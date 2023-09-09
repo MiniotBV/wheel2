@@ -205,7 +205,7 @@ void staatDingen(){
       return;
     }
 
-    if(armHoek < -1000){
+    if(armHoek < -800){//-1000){
       Serial.print("div; ");
       Serial.println(  (karOffset + karPos)  );
       karOffset -= KAR_HOME - karPos;

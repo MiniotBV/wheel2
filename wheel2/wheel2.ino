@@ -6,6 +6,7 @@
 
 #include <EEPROM.h>
 
+bool eepromShit = false;
 // #include <LittleFS.h>
 
 #include "pwm.h"
@@ -56,9 +57,10 @@ VAART strobo(7, 1800); //1800
 
 #include "compVaartSensor.h"
 // COMPVAART TLE5012(2, 1024); //elker 5ms is 11.4 samples en 22.75 per 10ms
-COMPVAART TLE5012(16, 4096); //elker 5ms is 11.4 samples en 22.75 per 10ms
+// COMPVAART TLE5012(16, 4096); //elker 5ms is 11.4 samples en 22.75 per 10ms
 // COMPVAART TLE5012(64, 8192); //elker 5ms is 11.4 samples en 22.75 per 10ms
 
+COMPVAART TLE5012(8, 720);//360); //elker 5ms is 11.4 samples en 22.75 per 10ms
 
 
 
@@ -151,6 +153,16 @@ void core1Dingen(){
   knoppenUpdate();
 
   armFunc();
+
+  // if(eepromShit){
+  //   eepromShit = false;
+  //   Serial.println("coreslapen");
+  //   // delay(20);
+  //   busy_wait_ms(3000);
+    
+  // }
+
+
 }
 
 
@@ -172,6 +184,16 @@ void loop() {
   if(enkeleCoreModus){
     core1Dingen();    
   }
+
+
+  if(eepromShit){
+    eepromShit = false;
+    Serial.println("coreslapen");
+    // delay(20);
+    busy_wait_ms(3000);
+    
+  }
+
 
 
   plaatLeesFunc();

@@ -25,6 +25,7 @@ void displayInit(){
   // setPwm(displayEN);
 
   pinMode(displayEN, OUTPUT);
+  digitalWrite(displayEN, 1);
 
   // pwmWriteF(displayEN, 0.99);
   // pwmWriteF(displayEN, 0.5);
@@ -175,9 +176,16 @@ void displayUpdate(){
       for(int i = 0; i < displayLengte; i++){
         displayData[i] = 0;          
 
-        int volumePunt = mapF(volume, 0, 63, (displayLengte-1) - volumeMargin,   volumeMargin);
+        // int volumePunt = mapF(volume, 0, 63, (displayLengte-1) - volumeMargin,   volumeMargin);
 
-        if(i < (displayLengte-1) - volumeMargin    &&    i > volumePunt){
+        // if(i < (displayLengte-1) - volumeMargin    &&    i > volumePunt){
+        //   displayData[i] = 0.1;
+        // }
+
+
+        int volumePunt = mapF(volume, 0, 63, 0, 40);
+
+        if(i < dispHalf + volumePunt    &&    i > dispHalf - volumePunt){
           displayData[i] = 0.1;
         }
 

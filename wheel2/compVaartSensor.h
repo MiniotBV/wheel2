@@ -104,7 +104,7 @@ class COMPVAART{
       tijd = micros();
 
 
-      dir = 1;
+      dir = -1;//dir = 1;
 
       sens = (gpio_get(plateauA) <<1)  |  gpio_get(plateauB);
       
@@ -113,7 +113,7 @@ class COMPVAART{
           sens == 0b11 && sensPrev == 0b10 ||
           sens == 0b10 && sensPrev == 0b00
       ){
-        dir = -1;
+        dir = 1;//dir = -1;
       }
 
       sensPrev = sens;
@@ -155,11 +155,19 @@ class COMPVAART{
       vaartInterval = tijd;
       
       if(interval > sampleMax){interval = sampleMax;}
-      
-      shiftSamples(interval * compSamples[teller] * dir);
-      
+
 
       teller = rondTrip(teller + dir,  pulsenPerRev);
+
+      if(divCompMeten){
+        shiftSamples(interval * dir);
+      }else{
+        shiftSamples(interval * compSamples[teller] * dir);
+      }
+      
+      
+
+      
     
       
       dav = compSamples[teller];
@@ -176,14 +184,16 @@ class COMPVAART{
       if(divCompMeten){
         
         if(isOngeveer(div, 1, 0.3)){
-          compSamples[rondTrip(teller - 10,  pulsenPerRev)] += ( div - 1 ) / 3;
+
+          compSamples[teller] += (div - compSamples[teller]) * 0.5;
+          // compSamples[rondTrip(teller - 10,  pulsenPerRev)] += ( div - 1 ) / 3;
         }
       }
 
 
 
       if(plateauCompMeten){
-        plateauCompensatie[teller] += ( glad - targetRpm )*0.5 ;//* 0.2;// *0.8;
+        plateauCompensatie[teller] += ( glad - targetRpm ) / 20 ;//* 0.2;// *0.8;
         // plateauCompensatie[teller] += ( gladglad - targetRpm )*0.5 ;//* 0.2;// *0.8;
         // plateauCompensatie[teller] -= (plateauCompensatie[teller] - plateauCompensatie[rondTrip(teller + 400,  pulsenPerRev)])*0.9;
       }
@@ -242,14 +252,17 @@ class COMPVAART{
 
     void recalCompSamples(){
       int i = 0;
-      for(int i = 0;   i < pulsenPerRev;   i += 4){
+      for(int i = 0;   i < pulsenPerRev;   i += 2){
         // compSamples[i*2] = eepLeesFloat(i*2);
         // compSamples[(i*2)+1] = compSamples[i*2];
         
-        compSamples[i] = eepLeesFloat(i/2);
+        // compSamples[i] = eepLeesFloat(i/2);
+        // compSamples[i+1] = compSamples[i];
+        // compSamples[i+2] = compSamples[i];
+        // compSamples[i+3] = compSamples[i];
+
+        compSamples[i] = eepLeesFloat(i);
         compSamples[i+1] = compSamples[i];
-        compSamples[i+2] = compSamples[i];
-        compSamples[i+3] = compSamples[i];
       }
 
       if(compSamples[10] < 2){
@@ -286,15 +299,28 @@ class COMPVAART{
     void saveCompSamples(){
       // noInterrupts();
       // rp2040.idleOtherCore();
-      delay(10);      
 
-      for(int i = 0;   i < pulsenPerRev;   i+=4){
-        float inpol = ( compSamples[i+0] + 
-                        compSamples[i+1] + 
-                        compSamples[i+2] + 
-                        compSamples[i+3]   )/4;
+      eepromShit = true;
+
+      busy_wait_ms(10); 
+
+      Serial.println("heeprom dingen");
+
+
+      // for(int i = 0;   i < pulsenPerRev;   i+=4){
+      //   float inpol = ( compSamples[i+0] + 
+      //                   compSamples[i+1] + 
+      //                   compSamples[i+2] + 
+      //                   compSamples[i+3]   )/4;
                         
-        eepSchrijfFloat(i/2,   inpol);
+      //   eepSchrijfFloat(i/2,   inpol);
+      // }
+
+      for(int i = 0;   i < pulsenPerRev;   i+=2){
+        float inpol = ( compSamples[i+0] + 
+                        compSamples[i+1] )/2;
+                        
+        eepSchrijfFloat(i,   inpol);
       }
 
       bool geenError = EEPROM.commit();
@@ -319,6 +345,7 @@ class COMPVAART{
       for(int i = 0;   i < pulsenPerRev;   i++){
         compSamples[i] = 1;
       }
+      // Serial.println("cleart");
     }
 
 
@@ -373,6 +400,7 @@ class COMPVAART{
 
     float getDiv(){
       div = getVaart() / strobo.getVaart();
+      // div = strobo.getVaart() / getVaart();
 
       // getVaart();
       // strobo.getVaart();

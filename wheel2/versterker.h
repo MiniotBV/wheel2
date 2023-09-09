@@ -2,7 +2,7 @@
 
 
 bool jackIn = false;
-int volume = 60;
+int volume = 32;
 int volumeOud;
 bool isNaaldEropOud = false;
 bool volumeOverRide = false;

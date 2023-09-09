@@ -37,8 +37,8 @@ void serieelFunc(){
       
       Serial.print(", ");
       Serial.print(TLE5012.div, 3);
-      // Serial.print(", ");
-      // Serial.print(TLE5012.dav, 3);
+      Serial.print(", ");
+      Serial.print(TLE5012.dav, 3);
 
       
       
