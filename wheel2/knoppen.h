@@ -368,13 +368,13 @@ void knoppenUpdate(){
 			
 
 			if(staat == S_SCHOONMAAK){
-				armTargetGewicht += riemDiv / 1.5;
-				armTargetGewicht = limieteerF(armTargetGewicht, MIN_ARMGEWICHT, MAX_ARMGEWICHT);
+				arm.targetGewicht += riemDiv / 1.5;
+				arm.targetGewicht = limieteerF(arm.targetGewicht, MIN_ARMGEWICHT, MAX_ARMGEWICHT);
 			}
 
 			else if(staat == S_CALIBREER){
-				armKracht += riemDiv * 0.5;
-				armKracht = limieteerF(armKracht, 0, 1);
+				arm.armKracht += riemDiv * 0.5;
+				arm.armKracht = limieteerF(arm.armKracht, 0, 1);
 				
 			}
 

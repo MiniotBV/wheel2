@@ -1,7 +1,7 @@
 //  ## Wheel2 ##
 //      rp2040
 
-#define versie 82
+#define versie 83
 
 
 #include <stdio.h>
@@ -24,7 +24,7 @@
 #include "staat.h"
 
 #include "armMotor.h"
-
+ArmMotor arm;
 
 
 
@@ -92,7 +92,7 @@ void setup() {
 
 	displayInit();  
 
-	armInit();
+	arm.armInit();
 
 	karInit();
 
@@ -136,7 +136,7 @@ void core1Dingen(){
 
 	knoppenUpdate();
 
-	armFunc();  
+	arm.armFunc();  
 }
 
 

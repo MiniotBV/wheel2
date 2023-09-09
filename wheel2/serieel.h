@@ -141,11 +141,11 @@ void checkenVoorCommando(bool info){
 
 	//----------------------------------------------------ARM
 	infoPrintln(info);
-	if(checkZin("NE", "naaldErop()", info)){  naaldErop(); return;}
-	if(checkZin("NA", "naaldEraf()", info)){  naaldEraf(); return;}
-	if(checkZinFloat("ATG", "armTargetGewicht", info, armTargetGewicht)){return;}
-	if(checkZin("AKL", "armKracht500mg calibreer", info)){    armKracht500mg = armKracht;   Serial.println("armKracht500mg: "  + String(armKracht500mg, 5));  return;}
-	if(checkZin("AKH", "armKracht500mg calibreer", info)){  armKracht4000mg = armKracht; Serial.println("armKracht4000mg: " + String(armKracht4000mg, 5));   return;}
+	if(checkZin("NE", "naaldErop()", info)){  arm.naaldErop(); return;}
+	if(checkZin("NA", "naaldEraf()", info)){  arm.naaldEraf(); return;}
+	if(checkZinFloat("ATG", "arm.targetGewicht", info, arm.targetGewicht)){return;}
+	if(checkZin("AKL", "armKracht500mg calibreer", info)){    arm.kracht500mg = arm.armKracht;   Serial.println("armKracht500mg: "  + String(arm.kracht500mg, 5));  return;}
+	if(checkZin("AKH", "armKracht500mg calibreer", info)){  arm.kracht4000mg = arm.armKracht; Serial.println("armKracht4000mg: " + String(arm.kracht4000mg, 5));   return;}
 
 
 	//-------------------------------------------------------KAR SENSORS / TRACK SHIT

@@ -294,7 +294,7 @@ bool volumeOverRide = false;
 
 
 bool isNaaldLangGenoegOpDePlaat(){
-	return isNaaldEropSinds() > 500  &&  staat == S_SPELEN;
+	return arm.isNaaldEropSinds() > 500  &&  staat == S_SPELEN;
 }
 
 
@@ -325,7 +325,7 @@ void volumeFunc(){
 			
  
 			
-			if(!(isNaaldErop() && staat == S_SPELEN)   &&    !volumeOverRide){
+			if(!(arm.isNaaldErop() && staat == S_SPELEN)   &&    !volumeOverRide){
 				// waarde = 0;
 				digitalWrite(koptelefoonEn, 0);
 				return;

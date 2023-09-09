@@ -98,12 +98,11 @@ void zetNummersAlsEenSingletje(){
 
 void nieuwNummer(float pos){
 	if(hoeveelNummers == 0){
-		Serial.println("einde plaat: " + String(pos));
+		// Serial.println("einde plaat: " + String(pos));
 	}else{
 		float afstand = pos - nummers[hoeveelNummers-1];
 		if(afstand < 2){return;}
-		Serial.println("track op: " + String(pos));
-		// Serial.println("afstand tot vorrige track: " + String(afstand));
+		// Serial.println("track op: " + String(pos));
 	}
 
 	nummers[hoeveelNummers] = pos;

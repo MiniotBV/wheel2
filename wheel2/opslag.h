@@ -49,10 +49,10 @@ void eepromUitlezen(){
 	
 	eepromLeesFloatWaarde( EEPROM_VERSIE,  eepromVersie);
 	
-	eepromLeesFloatWaarde( EEPROM_ARMKRACHT_500MG,  armKracht500mg);
-	eepromLeesFloatWaarde( EEPROM_ARMKRACHT_4000MG,  armKracht4000mg);
+	eepromLeesFloatWaarde( EEPROM_ARMKRACHT_500MG,  arm.kracht500mg);
+	eepromLeesFloatWaarde( EEPROM_ARMKRACHT_4000MG,  arm.kracht4000mg);
 
-	eepromLeesFloatWaarde( EEPROM_ARMGEWICHT,  armTargetGewicht);
+	eepromLeesFloatWaarde( EEPROM_ARMGEWICHT,  arm.targetGewicht);
 
 	eepromLeesFloatWaarde( EEPROM_WATERPAS_OFFSET,  orientatie.gefilterdOffset);
 
@@ -67,9 +67,9 @@ void eepromUitlezen(){
 
 void eepromOpslaan(){
 	EEPROM.put( EEPROM_VERSIE,              eepromVersie);
-	EEPROM.put( EEPROM_ARMKRACHT_500MG,     armKracht500mg);
-	EEPROM.put( EEPROM_ARMKRACHT_4000MG,    armKracht4000mg);
-	EEPROM.put( EEPROM_ARMGEWICHT,          armTargetGewicht);
+	EEPROM.put( EEPROM_ARMKRACHT_500MG,     arm.kracht500mg);
+	EEPROM.put( EEPROM_ARMKRACHT_4000MG,    arm.kracht4000mg);
+	EEPROM.put( EEPROM_ARMGEWICHT,          arm.targetGewicht);
 	EEPROM.put( EEPROM_WATERPAS_OFFSET,     orientatie.gefilterdOffset);
 	EEPROM.put( EEPROM_TRACK_OFFSET,        trackOffset);
 
@@ -81,9 +81,9 @@ void eepromOpslaan(){
 
 void eepromPrint(){
 	// Serial.println("EEPROM_VERSIE:            " + String(eepromVersie,                  5));
-	Serial.println("EEPROM_ARMKRACHT_500MG:   " + String(armKracht500mg,                5));
-	Serial.println("EEPROM_ARMKRACHT_4000MG:  " + String(armKracht4000mg,               5));
-	Serial.println("EEPROM_ARMGEWICHT:        " + String(armTargetGewicht,              5));
+	Serial.println("EEPROM_ARMKRACHT_500MG:   " + String(arm.kracht500mg,                5));
+	Serial.println("EEPROM_ARMKRACHT_4000MG:  " + String(arm.kracht4000mg,               5));
+	Serial.println("EEPROM_ARMGEWICHT:        " + String(arm.targetGewicht,              5));
 	Serial.println("EEPROM_WATERPAS_OFFSET:   " + String(orientatie.gefilterdOffset,    5));
 	// Serial.println("EEPROM_TRACK_OFFSET:      " + String(trackOffset,                   5));
 	Serial.println("EEPROM_ARMHOEK_MIN        " + String(armHoekMin,                    5));

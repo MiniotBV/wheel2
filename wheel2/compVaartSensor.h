@@ -81,7 +81,7 @@ class COMPVAART
 
 		//---------------------------------------------onbalans compensatie
 
-		int onbalansFase = 70;//90;//75;//90;  50 in pulsen per rev
+		int onbalansFase = 100;//70;//90;//75;//90;  50 in pulsen per rev
 		
 		float gemiddeldeSnelheidPre, gemiddeldeSnelheid;
 		
@@ -90,7 +90,7 @@ class COMPVAART
 		volatile float onbalansComp = 0;
 		
 		float compVerval = 1.0;//0.6;//0.8;
-		float onbalansCompGewicht = 0.8;
+		float onbalansCompGewicht = 1.5;//2;//0.8;
 
 
 		float  onbalansSinTotaal[5];
@@ -209,11 +209,12 @@ class COMPVAART
 			karPosMiddenPre -= karUitCenterGolf[teller];
 			karUitCenterGolf[teller] = egteKarPos;
 			karPosMiddenPre += karUitCenterGolf[teller];
+
 			karPosMidden = karPosMiddenPre / pulsenPerRev;
 
 			float karPosUitMidden = egteKarPos - karPosMidden;
 
-			if(isNaaldEropVoorZoLang(1000) && staat == S_SPELEN){ // naald moet er ff opzitten in spelen staat voor ie gaat rekenene
+			if(arm.isNaaldEropVoorZoLang(1000) && staat == S_SPELEN){ // naald moet er ff opzitten in spelen staat voor ie gaat rekenene
 				karSin -= karSinWaardes[teller];
 				karSinWaardes[teller] = sinus[teller]  *  karPosUitMidden;
 				karSin += karSinWaardes[teller];
@@ -236,6 +237,10 @@ class COMPVAART
 			float uitMiddenSnelheidsComp = ( ( ( sinus[leadTeller] * karSinFilt )  +  ( cosin[leadTeller] * karCosFilt ) )  / pulsenPerRev  ) * 2;
 
 			centerCompTargetRpm = targetRpm *  (( karPosMidden - uitMiddenSnelheidsComp ) / karPosMidden );
+
+      // targetrpm * midden / (midden + afwijking)
+
+      // centerCompTargetRpm = targetRpm +  uitMiddenSnelheidsComp; //<<<< dit is soort van wat ik bruikt
 
 			
 
@@ -263,7 +268,7 @@ class COMPVAART
 					draaienInterval.sinds() > 1000 && //moet 1 seconden aan staan
 					opsnelheid &&                      // en opsnelheid zijn     
 					
-          ((isNaaldEropVoorZoLang(200) && staat == S_SPELEN) ||
+          ((arm.isNaaldEropVoorZoLang(200) && staat == S_SPELEN) ||
           staat == S_HOMEN_VOOR_SPELEN ||    
 					staat == S_NAAR_BEGIN_PLAAT)
 					// staat == S_SPELEN)
@@ -307,9 +312,13 @@ class COMPVAART
 
 
 			if(onbalansCompAan){
-				onbalansComp = -onbalansCompFourier;//onbalansCompensatie[rondTrip(teller + onbalansFase,  pulsenPerRev)];
+				onbalansComp = -onbalansCompFourier; // wat het was
+        // onbalansComp = (1 + (onbalansCompFourier/100)); // wat jiji net bedacht heb
+
+        
 			}else{
 				onbalansComp = 0;
+        // onbalansComp = 1;
 			}
 			
 
@@ -368,18 +377,22 @@ class COMPVAART
 
 
 		void clearCenterCompSamples(){
+
+      float pos = egteKarPos;
+
 			for(int i = 0; i < pulsenPerRev; i++){
 				karSinWaardes[i] = 0;
 				karCosWaardes[i] = 0;
-				karUitCenterGolf[i] = 0;
+				karUitCenterGolf[i] = pos;
 			}
 
+      karSinFilt = 0;
+			karCosFilt = 0;
 			karSin = 0;
 			karCos = 0;
-			karPosMiddenPre = 0;
-
-			karSinFilt = 0;
-			karCosFilt = 0;
+      
+      karPosMiddenPre = pos * pulsenPerRev;
+			karPosMidden = pos;
 		}    
 
 

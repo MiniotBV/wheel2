@@ -170,7 +170,10 @@ String printError(enum errors s){
 void setError(enum errors err){
 	error = err;
 	errorVeranderd.reset();
-	Serial.println("error: " + printError(err));
+	Serial.println("V error: " + printError(err));
+  Serial.println("  staat: " + printStaat(staat));
+  Serial.println("  karPos: " + String(karPos));
+  Serial.println("^");
 }
 
 

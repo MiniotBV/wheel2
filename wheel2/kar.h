@@ -262,7 +262,7 @@ void naarVolgendNummer(){
 void staatDingen(){
 	
 	if(staat == S_STOPPEN){
-		if(naaldEraf() && decelereerKar()){
+		if(arm.naaldEraf() && decelereerKar()){
 			setStaat(S_NAAR_HOK);
 		}
 		return;
@@ -340,7 +340,7 @@ void staatDingen(){
 
 
 	if(staat == S_FOUTE_ORIENTATIE){
-		naaldEraf();
+		arm.naaldEraf();
 		karMotorEnable = false;
 		return;
 	}
@@ -425,55 +425,50 @@ void staatDingen(){
   //  ================================================================
   //      SPELEN
   //  ================================================================
-	if(staat == S_SPELEN)
-  {
+	if(staat == S_SPELEN){
 		if(staatVeranderd.sinds() < 1000) { armHoekCentreer(); return; } // eerst ff centrere
 		
-		if(naaldErop())
-    {
+		if(arm.naaldErop()){
 			nieuwePos = karPos + limieteerF(armHoek * -karP, -3, 3);
 			nieuwePos = limieteerF(nieuwePos, 0, plaatBegin);
 			beweegKarNaarPos(nieuwePos, KAR_MAX_SNELHEID);
 			
-			if(karPos <= PLAAT_EINDE)
-      {
+			if(karPos <= PLAAT_EINDE){
 				Serial.println("kar heeft de limiet berijkt");
 				stoppenOfHerhalen();//stoppen();
 				return;
 			}
 
-			if(karPos < karPosFilter - 2.5)
-      {
+			if(karPos < karPosFilter - 2.5){
 				Serial.println("waarschijnlijk uitloop groef");
 				stoppenOfHerhalen();//stoppen();
 				return;
 			}
 
-			if(egteKarPos > karPosFilter + 2.5)
-      {
+			if(egteKarPos > karPosFilter + 2.5){
 				setError(E_NAALD_TERUG_GELOPEN);     
 				stoppen();
 				return;
 			}
 
-			if(naaldNaarVorenBewogen.sinds() > 6000)
-      {
-				setError(E_NAALD_NIET_BEWOGEN); //kar te lang niet bewogen
-				stoppen();
-				return;
-			}      
+			// if(naaldNaarVorenBewogen.sinds() > 6000){
+			// 	setError(E_NAALD_NIET_BEWOGEN); //kar te lang niet bewogen
+			// 	stoppen();
+			// 	return;
+			// }      
 		}
 		return;
 	}
+
+
+
+  
   //  ================================================================
   //      NAAR NUMMER EN SPOELEN
   //  ================================================================
-	if(staat == S_NAAR_NUMMER)
-  {
-		if(naaldEraf())
-    {
-			if(beweegKarNaarPos(targetNummerPos, KAR_MAX_SNELHEID))
-      {
+	if(staat == S_NAAR_NUMMER){
+		if(arm.naaldEraf()){
+			if(beweegKarNaarPos(targetNummerPos, KAR_MAX_SNELHEID)){
 		    setStaat(S_SPELEN);
 				return;
 			}
@@ -481,24 +476,29 @@ void staatDingen(){
 		return;
 	}
 
-	if(staat == S_DOOR_SPOELEN)
-  {
-		if(naaldEraf())
-    {
+
+
+
+	if(staat == S_DOOR_SPOELEN){
+		if(arm.naaldEraf()){
 			beweegKarNaarPos(PLAAT_EINDE, KAR_MAX_SNELHEID/4);  
 		}
 		targetNummerPos = karPos;//om het display opteschonene
 	}
 
-	if(staat == S_TERUG_SPOELEN)
-  {
-		if(naaldEraf())
-    {
+
+
+
+	if(staat == S_TERUG_SPOELEN){
+		if(arm.naaldEraf()){
 			beweegKarNaarPos(plaatBegin, KAR_MAX_SNELHEID/4);
 		}
 		targetNummerPos = karPos;//om het display opteschonene
 	}
-  
+
+
+
+
   if(staat == S_UITROLLEN_NA_SPOELEN){
 		if(beweegKarNaarPos(targetNummerPos, KAR_MAX_SNELHEID/4)){ 
 			setStaat(S_SPELEN);
@@ -506,38 +506,36 @@ void staatDingen(){
 		}
 		return;
 	}
-  //  ================================================================
-  //      PAUZE, SCHOONMAAK, CALIBREER
-  //  ================================================================
-	if(staat == S_PAUZE)
-  {
-		if(naaldEraf())
-    {
+
+
+
+	if(staat == S_PAUZE){
+		if(arm.naaldEraf()){
 			beweegKarNaarPos(targetNummerPos, KAR_MAX_SNELHEID);
 		}
 		return;
 	}
 
-	if(staat == S_SCHOONMAAK)
-  {
-		if(beweegKarNaarPos(SCHOONMAAK_PLEK, KAR_MAX_SNELHEID))
-    {
-			naaldErop();
+
+
+
+	if(staat == S_SCHOONMAAK){
+		if(beweegKarNaarPos(SCHOONMAAK_PLEK, KAR_MAX_SNELHEID)){
+			arm.naaldErop();
 		}
 
-		if(sensorPos > PLAAT_EINDE + 2  &&  plaatAanwezig  &&  isNaaldEraf())
-    { 
+		if(sensorPos > PLAAT_EINDE + 2  &&  plaatAanwezig  &&  arm.isNaaldEraf()){ 
 			stoppen(); // als de naald erop is mag de plaat sensor wel afgaan     
 		}
 		return;
 	}
 
-	if(staat == S_CALIBREER)
-  {
-		if(beweegKarNaarPos( SCHOONMAAK_PLEK, KAR_MAX_SNELHEID))
-    {
-			
-		}
+
+
+
+
+	if(staat == S_CALIBREER){
+		if(beweegKarNaarPos( SCHOONMAAK_PLEK, KAR_MAX_SNELHEID)){}
 		return;
 	}
 
@@ -637,7 +635,7 @@ bool karMotorUitvoeren()
 	
 
 
-	if(staat == S_SPELEN  &&  isNaaldErop()){
+	if(staat == S_SPELEN  &&  arm.isNaaldErop()){
 		float div = karPos - karPosFilter;
 		if(div < 0){
 			karPosFilter += div / 1000;

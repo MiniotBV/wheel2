@@ -115,7 +115,7 @@ void displayUpdate(){
 
 
 		//--------------------------------------------------------------------INTRO
-		if(millis() < 4000){
+		if(millis()<4000){
 
 			int pos = (millis()/5) - 300;
 
@@ -184,7 +184,7 @@ void displayUpdate(){
 		//----------------------------------------------------------------SCHOONMAAK STAND
 		else if(staat == S_SCHOONMAAK  ||  staat == S_HOMEN_VOOR_SCHOONMAAK){
 			float verdeelPuntTeller = 0;
-			int volumePunt = mapF(armTargetGewicht, 0, 4, (displayLengte-1) - volumeMargin,   volumeMargin);
+			int volumePunt = mapF(arm.targetGewicht, 0, 4, (displayLengte-1) - volumeMargin,   volumeMargin);
 
 			for(int i = 0; i < displayLengte; i++){
 				displayData[i] = 0;
@@ -224,7 +224,7 @@ void displayUpdate(){
 	 //----------------------------------------------------------------CALIBREER STAND
 		else if(staat == S_CALIBREER){
 			
-			int volumePunt = mapF(armKracht, 0, 1, displayLengte - 1,   0);
+			int volumePunt = mapF(arm.armKracht, 0, 1, displayLengte - 1,   0);
 
 			for(int i = 0; i < displayLengte; i++){
 				displayData[i] = 0;
