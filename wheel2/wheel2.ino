@@ -1,7 +1,7 @@
 //  Wheel2 
 //  rp2040
 
-#define versie 141
+#define versie 142
 
 
 #include <stdio.h>
@@ -32,8 +32,8 @@ ArmMotor arm;
 
 
 void enableInterupts(bool aan){
-	// pinMode(plateauA,     INPUT_PULLUP);
-	// pinMode(plateauB,     INPUT_PULLUP);
+	pinMode(plateauA,     INPUT_PULLUP);
+	pinMode(plateauB,     INPUT_PULLUP);
 	// pinMode(plateauIndex, INPUT_PULLUP);
 
 	gpio_set_irq_enabled_with_callback(plateauA,   GPIO_IRQ_EDGE_RISE + GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
