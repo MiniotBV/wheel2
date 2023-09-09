@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Wheel 2 Updater</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+
+    <link href="style.css" rel="stylesheet" type="text/css">
+
+	
+</head>
+<body>
+
+    <br><br><br>
+    <a style="font-size:40px">Wheel 2 updater</a><a font-size='8px'>V1 &nbsp; sep23</a>
+    <br>
+
+    <br>chrome 78 of hoger gebruiken
+    <br>druk "put wheel in update mode" en selecteer "pico" en verbind
+    <br>de platenspeler zal verschijnen als schijf (RPI-RP2)
+    <br>download de laatste software (wheel2.uf2) en sleep het in RPI-RP2
+    <br>de wheel zal hierna meteen opstarten in de nieuwe software
+    <!-- <div id="notSupported" style='color: red'>Web Serial werkt niet op deze browser, gebruik Chrome 78 of hoger, en enable 
+    #enable-experimental-web-platform-features flag in chrome://flags</div>
+    <br><br> -->
+
+
+    <!-- <h2>Verbinding</h2> -->
+    <br>
+    <br>
+    <br>
+    <button id="btnConnect" type="button" onclick='clickReset()'>put wheel in update mode</button> 
+    <br>
+    <br>
+
+
+
+
+    <a href="wheel2.uf2.html" download>download software</a>
+    <br>
+    <br>
+    <a href="https://drive.google.com/drive/folders/1BKKGxrlx6HUjvCHgJyVHJfkWcCUIp_lk?usp=sharing" target="_blank">Source code</a>
+
+
+    <script>
+        async function clickReset(){
+            let port = await navigator.serial.requestPort();
+            await port.open({ baudRate: 1200 });
+            await port.close();
+            port = null;
+        }
+    </script>
+</body>
+</html>
