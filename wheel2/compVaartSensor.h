@@ -78,7 +78,7 @@ class COMPVAART{
     float plateauCompensatie[1000];
     bool compMeten = true;
     float preComp = 0;
-    float plateauComp = 0;
+    volatile float plateauComp = 0;
     float compFilter = 1.01;//2;
     float compVerval = 1.0;//0.6;//0.8;
     float compVermenigvuldiging = 0.8;
@@ -89,7 +89,7 @@ class COMPVAART{
     float sinWaardes[10][1000];
     float cosWaardes[10][1000];
     int harmonisen = 3;
-    float plateauCompFourier = 0;
+    volatile float plateauCompFourier = 0;
 
 
 

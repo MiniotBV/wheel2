@@ -26,7 +26,7 @@ float karPcomp = 0;
 // #define PLAAT_EINDE 52.5
 #define PLAAT_EINDE 52.5
 
-#define KAR_HOME 44.5
+#define KAR_HOME 44//44.5
 #define KAR_HOK 45.5
 
 #define SCHOONMAAK_PLEK 100
@@ -300,7 +300,7 @@ void staatDingen(){
       if(staat == S_HOMEN_VOOR_SPELEN){
         setStaat(S_BEGINNEN_SPELEN);
       }else{
-        setStaat(S_HOK);
+        setStaat(S_PARKEREN);
       }
 
       return;
@@ -311,11 +311,16 @@ void staatDingen(){
 
 
 
-  if(staat == S_HOK){
-    if(!beweegKarNaarPos(KAR_HOK, KAR_MAX_SNELHEID)){
-      return;
+  if(staat == S_PARKEREN){
+    if(beweegKarNaarPos(KAR_HOK, KAR_MAX_SNELHEID)){
+      setStaat(S_HOK);
     } 
-    
+    return;
+  }
+
+
+
+  if(staat == S_HOK){
     armHoekCalibreer();
     karMotorEnable = false;
     return;

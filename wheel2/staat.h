@@ -48,11 +48,12 @@ void updatePlateauRpm(){
 
 
 void setPlateauRpm(float rpm){
+  if(rpm == targetRpm){return;}//als er nisk veranderd is, hoeft er niks gerestet te worden
   autoRpm = rpm;
 
   updatePlateauRpm();
   // updatePlateauPID();
-
+  Serial.println("setPlateauRpm() reset");
   strobo.clearCompSamples();
   draaienInterval.reset();
   // opsnelheid = false;
@@ -82,7 +83,7 @@ void plateauDraaien(){
 
 void plateauStoppen(){
   plateauAan = false;
-
+  targetRpm = 0;
   draaienInterval.reset();
   uitdraaien = true;
   opsnelheid = false;
@@ -128,15 +129,16 @@ int hoeveelNummers = 0;
 
 
 enum staats{
-  S_NAAR_HOK,
-  S_HOK,
+  
+  
   S_STOPPEN,
 
-
-
-
-
+  S_PARKEREN,
+  S_HOK,
+  
+  S_NAAR_HOK,
   S_HOMEN_VOOR_SPELEN,
+  
   S_BEGINNEN_SPELEN,
   S_PLAAT_AANWEZIG,
   
@@ -176,6 +178,7 @@ Interval staatVeranderd(1000, MILLIS);
 
 
 String printStaat(int s){
+  if( s == S_PARKEREN             ){ return "PARKEREN";}
   if( s == S_NAAR_HOK             ){ return "NAAR_HOK";}
   if( s == S_HOK                  ){ return "HOK";}
   if( s == S_STOPPEN              ){ return "STOPPEN";}

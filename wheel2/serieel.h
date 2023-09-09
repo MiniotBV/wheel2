@@ -15,7 +15,9 @@ void serieelFunc(){
       
       Serial.print(strobo.vaart, 3);
       Serial.print(", ");
-      Serial.print(strobo.gladglad, 3);
+      Serial.print(strobo.glad, 3);
+      // Serial.print(", ");
+      // Serial.print(targetRpm, 2);
       Serial.print(", ");
       Serial.print(strobo.glad - targetRpm, 3);
 
@@ -35,7 +37,7 @@ void serieelFunc(){
 
 
       Serial.print(", ");
-      Serial.print(basis, 4);
+      Serial.print(uitBuff, 4);
 
       // Serial.print(", ");
       // Serial.print(karInterval);

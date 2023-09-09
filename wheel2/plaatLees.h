@@ -103,7 +103,7 @@ void plaatDetectie(){
 
 void nieuwNummer(float pos){
   if(hoeveelNummers == 0){
-    Serial.println("begin plaat: " + String(pos));
+    Serial.println("einde plaat: " + String(pos));
   }else{
     float afstand = pos - nummers[hoeveelNummers-1];
     if(afstand < 2){return;}
