@@ -166,6 +166,12 @@ class Orientatie //          QMA7981
 
   }
 
+  void calibreerOrientatie(){
+    gefilterdOffset += gefilterd;
+    Serial.println("orientatie.gefilterdOffset: " + String(gefilterdOffset, 5)); 
+  }  
+
+
 
 
   float read_accel_axis(uint8_t reg)

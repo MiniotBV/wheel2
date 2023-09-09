@@ -4,7 +4,8 @@
 //48 stappen / 12 tanden = 4 stappen per tand
 //1.5mm / 4 stappen per tand = 0.375mm per stap
 //PI = 2 stappen
-float mmPerStap = 1.5 / ( 48 / 10 );//8 );// / 12 );
+// float mmPerStap = 1.5 / ( 48 / 10 );//8 );// / 12 );
+float mmPerStap = 1.5 / ( 48 / 8 );// / 12 );
 float stap2mm = ( 2 / PI ) * mmPerStap;  // 0.238732414637843
 float mm2stap = 1 / stap2mm;   
 
@@ -15,7 +16,7 @@ bool karGolven;
 
 float karP = 2;//0.001;//0.0005; //0.00005;//0.00025;
 float karI = 0;//0.005; //0.00005;//0.00025;
-float karD = 1.5;//0.0006;//-0.003;
+float karD = 1;//1.5;//0.0006;//-0.003;
 
 float karBasis;
 float karPcomp = 0;
@@ -70,8 +71,8 @@ Interval naaldNaarVorenBewogen(1, MILLIS);
 
 
 
-// #define KAR_MAX_SNELHEID 0.02
-#define KAR_MAX_SNELHEID 0.0002
+#define KAR_MAX_SNELHEID 0.02
+// #define KAR_MAX_SNELHEID 0.0002
 #define KAR_VERSNELLING  0.0001
 
 double karSnelHeid = 0;
@@ -163,6 +164,16 @@ void armHoekCentreer(){
   armHoekOffset = armHoekSlow;
   // Serial.print("armHoekofset: ");
   // Serial.println(armHoekOffset);
+}
+
+
+void armHoekCalibreer(){
+  armHoekMin = armHoekMinCall;
+  armHoekMax = armHoekMaxCall;
+
+  armHoekMinCall = AMAX;
+  armHoekMaxCall = 0;
+  Serial.println("armHoek gecalibreed en buffer waardes gereset");
 }
 
 
@@ -616,9 +627,9 @@ bool karMotorUitvoeren(){
 
   if(karMotorEnable){
     if(antiCoggAan){
-      pwmStapperAntiCogging(karMotorPos,   stapperAP, stapperAN,  stapperBP, stapperBN,  true);      
+      pwmStapperAntiCogging(-karMotorPos,   stapperAP, stapperAN,  stapperBP, stapperBN,  true);      
     }else{
-      pwmStapper(karMotorPos,   stapperAP, stapperAN,  stapperBP, stapperBN,  true);
+      pwmStapper(-karMotorPos,   stapperAP, stapperAN,  stapperBP, stapperBN,  true);
     }
    
     

@@ -121,7 +121,7 @@ void pwmDisableStapper(int pinAP, int pinAN, int pinBP, int pinBN){
 float antiCoggSampels[antiCoggSampNum + 1];
 float antiCoggFases[antiCoggSampNum][2];
 
-bool antiCoggAan = true;
+bool antiCoggAan = false;
 bool antiCoggType = true;
 
 // float antiCoggNul = 1.5;
@@ -129,7 +129,7 @@ bool antiCoggType = true;
 // float antiCoggVerschuiving = 1.78;
 
 float antiCoggNul = 1.7;
-float antiCoggmacht = 3.5;
+float antiCoggMacht = 3.5;
 float antiCoggVerschuiving = 1.78;
 
 void berekenAntiCogging(){
@@ -142,9 +142,9 @@ void berekenAntiCogging(){
 
     float grafiek = 0;
     if(antiCoggType){
-      grafiek = pow( antiCoggNul - abs( sin(hoek) ) , antiCoggmacht);//   /   pow(vanNul, macht);
+      grafiek = pow( antiCoggNul - abs( sin(hoek) ) , antiCoggMacht);//   /   pow(vanNul, macht);
     }else{
-      grafiek = antiCoggNul - pow( abs( sin(hoek) ) , antiCoggmacht);//   /   pow(vanNul, macht);
+      grafiek = antiCoggNul - pow( abs( sin(hoek) ) , antiCoggMacht);//   /   pow(vanNul, macht);
     }
     
     antiCoggSampels[i+1] = antiCoggSampels[i] + grafiek;

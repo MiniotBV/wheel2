@@ -32,12 +32,14 @@ Interval compInt(0, MILLIS);
 class COMPVAART{
   public:
     volatile unsigned int vaartInterval;
-    volatile          int sampleNum;
-    volatile          int samples[1000];
+                      int sampleNum;
+    volatile          int samples[100];
     volatile unsigned int sampleTeller = 0;
     volatile unsigned long tijd;
     volatile unsigned int interval;
     float gemiddelde = sampleMax;
+
+    
 
 
     
@@ -45,18 +47,15 @@ class COMPVAART{
 
     float glad;
     float gladglad;
-    // float div;
 
     byte sens, sensPrev;
 
 
 
     int glitchTeller;
-    // int terugdraaiTeller = 0;
 
     int dir;
     int dirPrev;
-    int andereDirTeller;
 
     int pulsenPerRev;
     int teller = 0;
@@ -80,6 +79,9 @@ class COMPVAART{
     float cosWaardes[10][1000];
     int harmonisen = 1;
     volatile float plateauCompFourier = 0;
+
+
+    bool golven = false;    
 
 
 
@@ -214,6 +216,14 @@ class COMPVAART{
 
 
       plateauComp = -plateauCompFourier;//plateauCompensatie[rondTrip(teller + faseVerschuiving,  pulsenPerRev)];
+
+
+      if(golven){
+        Serial.print(vaart);
+        Serial.print(",");
+        Serial.print(glad);
+        Serial.println();        
+      }
     }
 
 

@@ -245,7 +245,7 @@ void plateauFunc(){
 
       uitBuff = limieteerF(uitBuff, -1, 1);
       
-      pwmFase(uitBuff, motorP, motorN, false);
+      pwmFase(uitBuff, motorN, motorP, false);
       
     }else{
       
