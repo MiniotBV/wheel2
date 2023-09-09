@@ -111,6 +111,7 @@ void displayTekenBlok(int begin, int einde, float kleur){
 
 
 void displayTekenPunt(int pos, float kleur){
+  if(pos < 0 || pos >= displayLengte){return;}
   displayData[pos] = kleur;  
 }
 
@@ -123,7 +124,6 @@ Interval displayInt(10000, MICROS);
 
 void displayUpdate(){
 	if(displayInt.loop()){
-	// if(true){
 
 		nummersTeller = 0;
 		int naald = egtePos2displayPos(karPosFilter);//int naald = egtePos2displayPos(karPos);
@@ -131,9 +131,6 @@ void displayUpdate(){
 		int sensor = egtePos2displayPos(sensorPos);
 		int sensorMaxBerijk = egtePos2displayPos(ELPEE_PLAAT_BEGIN - SENSOR_OFFSET)  +  3;
 		int plaatGroote = egtePos2displayPos(plaatBegin);
-
-		int volumeMargin = displayLengte/16;//16;
-
 		int dispHalf = displayLengte/2;
 
     displayClear();
@@ -147,11 +144,7 @@ void displayUpdate(){
       int gatLengte = 3;
 
       int decimalen = 3;
-      int versieDecimalen[decimalen];
-
-      versieDecimalen[0] = (versie) % 10;
-      versieDecimalen[1] = (versie / 10) % 10;
-      versieDecimalen[2] = (versie / 100) % 10;
+      int versieDecimalen[decimalen] = {   (versie) % 10,     (versie / 10) % 10,       (versie / 100) % 10    };
 
       for (int i = 0; i < decimalen; i++) {
         int dec = versieDecimalen[i];
@@ -190,31 +183,19 @@ void displayUpdate(){
     //----------------------------------------------------------------ERROR WEERGEVEN
 		else if(errorVeranderd.sinds() < 10000  &&  error != E_GEEN){ // 10seonden knipperen
 
-			if((millis()%1000) > 800){//                knipper
+			if((millis()%1000) < 800){// knipper
+				
+        int blokBreedte = 0.1 * displayLengte;
+        int begin = dispHalf - (blokBreedte/2) * error;
 
-
-				int blokken = error;
-
-				float blokBreedte = 0.1 * displayLengte;
-				float totaleBreedte = blokBreedte * blokken;
-				float halveBreedte = totaleBreedte / 2;
-				float beginPos = dispHalf - halveBreedte;
-				float eindPos = dispHalf + halveBreedte;
-
-
-				for(int i = 0; i < displayLengte; i++){
-					displayData[i] = 0;
-
-					if(i > beginPos  &&  i < eindPos){
-						displayData[i] = 0.1;
-
-						if( (int(beginPos) + i) % int(blokBreedte) < 2 ){
-							displayData[i] = 0;
-						}
-					}
-				}
+        for(int i = 0; i < error; i++){
+          displayTekenBlok(begin + 1, begin + blokBreedte - 1, 0.1);
+          begin += blokBreedte;
+        }
 			}
 		}
+
+
 
 		//----------------------------------------------------------------SCHOONMAAK STAND
 		else if(staat == S_SCHOONMAAK  ||  staat == S_HOMEN_VOOR_SCHOONMAAK){
@@ -254,17 +235,10 @@ void displayUpdate(){
       int krachtHoogPunt = mapF(arm.krachtHoog, 0, 1, displayLengte - 1,   0);
       int armHoekPunt = mapF(armHoekCall, 1, -1, 0, displayLengte-1);
 
-			for(int i = 0; i < displayLengte; i++){
-				displayData[i] = 0;
-
-				if(i > volumePunt){
-					displayData[i] = 0.1;
-				}
-
-        if(i == armHoekPunt  ||  i == krachtLaagPunt  ||  i == krachtHoogPunt){
-					displayData[i] = 0.9;         
-				}
-			}
+      displayTekenBlok(displayLengte, volumePunt, 0.1);
+      displayTekenPunt(armHoekPunt, 0.9);
+      displayTekenPunt(krachtLaagPunt, 0.9);
+      displayTekenPunt(krachtHoogPunt, 0.9);
 		}
 
 
@@ -273,24 +247,18 @@ void displayUpdate(){
 		//-------------------------------------------------------------------------WATER PAS STAND
 		else if(staat == S_FOUTE_ORIENTATIE){
 			
-
+      if((millis()%1000) < 800){
+        displayTekenBlok(0, displayLengte/4, 0.1);
+        displayTekenBlok(displayLengte - (displayLengte/4),   displayLengte, 0.1);
+      }
+      
       for(int i = 0; i < displayLengte; i++){
         float floatI = float(i) / displayLengte;
-
-        if((  i < displayLengte/4  ||  i  > displayLengte - (displayLengte/4))  &&  (millis()%1000) < 800 ){
-          displayData[i] = 0.1;
-        }else{
-          displayData[i] = 0;
-        }
-
 
         if(isOngeveer(floatI, (-orientatie.y*3) + 0.5, 0.02)){ // belltje
 					displayData[i] = 0.9;
 				}
       }
-
-
-      
 
 		}
 
@@ -300,7 +268,7 @@ void displayUpdate(){
 		//--------------------------------------------------------------RPM
 		else if(rpmDisplayActie.sinds() < 2000){
 
-			float blokken = 0;
+			int blokken = 1; //rpmStaat == AUTO
 
 			if(rpmStaat == R33){
 				blokken = 3;//3.33;
@@ -308,53 +276,30 @@ void displayUpdate(){
 			else if(rpmStaat == R45){
 				blokken = 4;//4.5;
 			}
-			else if(rpmStaat == AUTO){
-				blokken = 1;//4.5;
-			} 
 
-			float blokBreedte = 0.1 * displayLengte;
-			float totaleBreedte = blokBreedte * blokken;
-			float halveBreedte = totaleBreedte / 2;
-			float beginPos = dispHalf - halveBreedte;
-			float eindPos = dispHalf + halveBreedte;
+      int blokBreedte = 0.1 * displayLengte;
+      int begin = dispHalf - (blokBreedte/2) * blokken;
 
-
-			for(int i = 0; i < displayLengte; i++){
-				displayData[i] = 0;
-
-				if(i > beginPos  &&  i < eindPos){
-					displayData[i] = 0.1;
-
-					if( (int(beginPos) + i) % int(blokBreedte) < 2 ){
-						displayData[i] = 0;
-					}
-				}
-			}
+      for(int i = 0; i < blokken; i++){
+        displayTekenBlok(begin + 1, begin + blokBreedte - 1, 0.1);
+        begin += blokBreedte;
+      }
 		}
 
 
 		//------------------------------------------------------------------------VOLUME
 		else if(volumeDisplayActie.sinds() < 2000   &&  staat != S_DOOR_SPOELEN   &&  staat != S_TERUG_SPOELEN   &&  staat != S_NAAR_NUMMER   &&  staat != S_PAUZE){
-			for(int i = 0; i < displayLengte; i++){
-				displayData[i] = 0;          
-
-				int volumePunt = mapF(volume, 0, 63, 2, dispHalf + 1);//40
-
-				if(i < (dispHalf - 1) + volumePunt    &&    i > dispHalf - volumePunt){
-					displayData[i] = 0.1;
-				}
-			}
+			int volumePunt = mapF(volume, 0, 63, 1, dispHalf);//40
+      displayTekenBlok(dispHalf + volumePunt, dispHalf - volumePunt, 0.1);
 		}
 		
-		
+
 		//-----------------------------------------------------------------------------TRACK EN KAR DISPLAY
 		else{
 			for(int i = 0; i < displayLengte; i++){
 
 				//-------------------------------------------------------------------------------TRACKS
-				if( staat == S_STOPPEN  ||  staat == S_PARKEREN  ||  staat == S_NAAR_HOK  ||  staat == S_HOK){
-					displayData[i] = 0;
-				}else{
+				if( !( staat == S_STOPPEN  ||  staat == S_PARKEREN  ||  staat == S_NAAR_HOK  ||  staat == S_HOK ) ){
 					
 					int volgendeNummerDisplay  =  egtePos2displayPos(nummers[nummersTeller]);
 
@@ -379,43 +324,42 @@ void displayUpdate(){
 						}
 					}          
 				}
-
-
-				//---------------------------------------------------------------------------------------------------------------CURSOR
-				if(staat == S_NAAR_NUMMER  ||  staat ==  S_DOOR_SPOELEN  ||  staat == S_TERUG_SPOELEN  ||  staat == S_PAUZE){ 
-					if(naald-1 == i || naald+1 == i){ // dubbele punt
-						displayData[i] = 0.9;
-					}
-					
-					else if( i == target  &&  naald != i){ // target puntje
-						displayData[i] = 0.9;
-					}
-				}
-        else if(staat == S_SPELEN  &&  !arm.isNaaldErop()  &&  (staatVeranderd.sinds() % 1000 < 250)   &&  !puristenMode){// knipperen voordat de naald erop is
-          //niks
-        }
-				else if(herhaalDeHelePlaat){
-					if(naald == i || naald-2 == i || naald+2 == i){ // 3 dubbele punt
-						displayData[i] = 0.9;
-					}
-				}
-        else if(puristenMode  &&  (millis() % 1000 < 500)){
-					if(naald-1 == i || naald+1 == i){ // dubbele punt
-						displayData[i] = 0.9;
-					}
-				}
-				else if(naald == i){
-					displayData[i] = 0.9;	//gewone cursor
-				}
-
-				
 			}
+
+            //---------------------------------------------------------------------------------------------------------------CURSOR
+      if(staat == S_NAAR_NUMMER  ||  staat ==  S_DOOR_SPOELEN  ||  staat == S_TERUG_SPOELEN  ||  staat == S_PAUZE){ 
+        displayTekenPunt(naald-1, 0.9);
+        displayTekenPunt(naald+1, 0.9);
+        
+        if(naald != target){ // target puntje
+          displayTekenPunt(target, 0.9);
+        }
+      }
+      else if(staat == S_SPELEN  &&  !arm.isNaaldErop()  &&  (staatVeranderd.sinds() % 1000 < 250)   &&  !puristenMode){// knipperen voordat de naald erop is
+        //niks
+      }
+      else if(herhaalDeHelePlaat){
+        displayTekenPunt(naald, 0.9);
+        displayTekenPunt(naald-2, 0.9);
+        displayTekenPunt(naald+2, 0.9);
+      }
+      else if(puristenMode  &&  (millis() % 1000 < 500)){
+        displayTekenPunt(naald-1, 0.9);
+        displayTekenPunt(naald+1, 0.9);
+      }else{
+        displayTekenPunt(naald, 0.9);
+      }
 
 
       if(!orientatie.isStaand){
         flipDisplayData();
       }
 		}
+
+
+
+
+
 
 
 		//-----------------------------------------------------------KNOP BLINK
@@ -426,21 +370,15 @@ void displayUpdate(){
 			int knopUitMidden = 0.23 * displayLengte;
 
 			if(knopStaat[KNOP_PLAY] != LOSGELATEN){
-				for(int i = dispHalf - knopGrooteHalf; i < dispHalf + knopGrooteHalf; i++){
-					displayData[i] = 0.9;
-				}
+        displayTekenBlok(dispHalf - knopGrooteHalf,   dispHalf + knopGrooteHalf, 0.9);
 			}
 
 			if(knopStaat[KNOP_TERUGSPOEL] != LOSGELATEN){
-				for(int i = dispHalf - knopUitMidden - knopGroote; i < dispHalf - knopUitMidden; i++){
-					displayData[i] = 0.9;
-				}
+        displayTekenBlok(dispHalf - knopUitMidden,      dispHalf - knopUitMidden - knopGroote, 0.9);
 			}
 
 			if(knopStaat[KNOP_DOORSPOEL] != LOSGELATEN){
-				for(int i = dispHalf + knopUitMidden; i < dispHalf + knopUitMidden + knopGroote; i++){
-					displayData[i] = 0.9;
-				}
+        displayTekenBlok(dispHalf + knopUitMidden,      dispHalf + knopUitMidden + knopGroote, 0.9);
 			}
 		}
 

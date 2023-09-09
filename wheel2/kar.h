@@ -12,7 +12,7 @@ float stap2mm = ( 2 / PI ) * mmPerStap;  // 0.238732414637843
 float mm2stap = 1 / stap2mm;   
 
 
-float karInterval;
+// float karInterval;
 bool karGolven;
 
 bool karUitMiddenCompAan = true;
@@ -96,15 +96,41 @@ bool beweegKarNaarPos(float target, float snelheid){
 		versnelling = KAR_VERSNELLING * teGaanRichting;
 	}
 
-	
 	karPos += karSnelHeid + (versnelling / 2);
-
 	karSnelHeid += versnelling;
-
 	karSnelHeid = limieteerF(karSnelHeid, -snelheid, snelheid);
 
 	return false;
 }
+
+
+
+// bool beweegKarNaarPos(float target, float snelheid){
+//     float teGaan = target - karPos;
+//     int teGaanRichting = teGaan > 0 ? 1 : -1;
+//     float stopAfstand = (karSnelheid * karSnelheid) / (2 * KAR_VERSNELLING);
+//     int stopAfstandRichting = karSnelheid > 0 ? 1 : -1;
+    
+//     if(isOngeveer(teGaan, 0, 0.01) && stopAfstand < 0.1){
+//         karSnelheid = 0;
+//         return true;
+//     }
+    
+//     float sCurveParameter = 0.8; // adjust as needed
+//     float versnelling = 0;
+//     if(teGaan < sCurveParameter * stopAfstand){
+//         versnelling = KAR_VERSNELLING * teGaanRichting * (1 - pow(1 - teGaan / (sCurveParameter * stopAfstand), 2));
+//     }
+//     else if(teGaan > stopAfstand){
+//         versnelling = -KAR_VERSNELLING * teGaanRichting * (1 - pow(1 - (teGaan - stopAfstand) / ((1 - sCurveParameter) * stopAfstand), 2));
+//     }
+    
+//     karPos += karSnelheid + (versnelling / 2);
+//     karSnelheid += versnelling;
+//     karSnelheid = limieteerF(karSnelheid, -snelheid, snelheid);
+    
+//     return false;
+// }
 
 
 

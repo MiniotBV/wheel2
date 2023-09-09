@@ -90,15 +90,10 @@ class Orientatie //          QMA7981
 
 	float x, y, z;
   float xRuw, yRuw, zRuw;
-	float gefilterdY, gefilterdYPrev;
-	float xOffset = 0;//0.05;
-  float yOffset = 0;//0.05;
-  float zOffset = 0;//0.05;
+	float xOffset = 0,yOffset = 0,zOffset = 0;//0.05;
 	int id;
 	unsigned long loop;
 	bool eersteKeer = true;
-
-	
 
 
   void print() {
@@ -129,8 +124,6 @@ class Orientatie //          QMA7981
       x += ( (xRuw - xOffset) - x) / 10;
       y += ( (yRuw - yOffset) - y) / 10;
       z += ( (zRuw - zOffset) - z) / 10;
-
-
 
 			if(isFout){
 				isFout = ! isOngeveer(y, 0, 0.1);
@@ -323,52 +316,39 @@ void versterkerInit(){
 Interval versterkerInt(20, MILLIS);
 
 void volumeFunc(){
-	
+  if (!versterkerInt.loop()) return;
+
+  if(!isNaaldLangGenoegOpDePlaatVoorGeluid()   &&    !volumeOverRide){
+    digitalWrite(koptelefoonEn, 0);
+    volumeOud = -88;// om een herzend te triggeren
+    // Serial.println("geluid uit");
+    return;
+  }
+
   
-  if(versterkerInt.loop()){
+  if( volume != volumeOud   ||   isNaaldEropOud !=    isNaaldLangGenoegOpDePlaatVoorGeluid()    ||   volumeOverRide){//  ||   jackIn != digitalRead(koptelefoonAangesloten)){
+    
+    digitalWrite(koptelefoonEn, 1);      
+    
+    volumeOud = volume;
+    isNaaldEropOud = isNaaldLangGenoegOpDePlaatVoorGeluid();
+    
+    //0b11000000);//stereo
+    //0b11010000);//links in mono koptelefoon
+    //0b11100000);//links in bridge-tied speaker
+    int err = 0;
+    err = i2cWrite(0x60, 1, 0b11000000);
 
-    if(!isNaaldLangGenoegOpDePlaatVoorGeluid()   &&    !volumeOverRide){
-      digitalWrite(koptelefoonEn, 0);
-      volumeOud = -88;// om een herzend te triggeren
-      // Serial.println("geluid uit");
-      return;
+    int waarde = volume;
+    err = i2cWrite(0x60, 2, byte(waarde));
+
+    if(err){
+      debug("geen koptelefoon versterker");
+    }else{
+      // Serial.println("volume: " + String(volume) + " geschreven");
     }
-
-		
-		if( volume != volumeOud   ||   isNaaldEropOud !=    isNaaldLangGenoegOpDePlaatVoorGeluid()    ||   volumeOverRide){//  ||   jackIn != digitalRead(koptelefoonAangesloten)){
-			
-			
-
-
-			// volumeOverRide = false;
-			digitalWrite(koptelefoonEn, 1);      
-			
-			int waarde = volume;
-			
-			volumeOud = volume;
-			isNaaldEropOud = isNaaldLangGenoegOpDePlaatVoorGeluid();
-			
-			
-			int err = 0;
-
-
-			//0b11000000);//stereo
-			//0b11010000);//links in mono koptelefoon
-			//0b11100000);//links in bridge-tied speaker
-		
-			err = i2cWrite(0x60, 1, 0b11000000);
-			err = i2cWrite(0x60, 2, byte(waarde));
-
-			
-
-			if(err){
-				debug("geen koptelefoon versterker");
-			}else{
-        // Serial.println("volume: " + String(volume) + " geschreven");
-      }
-			
-		}
-	}
+    
+  }
 }
 
 
