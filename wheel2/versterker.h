@@ -75,10 +75,6 @@ Interval staatGoedInterval( 0, MILLIS);
 class Orientatie //          QMA7981
 {
 	public:
-	// Orientatie()//(byte a)
-	// {
-	//   // i2cWrite(adress, 0x1B, 0b10000000);
-	// }
   bool golven = false;
 	
 	bool isStaand    = false;
@@ -92,9 +88,12 @@ class Orientatie //          QMA7981
 	float x, y, z;
   float xRuw, yRuw, zRuw;
 	float xOffset = 0,yOffset = 0,zOffset = 0;//0.05;
-	int id;
+	// int id;
 	unsigned long loop;
 	bool eersteKeer = true;
+
+
+  // int calwaardeofzo;
 
 
   void print() {
@@ -118,14 +117,21 @@ class Orientatie //          QMA7981
 			// loop = millis();
 
 			// id = i2cRead(adress, 0x00);
+      float xSensorRuw = read_accel_axis(1);
+      float ySensorRuw = read_accel_axis(3);
+      float zSensorRuw = read_accel_axis(5);
 
-			xRuw += (read_accel_axis(1) - xRuw)/10;
-			yRuw += (read_accel_axis(3) - yRuw)/10;
-			zRuw += (read_accel_axis(5) - zRuw)/10;
+			xRuw += (xSensorRuw - xRuw)/10;
+			yRuw += (ySensorRuw - yRuw)/10;
+			zRuw += (zSensorRuw - zRuw)/10;
 
       x += ( (xRuw - xOffset) - x) / 10;
       y += ( (yRuw - yOffset) - y) / 10;
       z += ( (zRuw - zOffset) - z) / 10;
+
+      // x = xSensorRuw;
+      // y = ySensorRuw;
+      // z = zSensorRuw;
 
 			if(isFout){
 				isFout = ! isOngeveer(y, 0, 0.1);
@@ -162,7 +168,7 @@ class Orientatie //          QMA7981
 
 
       if(golven){
-        debug(String(x, 5) + "," + String(y, 5) + "," + String(z, 5));
+        debug(String(x, 5) + "," + String(y, 5) + "," + String(z, 5));// + "," + String(calwaardeofzo));
       }
 		}
 
@@ -198,43 +204,9 @@ class Orientatie //          QMA7981
 
 
 
-	enum qma7981_full_scale_range_t
-	{
-			RANGE_2G = 0b0001,
-			RANGE_4G = 0b0010,
-			RANGE_8G = 0b0100,
-			RANGE_16G = 0b1000,
-			RANGE_32G = 0b1111
-	};
-
-	enum qma7981_bandwidth_t
-	{
-			MCLK_DIV_BY_7695 = 0b000,
-			MCLK_DIV_BY_3855 = 0b001,
-			MCLK_DIV_BY_1935 = 0b010,
-			MCLK_DIV_BY_975 = 0b011,
-			MCLK_DIV_BY_15375 = 0b101,
-			MCLK_DIV_BY_30735 = 0b110,
-			MCLK_DIV_BY_61455 = 0b111
-	};
-
-	enum qma7981_clock_freq_t
-	{
-			CLK_500_KHZ = 0b0000,
-			CLK_333_KHZ = 0b0001,
-			CLK_200_KHZ = 0b0010,
-			CLK_100_KHZ = 0b0011,
-			CLK_50_KHZ = 0b0100,
-			CLK_25_KHZ = 0b0101,
-			CLK_12_KHZ_5 = 0b0110,
-			CLK_5_KHZ = 0b0111
-	};
-
-
-
 
 	void reset(){
-		//reset
+		// reset
 		i2cWrite(adress, 0x36, 0xB6);//soft reset
 		i2cWrite(adress, 0x36, 0x00);
 
@@ -243,24 +215,17 @@ class Orientatie //          QMA7981
 		//set_mode
 		uint8_t data = i2cRead(adress, 0x11);
 		set_bit(&data, 7, 1);//1 = active, 0 = deactive;
-
-		//set_clock_freq
-		data &= 0b11110000;      // clear bits 0-3
-		data |= (CLK_500_KHZ & 0b1111); // set freq on bits 0-3 
-    // data |= (CLK_50_KHZ & 0b1111); // set freq on bits 0-3 
 		i2cWrite(adress, 0x11, data);
 
 
-		//set_bandwidth
-		data = 0b11100000;
-		data |= (MCLK_DIV_BY_7695 & 0b111);
-    // data |= (MCLK_DIV_BY_61455 & 0b111);
-		i2cWrite(adress, 0x10, data);
-
+    // calwaardeofzo = i2cRead(adress, 0x0F);
 		//set_full_scale_range
-		data = 0b11110000;
-		data |= (RANGE_2G & 0b1111);
-		i2cWrite(adress, 0x0F, data);
+		// data = 0b11110000;
+		// data |= (RANGE_2G & 0b1111);
+		// i2cWrite(adress, 0x0F, data);
+    // i2cWrite(adress, 0x0F, 0b00000001);
+    // calwaardeofzo = i2cRead(adress, 0x0F);
+
 
 	}
 
