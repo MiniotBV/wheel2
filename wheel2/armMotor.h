@@ -18,8 +18,8 @@ class ArmMotor
   // float armKracht500mg = 0.33;  //7de proto
   // float armKracht4000mg = 0.66;
 
-  float kracht500mg = 0.28;  //7de proto
-  float kracht4000mg = 0.58;
+  float krachtMin = 0.28;   //  500 mg   7de proto
+  float krachtMax = 0.58;  // 4000 mg
 
   //op de plaat
   float netUitHokGewicht = -0.8;
@@ -29,20 +29,21 @@ class ArmMotor
   float netInHokGewicht = -1;
 
 
-  bool armMotorAan = false;
+  bool isMotorAan = false;
 
   Interval armInt {10, MILLIS};
   Interval naaldEropInterval {0, MILLIS};
 
   void armInit() { setPwm(armMotor); }
 
-  float armGewicht2pwm(float gewicht){
-    float pwm = mapF(gewicht,   MIN_ARMGEWICHT,   MAX_ARMGEWICHT,    kracht500mg, kracht4000mg);
-    return limieteerF(pwm, 0, 1);  
+  float gewicht2pwm(float w)
+  {
+    float pwm = mapF(w, MIN_ARMGEWICHT, MAX_ARMGEWICHT, krachtMin, krachtMax);
+    return limitF(pwm, 0, 1);  
   }
 
-  float pwm2armGewicht(float pwm){
-    float gewicht = mapF(pwm,  kracht500mg, kracht4000mg,  MIN_ARMGEWICHT,   MAX_ARMGEWICHT);
+  float pwm2gewicht(float pwm){
+    float gewicht = mapF(pwm, krachtMin, krachtMax, MIN_ARMGEWICHT, MAX_ARMGEWICHT);
     return gewicht;
   }
 
@@ -51,35 +52,23 @@ class ArmMotor
     return armGewicht == targetGewicht;
   }
 
-  bool isNaaldEraf(){
-	return armGewicht == HOK_ARMGEWICHT;
-  }
+  bool isNaaldEraf() { return armGewicht == HOK_ARMGEWICHT; }
 
-  int isNaaldEropSinds(){
-    return naaldEropInterval.sinds();
-  }
+  int isNaaldEropSinds() { return naaldEropInterval.sinds(); }
 
-  bool isNaaldEropVoorZoLang(int ms){
+  bool isNaaldEropVoorZoLang(int ms)
+  {
     return isNaaldErop() && naaldEropInterval.sinds() > ms;
   }
 
-
-
-  bool naaldErop(){
-    armMotorAan = true;
-    return isNaaldErop();
-  }
-
-  bool naaldEraf(){
-    armMotorAan = false;
-    return isNaaldEraf();
-  }
+  bool naaldErop() { isMotorAan = true; return isNaaldErop(); }
+  bool naaldEraf() { isMotorAan = false; return isNaaldEraf(); }
 
 
 
   bool naaldNoodStop(){
     armGewicht = HOK_ARMGEWICHT; // zet de arm dan meteen uit
-    armMotorAan = false;
+    isMotorAan = false;
     return true;  
   }
 
@@ -88,61 +77,45 @@ class ArmMotor
     if(armInt.loop()){
 
       if(staat == S_CALIBREER){
-        armGewicht = pwm2armGewicht(armKracht);
+        armGewicht = pwm2gewicht(armKracht);
         pwmWriteF(armMotor, armKracht);
         return;
       }
 
-      if(staat == S_HOMEN_VOOR_SPELEN  ||  staat == S_HOMEN_VOOR_SCHOONMAAK  ||staat == S_NAAR_HOK){
-        if(armMotorAan == true){
+      if(staat == S_HOMEN_VOOR_SPELEN || staat == S_HOMEN_VOOR_SCHOONMAAK || staat == S_NAAR_HOK){
+        if(isMotorAan)
+        {
           Serial.println("NAALD HAD NOOIT AAN MOGEN STAAN!!!");
           naaldNoodStop();
         }
       }
 
+      if(isMotorAan)  // motor moet aan
+      {
 
-      
-
-      if(armMotorAan == true){//moet de arm motor aan?
-
-        if(armGewicht < netUitHokGewicht){//als de arm net aan staat jump meteen naar nognetInHokGewicht
+        if(armGewicht < netUitHokGewicht) // arm net aan => nognetInHokGewicht
           armGewicht = netUitHokGewicht;
-        }
 
-        if(armGewicht < targetGewicht){//is de arm al op het target gewicht?
+        if(armGewicht < targetGewicht) // target gewicht
           armGewicht += snelheidOp;
-        }
 
-        if(armGewicht > netOpDePlaatGewicht){//is de arm al op de plaat?
-          armGewicht = targetGewicht;//zet dan de arm meteen op target gewicht
-        }
+        if(armGewicht > netOpDePlaatGewicht)  // arm op plaat =>
+          armGewicht = targetGewicht;         // target gewicht
       }
-      
+      else // motor moet uit
+      {
+        if(armGewicht > netVanDePlaatGewicht) // arm net uit =>
+          armGewicht = netVanDePlaatGewicht;  // meeste gewicht eraf
 
-      if(armMotorAan == false){// moet de arm motor uit?
+        if(armGewicht > HOK_ARMGEWICHT) // niet helemaal uit =>
+          armGewicht -= snelheidAf;     // minder hard
         
-        if(armGewicht > netVanDePlaatGewicht){ //als de arm net is uitgezet
-          armGewicht = netVanDePlaatGewicht; // zet haal dan meteen het meeste gewicht van de arm
-        }
-
-        if(armGewicht > HOK_ARMGEWICHT){ //is de arm nog niet helemaal uit
-          armGewicht -= snelheidAf; // zet hem dan wat minder hard
-        }
-        
-        if(armGewicht < netInHokGewicht){ //is de arm al van de plaat?
-          armGewicht = HOK_ARMGEWICHT; // zet de arm dan meteen uit
-        }
+        if(armGewicht < netInHokGewicht) // arm van plaat =>
+          armGewicht = HOK_ARMGEWICHT;   // meteen uit
       }
 
-
-
-      armKracht = armGewicht2pwm(armGewicht);
-
+      armKracht = gewicht2pwm(armGewicht);
       pwmWriteF(armMotor, armKracht);
-
-
-
-
 
       if(armGewicht != targetGewicht){
         naaldEropInterval.reset();

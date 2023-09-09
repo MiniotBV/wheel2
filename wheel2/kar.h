@@ -9,7 +9,7 @@ int karStapperTanden = 12;//8;
 
 float mmPerStap = 1.5 / ( 48 / karStapperTanden );
 float stap2mm = ( 2 / PI ) * mmPerStap;  // 0.238732414637843
-float mm2stap = 1 / stap2mm;   
+float mm2stap = 1 / stap2mm;
 
 
 float karInterval;
@@ -32,7 +32,7 @@ float karDcomp = 0;
 
 
 float targetNummerPos = 0;
-float sensorPos;
+//float sensorPos; must be global, see .ino file, renamed trackSenorPos
 float karOffset = 0; // om te kijken wat de homing afwijking is
 
 
@@ -103,7 +103,7 @@ bool beweegKarNaarPos(float target, float snelheid){
 
 	karSnelHeid += versnelling;
 
-	karSnelHeid = limieteerF(karSnelHeid, -snelheid, snelheid);
+	karSnelHeid = limitF(karSnelHeid, -snelheid, snelheid);
 
 	return false;
 }
@@ -356,9 +356,9 @@ void staatDingen(){
 			plaatBegin = 1000;
 		}
 
-		if(!plaatAanwezig  &&  sensorPos > PLAAT_EINDE + 1){ // is er een plaat aanwezig
+		if(!plaatAanwezig  &&  trackSensorPos > PLAAT_EINDE + 1){ // is er een plaat aanwezig
 			
-			float plaadDiaInch = (sensorPos / 25.4)*2;
+			float plaadDiaInch = (trackSensorPos / 25.4)*2;
 			
 
 			if(plaadDiaInch < 6){//kleiner dan 6" dan stoppen
@@ -369,21 +369,21 @@ void staatDingen(){
 			
 			if(plaadDiaInch < 8){// ongeveer 
 				Serial.println("plaatDia: " + String(plaadDiaInch) + " : ±7\" ");
-				setPlateauRpm(rpm45);
+				setPlateauRpm(rpm.r45);
 				plaatBegin = SINGLETJE_PLAAT_BEGIN;
-				zetNummersAlsEenSingletje();
+				lees.zetNummersAlsEenSingletje();
 				// return;
 			
 			
 			}else if(plaadDiaInch < 11){ 
 				Serial.println("plaatDia: " + String(plaadDiaInch) + " : ±10\" ");
-				setPlateauRpm(rpm33);
+				setPlateauRpm(rpm.r33);
 				plaatBegin = TIEN_INCH_PLAAT_BEGIN;
 			
 			
 			}else{
 				Serial.println("plaatDia: " + String(plaadDiaInch) + " : ???????\" ");
-				plaatBegin = sensorPos;
+				plaatBegin = trackSensorPos;
 				// setPlateauRpm(rpm33);
 			}
 
@@ -394,10 +394,11 @@ void staatDingen(){
 		
 
 
-		if(  beweegKarNaarPos(ELPEE_PLAAT_BEGIN,   KAR_MAX_SNELHEID)  ){
+		if(beweegKarNaarPos(ELPEE_PLAAT_BEGIN, KAR_MAX_SNELHEID))
+		{
 			plaatBegin = ELPEE_PLAAT_BEGIN;
 			Serial.println("plaatDia: 12inch");
-			setPlateauRpm(rpm33);
+			setPlateauRpm(rpm.r33);
 
 			setStaat(S_SPELEN);
 			return;
@@ -429,8 +430,8 @@ void staatDingen(){
 		if(staatVeranderd.sinds() < 1000) { armHoekCentreer(); return; } // eerst ff centrere
 		
 		if(arm.naaldErop()){
-			nieuwePos = karPos + limieteerF(armHoek * -karP, -3, 3);
-			nieuwePos = limieteerF(nieuwePos, 0, plaatBegin);
+			nieuwePos = karPos + limitF(armHoek * -karP, -3, 3);
+			nieuwePos = limitF(nieuwePos, 0, plaatBegin);
 			beweegKarNaarPos(nieuwePos, KAR_MAX_SNELHEID);
 			
 			if(karPos <= PLAAT_EINDE){
@@ -446,7 +447,7 @@ void staatDingen(){
 			}
 
 			if(egteKarPos > karPosFilter + 2.5){
-				setError(E_NAALD_TERUG_GELOPEN);     
+				setError(E_NAALD_TERUG_GELOPEN);  
 				stoppen();
 				return;
 			}
@@ -455,7 +456,7 @@ void staatDingen(){
 			// 	setError(E_NAALD_NIET_BEWOGEN); //kar te lang niet bewogen
 			// 	stoppen();
 			// 	return;
-			// }      
+			// }
 		}
 		return;
 	}
@@ -524,7 +525,7 @@ void staatDingen(){
 			arm.naaldErop();
 		}
 
-		if(sensorPos > PLAAT_EINDE + 2  &&  plaatAanwezig  &&  arm.isNaaldEraf()){ 
+		if(trackSensorPos > PLAAT_EINDE + 2  &&  plaatAanwezig  &&  arm.isNaaldEraf()){ 
 			stoppen(); // als de naald erop is mag de plaat sensor wel afgaan     
 		}
 		return;
@@ -594,7 +595,7 @@ bool karMotorUitvoeren()
 	}
 
 
-	sensorPos = karPos - SENSOR_OFFSET;
+	trackSensorPos = karPos - SENSOR_OFFSET;
 
 	
 
@@ -602,25 +603,30 @@ bool karMotorUitvoeren()
 
 
 	karDcomp *= 0.999;
-	karDcomp += limieteerF(armHoekDiv * -karD, -KAR_MAX_SNELHEID, KAR_MAX_SNELHEID);//------------ Om oscilatie te voorkomen
+	karDcomp += limitF(armHoekDiv * -karD, -KAR_MAX_SNELHEID, KAR_MAX_SNELHEID);//------------ Om oscilatie te voorkomen
 	
 	
 	egteKarPos  = karPos + karDcomp;
 
-	if(karUitMiddenCompAan){
+	if(karUitMiddenCompAan)
+	{
 		karUitMiddenCompFilter +=  ( strobo.karFourierFilt - karUitMiddenCompFilter ) / 4;
-		egteKarPos += karUitMiddenCompFilter;   
+		egteKarPos += karUitMiddenCompFilter;
 	}
 
 
 	karMotorPos = (egteKarPos + karOffset)  *  mm2stap;
 
 
-	if(karMotorEnable){
-		if(antiCoggAan){
-			pwmStapperAntiCogging(-karMotorPos,   stapperAP, stapperAN,  stapperBP, stapperBN,  true);      
-		}else{
-			pwmStapper(-karMotorPos,   stapperAP, stapperAN,  stapperBP, stapperBN,  true);
+	if(karMotorEnable)
+	{
+		if(antiCoggAan)
+		{
+			pwmStapperAntiCogging(-karMotorPos, stapperAP, stapperAN,  stapperBP, stapperBN, true);
+		}
+		else
+		{
+			pwmStapper(-karMotorPos, stapperAP, stapperAN,  stapperBP, stapperBN, true);
 		}
 	 
 		

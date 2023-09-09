@@ -3,8 +3,6 @@
 int eepromShit = 0;
 float eepromVersie;
 
-
-
 #define EEPROM_VERSIE             0
 
 #define EEPROM_ARMKRACHT_500MG    100
@@ -37,7 +35,7 @@ void eepromLeesFloatWaarde(int adress, float& waarde){
 		waarde = buffer;
 		Serial.println("gelezen adress: " + String(adress) + "  waarde: " + String(buffer, 5));
 	}else{
-		EEPROM.put(adress, waarde);    
+		EEPROM.put(adress, waarde);
 		Serial.println("geschreven adress: " + String(adress) + "  waarde: " + String(buffer, 5));
 	}
 }
@@ -49,8 +47,8 @@ void eepromUitlezen(){
 	
 	eepromLeesFloatWaarde( EEPROM_VERSIE,  eepromVersie);
 	
-	eepromLeesFloatWaarde( EEPROM_ARMKRACHT_500MG,  arm.kracht500mg);
-	eepromLeesFloatWaarde( EEPROM_ARMKRACHT_4000MG,  arm.kracht4000mg);
+	eepromLeesFloatWaarde( EEPROM_ARMKRACHT_500MG,  arm.krachtMin);
+	eepromLeesFloatWaarde( EEPROM_ARMKRACHT_4000MG,  arm.krachtMax);
 
 	eepromLeesFloatWaarde( EEPROM_ARMGEWICHT,  arm.targetGewicht);
 
@@ -67,8 +65,8 @@ void eepromUitlezen(){
 
 void eepromOpslaan(){
 	EEPROM.put( EEPROM_VERSIE,              eepromVersie);
-	EEPROM.put( EEPROM_ARMKRACHT_500MG,     arm.kracht500mg);
-	EEPROM.put( EEPROM_ARMKRACHT_4000MG,    arm.kracht4000mg);
+	EEPROM.put( EEPROM_ARMKRACHT_500MG,     arm.krachtMin);
+	EEPROM.put( EEPROM_ARMKRACHT_4000MG,    arm.krachtMax);
 	EEPROM.put( EEPROM_ARMGEWICHT,          arm.targetGewicht);
 	EEPROM.put( EEPROM_WATERPAS_OFFSET,     orientatie.gefilterdOffset);
 	EEPROM.put( EEPROM_TRACK_OFFSET,        trackOffset);
@@ -79,24 +77,23 @@ void eepromOpslaan(){
 
 
 
-void eepromPrint(){
-	// Serial.println("EEPROM_VERSIE:            " + String(eepromVersie,                  5));
-	Serial.println("EEPROM_ARMKRACHT_500MG:   " + String(arm.kracht500mg,                5));
-	Serial.println("EEPROM_ARMKRACHT_4000MG:  " + String(arm.kracht4000mg,               5));
-	Serial.println("EEPROM_ARMGEWICHT:        " + String(arm.targetGewicht,              5));
-	Serial.println("EEPROM_WATERPAS_OFFSET:   " + String(orientatie.gefilterdOffset,    5));
+void eepromPrint()
+{
+	// Serial.println("EEPROM_VERSIE:            " + String(eepromVersie,              5));
+	Serial.println("EEPROM_ARMKRACHT_500MG:   " + String(arm.krachtMin,              5));
+	Serial.println("EEPROM_ARMKRACHT_4000MG:  " + String(arm.krachtMax,              5));
+	Serial.println("EEPROM_ARMGEWICHT:        " + String(arm.targetGewicht,          5));
+	Serial.println("EEPROM_WATERPAS_OFFSET:   " + String(orientatie.gefilterdOffset, 5));
 	// Serial.println("EEPROM_TRACK_OFFSET:      " + String(trackOffset,                   5));
-	Serial.println("EEPROM_ARMHOEK_MIN        " + String(armHoekMin,                    5));
-	Serial.println("EEPROM_ARMHOEK_MAX        " + String(armHoekMax,                    5));
+	Serial.println("EEPROM_ARMHOEK_MIN        " + String(armHoekMin,                 5));
+	Serial.println("EEPROM_ARMHOEK_MAX        " + String(armHoekMax,                 5));
 }
 
 
 
 
 
-void opslagInit(){
-	EEPROM.begin(4096);
-}
+void opslagInit() { EEPROM.begin(4096); }
 
 
 

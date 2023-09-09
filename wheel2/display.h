@@ -1,8 +1,6 @@
-
-
-
-
-
+//	=================
+//	display.h
+//	=================
 #define displayLengte 120
 float displayData[displayLengte];
 
@@ -104,7 +102,7 @@ void displayUpdate(){
 		nummersTeller = 0;
 		int naald = egtePos2displayPos(karPosFilter);//int naald = egtePos2displayPos(karPos);
 		int target = egtePos2displayPos(targetNummerPos);
-		int sensor = egtePos2displayPos(sensorPos);
+		int sensor = egtePos2displayPos(trackSensorPos);
 		int sensorMaxBerijk = egtePos2displayPos(ELPEE_PLAAT_BEGIN - SENSOR_OFFSET)  +  3;
 		int plaatGroote = egtePos2displayPos(plaatBegin);
 
@@ -268,22 +266,23 @@ void displayUpdate(){
 		
 
 		//--------------------------------------------------------------RPM
-		else if(rpmDisplayActie.sinds() < 2000){
+		else if(rpmDisplayActie.sinds() < 2000)
+    {
 
-			float blokken = 0;
+			// float blokken = 0;
 
-			if(rpmStaat == R33){
-				blokken = 3;//3.33;
-			}  
-			else if(rpmStaat == R45){
-				blokken = 4;//4.5;
-			}
-			else if(rpmStaat == AUTO){
-				blokken = 1;//4.5;
-			} 
+			// if(rpmStaat == R33){
+			// 	blokken = 3;//3.33;
+			// }  
+			// else if(rpmStaat == R45){
+			// 	blokken = 4;//4.5;
+			// }
+			// else if(rpmStaat == AUTO){
+			// 	blokken = 1;//4.5;
+			// } 
 
 			float blokBreedte = 0.1 * displayLengte;
-			float totaleBreedte = blokBreedte * blokken;
+			float totaleBreedte = blokBreedte * rpm.rpm2blokken();
 			float halveBreedte = totaleBreedte / 2;
 			float beginPos = dispHalf - halveBreedte;
 			float eindPos = dispHalf + halveBreedte;

@@ -142,8 +142,9 @@ bool isKnopTerugspoel(int knop){
 
 
 
-void knopLogica(int knop){
-	if( knopStaat[knop] == LOSGELATEN   &&    knopIn[knop] == INGEDRUKT ){//-------------------------------------------------------------KORT INGEDRUKT
+void knopLogica(int knop)
+{
+	if( knopStaat[knop] == LOSGELATEN && knopIn[knop] == INGEDRUKT ){//-------------------------------------------------------------KORT INGEDRUKT
 		knopStaat[knop] = INGEDRUKT;
 		
 		knopAlleInterval.reset();
@@ -153,7 +154,7 @@ void knopLogica(int knop){
 		
 		knopLog( knop, " in ");
 		
-		if( staat == S_SCHOONMAAK ){//   SCHOONMAAK STAND STOPPEN
+		if( staat == S_SCHOONMAAK ){	//	SCHOONMAAK STAND STOPPEN
 			stoppen();
 			// ledBlink();  //led blink
 		}
@@ -162,7 +163,7 @@ void knopLogica(int knop){
 	
 	
   //----------------------------------------------------KORT LOSGELATEN
-	if( knopStaat[knop] == INGEDRUKT    &&    knopIn[knop] == LOSGELATEN )
+	if( knopStaat[knop] == INGEDRUKT && knopIn[knop] == LOSGELATEN )
   {
 		knopStaat[knop] = LOSGELATEN;
 		knopAlleInterval.reset();
@@ -194,9 +195,10 @@ void knopLogica(int knop){
     {
 			if(staat == S_HOK)
       {
-				if(rpmStaat == AUTO) { rpmStaat = R33; }
-				else if(rpmStaat == R33) { rpmStaat = R45; }
-				else { rpmStaat = AUTO; }
+        rpm.switchUserRpm();  // toggle through AUTO-R33-R45...AUTO
+				// if(rpmStaat == AUTO) { rpmStaat = R33; }
+				// else if(rpmStaat == R33) { rpmStaat = R45; }
+				// else { rpmStaat = AUTO; }
 
 				updatePlateauRpm();
 				rpmDisplayActie.reset();
@@ -210,7 +212,7 @@ void knopLogica(int knop){
 	
 	
 	
-	if( knopStaat[knop] == INGEDRUKT    &&    millis() - knopInterval[knop]  >  KNOP_LANG ){//------------------------------------------LANG INGEDRUKT
+	if( knopStaat[knop] == INGEDRUKT && millis() - knopInterval[knop] > KNOP_LANG ){//------------------------------------------LANG INGEDRUKT
 		knopStaat[knop] = LANG_INGEDRUKT;
 		knopAlleInterval.reset();
 
@@ -219,11 +221,11 @@ void knopLogica(int knop){
 
 		
 		
-		if( (staat == S_SPELEN  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)  &&   isKnopDoorspoel(knop)){ //      >> DOOR SPOELEN
+		if( (staat == S_SPELEN || staat == S_PAUZE || staat == S_NAAR_NUMMER) && isKnopDoorspoel(knop)){ //      >> DOOR SPOELEN
 			setStaat( S_DOOR_SPOELEN );
 		}
 
-		if( (staat == S_SPELEN  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)   &&   isKnopTerugspoel(knop)){//      << TERUG SPOELEN
+		if( (staat == S_SPELEN || staat == S_PAUZE || staat == S_NAAR_NUMMER) && isKnopTerugspoel(knop)){//      << TERUG SPOELEN
 			setStaat( S_TERUG_SPOELEN );
 		}
 
@@ -234,7 +236,7 @@ void knopLogica(int knop){
 		if(knop == KNOP_PLAY){
 			if(staat == S_HOK){
 				spelen();
-			}else{                                 
+			}else{
 				stoppen();
 			}
 		}
@@ -265,7 +267,7 @@ void knopLogica(int knop){
 	
 	
 	
-	if( knopStaat[knop] == LANG_INGEDRUKT    &&    millis() - knopInterval[knop]  >  KNOP_SUPER_LANG ){//--------------SUPER LANG INGEDRUKT
+	if( knopStaat[knop] == LANG_INGEDRUKT && millis() - knopInterval[knop]  >  KNOP_SUPER_LANG ){//--------------SUPER LANG INGEDRUKT
 		knopStaat[knop] = SUPER_LANG_INGEDRUKT;
 		knopAlleInterval.reset();   //led blink
 		
@@ -287,14 +289,15 @@ void knopLogica(int knop){
 	
 	
 	
-	if( knopStaat[knop] == SUPER_LANG_INGEDRUKT  &&    knopIn[knop] == LOSGELATEN ){//-------------------------------------------------SUPER LANG LOSGELATEN
+	if( knopStaat[knop] == SUPER_LANG_INGEDRUKT && knopIn[knop] == LOSGELATEN ){//-------------------------------------------------SUPER LANG LOSGELATEN
 		knopStaat[knop] = LOSGELATEN;
 		knopAlleInterval.reset();  //led blink
 		
-		knopLog(  knop, " super lang los ");
+		knopLog(knop, " super lang los ");
 		
 		
-		if(  (  staat == S_DOOR_SPOELEN   ||   staat == S_TERUG_SPOELEN  )  &&  (  knop == KNOP_DOORSPOEL  ||  knop == KNOP_TERUGSPOEL  )  ){//WEER BEGINNEN NA SPOELEN
+		if((staat == S_DOOR_SPOELEN || staat == S_TERUG_SPOELEN) && 
+			 (knop == KNOP_DOORSPOEL || knop == KNOP_TERUGSPOEL)  ){//WEER BEGINNEN NA SPOELEN
 			targetNummerPos = karPos;
 			setStaat(S_UITROLLEN_NA_SPOELEN);
 		}
@@ -345,7 +348,7 @@ void knoppenUpdate(){
 			if(potVal > potValPrev){
 				potValPrev += AMAX;
 			}else{
-				potValPrev -= AMAX;        
+				potValPrev -= AMAX;
 			}
 		}
 
@@ -369,27 +372,28 @@ void knoppenUpdate(){
 
 			if(staat == S_SCHOONMAAK){
 				arm.targetGewicht += riemDiv / 1.5;
-				arm.targetGewicht = limieteerF(arm.targetGewicht, MIN_ARMGEWICHT, MAX_ARMGEWICHT);
+				arm.targetGewicht = limitF(arm.targetGewicht, MIN_ARMGEWICHT, MAX_ARMGEWICHT);
 			}
 
 			else if(staat == S_CALIBREER){
 				arm.armKracht += riemDiv * 0.5;
-				arm.armKracht = limieteerF(arm.armKracht, 0, 1);
+				arm.armKracht = limitF(arm.armKracht, 0, 1);
 				
 			}
 
 			else if(staat == S_PAUZE){
 				targetNummerPos -= riemDiv * 20;
-				targetNummerPos = limieteerF(targetNummerPos, PLAAT_EINDE, plaatBegin);      
+				targetNummerPos = limitF(targetNummerPos, PLAAT_EINDE, plaatBegin);
 			}
 		
 			else{
-				if(staat != S_DOOR_SPOELEN   &&  staat != S_TERUG_SPOELEN   &&  staat != S_NAAR_NUMMER   &&  staat != S_PAUZE){ //zodat niet volume oppopt na een knop indruk met een doorspoel ofzo
+				if(staat != S_DOOR_SPOELEN && staat != S_TERUG_SPOELEN && 
+					 staat != S_NAAR_NUMMER &&  staat != S_PAUZE){ //zodat niet volume oppopt na een knop indruk met een doorspoel ofzo
 					volumeDisplayActie.reset();
 				}
 				
 				volume += round(riemDiv * 66);
-				volume = limieteerI(volume, 0, 63);        
+				volume = limitInt(volume, 0, 63);
 			}
 		}
 		
@@ -401,27 +405,6 @@ void knoppenUpdate(){
 
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
