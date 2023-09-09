@@ -264,6 +264,11 @@ void checkenVoorCommando(int info){
 	infoPrintln(info);
 	if(checkZinInt("SSN", "strobo.sampleNum", info, strobo.sampleNum)){return;}
 	if(checkZinBool("SOC", "strobo.onbalansCompAan", info, strobo.onbalansCompAan)){return;}
+
+  if(checkZinInt("SHVA", "strobo.harmVerschuiving[1]", info, strobo.harmVerschuiving[1])){return;}
+  if(checkZinInt("SHVB", "strobo.harmVerschuiving[2]", info, strobo.harmVerschuiving[2])){return;}
+  if(checkZinInt("SHVC", "strobo.harmVerschuiving[3]", info, strobo.harmVerschuiving[3])){return;}
+
   if(checkZinInt("SOFH", "strobo.onbalansHarm", info, strobo.onbalansHarm)){return;}
 	if(checkZinInt("SOF", "strobo.onbalansFase", info, strobo.onbalansFase)){return;}
 	if(checkZinFloat("SOG", "strobo.onbalansCompGewicht", info, strobo.onbalansCompGewicht)){return;}
@@ -328,8 +333,11 @@ void checkenVoorCommando(int info){
 		// orientatie.print();
 		// Serial.println();
 
-		Serial.println("strobo.onbalansFase: " + String(strobo.onbalansFase));
-    Serial.println("strobo.onbalansHarm: " + String(strobo.onbalansHarm));
+		// Serial.println("strobo.onbalansFase: " + String(strobo.onbalansFase));
+    // Serial.println("strobo.onbalansHarm: " + String(strobo.onbalansHarm));
+    Serial.println("strobo.harmVerschuiving[1]" + String(strobo.harmVerschuiving[1]));
+    Serial.println("strobo.harmVerschuiving[2]" + String(strobo.harmVerschuiving[2]));
+    Serial.println("strobo.harmVerschuiving[3]" + String(strobo.harmVerschuiving[3]));
 		Serial.println("strobo.sampleNum: " + String(strobo.sampleNum));
 		// Serial.println();
 
@@ -373,20 +381,36 @@ void serieelFunc(){
       Serial.print(", ");
 			Serial.print(strobo.vaart, 3);
       Serial.print(", ");
-			Serial.print(strobo.vaartLowPass, 3);
+			Serial.print((float)strobo.teller / strobo.pulsenPerRev, 3);
+      // Serial.print(", ");
+			// Serial.print(strobo.vaartLowPass, 3);
 			
 
 
-			Serial.print(", ");
-			Serial.print(strobo.vaartCenterComp - targetRpm, 3);
+			// Serial.print(", ");
+			// Serial.print(strobo.vaartCenterComp - targetRpm, 3);
+
+      Serial.print(", ");
+			Serial.print(strobo.onbalansSinTotaal[1], 3);
+      Serial.print(", ");
+			Serial.print(strobo.onbalansCosTotaal[1], 3);
+      Serial.print(", ");
+			Serial.print(strobo.onbalansSinTotaal[2], 3);
+      Serial.print(", ");
+			Serial.print(strobo.onbalansCosTotaal[2], 3);
+      Serial.print(", ");
+			Serial.print(strobo.onbalansSinTotaal[3], 3);
+      Serial.print(", ");
+			Serial.print(strobo.onbalansCosTotaal[3], 3);
+      
 
 
 			// Serial.print(", ");
 			// Serial.print(strobo.vaartLowPass - targetRpm, 3);
       // Serial.print(", ");
 			// Serial.print(strobo.lowpassRect, 3);
-      Serial.print(", ");
-			Serial.print(strobo.wow, 3);
+      // Serial.print(", ");
+			// Serial.print(strobo.wow, 3);
 
       // Serial.print(", ");
 			// Serial.print(strobo.vaartHighPass, 3);
