@@ -29,11 +29,14 @@ void serieelFunc(){
       Serial.print(strobo.teller);
 
       Serial.print(", ");
-      // Serial.print(strobo.plateauComp, 4);
       Serial.print(strobo.preComp, 4);
 
       Serial.print(", ");
-      Serial.print(strobo.plateauCompFourier, 4);
+      Serial.print(strobo.mean, 4);
+
+      Serial.print(", ");
+      Serial.print(strobo.plateauComp, 4);
+      // Serial.print(strobo.plateauCompFourier, 4);
 
 
       Serial.print(", ");

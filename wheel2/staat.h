@@ -1,132 +1,5 @@
 
 
-float autoRpm;
-
-
-
-float basis = 0;
-
-
-
-
-enum rpmStaats{
-  AUTO,
-  R33,
-  R45,
-  R78
-};
-
-
-enum rpmStaats rpmStaat = AUTO;
-
-
-
-
-
-
-void updatePlateauRpm(){
-  if(!plateauAan){
-    return;    
-  }
-
-  if(rpmStaat == AUTO){
-    targetRpm = autoRpm;
-    return;
-  }
-  if(rpmStaat == R33){
-    targetRpm = rpm33;
-    return;
-  }
-  if(rpmStaat == R45){
-    targetRpm = rpm45;
-    return;
-  }
-}
-
-
-
-
-
-void setPlateauRpm(float rpm){
-  if(rpm == targetRpm){return;}//als er nisk veranderd is, hoeft er niks gerestet te worden
-  autoRpm = rpm;
-
-  updatePlateauRpm();
-  // updatePlateauPID();
-  Serial.println("setPlateauRpm() reset");
-  strobo.clearCompSamples();
-  draaienInterval.reset();
-  // opsnelheid = false;
-}
-
-
-
-
-
-
-void plateauDraaien(){
-  plateauAan = true;
-  setPlateauRpm(rpm33);
-
-  basis = 0.5;
-  
-  // strobo.clearCompSamples();
-  // draaienInterval.reset();
-  
-  Serial.println("plateauStart()");
-}
-
-
-
-
-
-
-void plateauStoppen(){
-  plateauAan = false;
-  targetRpm = 0;
-  draaienInterval.reset();
-  uitdraaien = true;
-  opsnelheid = false;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-float nummers[20];// = {0.2, 0.3, 0.6, 0.68, 0.85}; //staat nu in staat.h
-int hoeveelNummers = 0;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 enum staats{
   
@@ -139,13 +12,13 @@ enum staats{
   S_NAAR_HOK,
   S_HOMEN_VOOR_SPELEN,
   
-  S_BEGINNEN_SPELEN,
-  S_PLAAT_AANWEZIG,
+  // S_BEGINNEN_SPELEN,
+  // S_PLAAT_AANWEZIG,
   
   S_NAAR_BEGIN_PLAAT,
   // S_BEGIN_PLAAT,
   // S_SPELEN,
-  S_PLAAT_DIAMETER_METEN,
+  // S_PLAAT_DIAMETER_METEN,
   S_NAALD_EROP,
 
 
@@ -188,11 +61,11 @@ String printStaat(int s){
   if( s == S_HOMEN_GEFAALD        ){ return "HOMEN_GEFAALD";}
 
 
-  if( s == S_BEGINNEN_SPELEN      ){ return "BEGINNEN_SPELEN";}
+  // if( s == S_BEGINNEN_SPELEN      ){ return "BEGINNEN_SPELEN";}
   if( s == S_HOMEN_VOOR_SPELEN    ){ return "HOMEN_VOOR_SPELEN";}
-  if( s == S_PLAAT_AANWEZIG       ){ return "PLAAT_AANWEZIG";}
+  // if( s == S_PLAAT_AANWEZIG       ){ return "PLAAT_AANWEZIG";}
   if( s == S_NAAR_BEGIN_PLAAT     ){ return "NAAR_BEGIN_PLAAT";}
-  if( s == S_PLAAT_DIAMETER_METEN ){ return "PLAAT_DIAMETER_METEN";}
+  // if( s == S_PLAAT_DIAMETER_METEN ){ return "PLAAT_DIAMETER_METEN";}
   // if( s == S_BEGIN_PLAAT          ){ return "BEGIN_PLAAT";}
   // if( s == S_SPELEN               ){ return "SPELEN";}
   if( s == S_NAALD_EROP           ){ return "NAALD_EROP";}
@@ -222,12 +95,6 @@ String printStaat(int s){
 
 
 
-
-
-
-
-
-
 void setStaat(enum staats s){
   staatVeranderd.reset();
   // karRemmen = false;
@@ -236,34 +103,6 @@ void setStaat(enum staats s){
 
   staat = s; // set staat
 }
-
-
-
-
-
-
-void stoppen(){
-  setStaat(S_STOPPEN);
-  plateauStoppen();
-}
-
-
-
-void spelen(){
-  setStaat(S_HOMEN_VOOR_SPELEN);
-  plateauDraaien();
-}
-
-
-
-// void naaldErop(){
-  // setStaat(S_NAALD_EROP);
-// }
-
-
-
-
-
 
 
 

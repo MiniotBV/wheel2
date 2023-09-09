@@ -54,13 +54,15 @@ void displayPrint(float tijd){
     
     // gpio_put(displayIN, displayData[i] >  tijd ? 1 : 0);
 
-    int pix = (displayLengte - 1) - i;//flip display   
+    int pix = i;
+    if(!orientatie.isStaand){
+      pix = (displayLengte - 1) - pix;//flip display   
+    }
     pix = (pix + 7) - ((pix % 8) * 2);//flip byte
     
     
-    gpio_put(displayIN, displayData[pix] >  tijd ? 1 : 0);//flip byte
+    gpio_put(displayIN, displayData[pix] >  tijd ? 1 : 0);
 
-    // gpio_put(displayIN, (i%16) != 0);//flip byte
 
     gpio_put(displayKLOK, 1);
     gpio_put(displayKLOK, 0);
@@ -107,7 +109,7 @@ void displayUpdate(){
 
 
 
-
+    //----------------------------------------------------------------SCHOONMAAK STAND
     if(staat == S_SCHOONMAAK){
       float verdeelPuntTeller = 0;
 
@@ -144,7 +146,7 @@ void displayUpdate(){
 
 
 
-
+    //-------------------------------------------------------------------------WATER PAS STAND
     else if(staat == S_FOUTE_ORIENTATIE){
       float verdeelPuntTeller = 0;
 
@@ -173,7 +175,7 @@ void displayUpdate(){
 
     
 
-
+    //--------------------------------------------------------------RPM
     else if(rpmDisplayActie.sinds() < 2000){
 
       float blokken = 0;
@@ -209,6 +211,7 @@ void displayUpdate(){
     }
 
 
+    //------------------------------------------------------------------------VOLUME
     else if(volumeDisplayActie.sinds() < 2000){
       for(int i = 0; i < displayLengte; i++){
         displayData[i] = 0;          
@@ -222,6 +225,7 @@ void displayUpdate(){
     }
     
     
+    //-----------------------------------------------------------------------------TRACK EN KAR DISPLAY
     else{
       for(int i = 0; i < displayLengte; i++){
 
@@ -274,7 +278,7 @@ void displayUpdate(){
     }
 
 
-
+    //-----------------------------------------------------------KNOP BLINK
     if(ledBlinkInterval.sinds() < 50){
       
       int knopGroote = 2;//0.01 * displayLengte;
@@ -287,13 +291,13 @@ void displayUpdate(){
         }
       }
 
-      if(knopStaat[KNOP_DOORSPOEL] != LOSGELATEN){
+      if(knopStaat[gecompenseerdeDoorspoel()] != LOSGELATEN){
         for(int i = dispHalf - knopUitMidden - knopGroote; i < dispHalf - knopUitMidden; i++){
           displayData[i] = 0.9;
         }
       }
 
-      if(knopStaat[KNOP_TERUGSPOEL] != LOSGELATEN){
+      if(knopStaat[gecompenseerdeTerugspoel()] != LOSGELATEN){
         for(int i = dispHalf + knopUitMidden; i < dispHalf + knopUitMidden + knopGroote; i++){
           displayData[i] = 0.9;
         }

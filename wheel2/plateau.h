@@ -1,12 +1,4 @@
-
-
 bool plateauLogica = true;
-
-// float targetRpm = 0;//staat nu in compVaartSensor.h
-
-
-float uitBuff;
-
 
 
 
@@ -32,6 +24,112 @@ float plateauI = 0.03;//plateau33I;
 float plateauD = 0;
 
 
+float basis = 0;
+float uitBuff;
+
+
+
+
+
+
+enum rpmStaats{
+  AUTO,
+  R33,
+  R45,
+  R78
+};
+
+
+enum rpmStaats rpmStaat = AUTO;
+
+
+
+
+float autoRpm;
+
+void updatePlateauRpm(){
+  if(!plateauAan){
+    return;    
+  }
+
+  if(rpmStaat == AUTO){
+    targetRpm = autoRpm;
+    return;
+  }
+  if(rpmStaat == R33){
+    targetRpm = rpm33;
+    return;
+  }
+  if(rpmStaat == R45){
+    targetRpm = rpm45;
+    return;
+  }
+}
+
+
+
+
+
+void setPlateauRpm(float rpm){
+  if(rpm == targetRpm){return;}//als er nisk veranderd is, hoeft er niks gerestet te worden
+  autoRpm = rpm;
+
+  updatePlateauRpm();
+  
+  Serial.println("setPlateauRpm() reset");
+  strobo.clearCompSamples();
+  draaienInterval.reset();
+  // opsnelheid = false;
+}
+
+
+
+
+
+
+void plateauDraaien(){
+  plateauAan = true;
+  setPlateauRpm(rpm33);
+
+  basis = 0.5;
+  
+  // strobo.clearCompSamples();
+  // draaienInterval.reset();
+  
+  Serial.println("plateauStart()");
+}
+
+
+
+
+
+
+void plateauStoppen(){
+  plateauAan = false;
+  targetRpm = 0;
+  draaienInterval.reset();
+  uitdraaien = true;
+  opsnelheid = false;
+}
+
+
+
+
+
+
+void stoppen(){
+  setStaat(S_STOPPEN);
+  plateauStoppen();
+}
+
+
+
+void spelen(){
+  setStaat(S_HOMEN_VOOR_SPELEN);
+  plateauDraaien();
+}
+
+
 
 void plateauInit(){
   setPwm(motorP);
@@ -39,28 +137,6 @@ void plateauInit(){
 }
 
 
-
-
-
-void updatePlateauPID(){
-  // if(staat == S_NAALD_EROP){
-  //   if(isPlaatOngeveer7Inch()){
-  //     plateauP = plateau45P;
-  //     plateauI = plateau45I;
-  //     Serial.println("hallo 45");
-  //     return;
-  //   }
-
-  //   plateauP = plateau33P;
-  //   plateauI = plateau33I;
-  //    Serial.println("hallo 33");
-  //   return;
-  // }
-
-  // Serial.println("hallo Rust");
-  // plateauP = plateauRustP;
-  // plateauI = plateauRustI;
-}
 
 
 
@@ -81,7 +157,7 @@ float pid(float rpmIn){
   double uit = (targetRpm - rpmIn) * plateauP;
   uit = limieteerF(uit, -1, 1);
   basis += uit * plateauI;            //breng basis voltage naar gemiddelde voor de juiste snelheid
-  basis = limieteerF(basis, -1, 1);
+  basis = limieteerF(basis, 0.5, 1);
   
   return  limieteerF(uit + basis,  -1,  1);
 }
@@ -173,7 +249,7 @@ void plateauFunc(){
     float vaart = strobo.glad;
     
     // if(strobo.compMeten){
-    vaart += (1/plateauP) * (strobo.plateauComp/100);
+    // vaart += (1/plateauP) * (strobo.plateauComp/100);
     // }
     
 
@@ -181,6 +257,7 @@ void plateauFunc(){
 
 
       uitBuff = pid(vaart);//                  bereken motor kracht
+      uitBuff += strobo.plateauComp / 100;
       
       pwmFase(uitBuff, motorP, motorN, false);
       

@@ -115,6 +115,27 @@ bool beweegKarNaarPos(float target, float snelheid){
 
 
 
+bool decelereerKar(){
+
+  int richting = karSnelHeid > 0 ? 1 : -1;
+
+  if(abs(karSnelHeid) < KAR_VERSNELLING){
+    karSnelHeid = 0;
+    return true;
+  }
+
+  versnelling = -KAR_VERSNELLING * richting;
+  
+  karPos += karSnelHeid + (versnelling / 2);
+
+  karSnelHeid += versnelling;
+
+  return false;
+}
+
+
+
+
 void karNoodStop(){
   karSnelHeid = 0;
 }
@@ -135,6 +156,9 @@ void armHoekCalibreer(){
 
 
 
+
+
+
 void gaNaarNummer(float pos){
   targetNummerPos = pos;
   Serial.print("naarpos:");
@@ -145,9 +169,12 @@ void gaNaarNummer(float pos){
 
 
 
+float nummers[100];// = {0.2, 0.3, 0.6, 0.68, 0.85}; //staat nu in staat.h
+int hoeveelNummers = 0;
 
 
 
+#define NUMMER_TERUG_OPFSET 2 //hoeveel mm kan de kar bewegen voor er terug gespoeld kan worden naar het begin van het nummer ipv naar een vorrig nummer
 
 void naarVorrigNummer(){
   if(hoeveelNummers < 2){// als er 1 nummer is is dat ook te weinig
@@ -163,12 +190,16 @@ void naarVorrigNummer(){
 
   int nummer = 0;
 
-  while(pos + 2 >= nummers[nummer]){
+  while(pos + NUMMER_TERUG_OPFSET >= nummers[nummer]){
     nummer++;
     if(nummer > hoeveelNummers - 1){
       gaNaarNummer(plaatBegin);
       return;
     }
+  }
+
+  if(nummers[nummer] > plaatBegin){
+    gaNaarNummer(plaatBegin);
   }
 
   gaNaarNummer(nummers[nummer]);
@@ -260,7 +291,7 @@ void pauze(){
 void staatDingen(){
   
   if(staat == S_STOPPEN){
-    if(naaldEraf()){
+    if(naaldEraf() && decelereerKar()){
       setStaat(S_NAAR_HOK);
     }
     return;
@@ -298,7 +329,7 @@ void staatDingen(){
       karNoodStop();
 
       if(staat == S_HOMEN_VOOR_SPELEN){
-        setStaat(S_BEGINNEN_SPELEN);
+        setStaat(S_NAAR_BEGIN_PLAAT);
       }else{
         setStaat(S_PARKEREN);
       }
@@ -347,12 +378,17 @@ void staatDingen(){
 
 
 
-  if(staat == S_BEGINNEN_SPELEN){
-    if( beweegKarNaarPos(PLAAT_EINDE + SENSOR_OFFSET,   KAR_MAX_SNELHEID)  ){ 
-      setStaat(S_PLAAT_AANWEZIG);
-    }
-    return;
-  }
+  // if(staat == S_PLAAT_AANWEZIG){
+  //   if( beweegKarNaarPos(PLAAT_EINDE + SENSOR_OFFSET,   KAR_MAX_SNELHEID)  ){
+  //     if(plaatAanwezig){
+  //       setStaat(S_NAAR_BEGIN_PLAAT);
+  //       return;
+  //     }
+  //     stoppen();
+  //     return;
+  //   }
+  //   return;
+  // }
 
 
 
@@ -368,16 +404,27 @@ void staatDingen(){
       
       if(plaatBegin == 1000){    // voer maar 1 keer uit
         plaatBegin = karPos - SENSOR_OFFSET;
+        Serial.println("plaatDia: " + String((plaatBegin / 25.4)*2) + "\"");
 
+        if(karPos < 60){
+          stoppen();
+          return;
+        
+        }
+        
         if(isPlaatOngeveer7Inch()){//isOngeveer(inchDia, 7, 1)){
           Serial.print("±7\" ");
           setPlateauRpm(rpm45);
           plaatBegin = SINGLETJE_PLAAT_BEGIN;
+          // return;
+        
         }else{
-          setPlateauRpm(rpm33);
+          
         }
-        Serial.println("plaatDia: " + String((plaatBegin / 25.4)*2) + "\"");
-        return;
+        
+        setPlateauRpm(rpm33);
+        
+        // return;
       }
       
       if(beweegKarNaarPos(plaatBegin, KAR_MAX_SNELHEID)){ 

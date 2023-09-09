@@ -122,6 +122,31 @@ void getKnopData(){
 
 
 
+int gecompenseerdeDoorspoel(){
+  if(orientatie.isStaand){
+    return KNOP_TERUGSPOEL;
+  }
+  return KNOP_DOORSPOEL;  
+}
+
+int gecompenseerdeTerugspoel(){
+  if(orientatie.isStaand){
+    return KNOP_DOORSPOEL;
+  }
+  return KNOP_TERUGSPOEL;
+}
+
+bool isKnopDoorspoel(int knop){
+  return knop == gecompenseerdeDoorspoel();
+}
+
+bool isKnopTerugspoel(int knop){
+  return knop == gecompenseerdeTerugspoel();
+}
+
+
+
+
 
 
 
@@ -164,20 +189,18 @@ void knoppenUpdate(){
         
         knopLog( knop, " los ");
         
-        if(knop == KNOP_DOORSPOEL){
+        if(isKnopDoorspoel(knop)){
           
           if( (staat == S_NAALD_EROP  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)){
             naarVolgendNummer();
-            // ledBlink();  //led blink
           }
         }
 
 
-        if(knop == KNOP_TERUGSPOEL){
+        if(isKnopTerugspoel(knop)){
 
           if( (staat == S_NAALD_EROP  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)){
             naarVorrigNummer();
-            // ledBlink();  //led blink
           }
         }
 
@@ -185,13 +208,11 @@ void knoppenUpdate(){
         if(knop == KNOP_PLAY){
           if(staat == S_PAUZE  ||  staat == S_NAALD_EROP){
             pauze();
-            // ledBlink();  //led blink
           
 
 
           }else if(staat == S_HOK){
             spelen();
-            // ledBlink();  //led blink
           }
         }
 
@@ -229,14 +250,12 @@ void knoppenUpdate(){
 
         
         
-        if( (staat == S_NAALD_EROP  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)  &&   knop == KNOP_DOORSPOEL){ //      >> DOOR SPOELEN
+        if( (staat == S_NAALD_EROP  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)  &&   isKnopDoorspoel(knop)){ //      >> DOOR SPOELEN
           setStaat( S_DOOR_SPOELEN );
-          // ledBlink();  //led blink
         }
 
-        if( (staat == S_NAALD_EROP  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)   &&   knop == KNOP_TERUGSPOEL){//      << TERUG SPOELEN
+        if( (staat == S_NAALD_EROP  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)   &&   isKnopTerugspoel(knop)){//      << TERUG SPOELEN
           setStaat( S_TERUG_SPOELEN );
-          // ledBlink();  //led blink
         }
 
         
@@ -246,10 +265,8 @@ void knoppenUpdate(){
         if(knop == KNOP_PLAY){
           if(staat == S_HOK){//         SPELEN
             spelen();//                       SPELEN
-            // ledBlink();  //                  led blink
           }else{                                 
             stoppen();
-            // ledBlink();  //                  led blink
           }
         }
       }
@@ -284,7 +301,6 @@ void knoppenUpdate(){
 
         if(  staat == S_HOK  &&  knop == KNOP_TERUGSPOEL  ){//               NAALD TEST STAND
           setStaat( S_SCHOONMAAK );
-          // ledBlink();  //led blink
         }
       }
       
@@ -300,7 +316,6 @@ void knoppenUpdate(){
         
         if(  (  staat == S_DOOR_SPOELEN   ||   staat == S_TERUG_SPOELEN  )  &&  (  knop == KNOP_DOORSPOEL  ||  knop == KNOP_TERUGSPOEL  )  ){//WEER BEGINNEN NA SPOELEN
           setStaat(S_NAALD_EROP);
-          // ledBlink();  //led blink
         }
       }
       

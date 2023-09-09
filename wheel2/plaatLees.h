@@ -242,24 +242,7 @@ void plaatLeesFunc(){
       scannenVoorTracks();
       return;
     }
-
-
-
-
-
-    if(staat == S_PLAAT_AANWEZIG){
-      if(staatVeranderd.sinds() > 1000){
-        if(plaatAanwezig){
-          armHoekCalibreer();
-          setStaat(S_NAAR_BEGIN_PLAAT);
-          // plateauDraaien();
-        }else{
-          stoppen();
-        }
-      }
-    }
-
-
+    
   }
 }
 

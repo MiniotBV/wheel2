@@ -7,6 +7,11 @@ bool uitdraaien;
 Interval draaienInterval(10, MILLIS);
 
 
+
+
+
+
+
 #define sampleMax 65500               //samples
 
 
@@ -74,7 +79,7 @@ class COMPVAART{
     int pulsenPerRev;
     int teller = 0;
 
-    int faseVerschuiving = 180;//90;  50 voor singletjes
+    int faseVerschuiving = 90;//180;//90;  50 voor singletjes
     float plateauCompensatie[1000];
     bool compMeten = true;
     float preComp = 0;
@@ -83,12 +88,15 @@ class COMPVAART{
     float compVerval = 1.0;//0.6;//0.8;
     float compVermenigvuldiging = 0.8;
 
+    float meanWaardehouder;
+    float vorrigeWaarde;
+    float mean;
 
     float sinTotaal[10];
     float cosTotaal[10];
     float sinWaardes[10][1000];
     float cosWaardes[10][1000];
-    int harmonisen = 3;
+    int harmonisen = 2;
     volatile float plateauCompFourier = 0;
 
 
@@ -180,7 +188,17 @@ class COMPVAART{
       
       // plateauCompensatie[teller] += ( glad - targetRpm ) / 4;
       
-      if(compMeten && opsnelheid && plateauAan && draaienInterval.sinds() > 1000){
+      if( compMeten && 
+          plateauAan && 
+          draaienInterval.sinds() > 1000 &&
+          opsnelheid &&           
+          (staat == S_HOMEN_VOOR_SPELEN ||
+          // staat == S_BEGINNEN_SPELEN ||
+          // staat == S_PLAAT_AANWEZIG ||
+          staat == S_NAAR_BEGIN_PLAAT || 
+          staat == S_NAALD_EROP)
+     
+      ){ 
         if(isOngeveer(glad, targetRpm, 10)){
           plateauCompensatie[teller] += ( glad - targetRpm ) * compVermenigvuldiging; 
         }
@@ -190,13 +208,19 @@ class COMPVAART{
       // plateauCompensatie[teller] *= compVerval;
       // plateauCompensatie[teller] = vorrigeWaarde + ((plateauCompensatie[teller] - vorrigeWaarde) / compFilter);
 
-      // plateauComp = plateauCompensatie[rondTrip(teller + faseVerschuiving,  pulsenPerRev)];
+      // plateauComp = -plateauCompensatie[rondTrip(teller + faseVerschuiving,  pulsenPerRev)];
 
       preComp = plateauCompensatie[teller];
       float nieuweWaarde = plateauCompensatie[teller];
       plateauCompFourier = 0;
       float radialen = ( teller / (float)pulsenPerRev ) * (PI*2);
       float faseShiftRad = ( faseVerschuiving / (float)pulsenPerRev ) * (PI*2);
+
+      meanWaardehouder -= vorrigeWaarde;
+      meanWaardehouder += nieuweWaarde;
+      vorrigeWaarde = nieuweWaarde;
+
+      mean = meanWaardehouder / (float)pulsenPerRev;
 
       for(int harm = 1; harm < harmonisen + 1; harm++){
         sinTotaal[harm] -= sinWaardes[harm][teller];
@@ -207,13 +231,14 @@ class COMPVAART{
         cosWaardes[harm][teller] = cos(radialen * harm)  *  nieuweWaarde;
         cosTotaal[harm] += cosWaardes[harm][teller];
 
-        float hoek = (radialen * harm) + (faseShiftRad);// / harm);
+        // float hoek = (radialen * harm) + (faseShiftRad / harm);
+        float hoek = (radialen * harm) + (faseShiftRad);
         plateauCompFourier += ( sin(hoek) * sinTotaal[harm] ) / pulsenPerRev;        
         plateauCompFourier += ( cos(hoek) * cosTotaal[harm] ) / pulsenPerRev;
       }
 
 
-      plateauComp = plateauCompFourier;//plateauCompensatie[rondTrip(teller + faseVerschuiving,  pulsenPerRev)];
+      plateauComp = -plateauCompFourier;//plateauCompensatie[rondTrip(teller + faseVerschuiving,  pulsenPerRev)];
     }
 
 
@@ -236,6 +261,8 @@ class COMPVAART{
           sinWaardes[harm][i] = 0;
         }        
       }
+
+      meanWaardehouder = 0;
     }
 
 

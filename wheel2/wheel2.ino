@@ -14,7 +14,6 @@
 
 
 bool eepromShit = false;
-// #include <LittleFS.h>
 
 #include "pwm.h"
 
@@ -25,7 +24,6 @@ bool eepromShit = false;
 
 #include "armMotor.h"
 
-// bool eepromPauze = false;
 
 bool enkeleCoreModus = true;
 bool audioFequencyMeten = false;
@@ -46,11 +44,6 @@ void enableInterupts(bool aan){
     // gpio_set_irq_enabled_with_callback(plateauA,   GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
   gpio_set_irq_enabled_with_callback(plateauB,   GPIO_IRQ_EDGE_RISE + GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
   gpio_set_irq_enabled_with_callback(plateauIndex,   GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
-
-    
-    // gpio_set_irq_enabled_with_callback(audioFreqPin,   GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
-    // gpio_set_irq_enabled_with_callback(audioFreqPin,   GPIO_IRQ_EDGE_RISE,  aan,   &gpio_callback);
-    // gpio_set_irq_enabled_with_callback(audioFreqPin,   GPIO_IRQ_EDGE_RISE + GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
 }
 
 void toggleAudioFreqMeting(){
@@ -59,6 +52,11 @@ void toggleAudioFreqMeting(){
   pinMode(audioFreqPin, INPUT);
   gpio_set_irq_enabled_with_callback(audioFreqPin,   GPIO_IRQ_EDGE_RISE,  audioFequencyMeten,   &gpio_callback);
 }
+
+
+
+#include "staat.h"
+
 
 #include "vaartSensor.h"
 // VAART calibratieToon(12, (60 / rpm33) * 1000); //1800
@@ -76,7 +74,7 @@ COMPVAART strobo(32, 720);//360); //elker 5ms is 11.4 samples en 22.75 per 10ms
 
 
 
-#include "staat.h"
+
 
 #include "plateau.h"
 
@@ -164,16 +162,6 @@ void core1Dingen(){
   knoppenUpdate();
 
   armFunc();
-
-  // if(eepromShit){
-  //   eepromShit = false;
-  //   Serial.println("coreslapen");
-  //   // delay(20);
-  //   busy_wait_ms(3000);
-    
-  // }
-
-
 }
 
 
@@ -217,9 +205,7 @@ void loop() {
 
   // staatFunc(); // zit in karFunc()
 
-  // pwmWriteF(ledWit, pow( ((sin( (PI*millis()) / 500.0 )+1)/2), 3) + plaatAanwezig);
-    // pwmWriteF(ledWit, pow( ((sin( (PI*millis()) / 500.0 )+1)/2), 3));
-  // pwmWriteF(ledWit, 0.5);
+  pwmWriteF(ledWit, plaatAanwezig);
 }
 
 
@@ -228,20 +214,9 @@ void loop() {
 
 
 
-
-bool encoderBezig = false;
-bool toonBezig = false;
-
-
 void gpio_callback(uint gpio, uint32_t events) {
-  // if(interruptBezig){return}
-  // interruptBezig = true;
-  if(!encoderBezig){
-    if( gpio == plateauA || gpio == plateauB){
-      // encoderBezig = true;
-      strobo.interrupt();
-      // encoderBezig = false;
-    }
+  if( gpio == plateauA || gpio == plateauB){
+    strobo.interrupt();
   }
   
   if(gpio == plateauIndex){
@@ -251,11 +226,5 @@ void gpio_callback(uint gpio, uint32_t events) {
   if(gpio == audioFreqPin){
     calibratieToon.interrupt();
   }
-
-  //   if(gpio == plaatStrobo){
-  //   calibratieToon.interrupt();
-  // }
-
-  // interruptBezig = false;
 }
 
