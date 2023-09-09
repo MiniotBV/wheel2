@@ -259,6 +259,7 @@ Interval plateauInt(5000, MICROS);
 void plateauFunc(){
 
 	if(plateauInt.loop()){
+    gpio_put(plateauEN, !gpio_get(plateauEN));
 
 		strobo.update();
 		float vaart = strobo.vaartCenterComp;//strobo.vaart;

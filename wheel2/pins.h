@@ -13,7 +13,7 @@
 // plateau encoder      
 #define plateauA                  8
 #define plateauB                  7
-#define plateauIndex              6
+#define plateauEN                 6
 
 // display
 

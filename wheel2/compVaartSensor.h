@@ -192,7 +192,7 @@ class COMPVAART
 			sensPrev = sens;
 
 			if(dirPrev != dir){
-        
+        // debug("strobo: richting veranderd");
 				clearOnbalansCompSamples();
 			}
 			dirPrev = dir;
@@ -202,7 +202,8 @@ class COMPVAART
 			interval = tijd - vaartInterval;
 			vaartInterval = tijd;
 			
-			if(interval > sampleMax){interval = sampleMax;}
+			if(interval > sampleMax){ interval = sampleMax;}//debug("strobo: puls te lang " + String(interval) + "us"); interval = sampleMax;}
+      // if(interval < 500){debug("strobo: puls te kort " + String(interval) + "us"); gpio_put(plateauEN, !gpio_get(plateauEN));  }//return;}
 
 			tellerRuw += dir;
       tellerSindsReset += dir;
@@ -325,11 +326,11 @@ class COMPVAART
 
       if(wow < 0.1 && wowEersteWeerLaag == true){
         wowEersteWeerLaag = false;
-        debug("loopt weer gelijk na: " + String(tellerSindsReset / float(pulsenPerRev)) + " omwentelingen");
-        debug("onbalansFase: " + String(onbalansFase));
-        debug("onbalansCompGewicht: " + String(onbalansCompGewicht));
-        debug("onbalansFilterBreedte: " + String(onbalansFilterBreedte));
-        debug("");
+        // debug("loopt weer gelijk na: " + String(tellerSindsReset / float(pulsenPerRev)) + " omwentelingen");
+        // debug("onbalansFase: " + String(onbalansFase));
+        // debug("onbalansCompGewicht: " + String(onbalansCompGewicht));
+        // debug("onbalansFilterBreedte: " + String(onbalansFilterBreedte));
+        // debug("");
         tellerSindsReset = 0;
       }
 

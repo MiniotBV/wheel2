@@ -3,7 +3,7 @@
 
 //https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json
 
-#define versie 149
+#define versie 151
   
 
 #include <stdio.h>
@@ -36,7 +36,7 @@ ArmMotor arm;
 void enableInterupts(bool aan){
 	pinMode(plateauA,     INPUT_PULLUP);
 	pinMode(plateauB,     INPUT_PULLUP);
-	// pinMode(plateauIndex, INPUT_PULLUP);
+	pinMode(plateauEN,    OUTPUT);
 
 	gpio_set_irq_enabled_with_callback(plateauA,   GPIO_IRQ_EDGE_RISE + GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
 	gpio_set_irq_enabled_with_callback(plateauB,   GPIO_IRQ_EDGE_RISE + GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
