@@ -360,7 +360,8 @@ class COMPVAART{
 
       // return (1000000 / gemiddeldeInterval())/4;  //  return totaal
       // return (((1000000.0 / gemiddelde)*60) / pulsenPerRev;  //  return totaal
-      return (((1000000.0 * 60) / inter)) / pulsenPerRev;  //  return totaal
+      return ((1000000.0 * 60) / inter) / pulsenPerRev;  //  return totaal
+      return (inter * pulsenPerRev) / (1000000.0 * 60);
 
     }
 
