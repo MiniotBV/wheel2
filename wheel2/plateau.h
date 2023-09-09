@@ -1,6 +1,6 @@
 
 bool plateauLogica = true;
-bool plateauComp = true;
+bool onbalansComp = true;
 
 // float plateauP = 0.005;//plateau33P;    //pid
 // float plateauI = 0.03;//plateau33I;
@@ -17,6 +17,7 @@ float plateauD = 0;
 
 float basis = 0;
 float uitBuff;
+float uitBuffPre;
 
 
 
@@ -160,7 +161,7 @@ float pid(float rpmIn){
 
 
 
-  if(plateauComp){
+  if(onbalansComp){
 
     if(opsnelheid){//abs(divTarget) < 3){
       pp = divTarget * plateauP;
@@ -283,7 +284,8 @@ void plateauFunc(){
 
 
       uitBuff = pid(vaart);//                  bereken motor kracht
-      uitBuff += strobo.plateauComp;
+      uitBuffPre = uitBuff;
+      uitBuff += strobo.onbalansComp;
 
       uitBuff = limieteerF(uitBuff, -100, 100);
       

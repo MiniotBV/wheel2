@@ -182,19 +182,20 @@ void checkenVoorCommando(bool info){
   if(checkZin("PA", "plateauDraaien()", info)){ plateauDraaien(); return;}
   if(checkZin("PS", "plateauStoppen()", info)){ plateauStoppen(); return;}
   if(checkZinBool("PL", "plateauLogica", info, plateauLogica)){return;}
-  if(checkZinBool("PC", "plateauComp", info, plateauComp)){return;}
+  if(checkZinBool("PC", "onbalansComp", info, onbalansComp)){return;}
 
 
   //----------------------------------------------------------------------STROBO
   infoPrintln(info);
   if(checkZinInt("SSN", "strobo.sampleNum", info, strobo.sampleNum)){return;}
-  if(checkZinBool("SCM", "strobo.onbalansCompenseren", info, strobo.onbalansCompenseren)){return;}
-  if(checkZin( "SCC", "strobo.clearCompSamples()", info)){   strobo.clearCompSamples(); Serial.println("clearComp");  return;}
-  if(checkZinInt("SCFV", "strobo.faseVerschuiving", info, strobo.faseVerschuiving)){return;}
-  if(checkZinFloat("SCV", "strobo.compVermenigvuldiging", info, strobo.compVermenigvuldiging)){return;}
-  if(checkZinFloat("SCD", "strobo.compVerval", info, strobo.compVerval)){return;}
+  if(checkZinBool("SOC", "strobo.onbalansCompAan", info, strobo.onbalansCompAan)){return;}
+  if(checkZinInt("SOF", "strobo.onbalansFase", info, strobo.onbalansFase)){return;}
+  if(checkZinFloat("SOG", "strobo.onbalansCompGewicht", info, strobo.onbalansCompGewicht)){return;}
+  // if(checkZinFloat("SCD", "strobo.compVerval", info, strobo.compVerval)){return;}
   if(checkZinBool("SKC", "strobo.plaatUitMiddenComp", info, strobo.plaatUitMiddenComp)){return;}
   if(checkZinBool("KC", "karUitMiddenCompAan", info, karUitMiddenCompAan)){return;}
+  
+  if(checkZin( "SCC", "strobo.clearCompSamples()", info)){   strobo.clearCompSamples(); Serial.println("clearComp");  return;}
 
   //------------------------------------------------------OPSLAG
   infoPrintln(info);
@@ -203,6 +204,7 @@ void checkenVoorCommando(bool info){
   if(checkZin("EL", "eepromUitlezen()", info)){ eepromUitlezen();  return;}
   
   if(checkZin("OC", "orientatie.calibreerOrientatie()", info)){ orientatie.calibreerOrientatie(); return;}
+
 
 
 
@@ -226,25 +228,29 @@ void checkenVoorCommando(bool info){
     Serial.println("volume: " + String(volume));
     Serial.println();
     
-    Serial.println("armKracht: " + String(armKracht));
-    Serial.println("armGewicht: " + String(armGewicht));
-    Serial.println("isNaaldErop(): " + String(isNaaldErop()));
-    Serial.println();
+    // Serial.println("armKracht: " + String(armKracht));
+    // Serial.println("armGewicht: " + String(armGewicht));
+    // Serial.println("isNaaldErop(): " + String(isNaaldErop()));
+    // Serial.println();
 
-    Serial.println("trackOffset: " + String(trackOffset));
-    Serial.println();
+    // Serial.println("trackOffset: " + String(trackOffset));
+    // Serial.println();
 
 
     eepromPrint();
     Serial.println();
     
     
-    printKnoppen();
-    orientatie.print();
+    // printKnoppen();
+    // orientatie.print();
+    // Serial.println();
+
+    Serial.println("strobo.onbalansFase: " + String(strobo.onbalansFase));
+    Serial.println("strobo.sampleNum: " + String(strobo.sampleNum));
     Serial.println();
 
 
-    Serial.println("-------------------------------------------------\n\n\n");
+    Serial.println("versie: " + String(versie) + "-------------------------------------------------\n\n\n");
     return;
   }
 
@@ -298,16 +304,19 @@ void serieelFunc(){
 
 
       Serial.print(", ");
-      Serial.print(strobo.teller);
+      Serial.print(strobo.teller / strobo.pulsenPerRev);
 
       // Serial.print(", ");
       // Serial.print(strobo.preComp, 4);
 
-      // Serial.print(", ");
-      // Serial.print(strobo.plateauComp, 4);
+      Serial.print(", ");
+      Serial.print(strobo.onbalansComp, 4);
 
       Serial.print(", ");
       Serial.print(uitBuff, 2);
+
+      Serial.print(", ");
+      Serial.print(uitBuffPre, 2);
 
       
 
@@ -333,8 +342,8 @@ void serieelFunc(){
       // Serial.print(", ");
       // Serial.print(karPosMidden, 3);
 
-      Serial.print(", ");
-      Serial.print(karPosMidden + strobo.karFourier, 3);  
+      // Serial.print(", ");
+      // Serial.print(karPosMidden + strobo.karFourier, 3);  
 
       Serial.print(", ");
       Serial.print(karPosMidden + strobo.karFourierFilt, 3);  
@@ -362,7 +371,7 @@ void serieelFunc(){
       // Serial.print(orientatie.z);
 
       // Serial.print(", ");
-      // Serial.print(strobo.processTijd);
+      // Serial.print(strobo.procesInterval);
 
 
 

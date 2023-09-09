@@ -80,12 +80,12 @@ void eepromOpslaan(){
 
 
 void eepromPrint(){
-  Serial.println("EEPROM_VERSIE:            " + String(eepromVersie,                  5));
+  // Serial.println("EEPROM_VERSIE:            " + String(eepromVersie,                  5));
   Serial.println("EEPROM_ARMKRACHT_500MG:   " + String(armKracht500mg,                5));
   Serial.println("EEPROM_ARMKRACHT_4000MG:  " + String(armKracht4000mg,               5));
   Serial.println("EEPROM_ARMGEWICHT:        " + String(armTargetGewicht,              5));
   Serial.println("EEPROM_WATERPAS_OFFSET:   " + String(orientatie.gefilterdOffset,    5));
-  Serial.println("EEPROM_TRACK_OFFSET:      " + String(trackOffset,                   5));
+  // Serial.println("EEPROM_TRACK_OFFSET:      " + String(trackOffset,                   5));
   Serial.println("EEPROM_ARMHOEK_MIN        " + String(armHoekMin,                    5));
   Serial.println("EEPROM_ARMHOEK_MAX        " + String(armHoekMax,                    5));
 }

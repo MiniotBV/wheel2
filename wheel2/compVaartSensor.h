@@ -28,11 +28,12 @@ class COMPVAART
                       int sampleNum;
     volatile          int samples[100];
     volatile unsigned int sampleTeller = 0;
-    volatile unsigned long tijd;
+    volatile unsigned int tijd;
     volatile unsigned int interval;
     float gemiddelde = sampleMax;
 
-    int processTijd;
+    unsigned int procesTijd;
+    unsigned int procesInterval;
 
     //-----------------------------------richting
     byte sens, sensPrev;
@@ -77,25 +78,25 @@ class COMPVAART
 
 
     //---------------------------------------------onbalans compensatie
-    bool onbalansCompenseren = true;
-    int faseVerschuiving = 70;//90;//75;//90;  50 in pulsen per rev
+    bool onbalansCompAan = true;
+    int onbalansFase = 70;//90;//75;//90;  50 in pulsen per rev
     
     float gemiddeldeSnelheidPre, gemiddeldeSnelheid;
     
-    float plateauCompensatie[pprmax];
+    float onbalansCompensatie[pprmax];
 
-    volatile float plateauComp = 0;
+    volatile float onbalansComp = 0;
     
     float compVerval = 1.0;//0.6;//0.8;
-    float compVermenigvuldiging = 0.8;
+    float onbalansCompGewicht = 0.8;
 
 
     float  onbalansSinTotaal[5];
     float  onbalansCosTotaal[5];
     float onbalansSinWaardes[5][pprmax];
     float onbalansCosWaardes[5][pprmax];
-    int harmonisen = 2;
-    volatile float plateauCompFourier = 0;
+    int harmonisen = 3;
+    volatile float onbalansCompFourier = 0;
 
 
 
@@ -239,12 +240,13 @@ class COMPVAART
 
 
 
+      procesTijd = micros();
 
       //-----------------------------------------------------------------------------UIT BALANS COMPENSATIE
-      // gemiddeldeSnelheidPre -= plateauCompensatie[teller];
+      // gemiddeldeSnelheidPre -= onbalansCompensatie[teller];
 
       
-      if( onbalansCompenseren &&   //alle mementen waarom de compensatie niet mag werken, omdat er dan verschillen zijn met als de naald er egt op is
+      if( onbalansCompAan &&   //alle mementen waarom de compensatie niet mag werken, omdat er dan verschillen zijn met als de naald er egt op is
           plateauAan && 
           draaienInterval.sinds() > 1000 && //moet 1 seconden aan staan
           opsnelheid &&                      // en opsnelheid zijn     
@@ -257,19 +259,19 @@ class COMPVAART
       ){ 
         if(isOngeveer(glad, targetRpm, 10)){
           if(plaatUitMiddenComp){
-            plateauCompensatie[teller] += ( glad - centerCompTargetRpm ) * compVermenigvuldiging; 
+            onbalansCompensatie[teller] += ( glad - centerCompTargetRpm ) * onbalansCompGewicht; 
           }else{
-            plateauCompensatie[teller] += ( glad - targetRpm ) * compVermenigvuldiging; 
+            onbalansCompensatie[teller] += ( glad - targetRpm ) * onbalansCompGewicht; 
           }
           
         }
       }
 
-      // plateauCompensatie[teller] *= compVerval;
+      // onbalansCompensatie[teller] *= compVerval;
 
-      float nieuweWaarde = plateauCompensatie[teller];
+      float nieuweWaarde = onbalansCompensatie[teller];
 
-      plateauCompFourier = 0;
+      onbalansCompFourier = 0;
 
       for(int harm = 1; harm < harmonisen + 1; harm++){
         int hoek = rondTrip(teller * harm,  pulsenPerRev);
@@ -282,19 +284,22 @@ class COMPVAART
         onbalansCosWaardes[harm][teller] = cosin[hoek]  *  nieuweWaarde;
         onbalansCosTotaal[harm] += onbalansCosWaardes[harm][teller];
 
-        hoek = rondTrip(hoek + faseVerschuiving,  pulsenPerRev);
-        plateauCompFourier += ( ( sinus[hoek] * onbalansSinTotaal[harm] ) + ( cosin[hoek] * onbalansCosTotaal[harm] ) ) / pulsenPerRev;
+        hoek = rondTrip(hoek + onbalansFase,  pulsenPerRev);
+        onbalansCompFourier += ( ( sinus[hoek] * onbalansSinTotaal[harm] ) + ( cosin[hoek] * onbalansCosTotaal[harm] ) ) / pulsenPerRev;
       }
 
 
-      if(onbalansCompenseren){
-        plateauComp = -plateauCompFourier;//plateauCompensatie[rondTrip(teller + faseVerschuiving,  pulsenPerRev)];
+      if(onbalansCompAan){
+        onbalansComp = -onbalansCompFourier;//onbalansCompensatie[rondTrip(teller + onbalansFase,  pulsenPerRev)];
       }else{
-        plateauComp = 0;
+        onbalansComp = 0;
       }
       
 
 
+
+
+      procesInterval = micros() - procesTijd;
 
 
 
@@ -309,7 +314,7 @@ class COMPVAART
       }
 
 
-      processTijd = micros() - tijd;
+      
     }
 
 
@@ -329,7 +334,7 @@ class COMPVAART
 
     void clearOnbalansCompSamples(){
       for(int i = 0; i < pulsenPerRev; i++){
-        plateauCompensatie[i] = 0;
+        onbalansCompensatie[i] = 0;
       }
 
       for(int harm = 1; harm < harmonisen + 1; harm++){

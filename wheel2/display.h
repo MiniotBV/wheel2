@@ -107,9 +107,10 @@ void displayUpdate(){
 
 
     //--------------------------------------------------------------------INTRO
-    if(millis()<4000){
+    if(millis()<4000)
+    {
 
-      int pos = (millis()/5) - 120;
+      int pos = (millis()/5) - 200;
 
       for(int i = 0; i < displayLengte; i++){
         if(i > pos  &&  i < pos + 200){
