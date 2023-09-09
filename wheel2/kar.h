@@ -482,6 +482,7 @@ void staatDingen(){
 	if(staat == S_SPELEN){
 		if(staatVeranderd.sinds() < 1000){
       armHoekCentreer();
+      naaldNaarVorenBewogen.reset();
       return; 
     } // eerst ff centrere
 
@@ -517,7 +518,11 @@ void staatDingen(){
 				return;
 			}
 
-			if(naaldNaarVorenBewogen.sinds() > 4000){
+
+      if(spoorafstand > 0.01){
+        naaldNaarVorenBewogen.reset();
+      
+      }else if(naaldNaarVorenBewogen.sinds() > 4000){
         if(karPos < 60){//is het een uitloop groef? (54mm lijkt de verste van het midden)
           stoppenOfHerhalen();//stoppen();
           return;

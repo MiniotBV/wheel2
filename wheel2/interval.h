@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include "hardware/timer.h"
 #define MILLIS 0
 #define MICROS 1
@@ -6,9 +7,9 @@
 
 class Interval{
 	public:
-		uint32_t interval = 0;
-		uint32_t vorrigeTijd = 0;
-		uint32_t vorrigeVorrigeTijd = 0;
+		uint64_t interval = 0;
+		uint64_t vorrigeTijd = 0;
+		uint64_t vorrigeVorrigeTijd = 0;
 		int eenheid = MILLIS;
     bool eenKeerLatch = true;
 
@@ -36,7 +37,7 @@ class Interval{
 		}
 
 
-		void offset(uint32_t ofst){
+		void offset(uint64_t ofst){
 			vorrigeTijd += ofst;
 		}
 
@@ -56,7 +57,7 @@ class Interval{
     }
 		
 
-		uint32_t  sinds(){
+		uint64_t  sinds(){
 			return tijd() - vorrigeTijd;
 		}
 
@@ -65,12 +66,12 @@ class Interval{
 		}
 
 
-		uint32_t tijd(){
+		uint64_t tijd(){
 			if(eenheid == MILLIS){
-				return millis();
+				return time_us_64()/1000;//millis();
 			}
 			if(eenheid == MICROS){
-				return micros(); //
+				return time_us_64();//micros(); //
         // time_us_32()
         // time_us_64();
         
