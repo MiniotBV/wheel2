@@ -1,6 +1,6 @@
-#define KNOP_PLAY 2//~5  knop3
-#define KNOP_DOORSPOEL 3//~4  knop2
-#define KNOP_TERUGSPOEL 1//~6   knop4
+#define KNOP_PLAY 6//~5  knop3
+#define KNOP_DOORSPOEL 5//~4  knop2
+#define KNOP_TERUGSPOEL 7//~6   knop4
 
 
 #define KNOP_LANG 700  //wat is een lange klik
@@ -39,12 +39,21 @@ float potVolumeDiv;
 
 
 void printKnoppen(){
-  Serial.print("knoppen= ");
+  Serial.print("knoppen: ");
   for(int i = 0; i < 8; i++){
     Serial.print(knopIn[i]);
     Serial.print(' ');
   }
   Serial.println();
+
+  // Serial.print("staat:   ");
+  // for(int i = 0; i < 8; i++){
+  //   Serial.print(knopStaat[i]);
+  //   Serial.print(' ');
+  // }
+  // Serial.println();
+
+
 }
 
 
@@ -117,7 +126,7 @@ void knoppenUpdate(){
     getKnopData();
 
 
-    for(int knop = 1; knop < 4; knop++){
+    for(int knop = 5; knop < 8; knop++){
 
       
       if(       knopStaat[knop] == LOSGELATEN   &&    knopIn[knop] == INGEDRUKT ){//             KORT INGEDRUKT

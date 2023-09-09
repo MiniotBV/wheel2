@@ -240,6 +240,13 @@ void staatDingen(){
 
 
 
+  else if(staat == S_FOUTE_ORIENTATIE){
+    naaldEraf();
+    karMotorEnable = false;
+  }
+
+
+
   else if(staat == S_BEGINNEN_SPELEN){
     if(karPos  <  PLAAT_EINDE + SENSOR_OFFSET){
       karPos += KAR_SNELHEID;
@@ -451,6 +458,9 @@ void karMotorFunc(){
     armHoek = armHoekRuw - armHoekOffset;
 
 
+    sensorPos = karPos - SENSOR_OFFSET;
+    karMotorPos = (karPos + karOffset)  *  mm2stap;
+
 
     staatDingen();
 
@@ -458,8 +468,7 @@ void karMotorFunc(){
 
 
 
-    sensorPos = karPos - SENSOR_OFFSET;
-    karMotorPos = (karPos + karOffset)  *  mm2stap;
+
 
 
     if(karMotorEnable){

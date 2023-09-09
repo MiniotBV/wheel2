@@ -35,7 +35,7 @@ void enableInterupts(bool aan){
   // gpio_set_irq_enabled_with_callback(plateauB,   GPIO_IRQ_EDGE_FALL + GPIO_IRQ_EDGE_RISE,  true,   &gpio_callback);
     gpio_set_irq_enabled_with_callback(plateauIndex,   GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
 
-    pinMode(audioFreqPin, INPUT);
+    
     // gpio_set_irq_enabled_with_callback(audioFreqPin,   GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
     // gpio_set_irq_enabled_with_callback(audioFreqPin,   GPIO_IRQ_EDGE_RISE,  aan,   &gpio_callback);
     // gpio_set_irq_enabled_with_callback(audioFreqPin,   GPIO_IRQ_EDGE_RISE + GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
@@ -43,6 +43,8 @@ void enableInterupts(bool aan){
 
 void toggleAudioFreqMeting(){
   audioFequencyMeten = !audioFequencyMeten;
+  
+  pinMode(audioFreqPin, INPUT);
   gpio_set_irq_enabled_with_callback(audioFreqPin,   GPIO_IRQ_EDGE_RISE,  audioFequencyMeten,   &gpio_callback);
 }
 
@@ -113,7 +115,6 @@ void setup() {
   plaatLeesInit();
 
   setPwm(ledWit);
-  // setPwm(ledRood);
 
   plateauInit();
 
@@ -181,7 +182,7 @@ void loop() {
 
   plateauFunc();
 
-  // staatFunc();
+  // staatFunc(); // zit in karFunc()
 
   pwmWriteF(ledWit, pow( ((sin( (PI*millis()) / 500.0 )+1)/2), 3));
   // pwmWriteF(ledWit, 0.5);

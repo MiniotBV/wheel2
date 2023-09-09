@@ -3,13 +3,13 @@
 #define VUSBsens                  1
 
 //kar stapper
-#define stapperAN                 2
-#define stapperAP                 3
-#define stapperBN                 4
-#define stapperBP                 5
+#define stapperAN                 2//~ PWM1 A
+#define stapperAP                 3//~ PWM1 B
+#define stapperBN                 4//~ PWM2 A
+#define stapperBP                 5//~ PWM2 B
 
 // plateau encoder      
-#define plateauA                  6 
+#define plateauA                  6
 #define plateauB                  7
 #define plateauIndex              8
 
@@ -19,19 +19,20 @@
 #define displayUIT                10
 #define displayKLOK               11
 #define displayLATCH              12
-#define displayEN                 13
+#define displayEN                 13//~ PWM6 B
 #define displayPOTMETER           28
 
 // plateau motor      
-#define motorP                    14  
-#define motorN                    15 
+#define motorP                    15//14//~ PWM7 A
+#define motorN                    14//15//~ PWM7 B
 
 // leds     
-#define ledWit                    16
+#define ledWit                    16//~ PWM0 A
 
 // arm      
-#define armMotor                  17
-#define plaatLeesLed              18
+#define armMotor                  17//~ PWM0 B
+// #define plaatLeesLed              18//~ PWM1 A
+#define plaatLeesLed              24//~ PWM4 A
 #define hoekSensor                26
 #define plaatLees                 27
 
@@ -43,7 +44,7 @@
 #define SDA                       22
 #define SCL                       23
 
-#define koptelefoonAangesloten    24
+// #define koptelefoonAangesloten    24//  PWM4 A
 
 
 

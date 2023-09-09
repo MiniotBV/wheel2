@@ -64,6 +64,3 @@ bool isTussen(float waarde, float min, float max){
 
 
 
-int volt2pwm(float volt){
-  return (volt * PMAX) / 3.3;
-}

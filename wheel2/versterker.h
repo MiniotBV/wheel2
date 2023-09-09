@@ -80,6 +80,9 @@ class Orientatie //          QMA7981
   
   bool isStaand    = false;
   bool isStaandOud = false;
+
+  bool isFout = false;
+  bool isFoutOud = false;
   
   byte adress = 0b0010010;
 
@@ -91,14 +94,14 @@ class Orientatie //          QMA7981
   void print()
   {
     // update();
-    Serial.print("id: ");
-    Serial.print(id);
+    // Serial.print("id: ");
+    // Serial.print(id);
 
-    Serial.print(" x: ");
+    Serial.print("x:");
     Serial.print(x);
-    Serial.print(" y: ");
+    Serial.print(" y:");
     Serial.print(y);
-    Serial.print(" z: ");
+    Serial.print(" z:");
     Serial.print(z);
     
     Serial.println( isStaand ? " staand" : " liggend");
@@ -117,22 +120,30 @@ class Orientatie //          QMA7981
     
     loop = millis();
 
-    i2cWrite(adress, 0x1B, 0b10000000);
-
-    id = i2cRead(adress, 0x00);
+    // id = i2cRead(adress, 0x00);
 
     x = read_accel_axis(1);
     y = read_accel_axis(3);
     z = read_accel_axis(5);
 
-    bool isFout = ! isOngeveer(y, 0, 0.2);
+    isFout = ! isOngeveer(y, 0, 0.2);
+
+    if( isFout  != isFoutOud ){
+      isFoutOud = isFout;
+
+      if(isFout){
+        setStaat(S_FOUTE_ORIENTATIE);
+      }
+    }
     
-    isStaand = !(  isOngeveer(x, 0, 40)   &&   isOngeveer(z, 70, 40)  );
+    isStaand = !(  isOngeveer(x, 0, 0.4)   &&   isOngeveer(z, -1, 0.4)  );
+
+
 
     if(isStaand != isStaandOud)
     {
       isStaandOud = isStaand;
-      Serial.print("orientatie veranderd: ");
+      // Serial.print("orientatie veranderd: ");
       print();
     }
 
@@ -157,37 +168,37 @@ class Orientatie //          QMA7981
 
 
 
-   enum qma7981_full_scale_range_t
-{
-    RANGE_2G = 0b0001,
-    RANGE_4G = 0b0010,
-    RANGE_8G = 0b0100,
-    RANGE_16G = 0b1000,
-    RANGE_32G = 0b1111
-};
+  enum qma7981_full_scale_range_t
+  {
+      RANGE_2G = 0b0001,
+      RANGE_4G = 0b0010,
+      RANGE_8G = 0b0100,
+      RANGE_16G = 0b1000,
+      RANGE_32G = 0b1111
+  };
 
-enum qma7981_bandwidth_t
-{
-    MCLK_DIV_BY_7695 = 0b000,
-    MCLK_DIV_BY_3855 = 0b001,
-    MCLK_DIV_BY_1935 = 0b010,
-    MCLK_DIV_BY_975 = 0b011,
-    MCLK_DIV_BY_15375 = 0b101,
-    MCLK_DIV_BY_30735 = 0b110,
-    MCLK_DIV_BY_61455 = 0b111
-};
+  enum qma7981_bandwidth_t
+  {
+      MCLK_DIV_BY_7695 = 0b000,
+      MCLK_DIV_BY_3855 = 0b001,
+      MCLK_DIV_BY_1935 = 0b010,
+      MCLK_DIV_BY_975 = 0b011,
+      MCLK_DIV_BY_15375 = 0b101,
+      MCLK_DIV_BY_30735 = 0b110,
+      MCLK_DIV_BY_61455 = 0b111
+  };
 
-enum qma7981_clock_freq_t
-{
-    CLK_500_KHZ = 0b0000,
-    CLK_333_KHZ = 0b0001,
-    CLK_200_KHZ = 0b0010,
-    CLK_100_KHZ = 0b0011,
-    CLK_50_KHZ = 0b0100,
-    CLK_25_KHZ = 0b0101,
-    CLK_12_KHZ_5 = 0b0110,
-    CLK_5_KHZ = 0b0111
-};
+  enum qma7981_clock_freq_t
+  {
+      CLK_500_KHZ = 0b0000,
+      CLK_333_KHZ = 0b0001,
+      CLK_200_KHZ = 0b0010,
+      CLK_100_KHZ = 0b0011,
+      CLK_50_KHZ = 0b0100,
+      CLK_25_KHZ = 0b0101,
+      CLK_12_KHZ_5 = 0b0110,
+      CLK_5_KHZ = 0b0111
+  };
 
 
 
@@ -269,22 +280,11 @@ void volumeFunc(){
       
       int err = 0;
 
-      // Wire1.begin();
-      // Wire1.beginTransmission(0x60); //verbinden met tpa60
-      // Wire1.write(1);
 
-      // // Wire1.write(0b11010000);//links in,  mono koptelefoon     
-      // Wire1.write(0b11000000);//stereo
-      // // Wire1.write(0b11010000);//links in mono koptelefoon
-      // // Wire1.write(0b11100000);//links in bridge-tied speaker
-      // err = Wire1.endTransmission();
+      //0b11000000);//stereo
+      //0b11010000);//links in mono koptelefoon
+      //0b11100000);//links in bridge-tied speaker
     
-    
-      // Wire1.beginTransmission(0x60);
-      // Wire1.write(2);
-      // Wire1.write(byte(waarde));
-      // err = Wire1.endTransmission();
-
       err = i2cWrite(0x60, 1, 0b11000000);
       err = i2cWrite(0x60, 2, byte(waarde));
 
@@ -303,9 +303,7 @@ void volumeFunc(){
 
 
   orientatie.update();
-  // if(orientatieInt.loop()){
-    
-  // }
+
 
 }
 

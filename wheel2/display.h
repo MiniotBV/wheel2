@@ -25,7 +25,7 @@ void displayInit(){
   setPwm(displayEN);
 
   // pwmWriteF(displayEN, 0.99);
-  pwmWriteF(displayEN, 0.5);
+  // pwmWriteF(displayEN, 0.5);
 
   pinMode(displayPOTMETER, INPUT);
 }
@@ -93,6 +93,9 @@ void displayUpdate(){
 
     int volumeMargin = displayLengte/5;//16;
 
+    int dispHalf = displayLengte/2;
+
+
 
 
 
@@ -123,6 +126,35 @@ void displayUpdate(){
         }
 
         if(i == volumePunt){
+          displayData[i] = 0.9;
+        }
+
+      }
+    }
+
+
+
+
+
+    if(staat == S_FOUTE_ORIENTATIE){
+      float verdeelPuntTeller = 0;
+
+      for(int i = 0; i < displayLengte; i++){
+        displayData[i] = 0;
+
+        float floatI = float(i) / displayLengte;
+
+        if(isOngeveer(floatI - 0.5, -orientatie.y*4, 0.1)){
+          displayData[i] = 0.1;
+        }
+
+
+        
+        if(i == int(dispHalf + dispHalf*0.1)){
+          displayData[i] = 0.9;
+        }
+
+        if(i == int(dispHalf - dispHalf*0.1)){
           displayData[i] = 0.9;
         }
 

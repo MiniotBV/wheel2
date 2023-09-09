@@ -34,6 +34,10 @@ int minimumTrackSpacing = 0.05;
 
 
 
+int volt2pwm(float volt){
+  return (volt * PMAX) / 3.3;
+}
+
 
 
 void plaatLeesLedSetMilliAmp(float amp){

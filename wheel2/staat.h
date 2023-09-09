@@ -241,24 +241,6 @@ void spelen(){
 
 
 
-// Interval staatInt(10000, MICROS);
-
-
-// void staatFunc(){
-//   if(staatInt.loop()){
-
-
-
-
-
-//   }
-// }
-
-
-
-
-
-
 
 
 
