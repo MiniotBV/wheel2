@@ -101,24 +101,13 @@ class Orientatie //          QMA7981
 	
 
 
-	void print()
-	{
-		Serial.print("xRuw:");
-		Serial.print(xRuw,3);
-		Serial.print(" yRuw:");
-		Serial.print(yRuw,3);
-		Serial.print(" zRuw:");
-		Serial.println(zRuw,3);
-
-    Serial.print("x:");
-		Serial.print(x,3);
-		Serial.print(" y:");
-		Serial.print(y,3);
-		Serial.print(" z:");
-		Serial.println(z,3);
-		
-		Serial.println( isStaand ? " staand" : " liggend");
-	}
+  void print() {
+    String output = "xRuw: " + String(xRuw, 3) + " yRuw: " + String(yRuw, 3) + " zRuw: " + String(zRuw, 3) + "\n";
+    output += "x: " + String(x, 3) + " y: " + String(y, 3) + " z: " + String(z, 3) + "\n";
+    output += (isStaand ? "staand\n" : "liggend\n");
+    
+    Serial.println(output);
+  }
 
 	void update()
 	{
@@ -138,11 +127,7 @@ class Orientatie //          QMA7981
 			zRuw += (read_accel_axis(5) - zRuw)/10;
 
       x += ( (xRuw - xOffset) - x) / 10;
-
       y += ( (yRuw - yOffset) - y) / 10;
-			// gefilterdYPrev += ( (yRuw - yOffset) - gefilterdYPrev) / 10;
-			// y += (gefilterdYPrev - y) / 10;
-
       z += ( (zRuw - zOffset) - z) / 10;
 
 

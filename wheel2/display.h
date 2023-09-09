@@ -95,15 +95,24 @@ void displayClear(){
 }
 
 
-// void displayTekenBlok(int begin, int einde, float kleur){
-//   int min = min(begin, einde);
-//   int max = max(begin, einde);
-//   for(int i = min; i < max; i++){
-//     if( i >= 0 && i < displayLengte){
-//       displayData[i] = kleur;
-//     }
-//   }  
-// }
+void displayTekenBlok(int begin, int einde, float kleur){
+  int start = min(begin, einde);
+  int eind = max(begin, einde);
+
+  // Use min and max to ensure the range of `i` is always between `0` and `displayLengte`.
+  start = max(start, 0);
+  eind = min(eind, displayLengte);
+
+  for(int i = start; i < eind; i++){
+    displayData[i] = kleur;
+  }  
+}
+
+
+
+void displayTekenPunt(int pos, float kleur){
+  displayData[pos] = kleur;  
+}
 
 
 
@@ -132,59 +141,46 @@ void displayUpdate(){
 
 
 		//--------------------------------------------------------------------INTRO
-    // if(0){
 		if(millis()<4000){
-
       int pos = displayLengte - (millis()/10);
       int blokLengte = 10;
       int gatLengte = 3;
 
-      char versieDisplay[500];
-      for(int i = 0; i < 500; i++){versieDisplay[i] = 0;}
-      int versieDisplayTeller = 0;
-
       int decimalen = 3;
-      int versieDecimaal[decimalen];
+      int versieDecimalen[decimalen];
 
-      versieDecimaal[0] = (versie) % 10;
-      versieDecimaal[1] = (versie / 10) % 10;
-      versieDecimaal[2] = (versie / 100) % 10;
+      versieDecimalen[0] = (versie) % 10;
+      versieDecimalen[1] = (versie / 10) % 10;
+      versieDecimalen[2] = (versie / 100) % 10;
 
       for (int i = 0; i < decimalen; i++) {
-        int dec = versieDecimaal[i];
+        int dec = versieDecimalen[i];
 
-        if (dec == 0) {
-          for (int j = 0; j < gatLengte * 2; j++) {
-            versieDisplay[versieDisplayTeller++] = (j < gatLengte) ? 0 : 1;
-          }
+        if (dec == 0) {// 0 stipje
+          int einde = pos + gatLengte;
+          displayTekenBlok(pos, einde, 0.1);
+          pos = einde + gatLengte;
         }
 
         while (dec > 0) {
           if (dec > 5) {
             dec -= 5;
-            for (int j = 0; j < gatLengte + blokLengte * 2; j++) {
-              versieDisplay[versieDisplayTeller++] = (j < gatLengte) ? 0 : 1;
-            }
+            int einde = pos + blokLengte * 2;// dikke streep voor 5
+            displayTekenBlok(pos, einde, 0.1);
+            pos = einde + gatLengte;
           }
 
           if (dec > 0) {
             dec -= 1;
-            for (int j = 0; j < gatLengte + blokLengte; j++) {
-              versieDisplay[versieDisplayTeller++] = (j < gatLengte) ? 0 : 1;
-            }
+            int einde = pos + blokLengte;
+            displayTekenBlok(pos, einde, 0.1);
+            pos = einde + gatLengte;
           }
         }
 
-        if (dec == 0) {
-          for (int j = 0; j < blokLengte; j++) {
-            versieDisplay[versieDisplayTeller++] = 0;
-          }
-        }
+        pos += blokLengte; // tussen elk blokken een pauze
       }
 
-      for (int i = 0; i < displayLengte; i++) {
-        displayData[i] = (i >= pos) ? (versieDisplay[i - pos] == 1 ? 0.1 : 0) : 0;
-      }
     }
 
 
