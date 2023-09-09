@@ -39,6 +39,12 @@ float trackOffset = 0;
 
 
 
+float nummers[100];// = {0.2, 0.3, 0.6, 0.68, 0.85}; //staat nu in staat.h
+int hoeveelNummers = 0;
+float plaatBegin = 0;
+
+
+
 
 bool plaatAanwezig = false;
 float plaatAanwezigGefilterd = 0;
@@ -82,57 +88,57 @@ bool uitdraaien;
 
 
 int rondTrip(int n, int max){
-  if( n < 0 ){
-    return max + (n % max);
-  }
+	if( n < 0 ){
+		return max + (n % max);
+	}
 
-  return n % max;
+	return n % max;
 }
 
 
 
 float limieteerF(float n, float min, float max){
-  if(n < min){
-    return min;
-  }
+	if(n < min){
+		return min;
+	}
 
-  if(n > max){
-    return max;
-  }
+	if(n > max){
+		return max;
+	}
 
-  return n;
+	return n;
 }
 
 
 
 int limieteerI(int n, int min, int max){
-  if(n < min){
-    return min;
-  }
+	if(n < min){
+		return min;
+	}
 
-  if(n > max){
-    return max;
-  }
+	if(n > max){
+		return max;
+	}
 
-  return n;
+	return n;
 }
 
 
 
 float mapF(float n, float nMin, float nMax, float min, float max){
-  return ( ( (n - nMin) / (nMax - nMin) )  *  (max - min) ) + min;
+	return ( ( (n - nMin) / (nMax - nMin) )  *  (max - min) ) + min;
 }
 
 
 
 
 bool isOngeveer(float waarde, float vergelijk, float marge){
-  return (waarde > vergelijk - marge) && (waarde < vergelijk + marge);
+	return (waarde > vergelijk - marge) && (waarde < vergelijk + marge);
 }
 
 
 bool isTussen(float waarde, float min, float max){
-  return   waarde > min   &&   waarde < max;
+	return   waarde > min   &&   waarde < max;
 }
 
 
@@ -140,7 +146,7 @@ bool isTussen(float waarde, float min, float max){
 
 
 int sign(float v) {
-  return (v < 0) ? -1 : ((v > 0) ? 1 : 0);
+	return (v < 0) ? -1 : ((v > 0) ? 1 : 0);
 }
 
 
@@ -150,12 +156,14 @@ int sign(float v) {
 
 
 
-// void pauze();
-bool isPlaatOngeveer7Inch();
-void updatePlateauPID();
+
+
 void plateauStoppen();
 void plateauDraaien();
 void zetNummersAlsEenSingletje();
 
+void gaNaarNummer(float pos);
+void naarVorrigNummer();
+void naarVolgendNummer();
 
 

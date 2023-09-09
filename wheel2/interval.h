@@ -4,64 +4,64 @@
 
 
 class Interval{
-  public:
-    unsigned int interval = 0;
-    unsigned long vorrigeTijd = 0;
-    unsigned long vorrigeVorrigeTijd = 0;
-    int eenheid = MILLIS;
+	public:
+		unsigned int interval = 0;
+		unsigned long vorrigeTijd = 0;
+		unsigned long vorrigeVorrigeTijd = 0;
+		int eenheid = MILLIS;
 
-    Interval(int i, int tijdMode){
-      interval = i;
-      eenheid = tijdMode;
-      vorrigeTijd = tijd();
-    }
-
-
-
-    bool loop(){
-      if(tijd() - vorrigeTijd >= interval){
-          vorrigeVorrigeTijd = vorrigeTijd;
-          vorrigeTijd += interval;
-
-          if(tijd() - vorrigeTijd >= interval){
-            vorrigeVorrigeTijd = vorrigeTijd;
-            vorrigeTijd = tijd();            
-          }
-
-          return true;
-      }
-      return false;
-    }
+		Interval(int i, int tijdMode){
+			interval = i;
+			eenheid = tijdMode;
+			vorrigeTijd = tijd();
+		}
 
 
-    void offset(int ofst){
-      vorrigeTijd += ofst;
-    }
+
+		bool loop(){
+			if(tijd() - vorrigeTijd >= interval){
+					vorrigeVorrigeTijd = vorrigeTijd;
+					vorrigeTijd += interval;
+
+					if(tijd() - vorrigeTijd >= interval){
+						vorrigeVorrigeTijd = vorrigeTijd;
+						vorrigeTijd = tijd();            
+					}
+
+					return true;
+			}
+			return false;
+		}
 
 
-    void reset(){
-      vorrigeTijd = tijd(); 
-    }
-    
-
-    int sinds(){
-      return tijd() - vorrigeTijd;
-    }
-
-    bool langerDan(){
-      return tijd() - vorrigeTijd > interval;
-    }
+		void offset(int ofst){
+			vorrigeTijd += ofst;
+		}
 
 
-    unsigned long tijd(){
-      if(eenheid == MILLIS){
-        return millis();
-      }
-      if(eenheid == MICROS){
-        return micros();
-      }
+		void reset(){
+			vorrigeTijd = tijd(); 
+		}
+		
 
-      return 0;
-    }
+		int sinds(){
+			return tijd() - vorrigeTijd;
+		}
+
+		bool langerDan(){
+			return tijd() - vorrigeTijd > interval;
+		}
+
+
+		unsigned long tijd(){
+			if(eenheid == MILLIS){
+				return millis();
+			}
+			if(eenheid == MICROS){
+				return micros();
+			}
+
+			return 0;
+		}
 
 };

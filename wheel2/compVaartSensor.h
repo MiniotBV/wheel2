@@ -121,6 +121,7 @@ class COMPVAART{
 
 
     void update(){
+      
       if( micros() - vaartInterval > sampleMax ){
         if(glitchTeller > 3){
           shiftSamples(sampleMax * dir);
@@ -132,6 +133,10 @@ class COMPVAART{
         }
       }else{
         glitchTeller = 0;
+      }
+
+      if(!isOngeveer(centerCompTargetRpm, targetRpm, 5)){
+        centerCompTargetRpm = targetRpm;
       }
     }
 
@@ -188,15 +193,13 @@ class COMPVAART{
 
       //-----------------------------------------------------------------------UIT HET MIDDEN COMPENSATIE
       karPosMiddenPre -= karUitCenterGolf[teller];
-      // karUitCenterGolf[teller] = (egteKarPos - karUitCenterGolf[teller] ) / 5);
       karUitCenterGolf[teller] = egteKarPos;
       karPosMiddenPre += karUitCenterGolf[teller];
       karPosMidden = karPosMiddenPre / pulsenPerRev;
 
       float karPosUitMidden = egteKarPos - karPosMidden;
-      // float nieuweWaarde = karUitCenterGolf[teller];
 
-      if(isNaaldEropVoorZoLang(1000)){
+      if(isNaaldEropVoorZoLang(1000) && staat == S_SPELEN){ // naald moet er ff opzitten in spelen staat voor ie gaat rekenene
         karSin -= karSinWaardes[teller];
         karSinWaardes[teller] = sinus[teller]  *  karPosUitMidden;
         karSin += karSinWaardes[teller];
@@ -247,11 +250,6 @@ class COMPVAART{
       }
 
       // plateauCompensatie[teller] *= compVerval;
-
-
-
-      // gemiddeldeSnelheidPre += plateauCompensatie[teller];
-      // gemiddeldeSnelheid = gemiddeldeSnelheidPre / pulsenPerRev;
 
       float nieuweWaarde = plateauCompensatie[teller];
 

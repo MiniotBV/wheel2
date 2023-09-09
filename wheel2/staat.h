@@ -1,5 +1,6 @@
 
 
+bool herhaalDeHelePlaat = false;
 
 
 enum staats{
@@ -33,7 +34,7 @@ enum staats staat = S_HOK;
 
 Interval staatVeranderd(1000, MILLIS);
 
-
+bool eersteKeerSindsStaatsVerandering = false;
 
 
 
@@ -70,9 +71,9 @@ String printStaat(int s){
 
 void setStaat(enum staats s){
   staatVeranderd.reset();
-  // karRemmen = false;
+  eersteKeerSindsStaatsVerandering = true;
+  
   Serial.println(printStaat(staat) + " > " + printStaat(s));
-  // printStaat(staat); Serial.print(" > "); printStaat(s); Serial.println();
 
   staat = s; // set staat
 }
@@ -80,24 +81,45 @@ void setStaat(enum staats s){
 
 
 
+bool eenKeerSindsStaatsVerandering(){
+  if(eersteKeerSindsStaatsVerandering){
+    eersteKeerSindsStaatsVerandering = false;
+    return true;
+  }
+  return false;
+}
+
+
+
 
 void stoppen(){
   // plaatBegin = 0; // om display leeg te maken
-  setStaat(S_STOPPEN);
+  if(staat == S_HOMEN_VOOR_SPELEN){ // omdat anders kan je een error triggeren als je precies tijdens de home bump stoppt jatoch
+    staat = S_NAAR_HOK; // iet wat extreem , maar anders komen de staats verandering timers mee
+  }else{
+    setStaat(S_STOPPEN);
+  }
   plateauStoppen();  
 }
 
 void spelen(){
-  setStaat(S_HOMEN_VOOR_SPELEN);
+  setStaat(S_HOMEN_VOOR_SPELEN); // eerst ff home
   plateauDraaien();
 }
 
 void schoonmaakStand(){
-  setStaat(S_HOMEN_VOOR_SCHOONMAAK);
+  setStaat(S_HOMEN_VOOR_SCHOONMAAK); // eerst ff home
 }
 
 
 
+void stoppenOfHerhalen(){
+  if(herhaalDeHelePlaat){
+    gaNaarNummer(plaatBegin);    
+  }else{
+    stoppen();
+  }
+}
 
 
 
@@ -113,12 +135,15 @@ void schoonmaakStand(){
 enum errors{
   E_GEEN = 0,
   
-  E_KON_NIET_HOMEN = 1,
+  E_KON_NIET_HOMEN = 5,
     
   E_NAALD_TERUG_GELOPEN = 2,
   E_NAALD_NIET_BEWOGEN = 3,
 
   E_PLAAT_NIET_OPGANG = 4,
+
+  E_ARMHOEK_LIMIET = 6,//
+  
   
 };
 
@@ -143,6 +168,8 @@ void setError(enum errors err){
   errorVeranderd.reset();
   Serial.println("error: " + printError(err));
 }
+
+
 
 
 

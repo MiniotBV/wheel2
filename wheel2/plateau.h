@@ -82,12 +82,12 @@ void plateauDraaien(){
   plateauAan = true;
   setPlateauRpm(rpm33);
 
-  basis = 60;//75;
+  basis = 20;//40;//60;//75;
   
   // strobo.clearCompSamples();
   // draaienInterval.reset();
   
-  Serial.println("plateauStart()");
+  // Serial.println("plateauStart()");
 }
 
 
@@ -132,10 +132,11 @@ float pp, pd;
 
 
 float pid(float rpmIn){
-  // updatePIDwaarde();  
 
   float divTijd = rpmIn - vorrigeVaart;
-  
+  vorrigeVaart = rpmIn;
+
+
   float divTarget;
   if(strobo.plaatUitMiddenComp){
     divTarget = centerCompTargetRpm - rpmIn;
@@ -144,13 +145,18 @@ float pid(float rpmIn){
   }
 
 
-  vorrigeVaart = rpmIn;
 
   if(plateauComp){
 
     pp = divTarget * plateauP;
+
+    if(abs(divTarget) < 3){
+      basis += divTarget * plateauI;            //breng basis voltage naar gemiddelde voor de juiste snelheid
+    }else{
+      basis += divTarget * plateauI * 0.25;       //om langzaam opte starten
+    }
     
-    basis += divTarget * plateauI;            //breng basis voltage naar gemiddelde voor de juiste snelheid
+
 
     pd = divTijd * plateauD;
   }
@@ -251,21 +257,14 @@ void plateauStaatDingen(){
 
 
 
-Interval plateauInt(10000, MICROS);
+Interval plateauInt(5000, MICROS);
 
 void plateauFunc(){
 
   if(plateauInt.loop()){
 
     strobo.update();
-    // float vaart = strobo.getVaart();
-    // float vaart = strobo.vaart;
     float vaart = strobo.glad;
-    
-    // if(strobo.onbalansCompenseren){
-    // vaart += (1/plateauP) * (strobo.plateauComp/100);
-    // }
-    
 
     if(plateauAan){             //staat de motor aan?
 

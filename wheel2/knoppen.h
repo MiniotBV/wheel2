@@ -159,7 +159,7 @@ bool isKnopTerugspoel(int knop){
 
 
 void knopLogica(int knop){
-  if( knopStaat[knop] == LOSGELATEN   &&    knopIn[knop] == INGEDRUKT ){//             KORT INGEDRUKT
+  if( knopStaat[knop] == LOSGELATEN   &&    knopIn[knop] == INGEDRUKT ){//-------------------------------------------------------------KORT INGEDRUKT
     knopStaat[knop] = INGEDRUKT;
     
     knopAlleInterval.reset();
@@ -178,7 +178,7 @@ void knopLogica(int knop){
   
   
 
-  if( knopStaat[knop] == INGEDRUKT    &&    knopIn[knop] == LOSGELATEN ){//               KORT LOSGELATEN
+  if( knopStaat[knop] == INGEDRUKT    &&    knopIn[knop] == LOSGELATEN ){//----------------------------------------------------KORT LOSGELATEN
     knopStaat[knop] = LOSGELATEN;
     knopAlleInterval.reset();
     
@@ -236,7 +236,7 @@ void knopLogica(int knop){
   
   
   
-  if( knopStaat[knop] == INGEDRUKT    &&    millis() - knopInterval[knop]  >  KNOP_LANG ){//               LANG INGEDRUKT
+  if( knopStaat[knop] == INGEDRUKT    &&    millis() - knopInterval[knop]  >  KNOP_LANG ){//------------------------------------------LANG INGEDRUKT
     knopStaat[knop] = LANG_INGEDRUKT;
     knopAlleInterval.reset();
 
@@ -258,8 +258,8 @@ void knopLogica(int knop){
 
 
     if(knop == KNOP_PLAY){
-      if(staat == S_HOK){//         SPELEN
-        spelen();//                       SPELEN
+      if(staat == S_HOK){
+        spelen();
       }else{                                 
         stoppen();
       }
@@ -270,7 +270,7 @@ void knopLogica(int knop){
   
   
   
-  if( knopStaat[knop] == LANG_INGEDRUKT  &&    knopIn[knop] == LOSGELATEN ){//                          LANG LOSGELATEN
+  if( knopStaat[knop] == LANG_INGEDRUKT  &&    knopIn[knop] == LOSGELATEN ){//------------------------------------LANG LOSGELATEN
     knopStaat[knop] = LOSGELATEN;
     knopAlleInterval.reset();
     
@@ -288,11 +288,17 @@ void knopLogica(int knop){
   
   
   
-  if( knopStaat[knop] == LANG_INGEDRUKT    &&    millis() - knopInterval[knop]  >  KNOP_SUPER_LANG ){//              SUPER LANG INGEDRUKT
+  if( knopStaat[knop] == LANG_INGEDRUKT    &&    millis() - knopInterval[knop]  >  KNOP_SUPER_LANG ){//--------------SUPER LANG INGEDRUKT
     knopStaat[knop] = SUPER_LANG_INGEDRUKT;
     knopAlleInterval.reset();   //led blink
     
     knopLog(  knop, " super lang ");
+
+    if(  knop == KNOP_PLAY  ){//               NAALD TEST STAND
+      if(staat == S_HOMEN_VOOR_SPELEN ||  staat == S_NAAR_BEGIN_PLAAT ){
+        herhaalDeHelePlaat = true;
+      }
+    }
 
 
     if(  staat == S_HOK  &&  knop == KNOP_TERUGSPOEL  ){//               NAALD TEST STAND
@@ -304,7 +310,7 @@ void knopLogica(int knop){
   
   
   
-  if( knopStaat[knop] == SUPER_LANG_INGEDRUKT  &&    knopIn[knop] == LOSGELATEN ){//                    SUPER LANG LOSGELATEN
+  if( knopStaat[knop] == SUPER_LANG_INGEDRUKT  &&    knopIn[knop] == LOSGELATEN ){//-------------------------------------------------SUPER LANG LOSGELATEN
     knopStaat[knop] = LOSGELATEN;
     knopAlleInterval.reset();  //led blink
     

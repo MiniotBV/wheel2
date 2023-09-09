@@ -134,7 +134,7 @@ void checkenVoorCommando(bool info){
   if(checkZin("pauze", "pauze()", info)){ pauze(); return;}
   if(checkZin("schoonmaak", "S_SCHOONMAAK", info)){ setStaat(S_SCHOONMAAK); return;}
   if(checkZin("cal", "S_CALIBREER", info)){ setStaat(S_CALIBREER); return;}
-
+  if(checkZinBool("rep", "herhaalDeHelePlaat", info, herhaalDeHelePlaat)){return;}
 
 
 
@@ -304,9 +304,6 @@ void serieelFunc(){
       // Serial.print(strobo.gladglad - targetRpm, 3);
 
       Serial.print(", ");
-      Serial.print(centerCompTargetRpm - targetRpm, 4);
-
-            Serial.print(", ");
       Serial.print(centerCompTargetRpm - targetRpm, 4);
 
 
