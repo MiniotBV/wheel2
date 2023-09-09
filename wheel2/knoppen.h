@@ -87,10 +87,13 @@ const char* knopNaam(int knop){
 
 
 
+bool knopDebug = false;
 
 void knopLog(int knop, const char* actie){
-  Serial.print(knopNaam(knop));
-  Serial.println(actie);
+  if(knopDebug){
+    Serial.print(knopNaam(knop));
+    Serial.println(actie);
+  }
 }
 
 

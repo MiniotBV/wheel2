@@ -80,6 +80,9 @@ void serieelFunc(){
 
       Serial.print(", ");
       Serial.print(karPos);
+
+      Serial.print(", ");
+      Serial.print(afstandOmTeStoppen );
       
       // Serial.print(", ");
       // Serial.print(armKracht);
@@ -240,3 +243,6 @@ void serieelFunc(){
     }
   }
 }
+
+
+

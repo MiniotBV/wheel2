@@ -38,7 +38,7 @@ void displayInit(){
 
 
 int egtePos2displayPos(float pos){
-  return mapF(pos, PLAAT_EINDE + SENSOR_OFFSET,  PLAAT_BEGIN, 0, displayLengte-1);
+  return mapF(pos, PLAAT_EINDE + SENSOR_OFFSET,  GROOTSTE_PLAAT_BEGIN, 0, displayLengte-1);
 }
 
 
@@ -96,7 +96,7 @@ void displayUpdate(){
     int naald = egtePos2displayPos(karPos);
     int target = egtePos2displayPos(targetNummerPos);
     int sensor = egtePos2displayPos(sensorPos);
-    int sensorMaxBerijk = egtePos2displayPos(PLAAT_BEGIN - SENSOR_OFFSET)  +  3;
+    int sensorMaxBerijk = egtePos2displayPos(GROOTSTE_PLAAT_BEGIN - SENSOR_OFFSET)  +  3;
 
     int volumeMargin = displayLengte/5;//16;
 

@@ -109,7 +109,7 @@ enum staats{
 
   S_SCHOONMAAK,
 
-
+  S_HOMEN_GEFAALD,
 
 
 
@@ -119,7 +119,7 @@ enum staats{
   
   S_NAAR_BEGIN_PLAAT,
   // S_BEGIN_PLAAT,
-  // S_SPELEN,
+  S_SPELEN,
   S_PLAAT_DIAMETER_METEN,
   S_NAALD_EROP,
 
@@ -160,6 +160,7 @@ void printStaat(int s){
 
   if( s == S_SCHOONMAAK           ){ Serial.print("SCHOONMAAK");          return;}
 
+  if( s == S_HOMEN_GEFAALD        ){ Serial.print("HOMEN_GEFAALD");       return;}
 
 
   if( s == S_BEGINNEN_SPELEN      ){ Serial.print("BEGINNEN_SPELEN");     return;}
@@ -168,7 +169,7 @@ void printStaat(int s){
   if( s == S_NAAR_BEGIN_PLAAT     ){ Serial.print("NAAR_BEGIN_PLAAT");    return;}
   if( s == S_PLAAT_DIAMETER_METEN ){ Serial.print("PLAAT_DIAMETER_METEN");    return;}
   // if( s == S_BEGIN_PLAAT          ){ Serial.print("BEGIN_PLAAT");         return;}
-  // if( s == S_SPELEN               ){ Serial.print("SPELEN");              return;}
+  if( s == S_SPELEN               ){ Serial.print("SPELEN");              return;}
   if( s == S_NAALD_EROP           ){ Serial.print("NAALD_EROP");          return;}
 
 
