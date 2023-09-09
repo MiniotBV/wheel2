@@ -663,14 +663,13 @@ bool karMotorUitvoeren()
 	armHoek = armHoekCall - armHoekOffset;
 
   //------------------------------limiet error
-  if( staat == S_SPELEN){
-	// if( (staat == S_NAAR_BEGIN_PLAAT   &&   staatVeranderd.sinds() > 500)    || staat == S_UITROLLEN_VOOR_SPELEN || staat == S_SPELEN || staat == S_PAUZE || staat == S_NAAR_NUMMER || staat == S_DOOR_SPOELEN || staat == S_TERUG_SPOELEN || staat == S_UITROLLEN_NA_SPOELEN ){
-		if(armHoekCall > 0.95){
+	if( (staat == S_NAAR_BEGIN_PLAAT   &&   staatVeranderd.sinds() > 500)    || staat == S_UITROLLEN_VOOR_SPELEN || staat == S_SPELEN || staat == S_PAUZE || staat == S_NAAR_NUMMER || staat == S_DOOR_SPOELEN || staat == S_TERUG_SPOELEN || staat == S_UITROLLEN_NA_SPOELEN ){
+		if(armHoekCall > 0.9){
 			setError(E_ARMHOEK_LIMIET_POS);
       arm.naaldEraf();
       setStaat(S_HOK);
 		}
-		if(armHoekCall < -0.95){
+		if(armHoekCall < -0.9){
 			setError(E_ARMHOEK_LIMIET_NEG);
       arm.naaldEraf();
 			setStaat(S_HOK);
