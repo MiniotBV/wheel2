@@ -1,6 +1,12 @@
 bool test;
 
 #define rpm33 33.333
+#define rpm45 45
+#define rpm78 78
+
+float autoRpm;
+
+bool plateauAan = false;
 
 bool opsnelheid;
 bool uitdraaien;
@@ -12,15 +18,49 @@ enum rpmStaats{
   AUTO,
   R33,
   R45,
-  R78
+  // R78
 };
 
 
 enum rpmStaats rpmStaat = AUTO;
 
 
+
+
+
+
+void updatePlateauRpm(){
+  if(!plateauAan){
+    return;    
+  }
+
+  if(rpmStaat == AUTO){
+    targetRpm = autoRpm;
+  }else if(rpmStaat == R33){
+    targetRpm = rpm33;
+  }else if(rpmStaat == R45){
+    targetRpm = rpm45;
+  }
+}
+
+
+
+
+
+void setPlateauRpm(float rpm){
+  autoRpm = rpm;
+
+  updatePlateauRpm();
+}
+
+
+
+
+
+
 void plateauDraaien(){
-  targetRpm = 33.333;
+  plateauAan = true;
+  setPlateauRpm(rpm33);
   // basis = 0;//basis33 * ((in / targetRpm));
   
   draaienInterval.reset();
@@ -31,8 +71,10 @@ void plateauDraaien(){
 
 
 
+
+
 void plateauStoppen(){
-  targetRpm = 0;
+  plateauAan = false;
 
   draaienInterval.reset();
   uitdraaien = true;

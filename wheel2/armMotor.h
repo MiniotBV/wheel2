@@ -1,28 +1,27 @@
-int armTargetKracht = 1600;
-int armKracht = 0;
-int armSnelheidOp = 4;
-int armSnelheidAf = 4;
-unsigned int armLoop = 0;
+#define MAX_ARMGEWICHT 4//gr
+#define MIN_ARMGEWICHT 0.5//gr
 
 
-// //op de plaat
-// int netUitHokKracht = 800;
-// int netOpDePlaatKracht = 1500;
+float armGewicht = 2.5;
 
+float armKracht500mg = 0.22;
+float armKracht4000mg = 0.56;
 
-// //van de plaat af
-// int netVanDePlaatKracht = 1000;
-// int netInHokKracht = 500;
+float armTargetKracht = 0.4;
+
+float armKracht = 0;
+float armSnelheidOp = 0.00025;
+float armSnelheidAf = 0.001;
 
 
 //op de plaat
-int netUitHokKracht = 500;
-int netOpDePlaatKracht = 1000;
+float netUitHokKracht = 0.15;
+float netOpDePlaatKracht = 0.2;
 
 
 //van de plaat af
-int netVanDePlaatKracht = 1000;
-int netInHokKracht = 500;
+float netVanDePlaatKracht = 0.2;
+float netInHokKracht = 0.15;
 
 
 bool armMotorAan = false;
@@ -31,6 +30,14 @@ bool armMotorAan = false;
 void armInit(){
   setPwm(armMotor);
 }
+
+
+
+void armGewichtUpdate(){
+  armGewicht = limieteerF(armGewicht,  MIN_ARMGEWICHT,   MAX_ARMGEWICHT);  
+  armTargetKracht = mapF(armGewicht,   MIN_ARMGEWICHT,   MAX_ARMGEWICHT,    armKracht500mg, armKracht4000mg);
+}
+
 
 
 
@@ -72,7 +79,7 @@ void armFunc(){
       }
     }
 
-    pwmWrite(armMotor, armKracht);
+    pwmWriteF(armMotor, armKracht);
   }
 
 }

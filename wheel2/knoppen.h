@@ -21,11 +21,10 @@ int           knopIn[8];
 int           knopOud[8];
 int           knopStaat[8];
 unsigned long knopInterval[8];
-unsigned long knopAlleInterval;
-unsigned long ledBlinkInterval;
 
-
-
+Interval ledBlinkInterval(0, MILLIS);
+Interval knopAlleInterval(0, MILLIS);
+Interval specialeDisplayActie(0, MILLIS);
 
 
 int potVal = 0;
@@ -34,9 +33,6 @@ int potValPrev = 0;
 float potVolume = 0;
 float potVolumePrev = 0;
 float potVolumeDiv;
-float potVolumeFilter;
-float potVolumeFilterPrev;
-int pot2volume = 100;
 
 
 
@@ -53,8 +49,11 @@ void printKnoppen(){
 
 
 void ledBlink(){
-  ledBlinkInterval = millis();
+  ledBlinkInterval.reset();
 }
+
+
+
 
 const char* knopNaam(int knop){
   if(knop == KNOP_PLAY){
@@ -141,7 +140,7 @@ void knoppenUpdate(){
       if(       knopStaat[knop] == LOSGELATEN   &&    knopIn[knop] == INGEDRUKT ){//             KORT INGEDRUKT
         knopStaat[knop] = INGEDRUKT;
         
-        knopAlleInterval = millis();
+        knopAlleInterval.reset();
         knopInterval[knop] = millis();
         
         // Serial.print(knopNaam( knop));Serial.println(" in ");
@@ -157,7 +156,7 @@ void knoppenUpdate(){
       
       else if( knopStaat[knop] == INGEDRUKT    &&    knopIn[knop] == LOSGELATEN ){//               KORT LOSGELATEN
         knopStaat[knop] = LOSGELATEN;
-        knopAlleInterval = millis();
+        knopAlleInterval.reset();
         
         // Serial.print(knopNaam( knop));Serial.println(" los ");
 
@@ -185,6 +184,22 @@ void knoppenUpdate(){
             ledBlink();  //led blink
           }
         }
+
+
+        if(knop == KNOP_RPM){
+          if(rpmStaat == AUTO){
+            rpmStaat = R33;
+          }
+          else if(rpmStaat == R33){
+            rpmStaat = R45;
+          }
+          else{
+            rpmStaat = AUTO;
+          }
+
+          updatePlateauRpm();
+          specialeDisplayActie.reset();
+        }
       }
       
       
@@ -192,7 +207,7 @@ void knoppenUpdate(){
       
       else if( knopStaat[knop] == INGEDRUKT    &&    millis() - knopInterval[knop]  >  KNOP_LANG ){//               LANG INGEDRUKT
         knopStaat[knop] = LANG_INGEDRUKT;
-        knopAlleInterval = millis();
+        knopAlleInterval.reset();
 
         // Serial.print(knopNaam( knop));Serial.println(" lang ");
 
@@ -229,7 +244,7 @@ void knoppenUpdate(){
       
       else if( knopStaat[knop] == LANG_INGEDRUKT  &&    knopIn[knop] == LOSGELATEN ){//                          LANG LOSGELATEN
         knopStaat[knop] = LOSGELATEN;
-        knopAlleInterval = millis();
+        knopAlleInterval.reset();
         
         // Serial.print(knopNaam( knop));Serial.println(" lang los ");
 
@@ -247,7 +262,7 @@ void knoppenUpdate(){
       
       else if( knopStaat[knop] == LANG_INGEDRUKT    &&    millis() - knopInterval[knop]  >  KNOP_SUPER_LANG ){//              SUPER LANG INGEDRUKT
         knopStaat[knop] = SUPER_LANG_INGEDRUKT;
-        knopAlleInterval = millis();   //led blink
+        knopAlleInterval.reset();   //led blink
         
         // Serial.print(knopNaam( knop));Serial.println(" super lang ");
 
@@ -263,7 +278,7 @@ void knoppenUpdate(){
       
       else if( knopStaat[knop] == SUPER_LANG_INGEDRUKT  &&    knopIn[knop] == LOSGELATEN ){//                    SUPER LANG LOSGELATEN
         knopStaat[knop] = LOSGELATEN;
-        knopAlleInterval = millis();   //led blink
+        knopAlleInterval.reset();  //led blink
         
         // Serial.print(knopNaam( knop));Serial.println(" super lang los ");
 
@@ -304,19 +319,62 @@ void knoppenUpdate(){
     }
 
     potVolume    +=     float(potVal - potValPrev) / AMAX;
-    potVolumeFilter += (potVolume - potVolumeFilter)/10;
-    potVolumeDiv = potVolumeFilter - potVolumeFilterPrev;
-    potVolumeFilterPrev = potVolumeFilter;
+    potValPrev = potVal;
+    
+    // potVolumeFilter += (potVolume - potVolumeFilter)/10;
 
-    if(staat == S_PAUZE){
-      // if(!isOngeveer(potVolumeDiv , 0, 0.0005)){
-        karTargetPos -= potVolumeDiv * 50;        
-      // }
-    }else{
+    potVolumeDiv = potVolume - potVolumePrev;
+
+    
+
+
+
+    if(staat == S_SCHOONMAAK){
+      if( !isOngeveer(potVolumeDiv, 0, 0.005) ){
+        potVolumePrev = potVolume;
+        
+        armGewicht += potVolumeDiv * 4;
+        armGewichtUpdate();           
+      }
+    }
+
+
+
+    else if(staat == S_PAUZE){
+      if( !isOngeveer(potVolumeDiv, 0, 0.005) ){
+        potVolumePrev = potVolume;
+        
+        karTargetPos -= potVolumeDiv * 50;           
+      }
+    
+           
 
     }
     
-    potValPrev = potVal;
+    
+    
+    else{
+      
+      if( !isOngeveer(potVolumeDiv, 0,   1.0 / 100) ){
+        potVolumePrev = potVolume;
+        
+        // Serial.print(":");
+        Serial.println(potVolumeDiv);
+        specialeDisplayActie.reset();
+        
+        // volume = limieteerF(volume + (potVolumeDiv * stappenPerOmwenteling), 0, 63);
+        volume += round(potVolumeDiv * 100);
+        volume = limieteerI(volume, 0, 63);        
+      }
+
+
+
+    }
+    
+
+
+
+
 
 
   }

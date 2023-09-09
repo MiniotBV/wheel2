@@ -257,37 +257,41 @@ void karMotorFunc(){
     else if(staat == S_PLAAT_DIAMETER_METEN){
       if(staatVeranderd.sinds() > 500){ // even een halve seconden wachten om de plaat detectie te laten werken
         
-        if(plaatAanwezig){
-          if(isOngeveer(karPos, PLAAT_BEGIN, 1)){
+        if(plaatAanwezig  &&  plaatAanwezigSindsKarPos == 0){
+          
+          if(isOngeveer(karPos, PLAAT_BEGIN, 1)){ // is het grofweg 12inch dan is het een gewone plaat en kan ie geweoon weer spelen
             naaldErop();
             Serial.println("plaatDia: 12inch");
           
-          }else if(plaatAanwezigSindsKarPos == 0){
+          }else{ // anders moet er gekeken worden wat de maat is en welke rpm daar bijhoort
             plaatAanwezigSindsKarPos = karPos - SENSOR_OFFSET;
             float inchDia = (plaatAanwezigSindsKarPos / 25.4)*2;
             if(isOngeveer(inchDia, 7, 1)){
-              Serial.println("7\"");
+              Serial.print("±7\" ");
+              setPlateauRpm(45);
             }
             Serial.print("plaatDia: ");
             Serial.println(inchDia);
           
-          }else if(karPos >  plaatAanwezigSindsKarPos + 0){
-            karPos -= KAR_SNELHEID;
-          
-          }else{
-            naaldErop();
-            
           }
-        
         }
         
-        if(!plaatAanwezig){
-          plaatAanwezigSindsKarPos = 0;
+        else if(karPos >  plaatAanwezigSindsKarPos + 0){
+          
           karPos -= KAR_SNELHEID;
           if(karPos <= SENSOR_OFFSET + PLAAT_EINDE){
             stoppen();
           }   
         }
+        
+        
+        else{
+          naaldErop();  
+        }
+      
+      
+      }else{
+        plaatAanwezigSindsKarPos = 0;
       }
     }
 
@@ -310,6 +314,19 @@ void karMotorFunc(){
       if(isNaaldEraf()){
         if(karPos == karTargetPos){
           naaldErop();
+        }else{
+          karPos += limieteerF( karTargetPos - karPos , -KAR_SNELHEID, KAR_SNELHEID);
+        }
+      }
+    }
+
+
+
+
+    else if(staat == S_JOGGEN){
+      if(isNaaldEraf()){
+        if(karPos == karTargetPos){
+          // naaldErop();
         }else{
           karPos += limieteerF( karTargetPos - karPos , -KAR_SNELHEID, KAR_SNELHEID);
         }

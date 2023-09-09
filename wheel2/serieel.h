@@ -107,13 +107,16 @@ void serieelFunc(){
         karMotorEnable = !karMotorEnable;
         Serial.println(karMotorEnable?"aan":"uit");
       }
-      else if(letter == 'f'){    //armmotor uit
-        armMotorAan = false;
-        Serial.println("arm motor uit");
+      else if(letter == 'N'){    //arm motor aan
+        setStaat(S_SCHOONMAAK);
       }
-      else if(letter == 'F'){    //arm motor aan
-        armMotorAan = true;
-        Serial.println("arm motor aan");
+      else if(letter == 'A'){    //arm motor target
+        armGewicht = Serial.parseFloat();
+        armGewichtUpdate();
+        Serial.print("armGewicht: ");
+        Serial.print(armGewicht);
+        Serial.print("  armTargetKracht: ");
+        Serial.println(armTargetKracht);
       }
       else if(letter == 'v'){    //set volume
         int i = Serial.parseInt();
@@ -132,9 +135,9 @@ void serieelFunc(){
         
       
       }
-      // else if(letter == 'S'){    //golven uit
-      //   TLE5012.printSamples();
-      // }
+      else if(letter == '~'){    //golven uit
+        TLE5012.printSamples();
+      }
     
     }
   }

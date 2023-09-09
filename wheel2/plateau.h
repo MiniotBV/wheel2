@@ -26,6 +26,13 @@ void plateauInit(){
 
 
 
+
+
+
+
+
+
+
 float maakP(){
   return plateauP;
 }   
@@ -62,7 +69,7 @@ void plateauFunc(){
     uitBuff = pid(vaart);//                  bereken motor kracht
     // uitBuff = pid(strobo.getVaart());//                  bereken motor kracht
 
-    if(targetRpm != 0){             //staat de motor aan?
+    if(plateauAan){             //staat de motor aan?
     
       pwmFase(uitBuff, motorP, motorN, false);
       
@@ -87,25 +94,26 @@ void plateauFunc(){
 
     float glad = TLE5012.getGlad();
 
-    if(targetRpm != 0){             //staat de motor aan?
+    
+    if(plateauAan){                   //staat de motor aan?
 
 
 
-      if( opsnelheid == true    ||    draaienInterval.sinds() > 3000){ //         tegen gehouden
+      if( opsnelheid == true){ //         tegen gehouden
         
         if(glad > targetRpm * 2 ){ //te snel 200%
           Serial.println("^");
-          if(test){
-            plateauStoppen();
-          }
-          stoppen();
+          // if(test){
+          //   plateauStoppen();
+          // }
+          // stoppen();
         }
-        else if(glad  <  targetRpm * 0.70){ //te langzaam 70%
-          Serial.println("T");
+        else if(glad  <  targetRpm * 0.70   &&   draaienInterval.sinds() > 500){ //te langzaam 70%
+          // Serial.println("T");----------------
           if(test){
             plateauStoppen();
           }
-          stoppen();
+          // stoppen();--------------------
         }
       }
 
@@ -115,8 +123,8 @@ void plateauFunc(){
         
         if(glad  <  targetRpm * 0.01   &&     draaienInterval.sinds() > 1000){//   <5% target snelheid na een kort tijd
           
-          Serial.println("kon niet opgang komen");
-          stoppen();
+          // Serial.println("kon niet opgang komen");
+          // stoppen();--------------------------------------------
         }
       }
 
@@ -132,9 +140,9 @@ void plateauFunc(){
 
 
 
-    if(targetRpm == 0 && draaienInterval.sinds() > 1000 && uitdraaien == false){//                              aangeslingerd
+    if( !plateauAan   &&   draaienInterval.sinds() > 1000   &&   uitdraaien == false){//                              aangeslingerd
       if(vaart  >  rpm33 * 0.50){                                                       //50% van de 33.3 snelheid
-        Serial.println("aangeslingerd");
+        Serial.println("A");
         if(test){
           plateauDraaien();
         }
@@ -149,7 +157,7 @@ void plateauFunc(){
     if(uitdraaien == true && glad < rpm33 * 0.05){ //     <5% van de 33.3 snelheid                                                    uitgedraaid
       uitdraaien = false;
       draaienInterval.reset();
-      Serial.println("uitgedraaid");
+      Serial.println("U");
     }
 
   }
