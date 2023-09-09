@@ -13,10 +13,28 @@
 
 #include "armMotor.h"
 
-#include "compVaartSensor.h"
+bool eepromPauze = false;
 
-COMPVAART TLE5012(16, plateauA, 4096);
-// VAART strobo(8, 0, 180*2);
+void enableInterupts(bool aan){
+    gpio_set_irq_enabled_with_callback(plateauA,   GPIO_IRQ_EDGE_RISE + GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
+    // gpio_set_irq_enabled_with_callback(plateauA,   GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
+  // gpio_set_irq_enabled_with_callback(plateauB,   GPIO_IRQ_EDGE_FALL + GPIO_IRQ_EDGE_RISE,  true,   &gpio_callback);
+    gpio_set_irq_enabled_with_callback(plateauIndex,   GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
+
+    pinMode(audioFreqPin, INPUT);
+    // gpio_set_irq_enabled_with_callback(audioFreqPin,   GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
+    gpio_set_irq_enabled_with_callback(audioFreqPin,   GPIO_IRQ_EDGE_RISE,  aan,   &gpio_callback);
+    // gpio_set_irq_enabled_with_callback(audioFreqPin,   GPIO_IRQ_EDGE_RISE + GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
+}
+
+#include "vaartSensor.h"
+VAART strobo(7, (60 / rpm33) * 1000); //1800
+// VAART strobo(7*2, (60 / rpm33) * 1000 * 2); //1800
+
+#include "compVaartSensor.h"
+// COMPVAART TLE5012(16, 4096); //elker 5ms is 11.4 samples en 22.75 per 10ms
+COMPVAART TLE5012(64, 8192); //elker 5ms is 11.4 samples en 22.75 per 10ms
+
 
 
 
@@ -37,7 +55,6 @@ Interval ledInt(200, MILLIS);
 
 
 
-#include "vaartSensor.h"
 
 
 
@@ -59,6 +76,7 @@ void setup() {
   Serial.begin(115200);
 
   EEPROM.begin(4096);
+  // TLE5012.recalCompSamples();
 
   versterkerInit();
 
@@ -75,18 +93,11 @@ void setup() {
 
   plateauInit();
 
+  delay(1);
+  
+  enableInterupts(true);
 
-  gpio_set_irq_enabled_with_callback(plateauA,   GPIO_IRQ_EDGE_RISE,  true,   &gpio_callback);
-
-  // gpio_set_irq_enabled_with_callback(plateauA,   GPIO_IRQ_EDGE_FALL + GPIO_IRQ_EDGE_RISE,  true,   &gpio_callback);
-  // gpio_set_irq_enabled_with_callback(plateauB,   GPIO_IRQ_EDGE_FALL + GPIO_IRQ_EDGE_RISE,  true,   &gpio_callback);
-
-  gpio_set_irq_enabled_with_callback(plateauIndex,   GPIO_IRQ_EDGE_FALL,  true,   &gpio_callback);
-
-  // gpio_set_irq_enabled_with_callback(plaatStrobo,   GPIO_IRQ_EDGE_FALL + GPIO_IRQ_EDGE_RISE,  true,   &gpio_callback);
-
-  multicore_launch_core1(core1_entry);
-
+  multicore_launch_core1(loop2);
 
   stoppen();
 }
@@ -96,15 +107,24 @@ void setup() {
 
 
 
-void core1_entry(){
+
+
+void loop2(){
+  
+
   while(1){
+    if(eepromPauze){
+      delay(1);
+    }
+
     displayUpdate();
-    
+  
     serieelFunc();
-    
+  
     knoppenUpdate();
 
     armFunc();
+    
   }
 }
 
@@ -114,8 +134,6 @@ void core1_entry(){
 void loop() {
 
   plaatLeesFunc();
-
-  
 
   karMotorFunc();
 
@@ -129,7 +147,7 @@ void loop() {
   pwmWriteF(ledWit, 0.5);
   // pwmWrite(ledRood, pow( ((cos( (PI*millis()) / 500.0 )+1)/2), 3) * PMAX);
 
-  pwmWrite(ledRood, plaatAanwezig ? (PMAX-1) : 0);
+  pwmWriteF(ledRood, plaatAanwezig ? 1 : 0);
 }
 
 
@@ -154,7 +172,11 @@ void gpio_callback(uint gpio, uint32_t events) {
     TLE5012.teller = 0;
   }  
 
-  // if(gpio == plaatStrobo){
+  if(gpio == audioFreqPin){
+    strobo.interrupt();
+  }
+
+  //   if(gpio == plaatStrobo){
   //   strobo.interrupt();
   // }
 

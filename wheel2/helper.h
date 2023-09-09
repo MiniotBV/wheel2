@@ -1,3 +1,8 @@
+#define rpm33 33.333
+#define rpm45 45
+#define rpm78 78
+
+
 #define AMAX 4095
 
 
@@ -39,6 +44,9 @@ bool isOngeveer(float waarde, float vergelijk, float marge){
 }
 
 
+bool isTussen(float waarde, float min, float max){
+  return   waarde > min   &&   waarde < max;
+}
 
 
 

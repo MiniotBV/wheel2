@@ -28,6 +28,8 @@
 #define hoekSensor          26//~ 
 #define plaatLees           27//~ 
 
+#define audioFreqPin        29
+
 
 
 // display

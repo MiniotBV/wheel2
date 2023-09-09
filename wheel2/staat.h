@@ -1,8 +1,6 @@
 bool test;
 
-#define rpm33 33.333
-#define rpm45 45
-#define rpm78 78
+
 
 float autoRpm;
 

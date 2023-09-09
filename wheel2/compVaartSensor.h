@@ -39,7 +39,7 @@ class COMPVAART{
   public:
     volatile unsigned int vaartInterval;
     volatile unsigned int sampleNum;
-    volatile          int samples[100];
+    volatile          int samples[200];
     volatile unsigned int sampleTeller = 0;
     volatile unsigned long tijd;
     volatile unsigned int interval;
@@ -47,29 +47,28 @@ class COMPVAART{
     float gemiddelde = sampleMax;
 
     float glad;
+    float div;
+    float dav;
 
     int glitchTeller;
 
-    bool Anu;
-    bool Aoud;
     int dir;
 
     float pulsenPerRev;
     int teller = 0;
-    int pin;
-
-    float compSamples[4096];
-    bool compAan = true;
 
 
-    COMPVAART(int samps, int p, float ppr){
+    // float compSamples[4096];
+    float compSamples[8192];
+    bool compensatieMeten = false;
+
+
+    COMPVAART(int samps, float ppr){
       sampleNum = samps;
-      pin = p;
       pulsenPerRev = ppr;
+      
       clearSamples();
-
       clearCompSamples();
-
     }
 
 
@@ -81,9 +80,9 @@ class COMPVAART{
       tijd = micros();
 
       dir = 1;
-      if(gpio_get(plateauB)){
-        dir = -1;
-      }  
+      // if(gpio_get(plateauB)){
+      //   dir = -1;
+      // }  
       
       
       interval = tijd - vaartInterval;
@@ -100,22 +99,123 @@ class COMPVAART{
       if(teller >= pulsenPerRev){teller = 0;}
       if(teller < 0){teller = pulsenPerRev - 1;}
 
-      shiftSamples((interval * dir) / compSamples[teller]);
+
+      div = getVaart() / strobo.getVaart();
+      
+      if(compensatieMeten){
+        shiftSamples((interval * dir));
+
+        if(isOngeveer(div, 1, 0.5)){
+          compSamples[teller] += ( div - compSamples[teller] ) / 10;
+        }
+
+      }else{
+        shiftSamples((interval * dir) * compSamples[teller]);
+      }
+      
+      
+      
+      dav = compSamples[teller];
+      
+      
     }
 
 
 
+
+
+
+    void toggleCompensatieModus(){
+      compensatieMeten = !compensatieMeten;
+
+      if(compensatieMeten){
+        clearCompSamples();
+        Serial.println("meten aan");
+      }else{
+        Serial.println("meten uit");
+      }
+    }
+
+
+
+
+
+    // void recalCompSamples(){
+    //   for(int i = 0;   i < pulsenPerRev;   i+=2){
+    //     compSamples[i] = eepLeesFloat(i);
+    //     compSamples[i+1] = compSamples[i];
+    //   }
+
+    //   Serial.println("gerecalt");
+    // }
 
 
 
     void recalCompSamples(){
-      for(int i = 0;   i < pulsenPerRev;   i+=2){
-        compSamples[i] = eepLeesFloat(i);
-        compSamples[i+1] = compSamples[i];
+      for(int i = 0;   i < pulsenPerRev;   i+=4){
+        // compSamples[i*2] = eepLeesFloat(i*2);
+        // compSamples[(i*2)+1] = compSamples[i*2];
+        
+        compSamples[i*4] = eepLeesFloat(i/2);
+        compSamples[(i*4)+1] = compSamples[i*4];
+        compSamples[(i*4)+2] = compSamples[i*4];
+        compSamples[(i*4)+3] = compSamples[i*4];
       }
 
-      // Serial.println("gerecalt");
+      Serial.println("gerecalt");
     }
+
+
+
+
+    // void saveCompSamples(){
+    //   eepromPauze = true;
+    //   delay(20);
+    //   // enableInterupts(false);
+
+    //   for(int i = 0;   i < pulsenPerRev;   i+=2){
+    //     eepSchrijfFloat(i,   (compSamples[i] + compSamples[i+1])/2);
+    //   }
+
+    //   // bool error = EEPROM.commit();
+    //   // Serial.println(error ? "opgeslagen: "   :   "faaal: ");
+
+    //   eepromPauze = false;
+    //   // enableInterupts(true);
+    // }
+
+
+
+    void saveCompSamples(){
+      eepromPauze = true;
+      delay(20);
+      // enableInterupts(false);
+
+      for(int i = 0;   i < pulsenPerRev;   i+=4){
+        float inpol = ( compSamples[(i*4)+0] + 
+                        compSamples[(i*4)+1] + 
+                        compSamples[(i*4)+2] + 
+                        compSamples[(i*4)+3]   )/4;
+                        
+        eepSchrijfFloat(i/2,   inpol);
+      }
+
+      // bool error = EEPROM.commit();
+      // Serial.println(error ? "opgeslagen: "   :   "faaal: ");
+
+      eepromPauze = false;
+      // enableInterupts(true);
+    }
+
+
+
+
+
+
+
+
+
+
 
     void clearCompSamples(){
       for(int i = 0;   i < pulsenPerRev;   i++){
@@ -128,7 +228,7 @@ class COMPVAART{
 
 
 
-    void printSamples(){
+    void printCompSamples(){
       for(int i = 0;   i < pulsenPerRev;   i++){
         Serial.println(compSamples[i], 3);
         delay(1);

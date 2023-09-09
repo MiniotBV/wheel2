@@ -16,13 +16,11 @@ class VAART{
 
     float pulsenPerRev;
     int teller = 0;
-    int pin;
 
 
 
-    VAART(int samps, int p, float ppr){
+    VAART(int samps, float ppr){
       sampleNum = samps;
-      pin = p;
       pulsenPerRev = ppr;
       for(int i = 0; i < sampleNum; i++){
         samples[i] = sampleMax;        

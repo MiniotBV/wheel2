@@ -12,8 +12,19 @@ void serieelFunc(){
 
     if(golven){
       Serial.print(TLE5012.vaart);
+      // Serial.print(", ");
+      // Serial.print(TLE5012.glad);
       Serial.print(", ");
-      Serial.print(TLE5012.glad);
+      Serial.print(strobo.vaart);
+      
+      Serial.print(", ");
+      Serial.print(TLE5012.div, 3);
+      Serial.print(", ");
+      Serial.print(TLE5012.dav, 3);
+
+      
+      
+      
       Serial.print(", ");
       Serial.print(plaatLeesRuw);
       // Serial.print(", ");
@@ -29,7 +40,7 @@ void serieelFunc(){
       Serial.print(", ");
       Serial.print(potVolume);
       Serial.print(", ");
-      Serial.print(uitBuff);
+      Serial.print(uitBuff * 30);
       Serial.print(", ");
       // Serial.print(armHoekSlow);//1696);
       // Serial.print(", ");
@@ -135,11 +146,17 @@ void serieelFunc(){
         
       
       }
-      else if(letter == 'R'){    //golven uit
+      else if(letter == 'r'){    //golven uit
         TLE5012.recalCompSamples();
       }
+      else if(letter == 's'){    //golven uit
+        TLE5012.saveCompSamples();
+      }
+      else if(letter == 'c'){    //golven uit
+        TLE5012.toggleCompensatieModus();
+      }
       else if(letter == '~'){    //golven uit
-        TLE5012.printSamples();
+        TLE5012.printCompSamples();
       }
     
     }
