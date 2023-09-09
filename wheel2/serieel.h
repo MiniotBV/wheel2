@@ -142,9 +142,11 @@ void serieelFunc(){
       //------------------------------------------------------------------------SERIEEL PLATEAU MOTOR
       if(letter == 'G'){    //gol aan
         golven = true;
+        Serial.println("golven aan");
       }
       else if(letter == 'g'){    //golven uit
         golven = false;
+        Serial.println("golven uit");
       }
       else if(letter == 'y'){    //plaat lees golven
         plaatLeesGolven = !plaatLeesGolven;
@@ -162,7 +164,8 @@ void serieelFunc(){
         stoppen();
       }
       else if(letter == 'D'){
-        spelen();
+        // spelen();
+        plateauDraaien();
       }
       else if(letter == 'P'){
         pauze();
@@ -171,6 +174,8 @@ void serieelFunc(){
         armHoekCalibreer();
       }
       
+
+
       else if(letter == 'F'){
         naaldErop();
       }
@@ -181,8 +186,6 @@ void serieelFunc(){
         armTargetGewicht = Serial.parseFloat();
         Serial.println("armTargetGewicht: " + String(armTargetGewicht));
       }
-
-
       else if(letter == 'k'){    //set karP
         karP = Serial.parseFloat();
         Serial.println("karP: " + String(karP, 5));
@@ -198,8 +201,6 @@ void serieelFunc(){
           Serial.println("plateau PID");
         }
       }
-
-
       else if(letter == 'p'){    //set P
         if(karPIDveranderen){
           karP = Serial.parseFloat();

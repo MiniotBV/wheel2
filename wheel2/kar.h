@@ -12,10 +12,11 @@ float mm2stap = 1 / stap2mm;
 float karInterval;
 
 
-float karP = 0.002;//0.0005; //0.00005;//0.00025;
-float karI = 0.005; //0.00005;//0.00025;
-float karD = 0;//-0.003;
+float karP = 0.0001;//0.0005; //0.00005;//0.00025;
+float karI = 0;//0.005; //0.00005;//0.00025;
+float karD = 0.0001;//-0.003;
 
+float karBasis;
 float karPcomp = 0;
 
 
@@ -431,10 +432,18 @@ void staatDingen(){
     
     if(naaldErop()){
       
-      nieuwePos = karPos + limieteerF(armHoek * -karP, -3, 3);
-      nieuwePos += limieteerF(armHoekDiv * karD, -0.3, 0.3);
-      nieuwePos = limieteerF(nieuwePos, 0, plaatBegin);
-      beweegKarNaarPos(nieuwePos, KAR_MAX_SNELHEID);
+      float acu = 0;
+      acu += limieteerF(armHoek * -karP, -0.5, 0.5);
+      acu += limieteerF(armHoekDiv * karD, -0.3, 0.3);
+      // karBasis += armHoek * -karI;
+      // acu += limieteerF(karBasis, -0.1, 0.1);
+
+      karPos += acu;
+      
+      // nieuwePos = karPos + limieteerF(armHoek * -karP, -3, 3);
+      // nieuwePos += limieteerF(armHoekDiv * karD, -0.3, 0.3);
+      // nieuwePos = limieteerF(nieuwePos, 0, plaatBegin);
+      // beweegKarNaarPos(nieuwePos, KAR_MAX_SNELHEID);
       
       if(karPos <= PLAAT_EINDE){
         Serial.println("kar heeft de limiet berijkt");

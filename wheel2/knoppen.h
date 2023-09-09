@@ -116,8 +116,10 @@ void getKnopData(){
     for(int i = 0; i < 8; i++){
     
       knopIn[i] = digitalRead(displayUIT);
+      delayMicroseconds(1);
 
       gpio_put(displayKLOK, 1);
+      delayMicroseconds(1);
       gpio_put(displayKLOK, 0);
     }
 }
