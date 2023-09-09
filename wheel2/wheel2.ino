@@ -1,7 +1,7 @@
 //  Wheel2 
 //  rp2040
 
-#define versie 101
+#define versie 102
 
 
 #include <stdio.h>
