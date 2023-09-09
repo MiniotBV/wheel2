@@ -89,8 +89,11 @@ class Orientatie //          QMA7981
 	byte adress = 0b0010010;
 
 	float x, y, z;
-	float gefilterd, gefilterdPrev;
-	float gefilterdOffset = 0;//0.05;
+  float xRuw, yRuw, zRuw;
+	float gefilterdY, gefilterdYPrev;
+	float xOffset = 0;//0.05;
+  float yOffset = 0;//0.05;
+  float zOffset = 0;//0.05;
 	int id;
 	unsigned long loop;
 	bool eersteKeer = true;
@@ -100,19 +103,26 @@ class Orientatie //          QMA7981
 
 	void print()
 	{
-		Serial.print("x:");
+		Serial.print("xRuw:");
+		Serial.print(xRuw,3);
+		Serial.print(" yRuw:");
+		Serial.print(yRuw,3);
+		Serial.print(" zRuw:");
+		Serial.println(zRuw,3);
+
+    Serial.print("x:");
 		Serial.print(x,3);
 		Serial.print(" y:");
 		Serial.print(y,3);
 		Serial.print(" z:");
-		Serial.print(z,3);
+		Serial.println(z,3);
 		
 		Serial.println( isStaand ? " staand" : " liggend");
 	}
 
 	void update()
 	{
-		if(orientatieInt.loop() && millis() > 200){
+		if(orientatieInt.loop() && millis() > 200){//staat hij ook al 200ms aan?
 			
 			if(eersteKeer){
 				eersteKeer = false;
@@ -123,17 +133,21 @@ class Orientatie //          QMA7981
 
 			// id = i2cRead(adress, 0x00);
 
-			x += (read_accel_axis(1) - x)/10;
-			y += (read_accel_axis(3) - y)/10;
-			z += (read_accel_axis(5) - z)/10;
+			xRuw += (read_accel_axis(1) - xRuw)/10;
+			yRuw += (read_accel_axis(3) - yRuw)/10;
+			zRuw += (read_accel_axis(5) - zRuw)/10;
 
-			gefilterdPrev += ((y - gefilterdOffset) - gefilterdPrev) / 10;
-			gefilterd += (gefilterdPrev - gefilterd) / 10;
+      x += ( (xRuw - xOffset) - x) / 10;
+
+			gefilterdYPrev += ( (yRuw - yOffset) - gefilterdYPrev) / 10;
+			y += (gefilterdYPrev - y) / 10;
+
+      z += ( (zRuw - zOffset) - z) / 10;
 
 			if(isFout){
-				isFout = ! isOngeveer(gefilterd, 0, 0.025);
+				isFout = ! isOngeveer(y, 0, 0.025);
 			}else{
-				isFout = ! isOngeveer(gefilterd, 0, 0.1);        
+				isFout = ! isOngeveer(y, 0, 0.1);        
 			}
 			
 
@@ -167,8 +181,14 @@ class Orientatie //          QMA7981
 	}
 
 	void calibreer(){
-		gefilterdOffset += gefilterd;
-		debug("orientatie.gefilterdOffset: " + String(gefilterdOffset, 5)); 
+		xOffset += x;
+		debug("orientatie.xOffset: " + String(xOffset, 5)); 
+
+    yOffset += y;
+		debug("orientatie.yOffset: " + String(yOffset, 5)); 
+
+    zOffset += (z + 1); // hij moet op -1 uitkomen
+		debug("orientatie.zOffset: " + String(zOffset, 5)); 
 	}  
 
 

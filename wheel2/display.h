@@ -281,7 +281,7 @@ void displayUpdate(){
 
 				float floatI = float(i) / displayLengte;
 
-				if(isOngeveer(floatI, (-orientatie.gefilterd*4) + 0.5, 0.1)){ // belltje
+				if(isOngeveer(floatI, (-orientatie.y*4) + 0.5, 0.1)){ // belltje
 					displayData[i] = 0.1;
 				}
 

@@ -124,11 +124,6 @@ class COMPVAART
     int tellerSindsReset;
 
 
-    int dx;
-    #define polyCount 10
-    int offsetLijst[polyCount];    
-
-
 
 
 
@@ -148,8 +143,7 @@ class COMPVAART
 			}
 
 
-      // maakOnbalansFilterCurve();
-      maakOnbalansPolygon();
+      maakOnbalansFilterCurve();
 		}
 
 
@@ -181,7 +175,7 @@ class COMPVAART
 			tijd = micros();
 
 
-      // procesTijd = micros();
+      procesTijd = micros();
 
 			//------------------------------------------------------RICHTING
 			dir = 1;
@@ -366,56 +360,12 @@ class COMPVAART
 
 			){ 
         
-        
-
-        //--------------------------------------------------------------------------------OUD
-        // int snelheidsError = (vaartCenterComp - targetRpm ) * 1000.0;
-        // for(int i = 0; i < onbalansFilterCurveBreedte; i++){
-        //   int waarde = onbalansFilterCurve[i] * snelheidsError;
-        //   onbalansCompensatie[(teller + 1 + i) % pulsenPerRev] += waarde;
-        //   onbalansCompensatie[(teller + pulsenPerRev - i    ) % pulsenPerRev] += waarde;
-        // }
-
-
-        //-----------------------------------------------------------------------------------NIEUW
-        // int snelheidsError = (vaartCenterComp - targetRpm ) * 1000.0;
-        // int laatsteY = snelheidsError;
-        // int laatsteX = 0;
-        // for(int s = 0; s < polyCount; s++){
-        //   int herschaald = onbalansFilterCurve[s] * snelheidsError;
-        
-        //   laatsteX += dx;
-
-        //   for(int i = 0; i < dx; i++){
-        //     onbalansCompensatie[(teller + 1 + laatsteX + i) % pulsenPerRev] -= laatsteY;
-        //     onbalansCompensatie[(teller + pulsenPerRev - laatsteX - i) % pulsenPerRev] -= laatsteY;
-        //     laatsteY += herschaald;
-        //   }
-        // }
-
-        int snelheidsError = (vaartCenterComp - targetRpm) * 1000.0;
-        
-        int s = 0;
-        int helling = onbalansFilterCurve[0] * snelheidsError;
-        int laatsteY = snelheidsError;
-        int volgendeX = dx;
-
+        int snelheidsError = (vaartCenterComp - targetRpm ) * 1000.0;
         for(int i = 0; i < onbalansFilterCurveBreedte; i++){
-          if (i > volgendeX) {
-            s += 1;
-            helling = onbalansFilterCurve[s] * snelheidsError;
-
-            volgendeX += dx;
-          } 
-
-          onbalansCompensatie[(teller + 1 + i) % pulsenPerRev] -= laatsteY;
-          onbalansCompensatie[(teller + pulsenPerRev - i) % pulsenPerRev] -= laatsteY;
-
-          laatsteY += helling;
+          int waarde = onbalansFilterCurve[i] * snelheidsError;
+          onbalansCompensatie[(teller + 1 + i) % pulsenPerRev] += waarde;
+          onbalansCompensatie[(teller + pulsenPerRev - i    ) % pulsenPerRev] += waarde;
         }
-        
-
-
         
 				// digitalWrite(ledWit, 1);//zet led aan
 			}else{
@@ -425,7 +375,7 @@ class COMPVAART
 
 
 			if(onbalansCompAan){
-				onbalansComp = - onbalansCompensatie[rondTrip( teller + onbalansFase, pulsenPerRev)] * onbalansCompGewicht / 1000000;
+				onbalansComp = - (onbalansCompensatie[rondTrip( teller + onbalansFase, pulsenPerRev)] / (100000000.0) ) * onbalansCompGewicht;
 			}else{
 				onbalansComp = 0;
 			}
@@ -510,6 +460,7 @@ class COMPVAART
 
     void maakOnbalansFilterCurve(){
       
+      float totaal = 0;
       onbalansFilterCurveBreedte = pulsenPerRev/2;
       
       for(int i = 0; i < pulsenPerRev/2; i++){
@@ -518,7 +469,8 @@ class COMPVAART
         float waarde = exp( -onbalansFilterBreedte * (j*j));
 
         if(waarde > 0.01){
-          onbalansFilterCurve[i]  =  waarde * 1000;      
+          onbalansFilterCurve[i]  =  waarde * 1000;
+          totaal += waarde;        
         
         }else{
           if( onbalansFilterCurveBreedte > i ){
@@ -529,18 +481,6 @@ class COMPVAART
     }
 
 
-    void maakOnbalansPolygon(){
-      onbalansFilterCurveBreedte = pulsenPerRev/2;
-
-      float curveBreedte = 80 / pulsenPerRev;
-      dx = onbalansFilterCurveBreedte / polyCount;
-      
-      for(int i = 0; i < polyCount; i++) {
-        float dy =  (exp(-curveBreedte * (i + 1) * (i + 1) * dx * dx) - exp(-curveBreedte * i * i * dx * dx));
-        onbalansFilterCurve[i] = 1000 * dy / dx;
-        offsetLijst[i] = dx * i;
-      }
-    }
 
 
 

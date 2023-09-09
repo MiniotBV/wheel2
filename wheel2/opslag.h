@@ -12,7 +12,9 @@ float eepromVersie;
 #define EEPROM_ARMKRACHT_HOK      130
 #define EEPROM_ARMGEWICHT         120
 
-#define EEPROM_WATERPAS_OFFSET    200
+#define EEPROM_WATERPAS_OFFSETX   200
+#define EEPROM_WATERPAS_OFFSETY   210
+#define EEPROM_WATERPAS_OFFSETZ   220
 
 #define EEPROM_TRACK_OFFSET       300
 
@@ -56,7 +58,9 @@ void eepromUitlezen(){
 
 	eepromLeesFloatWaarde( EEPROM_ARMGEWICHT,         arm.targetGewicht);
 
-	eepromLeesFloatWaarde( EEPROM_WATERPAS_OFFSET,    orientatie.gefilterdOffset);
+	eepromLeesFloatWaarde( EEPROM_WATERPAS_OFFSETX,   orientatie.xOffset);
+  eepromLeesFloatWaarde( EEPROM_WATERPAS_OFFSETY,   orientatie.yOffset);
+  eepromLeesFloatWaarde( EEPROM_WATERPAS_OFFSETZ,   orientatie.zOffset);
 
 	eepromLeesFloatWaarde( EEPROM_TRACK_OFFSET,       trackOffset);
 
@@ -74,7 +78,9 @@ void eepromOpslaan(){
 	EEPROM.put( EEPROM_ARMKRACHT_4000MG,    arm.krachtHoog);
   EEPROM.put( EEPROM_ARMKRACHT_HOK,       arm.netInHokGewicht);
 	EEPROM.put( EEPROM_ARMGEWICHT,          arm.targetGewicht);
-	EEPROM.put( EEPROM_WATERPAS_OFFSET,     orientatie.gefilterdOffset);
+	EEPROM.put( EEPROM_WATERPAS_OFFSETX,    orientatie.xOffset);
+  EEPROM.put( EEPROM_WATERPAS_OFFSETY,    orientatie.yOffset);
+  EEPROM.put( EEPROM_WATERPAS_OFFSETZ,    orientatie.zOffset);
 	EEPROM.put( EEPROM_TRACK_OFFSET,        trackOffset);
 
 	EEPROM.put( EEPROM_ARMHOEK_MIN,         armHoekMin);
@@ -91,7 +97,9 @@ void eepromPrint(){
 	Serial.println("EEPROM_ARMKRACHT_4000MG:  " + String(arm.krachtHoog,                5));
   Serial.println("EEPROM_ARMKRACHT_HOK:     " + String(arm.netInHokGewicht,           5));
 	Serial.println("EEPROM_ARMGEWICHT:        " + String(arm.targetGewicht,             5));
-	Serial.println("EEPROM_WATERPAS_OFFSET:   " + String(orientatie.gefilterdOffset,    5));
+  Serial.println("EEPROM_WATERPAS_OFFSETX:  " + String(orientatie.xOffset,            5));
+  Serial.println("EEPROM_WATERPAS_OFFSETY:  " + String(orientatie.yOffset,            5));
+	Serial.println("EEPROM_WATERPAS_OFFSETZ:  " + String(orientatie.zOffset,            5));
 	Serial.println("EEPROM_TRACK_OFFSET:      " + String(trackOffset,                   5));
 	Serial.println("EEPROM_ARMHOEK_MIN        " + String(armHoekMin,                    5));
 	Serial.println("EEPROM_ARMHOEK_MAX        " + String(armHoekMax,                    5));
@@ -109,8 +117,3 @@ void opslagInit(){
 
 
 
-
-void eepromCalibreerOrientatie(){
-	orientatie.gefilterdOffset = orientatie.gefilterd;
-	Serial.println("orientatie.gefilterdOffset: " + String(orientatie.gefilterdOffset, 5));  
-}

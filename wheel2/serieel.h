@@ -259,7 +259,7 @@ void checkenVoorCommando(int info){
 
 
 	if(checkZinFloat(   "SOG",    "strobo.onbalansCompGewicht", info, strobo.onbalansCompGewicht)){return;}
-  if(checkZinFloat(   "SOFB",  "strobo.onbalansFilterBreedte",  info, strobo.onbalansFilterBreedte)){strobo.maakOnbalansPolygon(); return;}
+  if(checkZinFloat(   "SOFB",  "strobo.onbalansFilterBreedte",  info, strobo.onbalansFilterBreedte)){strobo.maakOnbalansFilterCurve(); return;}
   if(checkZinInt(     "SOF",    "strobo.onbalansFase",      info, strobo.onbalansFase)){return;}
 
 	if(checkZinCommando("SCZ",    "strobo.clearCompSamplesOpTellerNull()", info)){   strobo.clearCompSamplesOpTellerNull(); return;}
@@ -323,7 +323,7 @@ void checkenVoorCommando(int info){
 		
 		
 		// printKnoppen();
-		// orientatie.print();
+		orientatie.print();
 		// Serial.println();
 
 		Serial.println("strobo.onbalansFase: " + String(strobo.onbalansFase));
@@ -378,22 +378,6 @@ void serieelFunc(){
       
       // Serial.print(", ");
 			// Serial.print(strobo.vaartLowPass, 3);
-
-
-      // for(int i = 1; i < strobo.harmonisen + 1; i++){
-      //   Serial.print(", ");
-      //   Serial.print(strobo.onbalansSinTotaal[i], 3);
-      //   Serial.print(", ");
-      //   Serial.print(strobo.onbalansCosTotaal[i], 3);
-      // }
-
-
-      // for(int i = 1; i < strobo.harmonisen + 1; i++){
-      //   Serial.print(", ");
-      //   Serial.print(atan2(strobo.onbalansCosTotaal[i], strobo.onbalansSinTotaal[i]) * 114.6, 3);
-      //   Serial.print(", ");
-      //   Serial.print(sqrt( strobo.onbalansSinTotaal[i] * strobo.onbalansSinTotaal[i]   +  strobo.onbalansCosTotaal[i] * strobo.onbalansCosTotaal[i]), 3);
-      // }
 
 
       
