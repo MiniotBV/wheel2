@@ -167,4 +167,6 @@ void gaNaarNummer(float pos);
 void naarVorrigNummer();
 void naarVolgendNummer();
 
+void plaatLeesNaKijken();
+
 

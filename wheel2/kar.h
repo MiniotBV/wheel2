@@ -401,7 +401,11 @@ void staatDingen(){
 			}
 
 			targetNummerPos = plaatBegin;
+      plaatLeesNaKijken();
+
 			setStaat(S_UITROLLEN_VOOR_SPELEN);
+      
+
 			return;
 		}
 		
@@ -411,6 +415,7 @@ void staatDingen(){
 			plaatBegin = ELPEE_PLAAT_BEGIN;
 			Serial.println("plaatDia: 12inch");
 			setPlateauRpm(rpm33);
+      plaatLeesNaKijken();
 
 			setStaat(S_SPELEN);
 			return;
