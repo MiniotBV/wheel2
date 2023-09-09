@@ -14,15 +14,15 @@ String vorrigeCommando = "";
 
 
 
+String debugBericht = "";
 
-// String voegMargeToe(String waarde, int lengte){
+void debug(String bericht){
+  debugBericht += bericht;
+}
+
+void printDebug(){
   
-//   while( waarde.length() < lengte){
-//     waarde += " "; 
-//   }
-
-//   return waarde;
-// }
+}
 
 
 
@@ -158,6 +158,17 @@ bool checkZinBool(String vergelijking, String beschrijving, int infoPrinten, boo
 	Serial.println(String(waarde));
 	return true;
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -353,8 +364,8 @@ void serieelFunc(){
       Serial.print(", ");
 			Serial.print((float)strobo.teller / strobo.pulsenPerRev, 3);
 
-      Serial.print(", ");
-			Serial.print(strobo.onbalansFilterCurve[strobo.teller]);
+      // Serial.print(", ");
+			// Serial.print(strobo.onbalansFilterCurve[strobo.teller]);
 
 
       
@@ -379,8 +390,8 @@ void serieelFunc(){
 
 
       
-      Serial.print(", ");
-			Serial.print(strobo.procesInterval);
+      // Serial.print(", ");
+			// Serial.print(strobo.procesInterval);
       
 
 

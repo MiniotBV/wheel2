@@ -294,7 +294,7 @@ bool volumeOverRide = false;
 
 
 bool isNaaldLangGenoegOpDePlaatVoorGeluid(){
-	return arm.isNaaldEropVoorZoLang(2000)  &&  staat == S_SPELEN;
+	return arm.isNaaldEropVoorZoLang(2000)  &&  staat == S_SPELEN  &&  !puristenMode; // als de puristenMode aanstaat mag er geen geluid komen
 }
 
 
@@ -319,7 +319,7 @@ void volumeFunc(){
 
     if(!isNaaldLangGenoegOpDePlaatVoorGeluid()   &&    !volumeOverRide){
       digitalWrite(koptelefoonEn, 0);
-      volumeOud = -10;// om een herzend te triggeren
+      volumeOud = -88;// om een herzend te triggeren
       // Serial.println("geluid uit");
       return;
     }

@@ -180,6 +180,7 @@ void plateauStoppen();
 void plateauDraaien();
 void zetNummersAlsEenSingletje();
 
+void naarBeginPlaat(); 
 void gaNaarNummer(float pos);
 void naarVorrigNummer();
 void naarVolgendNummer();

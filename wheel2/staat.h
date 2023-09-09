@@ -99,12 +99,14 @@ void stoppen(){
 	}else{
 		setStaat(S_STOPPEN);
 	}
-	plateauStoppen();  
+	plateauStoppen();
+  puristenMode = false;
 }
 
 void spelen(){
 	setStaat(S_HOMEN_VOOR_SPELEN); // eerst ff home
 	plateauDraaien();
+  puristenMode = false;
 }
 
 void schoonmaakStand(){
@@ -115,7 +117,7 @@ void schoonmaakStand(){
 
 void stoppenOfHerhalen(){
 	if(herhaalDeHelePlaat){
-		gaNaarNummer(plaatBegin);    
+		naarBeginPlaat();  
 	}else{
 		stoppen();
 	}
@@ -148,17 +150,17 @@ void pauze(){
 enum errors{
 	E_GEEN = 0,
 	
-	E_NAALD_TERUG_GELOPEN = 2,
-	E_NAALD_NIET_BEWOGEN = 3,
+	E_NAALD_TERUG_GELOPEN = 2, // de naalt is terug gelopen (naar buiten), dit kan betekenen dat de naalt nooit op de plaat is gekomen of dat de tracking heel slecht is
+	E_NAALD_NIET_BEWOGEN = 3, // de naalt heeft te lang niet bewogen, dit kan betekenen dat de tracking slecht is of dat de naalt er niet op zit
 
 	E_PLAAT_NIET_OPGANG = 4,
 
-	E_KON_NIET_HOMEN = 5,
+	E_KON_NIET_HOMEN = 5,// het homen heb niet kunnen voltooien, dit kan beteken dat er een obstructie is (kabel) of dat de kar heugel los is of dat de calibratie niet goed meer is
 
-	E_ARMHOEK_LIMIET_POS = 6,//
-	E_ARMHOEK_LIMIET_NEG = 7,//
+	E_ARMHOEK_LIMIET_POS = 6,// dat arm is in de buurt van een limiet gekomen, mischien vast in de home positie? of een harde stoot
+	E_ARMHOEK_LIMIET_NEG = 7,// dat arm is in de buurt van een limiet gekomen, dit kan betekenen dat er een obstuktie is buiten de kar waar hij tijdens het uitrijden tegenaan komt, of een harde stoot
 
-	E_TE_GROTE_UITSLAG = 8,
+	E_TE_GROTE_UITSLAG = 8,// als de plaat te ver uit het midden zit om goed te tracken of dat er een grote tracking fout is door een grote dieuw tijdens het tracken ofzo?
 };
 
 enum errors error = E_GEEN;

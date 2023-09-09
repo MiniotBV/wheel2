@@ -177,6 +177,10 @@ void gaNaarNummer(float pos){
 }
 
 
+void naarBeginPlaat(){
+  gaNaarNummer(plaatBegin);
+}
+
 
 
 void naarVorrigNummer(){
@@ -191,13 +195,13 @@ void naarVorrigNummer(){
 	while(pos + NUMMER_TERUG_OPFSET >= nummers[nummer]){
 		nummer++;
 		if(nummer > hoeveelNummers - 1){
-			gaNaarNummer(plaatBegin);
+      naarBeginPlaat();
 			return;
 		}
 	}
 
 	if(nummers[nummer] > plaatBegin){
-		gaNaarNummer(plaatBegin);
+		naarBeginPlaat();
 	}
 
 	gaNaarNummer(nummers[nummer]);
@@ -452,10 +456,14 @@ void staatDingen(){
 
 		
 		if(arm.naaldErop()){
+
+      //-----------------------------------------------------------transport berekeningen
 			nieuwePos = karPos + limieteerF(armHoek * karP, -3, 3);
 			nieuwePos = limieteerF(nieuwePos, 0, plaatBegin);
 			beweegKarNaarPos(nieuwePos, KAR_MAX_SNELHEID);
 			
+
+      //---------------------------------------------------------dingen die kunnen gebeuren tijdens spelen
 			if(egteKarPos <= PLAAT_EINDE){
 				Serial.println("kar heeft de limiet berijkt");
 				stoppenOfHerhalen();//stoppen();
@@ -485,7 +493,15 @@ void staatDingen(){
           return;
         }
 				
-			}      
+			} 
+
+      if(puristenMode){
+        if(strobo.wow < 0.15   ||  arm.isNaaldEropVoorZoLang(10000) ){// loop de plaat al geleleik of heeft het 10sec geduurd
+          puristenMode = false;
+          Serial.println("loopt gelijk genoeg");
+          naarBeginPlaat();
+        }
+      }    
 		}
 		return;
 	}

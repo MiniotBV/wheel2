@@ -395,13 +395,16 @@ void displayUpdate(){
 						displayData[i] = 0.9;
 					}
 				}
-        else if(staat == S_SPELEN  &&  !arm.isNaaldErop()  &&  (staatVeranderd.sinds() % 1000 < 250) ){// knipperen voordat de naald erop is
-          // if(naald-1 == i || naald+1 == i){ // dubbele punt
-					// 	displayData[i] = 0.9;
-					// }
+        else if(staat == S_SPELEN  &&  !arm.isNaaldErop()  &&  (staatVeranderd.sinds() % 1000 < 250)   &&  !puristenMode){// knipperen voordat de naald erop is
+          //niks
         }
 				else if(herhaalDeHelePlaat){
 					if(naald == i || naald-2 == i || naald+2 == i){ // 3 dubbele punt
+						displayData[i] = 0.9;
+					}
+				}
+        else if(puristenMode  &&  (millis() % 1000 < 500)){
+					if(naald-1 == i || naald+1 == i){ // dubbele punt
 						displayData[i] = 0.9;
 					}
 				}
