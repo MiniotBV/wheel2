@@ -12,16 +12,22 @@ String vorrigeCommando = "";
 
 
 
+void printMetMarge(String waarde, int lengte){
+  
+  Serial.print(waarde);
+
+  int marge = lengte - waarde.length(); // padding
+  if(marge < 1)marge = 1;
+
+  for(int i = 0; i < marge; i++){
+    Serial.print(" ");      
+  }
+}
+
+
+
 void printCommandoMetPadding(String vergelijking, String beschrijving, bool padding){
-	Serial.print(vergelijking);
-
-	if(padding){
-		int padding = 12 - vergelijking.length(); // padding
-		for(int i = 0; i < padding; i++){
-			Serial.print(" ");      
-		}
-	}  
-
+	printMetMarge(vergelijking, 8);
 
 	Serial.print(" " + beschrijving);
 }
@@ -29,20 +35,8 @@ void printCommandoMetPadding(String vergelijking, String beschrijving, bool padd
 
 
 void printWaardeMetPadding(String vergelijking, String beschrijving, String waarde){
-	Serial.print(vergelijking);
-
-	int padding = 6 - vergelijking.length(); // padding
-  for(int i = 0; i < padding; i++){
-    Serial.print(" ");      
-  }
-	
-  Serial.print(" " + beschrijving);
-
-  padding = 24 - beschrijving.length(); // padding
-  for(int i = 0; i < padding; i++){
-    Serial.print(" ");      
-  }
-
+	printMetMarge(vergelijking, 6);
+  printMetMarge(beschrijving, 26);
   Serial.println(" " + waarde);
 }
 
@@ -74,7 +68,7 @@ bool checkZin(String vergelijking, String beschrijving, int infoPrinten){
 
 
 
-bool checkZinCommandoFunc( String vergelijking, String beschrijving, int infoPrinten, void (*func)(void)){//void (*f)){
+bool checkZinFunc( String vergelijking, String beschrijving, int infoPrinten, void (*func)(void)){//void (*f)){
   if(infoPrinten == WAARDE_INFO){
 		return false;
 	}
@@ -103,11 +97,11 @@ bool checkZinCommando(String vergelijking, String beschrijving, int infoPrinten)
   
   if(!checkZin(vergelijking, beschrijving, infoPrinten)) return false;
   
-  if( zin.indexOf('?') != -1){ // als er een '?' is
-		Serial.println(" commando");
-    zin = "";
-    return false;
-	}
+  // if( zin.indexOf('?') != -1){ // als er een '?' is
+	// 	Serial.println(" commando");
+  //   zin = "";
+  //   return false;
+	// }
 	
   Serial.println();
 	return true;
@@ -204,6 +198,8 @@ void checkenVoorCommando(int info){
 
 	infoPrintln(info);
 
+  if(checkZinCommando("BT", "bluetooth commando", info)){ zin.trim();zin.toUpperCase(); Serial2.print(zin); Serial.println("BT GESTUURD:" + zin); return;}
+
 	if(checkZinBool("g", "golven", info, golven)){return;}
 	if(checkZinBool("PLG", "plaatLeesGolven", info, plaatLeesGolven)){return;}
 	if(checkZinBool("KG", "karGolven", info, karGolven)){return;}
@@ -213,12 +209,12 @@ void checkenVoorCommando(int info){
 
 	//-------------------------------------------------STAAT   
 	infoPrintln(info);     
-	if(checkZinCommandoFunc(">>", "naarVolgendNummer()", info, naarVolgendNummer)){ return;}
-	if(checkZinCommando("<<", "naarVorrigNummer()", info)){ naarVorrigNummer(); return;}
+	if(checkZinFunc(">>", "naarVolgendNummer()", info, naarVolgendNummer)){ return;}
+	if(checkZinFunc("<<", "naarVorrigNummer()", info, naarVorrigNummer)){ return;}
 	if(checkZinCommando("hok", "S_HOK", info)){ setStaat(S_HOK); return;}
-	if(checkZinCommando("stop", "stoppen()", info)){ stoppen(); return;}
-	if(checkZinCommando("spelen", "spelen()", info)){ spelen(); return;}
-	if(checkZinCommando("pauze", "pauze()", info)){ pauze(); return;}
+	if(checkZinFunc("stop", "stoppen()", info, stoppen)){return;}
+	if(checkZinFunc("spelen", "spelen()", info, spelen)){return;}
+	if(checkZinFunc("pauze", "pauze()", info, pauze)){return;}
 	if(checkZinCommando("schoonmaak", "S_SCHOONMAAK", info)){ setStaat(S_SCHOONMAAK); return;}
 	if(checkZinCommando("cal", "S_CALIBREER", info)){ setStaat(S_CALIBREER); return;}
 	if(checkZinBool("rep", "herhaalDeHelePlaat", info, herhaalDeHelePlaat)){return;}
@@ -242,8 +238,8 @@ void checkenVoorCommando(int info){
 
 	if(checkZinFloat("TO", "trackOffset", info, trackOffset)){return;}
 
-	if(checkZinCommando("AHCent", "armHoekCentreer()", info)){  armHoekCentreer(); return;}
-	if(checkZinCommando("AHCal", "armHoekCalibreer()", info)){ armHoekCalibreer(); return;}
+	if(checkZinFunc("AHCent", "armHoekCentreer()", info,  armHoekCentreer)){  return;}
+	if(checkZinFunc("AHCal", "armHoekCalibreer()", info, armHoekCalibreer)){  return;}
 
 
 	//--------------------------------------------------------KAR
@@ -261,8 +257,8 @@ void checkenVoorCommando(int info){
 
 	if(checkZinFloat("TR", "targetRpm", info, targetRpm)){draaienInterval.reset(); return;}
 
-	if(checkZinCommando("PA", "plateauDraaien()", info)){ plateauDraaien(); return;}
-	if(checkZinCommando("PS", "plateauStoppen()", info)){ plateauStoppen(); return;}
+	if(checkZinFunc("PA", "plateauDraaien()", info, plateauDraaien)){  return;}
+	if(checkZinFunc("PS", "plateauStoppen()", info, plateauStoppen)){  return;}
 	if(checkZinBool("PL", "plateauLogica", info, plateauLogica)){return;}
 	if(checkZinBool("PC", "onbalansComp", info, onbalansComp)){return;}
 
@@ -271,11 +267,10 @@ void checkenVoorCommando(int info){
 	infoPrintln(info);
 	if(checkZinInt("SSN", "strobo.sampleNum", info, strobo.sampleNum)){return;}
 	if(checkZinBool("SOC", "strobo.onbalansCompAan", info, strobo.onbalansCompAan)){return;}
-    if(checkZinInt("SOFH", "strobo.onbalansHarm", info, strobo.onbalansHarm)){return;}
+  if(checkZinInt("SOFH", "strobo.onbalansHarm", info, strobo.onbalansHarm)){return;}
 	if(checkZinInt("SOF", "strobo.onbalansFase", info, strobo.onbalansFase)){return;}
 	if(checkZinFloat("SOG", "strobo.onbalansCompGewicht", info, strobo.onbalansCompGewicht)){return;}
   if(checkZinInt("SOH", "strobo.harmonisen", info, strobo.harmonisen)){return;}
-	// if(checkZinFloat("SCD", "strobo.compVerval", info, strobo.compVerval)){return;}
 	if(checkZinBool("SKC", "strobo.plaatUitMiddenComp", info, strobo.plaatUitMiddenComp)){return;}
 	if(checkZinBool("KC", "karUitMiddenCompAan", info, karUitMiddenCompAan)){return;}
 	
@@ -286,8 +281,8 @@ void checkenVoorCommando(int info){
 	//------------------------------------------------------OPSLAG
 	infoPrintln(info);
 	if(checkZinFloat("EV", "eepromVersie", info, eepromVersie)){return;}
-	if(checkZinCommando("EO", "eepromOpslaan()", info)){   eepromOpslaan();  eepromShit = 1; return;}
-	if(checkZinCommando("EL", "eepromUitlezen()", info)){ eepromUitlezen();  return;}
+	if(checkZinCommando("EO", "eepromOpslaan()",  info)){ eepromOpslaan(); eepromShit = 1;  return;}
+	if(checkZinFunc("EL", "eepromUitlezen()", info, eepromUitlezen)){   return;}
 	
 	if(checkZinCommando("OC", "orientatie.calibreerOrientatie()", info)){ orientatie.calibreer(); return;}
 
@@ -333,6 +328,7 @@ void checkenVoorCommando(int info){
 		// Serial.println();
 
 		Serial.println("strobo.onbalansFase: " + String(strobo.onbalansFase));
+    Serial.println("strobo.onbalansHarm: " + String(strobo.onbalansHarm));
 		Serial.println("strobo.sampleNum: " + String(strobo.sampleNum));
 		// Serial.println();
 
@@ -381,10 +377,10 @@ void serieelFunc(){
       // Serial.print(", ");
 			// Serial.print(strobo.vaart - centerCompTargetRpm, 3);
 
-			Serial.print(", ");
-			Serial.print(strobo.vaartLowPass - targetRpm, 3);
-      Serial.print(", ");
-			Serial.print(strobo.lowpassRect, 3);
+			// Serial.print(", ");
+			// Serial.print(strobo.vaartLowPass - targetRpm, 3);
+      // Serial.print(", ");
+			// Serial.print(strobo.lowpassRect, 3);
       Serial.print(", ");
 			Serial.print(strobo.wow, 3);
 

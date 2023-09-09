@@ -75,6 +75,8 @@ void eepromOpslaan(){
 
 	EEPROM.put( EEPROM_ARMHOEK_MIN,         armHoekMin);
 	EEPROM.put( EEPROM_ARMHOEK_MAX,         armHoekMax);
+
+  
 }
 
 

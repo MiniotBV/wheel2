@@ -31,7 +31,7 @@ float karDcomp = 0;
 
 
 
-float targetNummerPos = 0;
+
 float sensorPos;
 float karOffset = 0; // om te kijken wat de homing afwijking is
 

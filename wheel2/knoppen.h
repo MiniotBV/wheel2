@@ -42,17 +42,6 @@ float riemDiv;
 
 
 
-void pauze(){
-	if(staat == S_SPELEN){
-		setStaat(S_PAUZE);
-		targetNummerPos = karPos;
-	}
-	else if(staat == S_PAUZE){
-		setStaat(S_UITROLLEN_VOOR_SPELEN);
-	}
-}
-
-
 
 
 
@@ -168,18 +157,14 @@ void knopLogica(int knop){
 		knopAlleInterval.reset();
 		knopLog( knop, " los ");
 		
-		if(isKnopDoorspoel(knop))
-    {
-			if((staat == S_SPELEN || staat == S_PAUZE || staat == S_NAAR_NUMMER))
-      {
+		if(isKnopDoorspoel(knop)){
+			if((staat == S_SPELEN || staat == S_PAUZE || staat == S_NAAR_NUMMER)){
 				naarVolgendNummer();
 			}
 		}
 
-		if(isKnopTerugspoel(knop))
-    {
-			if((staat == S_SPELEN || staat == S_PAUZE || staat == S_NAAR_NUMMER))
-      {
+		if(isKnopTerugspoel(knop)){
+			if((staat == S_SPELEN || staat == S_PAUZE || staat == S_NAAR_NUMMER)){
 				naarVorrigNummer();
 			}
 		}

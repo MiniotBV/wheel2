@@ -305,20 +305,17 @@ bool isNaaldLangGenoegOpDePlaat(){
 
 
 void versterkerInit(){
-	Wire1.setSCL(SCL);
-	Wire1.setSDA(SDA);
 	pinMode(koptelefoonEn, OUTPUT);
 	digitalWrite(koptelefoonEn, 1);
 }
 
+
 Interval versterkerInt(20, MILLIS);
 
-
 void volumeFunc(){
-	orientatie.update();
-
-
-	if(versterkerInt.loop()){
+	
+  
+  if(versterkerInt.loop()){
 		
 		if( volume != volumeOud   ||   isNaaldEropOud !=    isNaaldLangGenoegOpDePlaat()    ||   volumeOverRide){//  ||   jackIn != digitalRead(koptelefoonAangesloten)){
 			
@@ -369,6 +366,116 @@ void volumeFunc(){
 
 
 
+
+
+
+//--------------------------het commando begind met dit karrakter
+#define BT_KNOP_IN "4"
+#define BT_KNOP_UIT "c"
+
+//--------------------------het commando eindigd met dit karakter
+#define BT_VOLGEND_NUMMER "b"
+#define BT_VORRIG_NUMMER  "c"
+#define BT_DOORSPOELEN    "9"
+#define BT_TERUGSPOELEN   "8"
+
+#define BT_PLAY           "4" //koptelefoon op
+#define BT_PAUZE          "6" //koptelefoon af?
+
+// #define BT_PAUZE_LANG
+
+
+
+
+
+void bluetoothInit(){
+  delay(100);
+  Serial2.setRX(BT_RXD);
+  Serial2.setTX(BT_TXD);
+  Serial2.setPollingMode(true);
+  Serial2.setFIFOSize(128);
+  Serial2.begin(9600);
+}
+
+
+Interval bluetoothInt(20, MILLIS);
+
+String bluetoothBuffer = "";
+
+void bluetoothFunc(){
+  if(bluetoothInt.loop()){
+
+    while(Serial2.available() > 0){
+      char c = Serial2.read();
+      if( c == '\n' || c == '\r' ){
+        if(bluetoothBuffer == "")return;
+
+        // if(c == '\n')Serial.print("<nl>");
+        // if(c == '\r')Serial.print("<cr>");
+        
+
+        bluetoothBuffer.trim();
+
+        if(bluetoothBuffer.startsWith("income_opid:")){
+          bluetoothBuffer.replace("income_opid:", "");
+          bluetoothBuffer.trim();
+
+          // Serial.println("knop: " + bluetoothBuffer);
+          
+          if(bluetoothBuffer.startsWith(BT_KNOP_IN)){
+            bluetoothBuffer.remove(0, 1); // gooi de in uit getal weg
+            Serial.println("BT KNOP_IN: " + bluetoothBuffer);
+            
+            // if(bluetoothBuffer == BT_PLAY){
+            //   if(staat == S_PAUZE || staat == S_SPELEN) { pauze(); }//miscnien s_spelen dr uithalen
+            //   else if(staat == S_HOK) { spelen(); }
+            // }
+
+            if(bluetoothBuffer == BT_PLAY){
+              if(staat == S_PAUZE) { pauze(); }//miscnien s_spelen dr uithalen
+              else if(staat == S_HOK) { spelen(); }
+            }
+
+            else if(bluetoothBuffer == BT_PAUZE){
+              if(staat == S_PAUZE || staat == S_SPELEN) { pauze(); }//miscnien s_spelen dr uithalen
+            }
+
+            else if(bluetoothBuffer == BT_VOLGEND_NUMMER){
+              if((staat == S_SPELEN || staat == S_PAUZE || staat == S_NAAR_NUMMER)){
+                naarVolgendNummer();
+              }
+            }
+
+            else if(bluetoothBuffer == BT_VORRIG_NUMMER){
+              if((staat == S_SPELEN || staat == S_PAUZE || staat == S_NAAR_NUMMER)){
+                naarVorrigNummer();
+              }
+            }
+
+
+          }
+          else if(bluetoothBuffer.startsWith(BT_KNOP_UIT)){
+            bluetoothBuffer.remove(0, 1); // gooi de in uit getal weg
+            Serial.println("BT KNOP_UIT: " + bluetoothBuffer);
+          }
+          else {
+            Serial.println("BT KNOP_ONBEKENT: " + bluetoothBuffer);
+          }
+        
+        
+        }else{
+          Serial.println("BT ONTVANGEN:" + bluetoothBuffer);
+        }
+
+
+        bluetoothBuffer = "";
+      }else{
+        bluetoothBuffer += c;
+      }
+    }
+
+  }
+}
 
 
 

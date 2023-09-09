@@ -125,6 +125,19 @@ void stoppenOfHerhalen(){
 
 
 
+void pauze(){
+	if(staat == S_SPELEN){
+		setStaat(S_PAUZE);
+		targetNummerPos = karPos;
+	}
+	else if(staat == S_PAUZE){
+		setStaat(S_UITROLLEN_VOOR_SPELEN);
+	}
+}
+
+
+
+
 
 
 

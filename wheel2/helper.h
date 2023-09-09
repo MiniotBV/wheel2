@@ -49,7 +49,7 @@ float plaatBegin = 0;
 bool plaatAanwezig = false;
 float plaatAanwezigGefilterd = 0;
 
-
+float targetNummerPos = 0;
 
 float nieuwePos;
 float karPos = KAR_HOK;

@@ -1,7 +1,7 @@
 //  Wheel2 
 //  rp2040
 
-#define versie 93
+#define versie 95
 
 
 #include <stdio.h>
@@ -82,7 +82,12 @@ Interval ledInt(200, MILLIS);
 void setup() {
 	analogReadResolution(12);// moet sinds nieuwe core versie, anders leest hij in 10bit
 
-	Serial.begin(115200);
+	Serial.begin();
+
+  Wire1.setSCL(SCL);
+	Wire1.setSDA(SDA);
+
+  bluetoothInit();
 
 	opslagInit();
 	eepromUitlezen();
@@ -166,7 +171,11 @@ void loop() {
 
 	volumeFunc();
 
+  orientatie.update();
+
 	plateauFunc();
+
+  bluetoothFunc();
 
 
 	// digitalWrite(ledWit, isNaaldEropVoorZoLang(1000));
