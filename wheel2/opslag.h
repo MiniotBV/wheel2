@@ -1,7 +1,7 @@
 #include <EEPROM.h>
 
 
-bool eepromShit = false;
+int eepromShit = 0;
 float eepromVersie = 1;
 
 #define EEPROM_VERSIE             0
@@ -20,11 +20,8 @@ float eepromVersie = 1;
 
 
 void eepCommit(){
-  eepromShit = true;
-  delay(100);
   EEPROM.commit();
-  delay(100);
-  eepromShit = false;
+  eepromShit = 0;
 }
 
 

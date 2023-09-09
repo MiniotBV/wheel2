@@ -289,16 +289,20 @@ void serieelFunc(){
 
 
       else if(letter == 'e'){ 
-        float eepromVersie = Serial.parseFloat();
+        eepromVersie = Serial.parseFloat();
         EEPROM.put(EEPROM_VERSIE, eepromVersie);
-        // eepSchrijfInt(EEPROM_VERSIE, eep);
         Serial.println("eepromVersie: " + String(eepromVersie, 5));
       }
 
       else if(letter == 'E'){ 
         Serial.println("opslaan...");
-        eepromOpslaan();               
-        eepromShit = true;
+        eepromOpslaan();
+        eepromShit = 1;
+      }
+
+
+      else if(letter == 'r'){ 
+        eepromUitlezen();
       }
 
 
