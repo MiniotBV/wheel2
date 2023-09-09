@@ -316,15 +316,19 @@ void volumeFunc(){
 	
   
   if(versterkerInt.loop()){
+
+    if(!(arm.isNaaldErop() && staat == S_SPELEN)   &&    !volumeOverRide){
+      // waarde = 0;
+      digitalWrite(koptelefoonEn, 0);
+      // Serial.println("geluid uit");
+      return;
+    }
+
 		
 		if( volume != volumeOud   ||   isNaaldEropOud !=    isNaaldLangGenoegOpDePlaatVoorGeluid()    ||   volumeOverRide){//  ||   jackIn != digitalRead(koptelefoonAangesloten)){
 			
 			
-			if(!(arm.isNaaldErop() && staat == S_SPELEN)   &&    !volumeOverRide){
-				// waarde = 0;
-				digitalWrite(koptelefoonEn, 0);
-				return;
-			}
+
 
 			volumeOverRide = false;
 			digitalWrite(koptelefoonEn, 1);      
