@@ -117,18 +117,6 @@ void plateauStoppen(){
 
 
 
-void stoppen(){
-  setStaat(S_STOPPEN);
-  plateauStoppen();
-}
-
-
-
-void spelen(){
-  setStaat(S_HOMEN_VOOR_SPELEN);
-  plateauDraaien();
-}
-
 
 
 void plateauInit(){
@@ -157,7 +145,9 @@ float pid(float rpmIn){
   double uit = (targetRpm - rpmIn) * plateauP;
   uit = limieteerF(uit, -1, 1);
   basis += uit * plateauI;            //breng basis voltage naar gemiddelde voor de juiste snelheid
-  basis = limieteerF(basis, 0.5, 1);
+  basis = limieteerF(basis, 0, 1);
+
+  basis = limieteerF(basis, 0, 0.7 + (rpmIn / 30) );
   
   return  limieteerF(uit + basis,  -1,  1);
 }
@@ -185,7 +175,7 @@ void plateauStaatDingen(){
         Serial.println("^");
         stoppen();
       }
-      else if(glad  <  targetRpm * 0.75   &&   draaienInterval.sinds() > 1000){ //te langzaam 70%
+      else if(glad  <  targetRpm * 0.65   &&   draaienInterval.sinds() > 1500){ //te langzaam 70%
         Serial.println("T");
         stoppen();
       }
@@ -195,12 +185,12 @@ void plateauStaatDingen(){
     
     if(  opsnelheid == false    ){ //                                                 tegen gehouden
       
-      if(glad  >  targetRpm * 0.9){ //                       op snelheid (95% van de snelheid)
+      if(glad  >  targetRpm * 0.95){ //                       op snelheid (95% van de snelheid)
         Serial.println("O");
         opsnelheid = true;
       }
 
-      if(glad  <  targetRpm * 0.1   &&     draaienInterval.sinds() > 1500){//   <5% target snelheid na een kort tijd
+      if(glad  <  targetRpm * 0.1   &&     draaienInterval.sinds() > 1000){//   <5% target snelheid na een kort tijd
         
         Serial.println("kon niet opgang komen");
         stoppen();//--------------------------------------------

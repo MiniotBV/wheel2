@@ -77,7 +77,8 @@ bool isTussen(float waarde, float min, float max){
 // void pauze();
 bool isPlaatOngeveer7Inch();
 void updatePlateauPID();
-
+void plateauStoppen();
+void plateauDraaien();
 
 
 

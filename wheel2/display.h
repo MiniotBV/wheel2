@@ -254,15 +254,9 @@ void displayUpdate(){
         }
 
         
-        if(staat == S_NAAR_NUMMER  ||  staat ==  S_DOOR_SPOELEN  ||  staat == S_TERUG_SPOELEN  ||  staat == S_PAUZE){
-          
-          
+        if(staat == S_NAAR_NUMMER  ||  staat ==  S_DOOR_SPOELEN  ||  staat == S_TERUG_SPOELEN  ||  staat == S_PAUZE){ // pauze cursor
           if(naald-1 == i || naald+1 == i){
-            // if(millis()%1000 > 300){
-              displayData[i] = 0.9;
-            // }else{
-            //   displayData[i] = 0;
-            // }
+            displayData[i] = 0.9;
           }
           
           else if( i == target  &&  naald != i){

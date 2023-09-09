@@ -42,6 +42,9 @@ void serieelFunc(){
       Serial.print(", ");
       Serial.print(uitBuff, 4);
 
+      Serial.print(", ");
+      Serial.print(basis, 4);
+
       // Serial.print(", ");
       // Serial.print(karInterval);
       

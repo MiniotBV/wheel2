@@ -13,8 +13,8 @@ float karInterval;
 
 bool plaatAanwezig = false;
 
-float karP = 0.1; //0.00005;//0.00025;
-float karI = 0.005; //0.00005;//0.00025;
+float karP = 0.001; //0.00005;//0.00025;
+// float karI = 0.005; //0.00005;//0.00025;
 float karPcomp = 0;
 
 
@@ -46,6 +46,7 @@ float mm2stap = 1 / stap2mm;             // 4.188790204786391
 bool karMotorEnable = true;
 float karMotorPos = 0;
 
+float nieuwePos;
 float karPos = KAR_HOK;
 float targetNummerPos = 0;
 float sensorPos;
@@ -246,17 +247,6 @@ void naarVolgendNummer(){
 
 
 
-bool isPlaatOngeveer7Inch(){
-  float inchDia = (plaatBegin / 25.4)*2;
-  return inchDia < 8;
-}
-
-
-
-
-
-
-
 
 
 void pauze(){
@@ -415,10 +405,9 @@ void staatDingen(){
         
         }else{
           Serial.println("plaatDia: " + String(plaadDiaInch) + " : ?\" ");
+          plaatBegin = sensorPos;
+          // setPlateauRpm(rpm33);
         }
-        
-        setPlateauRpm(rpm33);
-        
         // return;
       }
       
@@ -452,12 +441,13 @@ void staatDingen(){
   if(staat == S_NAALD_EROP){
     if(naaldErop()){
       
-      karPcomp += ( limieteerF( armHoek * -karP,     -3, 3) - karPcomp ) / 500;
-      karPos += karPcomp * karI;
-      karPos = limieteerF( karPos, PLAAT_EINDE, plaatBegin + 1);
+      nieuwePos = karPos + limieteerF(armHoek * -karP, -3, 3);
+      nieuwePos = limieteerF(nieuwePos, 0, plaatBegin);
+      beweegKarNaarPos(nieuwePos, KAR_MAX_SNELHEID);
       
       if(karPos <= PLAAT_EINDE){
         stoppen();
+        return;
       }
     }
     return;
@@ -581,7 +571,8 @@ bool karMotorUitvoeren(){
 
 
 
-  karMotorPos = (karPos + karOffset + karPcomp)  *  mm2stap;
+  // karMotorPos = (karPos + karOffset + karPcomp)  *  mm2stap;
+  karMotorPos = (karPos + karOffset)  *  mm2stap;
   
 
 
