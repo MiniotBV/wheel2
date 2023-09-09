@@ -1,6 +1,6 @@
 //Wheel2
 //rp2040
-#define versie 48
+#define versie 52
 
 
 #include <stdio.h>
@@ -9,11 +9,12 @@
 #include "hardware/pwm.h"
 #include "hardware/gpio.h"
 
-#include <EEPROM.h>
+
+#include "opslag.h"
 
 
 
-bool eepromShit = false;
+
 
 #include "pwm.h"
 
@@ -114,11 +115,11 @@ Interval ledInt(200, MILLIS);
 // }
 
 void setup() {
-
+  analogReadResolution(12);
 
   Serial.begin(115200);
 
-  EEPROM.begin(4096);
+  opslagInit();
   
 
   // add_repeating_timer_ms( 2000, callback, &timers[1] );
@@ -166,7 +167,7 @@ void core1Dingen(){
 
   knoppenUpdate();
 
-  armFunc();
+  armFunc();  
 }
 
 
@@ -175,6 +176,11 @@ void core1Dingen(){
 void loop2(){
   while(1){
     core1Dingen();
+
+    if(eepromShit){
+      delay(100);
+      eepromShit = false;
+    }
   }
 }
 
@@ -184,18 +190,15 @@ void loop2(){
 
 
 void loop() {
-
   if(enkeleCoreModus){
     core1Dingen();    
   }
 
 
   if(eepromShit){
-    eepromShit = false;
-    Serial.println("coreslapen");
-    // delay(20);
-    busy_wait_ms(3000);
-    
+    eepCommit();
+    Serial.println("doei");
+    delay(100);
   }
 
 

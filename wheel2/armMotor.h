@@ -1,88 +1,49 @@
 #define MIN_ARMGEWICHT 0.5//gr
 #define MAX_ARMGEWICHT 4//gr
 
-float armGewicht = 2.3;
-float armTargetKracht;
 
+float armTargetGewicht = 2.3;
+float armGewicht = -10;
 float armKracht = 0;
-float armSnelheidOp = 0.00025;
-float armSnelheidAf = 0.001;
+
+float armSnelheidOp = 0.004;
+float armSnelheidAf = 0.01;
 
 
 
-// float armKracht500mg = 0.22; //derde proto
-// float armKracht4000mg = 0.56;
-// //op de plaat
-// float netUitHokKracht = 0.15;
-// float netOpDePlaatKracht = 0.2;
-// //van de plaat af
-// float netVanDePlaatKracht = 0.2;
-// float netInHokKracht = 0.15;
 
-// float armKracht500mg = 0.33;  //vierde proto
-// float armKracht4000mg = 0.64;
-// //op de plaat
-// float netUitHokKracht = 0.25;
-// float netOpDePlaatKracht = 0.3;
-// //van de plaat af
-// float netVanDePlaatKracht = 0.3;
-// float netInHokKracht = 0.20;
 
-// float armKracht500mg = 0.33;  //vierde proto
-// float armKracht4000mg = 0.68;
-// //op de plaat
-// float netUitHokKracht = 0.25;
-// float netOpDePlaatKracht = 0.35;
-// //van de plaat af
-// float netVanDePlaatKracht = 0.30;
-// float netInHokKracht = 0.25;
+float armKracht500mg = 0.43;  //6de proto
+float armKracht4000mg = 0.76;
 
-// float armKracht500mg = 0.33;  //vijfde proto
-// float armKracht4000mg = 0.68;
-// //op de plaat
-// float netUitHokKracht = 0.25;
-// float netOpDePlaatKracht = 0.35;
-// //van de plaat af
-// float netVanDePlaatKracht = 0.30;
-// float netInHokKracht = 0.25;
-
-float armKracht500mg = 0.5;  //6de proto
-float armKracht4000mg = 0.8;
 //op de plaat
-float netUitHokKracht = 0.30;
-float netOpDePlaatKracht = 0.40;
+float netUitHokGewicht = -0.8;
+float netOpDePlaatGewicht = 0.2;
 //van de plaat af
-float netVanDePlaatKracht = 0.35;
-float netInHokKracht = 0.25;
-
-
+float netVanDePlaatGewicht = 0;
+float netInHokGewicht = -1;
 
 
 bool armMotorAan = false;
 
 
-void armGewichtUpdate(){
-  armGewicht = limieteerF(armGewicht,  MIN_ARMGEWICHT,   MAX_ARMGEWICHT);  
-  armTargetKracht = mapF(armGewicht,   MIN_ARMGEWICHT,   MAX_ARMGEWICHT,    armKracht500mg, armKracht4000mg);
-  
-  Serial.print("armTargetKracht: " + String(armTargetKracht));
-}
 
 
 void armInit(){
   setPwm(armMotor);
-  armGewichtUpdate();
 }
 
 
 
 
-armGewicht2pwm(float gewicht){
-  return gewicht  
+float armGewicht2pwm(float gewicht){
+  float pwm = mapF(gewicht,   MIN_ARMGEWICHT,   MAX_ARMGEWICHT,    armKracht500mg, armKracht4000mg);
+  return limieteerF(pwm, 0, 1);  
 }
 
-pwm2armGewicht(float pwm){
-  return pwm
+float pwm2armGewicht(float pwm){
+  float gewicht = mapF(pwm,  armKracht500mg, armKracht4000mg,  MIN_ARMGEWICHT,   MAX_ARMGEWICHT);
+  return gewicht;
 }
 
 
@@ -96,40 +57,44 @@ void armFunc(){
   if(armInt.loop()){
 
     if(staat == S_CALIBREER){
+      armGewicht = pwm2armGewicht(armKracht);
+      pwmWriteF(armMotor, armKracht);
       return;
     }
 
 
     if(armMotorAan == true){//moet de arm motor aan?
 
-      if(armKracht < netUitHokKracht){//als de arm net aan staat jump meteen naar nogNetInHokKracht
-        armKracht = netUitHokKracht;
+      if(armGewicht < netUitHokGewicht){//als de arm net aan staat jump meteen naar nognetInHokGewicht
+        armGewicht = netUitHokGewicht;
       }
 
-      if(armKracht < armTargetKracht){//is de arm al op het target gewicht?
-        armKracht += armSnelheidOp;
+      if(armGewicht < armTargetGewicht){//is de arm al op het target gewicht?
+        armGewicht += armSnelheidOp;
       }
 
-      if(armKracht > netOpDePlaatKracht){//is de arm al op de plaat?
-        armKracht = armTargetKracht;//zet dan de arm meteen op target gewicht
+      if(armGewicht > netOpDePlaatGewicht){//is de arm al op de plaat?
+        armGewicht = armTargetGewicht;//zet dan de arm meteen op target gewicht
       }
     }
     
 
     if(armMotorAan == false){// moet de arm motor uit?
       
-      if(armKracht > netVanDePlaatKracht){ //als de arm net is uitgezet
-        armKracht = netVanDePlaatKracht; // zet haal dan meteen het meeste gewicht van de arm
+      if(armGewicht > netVanDePlaatGewicht){ //als de arm net is uitgezet
+        armGewicht = netVanDePlaatGewicht; // zet haal dan meteen het meeste gewicht van de arm
       }
 
-      if(armKracht > 0){ //is de arm nog niet helemaal uit
-        armKracht -= armSnelheidAf; // zet hem dan wat minder hard
+      if(armGewicht > -10){ //is de arm nog niet helemaal uit
+        armGewicht -= armSnelheidAf; // zet hem dan wat minder hard
       }
       
-      if(armKracht < netInHokKracht){ //is de arm al van de plaat?
-        armKracht = 0; // zet de arm dan meteen uit
+      if(armGewicht < netInHokGewicht){ //is de arm al van de plaat?
+        armGewicht = -10; // zet de arm dan meteen uit
       }
     }
+
+    armKracht = armGewicht2pwm(armGewicht);
 
     pwmWriteF(armMotor, armKracht);
   }
@@ -140,11 +105,11 @@ void armFunc(){
 
 
 bool isNaaldErop(){
-  return armKracht == armTargetKracht;
+  return armGewicht == armTargetGewicht;
 }
 
 bool isNaaldEraf(){
-  return armKracht == 0;
+  return armGewicht < 5;
 }
 
 

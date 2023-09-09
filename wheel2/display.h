@@ -102,7 +102,7 @@ void displayUpdate(){
     int sensorMaxBerijk = egtePos2displayPos(ELPEE_PLAAT_BEGIN - SENSOR_OFFSET)  +  3;
     int plaatGroote = egtePos2displayPos(plaatBegin);
 
-    int volumeMargin = displayLengte/5;//16;
+    int volumeMargin = displayLengte/16;//16;
 
     int dispHalf = displayLengte/2;
 
@@ -112,11 +112,12 @@ void displayUpdate(){
     //----------------------------------------------------------------SCHOONMAAK STAND
     if(staat == S_SCHOONMAAK){
       float verdeelPuntTeller = 0;
+      int volumePunt = mapF(armTargetGewicht, 0, 4, (displayLengte-1) - volumeMargin,   volumeMargin);
 
       for(int i = 0; i < displayLengte; i++){
         displayData[i] = 0;
 
-        int volumePunt = mapF(armGewicht, 0, 4, (displayLengte-1) - volumeMargin,   volumeMargin);
+        
 
         if(i < (displayLengte-1) - volumeMargin    &&    i > volumePunt){
           displayData[i] = 0.1;
@@ -146,25 +147,15 @@ void displayUpdate(){
    
    //----------------------------------------------------------------CALIBREER STAND
     else if(staat == S_CALIBREER){
-      float verdeelPuntTeller = 0;
+      
+      int volumePunt = mapF(armKracht, 0, 1, displayLengte - 1,   0);
 
       for(int i = 0; i < displayLengte; i++){
         displayData[i] = 0;
 
-        int volumePunt = mapF(armTargetKracht, 0, 1, (displayLengte-1) - volumeMargin,   volumeMargin);
-
-        if(i < (displayLengte-1) - volumeMargin    &&    i > volumePunt){
+        if(i > volumePunt){
           displayData[i] = 0.1;
         }
-
-        if(i == volumeMargin   ||   i == (displayLengte-1) - volumeMargin){ //eind van de schaal punt
-          displayData[i] = 0.1;
-        }
-
-        if(i == volumePunt){
-          displayData[i] = 0.9;
-        }
-
       }
     }
 

@@ -43,9 +43,5 @@ void pwmFase(float kracht, int pinP, int pinN, bool omgekeerd){
       pwmWrite(pinN,  fase - PMAX );
     }
   }
-
-
-
-
 }
 

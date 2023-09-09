@@ -44,12 +44,12 @@ float riemDiv;
 
 
 void pauze(){
-  if(staat == S_NAALD_EROP){
+  if(staat == S_SPELEN){
     setStaat(S_PAUZE);
     targetNummerPos = karPos;
   }
   else if(staat == S_PAUZE){
-    setStaat(S_NAALD_EROP);
+    setStaat(S_SPELEN);
   }
 }
 
@@ -183,7 +183,7 @@ void knopLogica(int knop){
     
     if(isKnopDoorspoel(knop)){
       
-      if( (staat == S_NAALD_EROP  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)){
+      if( (staat == S_SPELEN  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)){
         naarVolgendNummer();
       }
     }
@@ -191,14 +191,14 @@ void knopLogica(int knop){
 
     if(isKnopTerugspoel(knop)){
 
-      if( (staat == S_NAALD_EROP  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)){
+      if( (staat == S_SPELEN  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)){
         naarVorrigNummer();
       }
     }
 
     
     if(knop == KNOP_PLAY){
-      if(staat == S_PAUZE  ||  staat == S_NAALD_EROP){
+      if(staat == S_PAUZE  ||  staat == S_SPELEN){
         pauze();
       
 
@@ -242,11 +242,11 @@ void knopLogica(int knop){
 
     
     
-    if( (staat == S_NAALD_EROP  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)  &&   isKnopDoorspoel(knop)){ //      >> DOOR SPOELEN
+    if( (staat == S_SPELEN  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)  &&   isKnopDoorspoel(knop)){ //      >> DOOR SPOELEN
       setStaat( S_DOOR_SPOELEN );
     }
 
-    if( (staat == S_NAALD_EROP  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)   &&   isKnopTerugspoel(knop)){//      << TERUG SPOELEN
+    if( (staat == S_SPELEN  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)   &&   isKnopTerugspoel(knop)){//      << TERUG SPOELEN
       setStaat( S_TERUG_SPOELEN );
     }
 
@@ -276,7 +276,8 @@ void knopLogica(int knop){
 
 
     if(  (  staat == S_DOOR_SPOELEN   ||   staat == S_TERUG_SPOELEN  )  &&  (  knop == KNOP_DOORSPOEL  ||  knop == KNOP_TERUGSPOEL  )  ){//WEER BEGINNEN NA SPOELEN
-      setStaat(S_NAALD_EROP);
+      targetNummerPos = karPos;
+      setStaat(S_UITROLLEN_VOOR_SPELEN);
       // ledBlink();  //led blink
       
     }
@@ -310,7 +311,7 @@ void knopLogica(int knop){
     
     
     if(  (  staat == S_DOOR_SPOELEN   ||   staat == S_TERUG_SPOELEN  )  &&  (  knop == KNOP_DOORSPOEL  ||  knop == KNOP_TERUGSPOEL  )  ){//WEER BEGINNEN NA SPOELEN
-      setStaat(S_NAALD_EROP);
+      setStaat(S_SPELEN);
     }
     return;
   }
@@ -382,12 +383,13 @@ void knoppenUpdate(){
 
       if(staat == S_SCHOONMAAK){
         armGewicht += riemDiv * 4;
-        armGewichtUpdate();
+        // armGewichtUpdate();
       }
 
       else if(staat == S_CALIBREER){
-        armTargetKracht += riemDiv * 0.5;
-        armTargetKracht = limieteerF(armTargetKracht, 0, 1);
+        armKracht += riemDiv * 0.5;
+        armKracht = limieteerF(armKracht, 0, 1);
+        
       }
 
       else if(staat == S_PAUZE){

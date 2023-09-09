@@ -56,7 +56,6 @@ int rondTrip(int n, int max){
 
 
 
-
 float limieteerF(float n, float min, float max){
   if(n < min){
     return min;
@@ -68,6 +67,8 @@ float limieteerF(float n, float min, float max){
 
   return n;
 }
+
+
 
 int limieteerI(int n, int min, int max){
   if(n < min){

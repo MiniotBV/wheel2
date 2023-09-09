@@ -2,6 +2,7 @@
 
 
 bool golven = false;
+bool karPIDveranderen = false;
 
 
 
@@ -42,8 +43,8 @@ void serieelFunc(){
       Serial.print(", ");
       Serial.print(uitBuff, 4);
 
-      Serial.print(", ");
-      Serial.print(basis, 4);
+      // Serial.print(", ");
+      // Serial.print(basis, 4);
 
       // Serial.print(", ");
       // Serial.print(karInterval);
@@ -82,10 +83,10 @@ void serieelFunc(){
       
       // Serial.print(", ");
       // Serial.print(armHoekSlow);//1696);
-      // Serial.print(", ");
-      // Serial.print(armHoekRuw);//1696);
       Serial.print(", ");
-      Serial.print(armHoek);//1696);
+      Serial.print(armHoekRuw);//1696);
+      // Serial.print(", ");
+      // Serial.print(armHoek);//1696);
 
 
 
@@ -95,17 +96,19 @@ void serieelFunc(){
       Serial.print(", ");
       Serial.print(karPosFilter, 4);
 
-      // Serial.print(", ");
-      // Serial.print(karPosFilterSlow, 4);
-
       Serial.print(", ");
-      Serial.print(plaatAanwezigGefilterd, 3);
+      Serial.print(nieuwePos, 4);
+
+      // Serial.print(", ");
+      // Serial.print(plaatAanwezigGefilterd, 3);
       
       // Serial.print(", ");
       // Serial.print(afstandOmTeStoppen );
       
       // Serial.print(", ");
       // Serial.print(armKracht);
+      // Serial.print(", ");
+      // Serial.print(armGewicht);
 
 
       // Serial.print(", ");
@@ -114,6 +117,10 @@ void serieelFunc(){
       // Serial.print(orientatie.y);
       // Serial.print(", ");
       // Serial.print(orientatie.z);
+
+
+      // Serial.print(", ");
+      // Serial.print(potVal);
 
 
 
@@ -171,31 +178,57 @@ void serieelFunc(){
         naaldEraf();
       }
       else if(letter == 'a'){    //arm motor target
-        armTargetKracht = Serial.parseFloat();
-        Serial.println("armTargetKracht: " + String(armTargetKracht));
+        armTargetGewicht = Serial.parseFloat();
+        Serial.println("armTargetGewicht: " + String(armTargetGewicht));
       }
-      else if(letter == 'A'){    //arm motor target
-        armGewicht = Serial.parseFloat();
-        armGewichtUpdate();
-        Serial.println("armGewicht: " + String(armGewicht) + " armTargetKracht: " + String(armTargetKracht));
-      }
+
 
       else if(letter == 'k'){    //set karP
         karP = Serial.parseFloat();
-        Serial.println("karP: " + String(karP));
+        Serial.println("karP: " + String(karP, 5));
       }
+      
+
+
+      else if(letter == 'K'){    //set karP
+        karPIDveranderen = !karPIDveranderen;
+        if(karPIDveranderen){
+          Serial.println("kar PID");
+        }else{
+          Serial.println("plateau PID");
+        }
+      }
+
+
       else if(letter == 'p'){    //set P
-        plateauP = Serial.parseFloat();
-        Serial.println("p: " + String(plateauP));
+        if(karPIDveranderen){
+          karP = Serial.parseFloat();
+          Serial.println("kar P: " + String(karP, 5));
+        }else{
+          plateauP = Serial.parseFloat();
+          Serial.println("plateau P: " + String(plateauP, 5));
+        }
       }
       else if(letter == 'i'){    //set I
-        plateauI = Serial.parseFloat();
-        Serial.println("i: " + String(plateauI));
+        if(karPIDveranderen){
+          karI = Serial.parseFloat();
+          Serial.println("kar I: " + String(karI, 5));
+        }else{
+          plateauI = Serial.parseFloat();
+          Serial.println("plateau I: " + String(plateauI, 5));
+        }
       }
       else if(letter == 'd'){    //set D
-        plateauD = Serial.parseFloat();
-        Serial.println("d: " + String(plateauD));
+        if(karPIDveranderen){
+          karD = Serial.parseFloat();
+          Serial.println("kar D: " + String(karD, 5));
+        }else{
+          plateauD = Serial.parseFloat();
+          Serial.println("plateau D: " + String(plateauD, 5));
+        }
       }
+
+      
       else if(letter == '='){    //set basisVaart
         float i = Serial.parseFloat();
         targetRpm = i;
@@ -213,23 +246,34 @@ void serieelFunc(){
       }
       else if(letter == '?'){    //help
         Serial.println("help----------------------------");   
-        Serial.println("p: " + String(plateauP, 3));
-        Serial.println("i: " + String(plateauI, 3));
-        Serial.println("d: " + String(plateauD, 3));
+        Serial.println("plateau P: " + String(plateauP, 5));
+        Serial.println("plateau I: " + String(plateauI, 5));
+        Serial.println("plateau D: " + String(plateauD, 5));
+        Serial.println();
+
+        Serial.println("kar P: " + String(karP, 5));
+        Serial.println("kar I: " + String(karI, 5));
+        Serial.println("kar D: " + String(karD, 5));
         Serial.println();
         
         Serial.println("staat: " + printStaat(staat));
         Serial.println("volume: " + String(volume));
         Serial.println();
-        
-        Serial.println("armTargetKracht: " + String(armTargetKracht));
+
+        eepromPrint();
+
         Serial.println();
         
-        Serial.println("V faseVerschuiving: " + String(strobo.faseVerschuiving));
-        Serial.println("C compFilter: " + String(strobo.compFilter));
-        Serial.println("c compVermenigvuldiging: " + String(strobo.compVermenigvuldiging));
-        Serial.println("I compverval: " + String(strobo.compVerval));
+        Serial.println("armKracht: " + String(armKracht));
+        Serial.println("armGewicht: " + String(armGewicht));
+        Serial.println("isNaaldErop(): " + String(isNaaldErop()));
         Serial.println();
+        
+        // Serial.println("V faseVerschuiving: " + String(strobo.faseVerschuiving));
+        // Serial.println("C compFilter: " + String(strobo.compFilter));
+        // Serial.println("c compVermenigvuldiging: " + String(strobo.compVermenigvuldiging));
+        // Serial.println("I compverval: " + String(strobo.compVerval));
+        // Serial.println();
         
         printKnoppen();
         orientatie.print();
@@ -241,6 +285,18 @@ void serieelFunc(){
 
       else if(letter == '~'){    //
         setStaat(S_CALIBREER);
+      }
+
+
+      else if(letter == 'e'){ 
+        int eep = Serial.parseFloat();
+        eepSchrijfInt(EEPROM_VERSIE, eep);
+        Serial.println("eep: " + String(eep));
+      }
+
+      else if(letter == 'E'){ 
+        Serial.println("hallo");
+        eepromShit = true;
       }
 
 

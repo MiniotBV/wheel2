@@ -21,24 +21,6 @@ Interval draaienInterval(10, MILLIS);
 
 
 
-void eepSchrijfInt(int addr, int val){
-  EEPROM.write(addr,     (val >> 8) & 255);
-  EEPROM.write(addr + 1,  val       & 255);
-}
-
-int eepLeesInt(int addr){
-  return (EEPROM.read(addr) << 8) + EEPROM.read(addr + 1);
-}
-
-void eepSchrijfFloat(int addr, float val){
-  eepSchrijfInt(addr, int( val * 10000.0 ) );
-}
-
-float eepLeesFloat(int addr){
-  return eepLeesInt(addr) / 10000.0;
-}
-
-
 
 
 
@@ -192,7 +174,7 @@ class COMPVAART{
           opsnelheid &&           
           (staat == S_HOMEN_VOOR_SPELEN ||
           staat == S_NAAR_BEGIN_PLAAT || 
-          staat == S_NAALD_EROP)
+          staat == S_SPELEN)
      
       ){ 
         if(isOngeveer(glad, targetRpm, 10)){
