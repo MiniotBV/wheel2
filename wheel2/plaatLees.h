@@ -10,6 +10,13 @@ float plaatLeesRuwDiv;
 float plaatLeesAbsDiv;
 float plaatLeesWaarde;
 
+float plaatLeesAbsDivOudOud;
+float plaatLeesAbsDivOud;
+float plaatLeesWaardeJohan;
+
+float plaatLeesBuffer[2000][2];
+int plaatLeesBufferTeller = 0;
+
 float plaatLeesMax;
 float plaatLeesMin;
 
@@ -124,12 +131,16 @@ void scannenVoorTracks(){
 		return;
 	}
 
+  plaatLeesBuffer[plaatLeesBufferTeller][0] = sensorPos;
+  plaatLeesBuffer[plaatLeesBufferTeller][1] = plaatLeesWaarde;
+  // plaatLeesBufferTeller++;
+
 	if(plaatLeesWaarde < trackTresshold / 2 &&   trackOnderTresh){  trackOnderTresh = false; }
 
 	if(plaatLeesWaarde > trackTresshold     &&  !trackOnderTresh){
 		trackOnderTresh = true;
 
-		nieuwNummer(sensorPos - trackOffset);
+		nieuwNummer(sensorPos);
 	}
 
 
@@ -138,6 +149,9 @@ void scannenVoorTracks(){
 		Serial.print(plaatLeesWaarde);
 
 		Serial.print(", ");
+		Serial.print(plaatLeesWaardeJohan);
+
+    Serial.print(", ");
 		Serial.print(plaatLeesAbsDiv);
 
 		Serial.print(", ");
@@ -185,6 +199,12 @@ void plaatLeesFunc(){
 
 
 	plaatLeesAbsDiv = abs(plaatLeesRuwDiv);
+
+  plaatLeesWaardeJohan = ( plaatLeesAbsDivOud * plaatLeesAbsDivOud )   -   ( plaatLeesAbsDivOudOud * plaatLeesAbsDiv );  // s[i] * s[i] - s[i - 1] * s[i + 1]
+  plaatLeesAbsDivOudOud = plaatLeesAbsDivOud;
+  plaatLeesAbsDivOud = plaatLeesAbsDiv;
+
+  
 
 	plaatLeesWaarde = abs(plaatLeesAbsDiv - plaatSensorTarget);
 

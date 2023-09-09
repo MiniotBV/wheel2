@@ -131,20 +131,6 @@ void displayUpdate(){
 					displayData[i] = 0;
 				}
 			}
-
-      // float pos = millis()/1000.0;
-
-      // int x = dispHalf + sin(      pos * TAU ) * dispHalf;
-      // int y = dispHalf + sin(0.4 + pos * TAU ) * dispHalf;
-
-
-      // for(int i = 0; i < displayLengte; i++){
-			// 	if(i > min(x, y) && i < max(x, y)){
-      //     displayData[i] = 0.1;
-      //   }else{
-      //     displayData[i] = 0;
-      //   }
-			// }
 		}
 
 

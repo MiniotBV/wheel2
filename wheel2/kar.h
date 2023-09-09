@@ -469,12 +469,17 @@ void staatDingen(){
 				return;
 			}
 
-			if(naaldNaarVorenBewogen.sinds() > 6000){
-				setError(E_NAALD_NIET_BEWOGEN); //kar te lang niet bewogen
-        naaldNaarVorenBewogen.reset(); // ff de timer reseten zodat hij niet straks weer triggerd
-        gaNaarNummer(karPos - 0.25); // beweeg de kar 0.5mm naar binne om over de skip te skippen
-				// stoppen();
-				return;
+			if(naaldNaarVorenBewogen.sinds() > 4000){
+        if(karPos < 60){//is het een uitloop groef? (54mm lijkt de verste van het midden)
+          stoppenOfHerhalen();//stoppen();
+          return;
+        }else{
+          setError(E_NAALD_NIET_BEWOGEN); //kar te lang niet bewogen
+          naaldNaarVorenBewogen.reset(); // ff de timer reseten zodat hij niet straks weer triggerd
+          gaNaarNummer(karPos - 0.25); // beweeg de kar 0.5mm naar binne om over de skip te skippen
+          return;
+        }
+				
 			}      
 		}
 		return;
@@ -611,7 +616,7 @@ bool karMotorUitvoeren()
 	}
 
 
-	sensorPos = karPos - SENSOR_OFFSET;
+	sensorPos = ( karPos - SENSOR_OFFSET )  - trackOffset;
 
 
 	staatDingen();

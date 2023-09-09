@@ -141,6 +141,13 @@ void knopLogica(int knop){
 		ledBlink();  //led blink
 		
 		knopLog( knop, " in ");
+
+    if(knop == KNOP_PLAY){
+      if( staat == S_HOK ){
+        spelen();
+      }
+    }
+
 		
 		if( staat == S_SCHOONMAAK ){//   SCHOONMAAK STAND STOPPEN
 			stoppen();
@@ -169,10 +176,9 @@ void knopLogica(int knop){
 			}
 		}
 
-		if(knop == KNOP_PLAY)
-    {
+		if(knop == KNOP_PLAY){
 			if(staat == S_PAUZE || staat == S_SPELEN) { pauze(); }
-      else if(staat == S_HOK) { spelen(); }
+      // else if(staat == S_HOK) { spelen(); }
 		}
 
 
@@ -220,10 +226,9 @@ void knopLogica(int knop){
 
 
 		if(knop == KNOP_PLAY){
-			if(staat == S_HOK){
-				spelen();
-			}else{                                 
-				stoppen();
+			if(staat != S_HOK){
+        stoppen();
+				// spelen();
 			}
 		}
 
