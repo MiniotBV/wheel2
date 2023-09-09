@@ -163,14 +163,16 @@ float pid(float rpmIn){
 
 	if(onbalansComp){
 
-		if(opsnelheid){//abs(divTarget) < 3){
+		// if(opsnelheid){//abs(divTarget) < 3){
 			pp = divTarget * plateauP;
 			basis += divTarget * plateauI;            //breng basis voltage naar gemiddelde voor de juiste snelheid
 			
-		}else{
-			pp = divTarget * plateauP * 0.5;
-			basis += divTarget * plateauI * 0.25;       //om langzaam opte starten
-		}
+		// }else{
+		// 	pp = divTarget * plateauP * 0.5;
+		// 	basis += divTarget * plateauI * 0.25;       //om langzaam opte starten
+		// }
+
+    basis = limieteerF(basis, 45, 80);
 
 		// pp = divTarget * plateauP;
 

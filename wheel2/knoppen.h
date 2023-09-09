@@ -62,36 +62,21 @@ void pauze(){
 
 
 
-void printKnoppen(){
+void printKnoppen()
+{
 	Serial.print("knoppen: ");
-	for(int i = 0; i < 8; i++){
-		Serial.print(knopIn[i]);
-		Serial.print(' ');
-	}
+	for(int i = 0; i < 8; i++) { Serial.print(knopIn[i]);  Serial.print(' '); }
 	Serial.println();
 }
 
+void ledBlink() { ledBlinkInterval.reset(); }
 
-
-void ledBlink(){
-	ledBlinkInterval.reset();
-}
-
-
-
-
-const char* knopNaam(int knop){
-	if(knop == KNOP_PLAY){
-		return "play";
-	}
-	if(knop == KNOP_DOORSPOEL){
-		return "doorspoel";
-	}
-	if(knop == KNOP_TERUGSPOEL){
-		return "terugspoel";
-	}
-
-	return "?";
+const char* knopNaam(int knop)
+{
+	if(knop == KNOP_PLAY) { return "play"; }
+	if(knop == KNOP_DOORSPOEL) { return "doorspoel"; }
+	if(knop == KNOP_TERUGSPOEL) { return "terugspoel"; }
+  return "?";
 }
 
 
@@ -176,52 +161,42 @@ void knopLogica(int knop){
 	}
 	
 	
-
-	if( knopStaat[knop] == INGEDRUKT    &&    knopIn[knop] == LOSGELATEN ){//----------------------------------------------------KORT LOSGELATEN
+  //----------------------------------------------------KORT LOSGELATEN
+	if( knopStaat[knop] == INGEDRUKT    &&    knopIn[knop] == LOSGELATEN )
+  {
 		knopStaat[knop] = LOSGELATEN;
 		knopAlleInterval.reset();
-		
 		knopLog( knop, " los ");
 		
-		if(isKnopDoorspoel(knop)){
-			
-			if( (staat == S_SPELEN  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)){
+		if(isKnopDoorspoel(knop))
+    {
+			if((staat == S_SPELEN || staat == S_PAUZE || staat == S_NAAR_NUMMER))
+      {
 				naarVolgendNummer();
 			}
 		}
 
-
-		if(isKnopTerugspoel(knop)){
-
-			if( (staat == S_SPELEN  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)){
+		if(isKnopTerugspoel(knop))
+    {
+			if((staat == S_SPELEN || staat == S_PAUZE || staat == S_NAAR_NUMMER))
+      {
 				naarVorrigNummer();
 			}
 		}
 
-		
-		if(knop == KNOP_PLAY){
-			if(staat == S_PAUZE  ||  staat == S_SPELEN){
-				pauze();
-			
-
-
-			}else if(staat == S_HOK){
-				spelen();
-			}
+		if(knop == KNOP_PLAY)
+    {
+			if(staat == S_PAUZE || staat == S_SPELEN) { pauze(); }
+      else if(staat == S_HOK) { spelen(); }
 		}
 
-
-		if(knop == KNOP_TERUGSPOEL){
-			if(staat == S_HOK){
-				if(rpmStaat == AUTO){
-					rpmStaat = R33;
-				}
-				else if(rpmStaat == R33){
-					rpmStaat = R45;
-				}
-				else{
-					rpmStaat = AUTO;
-				}
+		if(knop == KNOP_TERUGSPOEL)
+    {
+			if(staat == S_HOK)
+      {
+				if(rpmStaat == AUTO) { rpmStaat = R33; }
+				else if(rpmStaat == R33) { rpmStaat = R45; }
+				else { rpmStaat = AUTO; }
 
 				updatePlateauRpm();
 				rpmDisplayActie.reset();
@@ -268,8 +243,9 @@ void knopLogica(int knop){
 	
 	
 	
-	
-	if( knopStaat[knop] == LANG_INGEDRUKT  &&    knopIn[knop] == LOSGELATEN ){//------------------------------------LANG LOSGELATEN
+	//------------------------------------LANG LOSGELATEN
+	if( knopStaat[knop] == LANG_INGEDRUKT && knopIn[knop] == LOSGELATEN )
+  {
 		knopStaat[knop] = LOSGELATEN;
 		knopAlleInterval.reset();
 		
@@ -277,7 +253,9 @@ void knopLogica(int knop){
 
 
 
-		if(  (  staat == S_DOOR_SPOELEN   ||   staat == S_TERUG_SPOELEN  )  &&  (  knop == KNOP_DOORSPOEL  ||  knop == KNOP_TERUGSPOEL  )  ){//WEER BEGINNEN NA SPOELEN
+		if( (staat == S_DOOR_SPOELEN || staat == S_TERUG_SPOELEN) &&
+        (knop == KNOP_DOORSPOEL  ||  knop == KNOP_TERUGSPOEL  )  )
+    { //                                                            WEER BEGINNEN NA SPOELEN
 			targetNummerPos = karPos;
 			setStaat(S_UITROLLEN_NA_SPOELEN);
 		}

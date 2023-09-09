@@ -221,12 +221,12 @@ class COMPVAART
 				karCos -= karCosWaardes[teller];
 				karCosWaardes[teller] = cosin[teller]  *  karPosUitMidden;
 				karCos += karCosWaardes[teller];
+
+        karSinFilt += ( karSin - karSinFilt ) / 2000;
+        karCosFilt += ( karCos - karCosFilt ) / 2000;
 			}
 
 			karFourier  = ( ( ( sinus[teller] * karSin )  +  ( cosin[teller] * karCos ) ) / pulsenPerRev ) * 2;
-
-			karSinFilt += ( karSin - karSinFilt ) / 2000;
-			karCosFilt += ( karCos - karCosFilt ) / 2000;
 
 			karFourierFilt  = ( ( ( sinus[teller] * karSinFilt )  +  ( cosin[teller] * karCosFilt ) )  / pulsenPerRev  ) * 2;
 			
@@ -256,13 +256,19 @@ class COMPVAART
 			// gemiddeldeSnelheidPre -= onbalansCompensatie[teller];
 
 			
+      digitalWrite(ledWit, 0);//zet led aan
+
 			if( onbalansCompAan &&   //alle mementen waarom de compensatie niet mag werken, omdat er dan verschillen zijn met als de naald er egt op is
 					plateauAan && 
 					draaienInterval.sinds() > 1000 && //moet 1 seconden aan staan
 					opsnelheid &&                      // en opsnelheid zijn     
-					(staat == S_HOMEN_VOOR_SPELEN ||    
-					staat == S_NAAR_BEGIN_PLAAT || 
-					staat == S_SPELEN)
+					
+          ((isNaaldEropVoorZoLang(200) && staat == S_SPELEN) ||
+          staat == S_HOMEN_VOOR_SPELEN ||    
+					staat == S_NAAR_BEGIN_PLAAT)
+					// staat == S_SPELEN)
+
+
 
 					// true
 		 
@@ -275,6 +281,7 @@ class COMPVAART
 					}
 					
 				}
+        digitalWrite(ledWit, 1);//zet led aan
 			}
 
 			// onbalansCompensatie[teller] *= compVerval;

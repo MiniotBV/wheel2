@@ -1,7 +1,7 @@
 //  ## Wheel2 ##
 //      rp2040
 
-#define versie 78
+#define versie 82
 
 
 #include <stdio.h>
@@ -176,7 +176,7 @@ void loop() {
 
 
 	// digitalWrite(ledWit, isNaaldEropVoorZoLang(1000));
-	digitalWrite(ledWit, isPlaatAanwezig());
+	// digitalWrite(ledWit, isPlaatAanwezig());
 }
 
 

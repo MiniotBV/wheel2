@@ -315,8 +315,8 @@ void serieelFunc(){
 			Serial.print(", ");
 			Serial.print(uitBuff, 2);
 
-			Serial.print(", ");
-			Serial.print(uitBuffPre, 2);
+			// Serial.print(", ");
+			// Serial.print(uitBuffPre, 2);
 
 			
 
@@ -342,8 +342,8 @@ void serieelFunc(){
 			// Serial.print(", ");
 			// Serial.print(karPosMidden, 3);
 
-			// Serial.print(", ");
-			// Serial.print(karPosMidden + strobo.karFourier, 3);  
+			Serial.print(", ");
+			Serial.print(karPosMidden + strobo.karFourier, 3);  
 
 			Serial.print(", ");
 			Serial.print(karPosMidden + strobo.karFourierFilt, 3);  

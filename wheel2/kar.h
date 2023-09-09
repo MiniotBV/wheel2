@@ -422,41 +422,42 @@ void staatDingen(){
 
 
 
-
-
-
-	if(staat == S_SPELEN){
-
-		if(staatVeranderd.sinds() < 1000){ // eerst ff centrere
-			armHoekCentreer();
-			return;
-		}
+  //  ================================================================
+  //      SPELEN
+  //  ================================================================
+	if(staat == S_SPELEN)
+  {
+		if(staatVeranderd.sinds() < 1000) { armHoekCentreer(); return; } // eerst ff centrere
 		
-		if(naaldErop()){
-			
+		if(naaldErop())
+    {
 			nieuwePos = karPos + limieteerF(armHoek * -karP, -3, 3);
 			nieuwePos = limieteerF(nieuwePos, 0, plaatBegin);
 			beweegKarNaarPos(nieuwePos, KAR_MAX_SNELHEID);
 			
-			if(karPos <= PLAAT_EINDE){
+			if(karPos <= PLAAT_EINDE)
+      {
 				Serial.println("kar heeft de limiet berijkt");
 				stoppenOfHerhalen();//stoppen();
 				return;
 			}
 
-			if(karPos < karPosFilter - 2.5){
+			if(karPos < karPosFilter - 2.5)
+      {
 				Serial.println("waarschijnlijk uitloop groef");
 				stoppenOfHerhalen();//stoppen();
 				return;
 			}
 
-			if(egteKarPos > karPosFilter + 2.5){
+			if(egteKarPos > karPosFilter + 2.5)
+      {
 				setError(E_NAALD_TERUG_GELOPEN);     
 				stoppen();
 				return;
 			}
 
-			if(naaldNaarVorenBewogen.sinds() > 6000){
+			if(naaldNaarVorenBewogen.sinds() > 6000)
+      {
 				setError(E_NAALD_NIET_BEWOGEN); //kar te lang niet bewogen
 				stoppen();
 				return;
@@ -464,66 +465,77 @@ void staatDingen(){
 		}
 		return;
 	}
-
-
-
-	if(staat == S_NAAR_NUMMER){
-		if(naaldEraf()){
-			if(beweegKarNaarPos(targetNummerPos, KAR_MAX_SNELHEID)){
-		setStaat(S_SPELEN);
+  //  ================================================================
+  //      NAAR NUMMER EN SPOELEN
+  //  ================================================================
+	if(staat == S_NAAR_NUMMER)
+  {
+		if(naaldEraf())
+    {
+			if(beweegKarNaarPos(targetNummerPos, KAR_MAX_SNELHEID))
+      {
+		    setStaat(S_SPELEN);
 				return;
 			}
 		}
 		return;
 	}
 
-
-
-
-	if(staat == S_DOOR_SPOELEN){
-		if(naaldEraf()){
+	if(staat == S_DOOR_SPOELEN)
+  {
+		if(naaldEraf())
+    {
 			beweegKarNaarPos(PLAAT_EINDE, KAR_MAX_SNELHEID/4);  
 		}
 		targetNummerPos = karPos;//om het display opteschonene
 	}
 
-	if(staat == S_TERUG_SPOELEN){
-		if(naaldEraf()){
+	if(staat == S_TERUG_SPOELEN)
+  {
+		if(naaldEraf())
+    {
 			beweegKarNaarPos(plaatBegin, KAR_MAX_SNELHEID/4);
 		}
 		targetNummerPos = karPos;//om het display opteschonene
 	}
-
-
-
-
-
-
-	if(staat == S_PAUZE){
-		if(naaldEraf()){
+  
+  if(staat == S_UITROLLEN_NA_SPOELEN){
+		if(beweegKarNaarPos(targetNummerPos, KAR_MAX_SNELHEID/4)){ 
+			setStaat(S_SPELEN);
+			return;
+		}
+		return;
+	}
+  //  ================================================================
+  //      PAUZE, SCHOONMAAK, CALIBREER
+  //  ================================================================
+	if(staat == S_PAUZE)
+  {
+		if(naaldEraf())
+    {
 			beweegKarNaarPos(targetNummerPos, KAR_MAX_SNELHEID);
 		}
 		return;
 	}
 
-
-
-
-	if(staat == S_SCHOONMAAK){
-		if(beweegKarNaarPos( SCHOONMAAK_PLEK,   KAR_MAX_SNELHEID)){
+	if(staat == S_SCHOONMAAK)
+  {
+		if(beweegKarNaarPos(SCHOONMAAK_PLEK, KAR_MAX_SNELHEID))
+    {
 			naaldErop();
 		}
 
-		if(sensorPos > PLAAT_EINDE + 2  &&  plaatAanwezig  &&  isNaaldEraf()){ // als de naalt erop is mag de plaat sensor wel afgaan
-			stoppen();      
+		if(sensorPos > PLAAT_EINDE + 2  &&  plaatAanwezig  &&  isNaaldEraf())
+    { 
+			stoppen(); // als de naald erop is mag de plaat sensor wel afgaan     
 		}
-
 		return;
 	}
 
-
-	if(staat == S_CALIBREER){
-		if(beweegKarNaarPos( SCHOONMAAK_PLEK,   KAR_MAX_SNELHEID)){
+	if(staat == S_CALIBREER)
+  {
+		if(beweegKarNaarPos( SCHOONMAAK_PLEK, KAR_MAX_SNELHEID))
+    {
 			
 		}
 		return;
@@ -532,44 +544,18 @@ void staatDingen(){
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  //  ================================================================
+  //
+  //              MOTOR
+  //
+  //  ================================================================
 
 
 Interval karMotorInt(1000, MICROS);
 
 
-bool karMotorUitvoeren(){
+bool karMotorUitvoeren()
+{
 	
 	// karInterval = (micros() - karMotorInt.vorrigeVorrigeTijd) / 1000000.0;
 
@@ -590,7 +576,15 @@ bool karMotorUitvoeren(){
 	armHoek = armHoekCall - armHoekOffset;
 
   
-	if( staat == S_NAAR_BEGIN_PLAAT || staat == S_UITROLLEN_VOOR_SPELEN || staat == S_SPELEN || staat == S_PAUZE || staat == S_NAAR_NUMMER || staat == S_DOOR_SPOELEN || staat == S_TERUG_SPOELEN || staat == S_UITROLLEN_NA_SPOELEN ){
+	if( staat == S_NAAR_BEGIN_PLAAT || 
+      staat == S_UITROLLEN_VOOR_SPELEN || 
+      staat == S_SPELEN || 
+      staat == S_PAUZE || 
+      staat == S_NAAR_NUMMER || 
+      staat == S_DOOR_SPOELEN || 
+      staat == S_TERUG_SPOELEN || 
+      staat == S_UITROLLEN_NA_SPOELEN )
+  {
 		if(armHoekCall > 0.95){
 			setError(E_ARMHOEK_LIMIET_POS);
 			staat = S_HOK;
@@ -667,16 +661,13 @@ bool karMotorUitvoeren(){
 
 
 
-	if(karGolven){
-		Serial.print(karDcomp, 5);
-		Serial.print(',');
-		Serial.print(armHoekRuw);
-		Serial.print(',');
+	if(karGolven)
+  {
+		Serial.print(karDcomp, 5); Serial.print(',');
+		Serial.print(armHoekRuw); Serial.print(',');
 		Serial.print(armHoekCall, 2);
-
 		Serial.println();
 	}
-
 	return 1;
 }
 
