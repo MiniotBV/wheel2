@@ -317,9 +317,9 @@ void volumeFunc(){
   
   if(versterkerInt.loop()){
 
-    if(!(arm.isNaaldErop() && staat == S_SPELEN)   &&    !volumeOverRide){
-      // waarde = 0;
+    if(!isNaaldLangGenoegOpDePlaatVoorGeluid()   &&    !volumeOverRide){
       digitalWrite(koptelefoonEn, 0);
+      volumeOud = -10;// om een herzend te triggeren
       // Serial.println("geluid uit");
       return;
     }
@@ -330,7 +330,7 @@ void volumeFunc(){
 			
 
 
-			volumeOverRide = false;
+			// volumeOverRide = false;
 			digitalWrite(koptelefoonEn, 1);      
 			
 			int waarde = volume;

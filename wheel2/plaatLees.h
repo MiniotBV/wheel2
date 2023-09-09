@@ -211,7 +211,7 @@ void plaatLeesNaKijken(){
       grootstePiek = plaatLeesBuffer[i][1]; 
     }
   }
-  Serial.println("grootste piek: " + String(grootstePiek));
+  // Serial.println("grootste piek: " + String(grootstePiek));
 
   //------------------------------------------vind alle nummers;
   clearNummers();
