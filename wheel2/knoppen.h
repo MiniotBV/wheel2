@@ -378,7 +378,7 @@ void knoppenUpdate(){
       riemFilterDiv = riemFilter - riemFilterPrev;
       riemFilterPrev = riemFilter;
       
-      riemDiv = riemFilterDiv / 2;    
+      riemDiv = riemFilterDiv / 1.5;    
       // riemDiv = riem - riemPrev;
 
       if(!orientatie.isStaand){

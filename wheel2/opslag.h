@@ -88,3 +88,13 @@ void eepromPrint(){
 void opslagInit(){
   EEPROM.begin(4096);
 }
+
+
+
+
+
+
+void eepromCalibreerOrientatie(){
+  orientatie.gefilterdOffset = orientatie.gefilterd;
+  Serial.println("orientatie.gefilterdOffset: " + String(orientatie.gefilterdOffset, 5));  
+}

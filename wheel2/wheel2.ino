@@ -1,6 +1,6 @@
 //Wheel2
 //rp2040
-#define versie 52
+#define versie 65
 
 
 #include <stdio.h>
@@ -10,9 +10,6 @@
 #include "hardware/gpio.h"
 
 #include "pico/time.h"
-
-
-
 
 
 
@@ -28,8 +25,6 @@
 
 #include "armMotor.h"
 
-
-bool audioFequencyMeten = false;
 
 
 

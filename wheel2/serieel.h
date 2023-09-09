@@ -11,7 +11,7 @@ void serieelFunc(){
     if(golven){
       
       
-      Serial.print(strobo.vaart, 3);
+      Serial.print(strobo.vaart - targetRpm, 3);
       
       // Serial.print(", ");
       // Serial.print(strobo.glad, 3);
@@ -25,11 +25,11 @@ void serieelFunc(){
       // Serial.print(calibratieToon.vaart);
 
 
-      // Serial.print(", ");
-      // Serial.print(strobo.teller);
+      Serial.print(", ");
+      Serial.print(strobo.teller);
 
-      // Serial.print(", ");
-      // Serial.print(strobo.preComp, 4);
+      Serial.print(", ");
+      Serial.print(strobo.preComp, 4);
 
       // Serial.print(", ");
       // Serial.print(strobo.mean, 4);
@@ -91,14 +91,14 @@ void serieelFunc(){
 
 
 
-      Serial.print(", ");
-      Serial.print(karDcomp, 4);
+      // Serial.print(", ");
+      // Serial.print(karDcomp, 4);
 
       Serial.print(", ");
       Serial.print(karPos, 4);  
 
-      Serial.print(", ");
-      Serial.print(nieuwePos, 4);
+      // Serial.print(", ");
+      // Serial.print(nieuwePos, 4);
 
       // Serial.print(", ");
       // Serial.print(plaatAanwezigGefilterd, 3);
@@ -203,12 +203,32 @@ void serieelFunc(){
         armTargetGewicht = Serial.parseFloat();
         Serial.println("armTargetGewicht: " + String(armTargetGewicht));
       }
+      else if(letter == 'l'){
+        armKracht500mg = armKracht;
+        Serial.println("armKracht500mg: " + String(armKracht500mg, 5)); 
+      }
+      else if(letter == 'h'){
+        armKracht4000mg = armKracht;
+        Serial.println("armKracht4000mg: " + String(armKracht4000mg, 5)); 
+      }
 
 
 
       else if(letter == 's'){    //plaatLeesStroom
         plaatLeesStroom = Serial.parseFloat();
         Serial.println("plaatLeesStroom: " + String(plaatLeesStroom));
+      }
+      else if(letter == 'v'){    //set volume
+        int i = Serial.parseInt();
+        volume = i;
+        volumeOverRide = true;
+        Serial.println("volume: " + String(i));
+      }
+
+      else if(letter == 't'){    //set track offset
+        float i = Serial.parseFloat();
+        trackOffset = i;
+        Serial.println("trackOffset: " + String(i));
       }
 
 
@@ -263,18 +283,7 @@ void serieelFunc(){
 
 
 
-      else if(letter == 'v'){    //set volume
-        int i = Serial.parseInt();
-        volume = i;
-        volumeOverRide = true;
-        Serial.println("volume: " + String(i));
-      }
 
-      else if(letter == 't'){    //set track offset
-        float i = Serial.parseFloat();
-        trackOffset = i;
-        Serial.println("trackOffset: " + String(i));
-      }
 
 
 
@@ -297,6 +306,13 @@ void serieelFunc(){
       else if(letter == 'r'){ 
         eepromUitlezen();
       }
+
+      else if(letter == 'a'){
+        orientatie.gefilterdOffset = orientatie.gefilterd;
+        Serial.println("orientatie.gefilterdOffset: " + String(orientatie.gefilterdOffset, 5)); 
+      }
+
+
 
 
 

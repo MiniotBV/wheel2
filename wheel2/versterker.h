@@ -90,7 +90,7 @@ class Orientatie //          QMA7981
 
   float x, y, z;
   float gefilterd, gefilterdPrev;
-  float gefilterdOffset = 0.05;
+  float gefilterdOffset = 0;//0.05;
   int id;
   unsigned long loop;
   bool eersteKeer = true;

@@ -103,8 +103,6 @@ bool beweegKarNaarPos(float target, float snelheid){
 
   karSnelHeid += versnelling;
 
-
-
   karSnelHeid = limieteerF(karSnelHeid, -snelheid, snelheid);
 
   return false;

@@ -78,7 +78,7 @@ class COMPVAART{
     float cosTotaal[10];
     float sinWaardes[10][1000];
     float cosWaardes[10][1000];
-    int harmonisen = 2;
+    int harmonisen = 1;
     volatile float plateauCompFourier = 0;
 
 
@@ -158,10 +158,6 @@ class COMPVAART{
 
       glad += (vaart - glad) / 10;
       gladglad += (glad - gladglad) / 10;
-
-
-
-
 
 
       

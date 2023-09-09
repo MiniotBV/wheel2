@@ -31,7 +31,7 @@
 
 #define SENSOR_OFFSET 7.5//mm
 
-float trackOffset = 1;
+float trackOffset = 0;
 
 
 
