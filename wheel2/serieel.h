@@ -14,6 +14,10 @@ String vorrigeCommando = "";
 
 
 
+
+
+
+
 void printMetMarge(String waarde, int lengte){
   
   Serial.print(waarde);
@@ -202,7 +206,7 @@ void checkenVoorCommando(int info){
 	if(checkZinBool("PLG", "plaatLeesGolven", info, plaatLeesGolven)){return;}
 	if(checkZinBool("KG", "karGolven", info, karGolven)){return;}
 	if(checkZinBool("SG", "strobo.golven", info, strobo.golven)){return;}
-
+  if(checkZinBool("SCR", "strobo.compRaportPerOmwenteling", info, strobo.compRaportPerOmwenteling)){return;}
 
 
 	//-------------------------------------------------STAAT   
@@ -229,15 +233,6 @@ void checkenVoorCommando(int info){
 	if(checkZinCommando("AKH", "armKracht500mg calibreer", info)){  arm.krachtHoog = arm.kracht; Serial.println("armKracht4000mg: " + String(arm.krachtHoog, 5));   return;}
 
 
-	//-------------------------------------------------------KAR SENSORS / TRACK SHIT
-	infoPrintln(info);
-	if(checkZinFloat("PLS", "plaatLeesStroom", info, plaatLeesStroom)){return;}
-	if(checkZinInt("VOL", "volume", info, volume)){ volumeOverRide = true; return;}
-
-	if(checkZinFloat("TO", "trackOffset", info, trackOffset)){return;}
-
-	if(checkZinFunc("AHCent", "armHoekCentreer()", info,  armHoekCentreer)){  return;}
-	if(checkZinFunc("AHCal", "armHoekCalibreer()", info, armHoekCalibreer)){  return;}
 
 
 	//--------------------------------------------------------KAR
@@ -263,35 +258,45 @@ void checkenVoorCommando(int info){
 
 	//----------------------------------------------------------------------STROBO
 	infoPrintln(info);
-	if(checkZinInt("SSN", "strobo.sampleNum", info, strobo.sampleNum)){return;}
+	// if(checkZinInt("SSN", "strobo.sampleNum", info, strobo.sampleNum)){return;}
 	if(checkZinBool("SOC", "strobo.onbalansCompAan", info, strobo.onbalansCompAan)){return;}
+  if(checkZinBool("SKC", "strobo.plaatUitMiddenComp", info, strobo.plaatUitMiddenComp)){return;}
+	if(checkZinBool("KC", "karUitMiddenCompAan", info, karUitMiddenCompAan)){return;}
+
 
   if(checkZinInt("SHVA", "strobo.harmVerschuiving[1]", info, strobo.harmVerschuiving[1])){return;}
   if(checkZinInt("SHVB", "strobo.harmVerschuiving[2]", info, strobo.harmVerschuiving[2])){return;}
   if(checkZinInt("SHVC", "strobo.harmVerschuiving[3]", info, strobo.harmVerschuiving[3])){return;}
-
   if(checkZinFloat("SHEA", "strobo.harmEffect[1]", info, strobo.harmEffect[1])){return;}
   if(checkZinFloat("SHEB", "strobo.harmEffect[2]", info, strobo.harmEffect[2])){return;}
   if(checkZinFloat("SHEC", "strobo.harmEffect[3]", info, strobo.harmEffect[3])){return;}
 
-  if(checkZinInt("SOFH", "strobo.onbalansHarm", info, strobo.onbalansHarm)){return;}
-	if(checkZinInt("SOF", "strobo.onbalansFase", info, strobo.onbalansFase)){return;}
+  // if(checkZinInt("SOFH", "strobo.onbalansHarm", info, strobo.onbalansHarm)){return;}
+	// if(checkZinInt("SOF", "strobo.onbalansFase", info, strobo.onbalansFase)){return;}
 	if(checkZinFloat("SOG", "strobo.onbalansCompGewicht", info, strobo.onbalansCompGewicht)){return;}
   if(checkZinInt("SOH", "strobo.harmonisen", info, strobo.harmonisen)){return;}
-	if(checkZinBool("SKC", "strobo.plaatUitMiddenComp", info, strobo.plaatUitMiddenComp)){return;}
-	if(checkZinBool("KC", "karUitMiddenCompAan", info, karUitMiddenCompAan)){return;}
-	
+
 	if(checkZinCommando( "SCZ", "strobo.clearCompSamplesOpTellerNull()", info)){   strobo.clearCompSamplesOpTellerNull(); return;}
 	if(checkZinCommando( "SCC", "strobo.clearCompSamples()", info)){   strobo.clearCompSamples(); return;}
 
 
 	//------------------------------------------------------OPSLAG
 	infoPrintln(info);
-	if(checkZinFloat("EV", "eepromVersie", info, eepromVersie)){return;}
+	// if(checkZinFloat("EV", "eepromVersie", info, eepromVersie)){return;}
 	if(checkZinFunc("EO", "eepromOpslaan()",  info, eepromOpslaan)){    return;}
-	if(checkZinFunc("EL", "eepromUitlezen()", info, eepromUitlezen)){   return;}
-	
+	// if(checkZinFunc("EL", "eepromUitlezen()", info, eepromUitlezen)){   return;}
 	if(checkZinCommando("OC", "orientatie.calibreerOrientatie()", info)){ orientatie.calibreer(); return;}
+	if(checkZinFloat("TO", "trackOffset", info, trackOffset)){return;}
+	if(checkZinFunc("AHCal", "armHoekCalibreer()", info, armHoekCalibreer)){  return;}
+
+
+
+  	//-------------------------------------------------------KAR SENSORS / TRACK SHIT
+	infoPrintln(info);
+	// if(checkZinFloat("PLS", "plaatLeesStroom", info, plaatLeesStroom)){return;}
+	if(checkZinInt("VOL", "volume", info, volume)){ volumeOverRide = true; return;}
+	if(checkZinFunc("AHCent", "armHoekCentreer()", info,  armHoekCentreer)){  return;}
+
 
 
 

@@ -1,3 +1,4 @@
+#include "api/Common.h"
 
 
 #define TAU 2*PI
@@ -35,7 +36,7 @@
 
 #define SENSOR_OFFSET 7.5//mm
 
-float trackOffset = 0;
+float trackOffset = 0.7;
 
 
 
@@ -78,6 +79,17 @@ bool uitdraaien;
 
 
 
+
+
+
+String voegMargeToe(String waarde, int lengte){
+  
+  while( waarde.length() < lengte){
+    waarde += " "; 
+  }
+
+  return waarde;
+}
 
 
 

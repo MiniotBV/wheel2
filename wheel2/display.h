@@ -176,7 +176,7 @@ void displayUpdate(){
 
 
       for(int i = 0; i < displayLengte; i++){
-				if(i > pos){
+				if(i >= pos){
 					
 					if(versieDisplay[i - pos] == 1){
 						displayData[i] = 0.1;

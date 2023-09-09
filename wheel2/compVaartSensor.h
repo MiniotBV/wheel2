@@ -1,3 +1,4 @@
+#include "api/Common.h"
 
 
 
@@ -106,8 +107,7 @@ class COMPVAART
 
 		volatile float onbalansComp = 0;
 		
-		// float compVerval = 1.0;//0.6;//0.8;
-		float onbalansCompGewicht = 1.9;//1.5;//2;//0.8;
+		float onbalansCompGewicht = 1.9;
 
 
 		float  onbalansSinTotaal[6];
@@ -116,6 +116,7 @@ class COMPVAART
 		float onbalansCosWaardes[6][pprmax];
 		
 		volatile float onbalansCompFourier = 0;
+    float onbalansSignaal = 0;
 
 
 
@@ -127,6 +128,7 @@ class COMPVAART
 		bool onbalansCompAan = true;
 		bool plaatUitMiddenComp = true;
 		bool clearCompSamplesWachtrij = false;
+    bool compRaportPerOmwenteling = false;
 
     bool wowEersteWeerLaag;
     int tellerSindsReset;
@@ -224,18 +226,40 @@ class COMPVAART
 
 
 
-			//--------------------------------------------------------T = 0 COMP RESET
-			if(clearCompSamplesWachtrij  && teller == 0){
-				clearCompSamplesWachtrij = false;
-        tellerSindsReset = 0;
-				clearOnbalansCompSamples();
-				// clearCompSamples();
-			}
+			
+      if(teller == 0){// als er een omwenteling is geweest
+
+        if(compRaportPerOmwenteling){
+          float hoek[6];
+          float amplitude[6];
+          for(int i = 1; i < harmonisen + 1; i++){
+            hoek[i] = ( atan2(onbalansCosTotaal[i], onbalansSinTotaal[i]) * RAD_TO_DEG * 2  + 360 ) / i;
+            amplitude[i] = sqrt( onbalansSinTotaal[i] * onbalansSinTotaal[i]   +  onbalansCosTotaal[i] * onbalansCosTotaal[i]);
+            if(i == 1){
+              Serial.print("grondtoon a:" + voegMargeToe( String( amplitude[i], 2), 9) );           
+            }else{
+              Serial.print("    |     h" + String(i) + " a:" + voegMargeToe( String( amplitude[i] / amplitude[1], 2), 9) ); 
+            }
+            Serial.print(" f:" + voegMargeToe(String(hoek[i], 2), 9)  +
+            " +c:" + voegMargeToe(String(hoek[i] + harmVerschuiving[i], 2), 9));
+          }
+          Serial.println();
+        }
+
+
+        if(clearCompSamplesWachtrij){//--------------------------------------------------------T = 0 COMP RESET
+          clearCompSamplesWachtrij = false;
+          tellerSindsReset = 0;
+          clearOnbalansCompSamples();
+        }
+
+      }
+
 
 
 			
 
-			//-----------------------------------------------------------------------UIT HET MIDDEN COMPENSATIE
+			//------------------------------------------------------------------------------------------------UIT HET MIDDEN COMPENSATIE
 			karPosMiddenPre -= karUitCenterGolf[teller];
 			karUitCenterGolf[teller] = egteKarPos;
 			karPosMiddenPre += karUitCenterGolf[teller];
@@ -272,24 +296,42 @@ class COMPVAART
 			
 
 
+
+
+      //------------------------------------------------------------------------------te grote uitslag ERROR
+			float sinBuff = karSinFilt / pulsenPerRev;
+			float cosBuff = karCosFilt / pulsenPerRev;
+			if( sinBuff * sinBuff  +  cosBuff * cosBuff  >  3 * 3){ // een uit het midden hijd van 6mm (3mm radius) triggerd error
+				setError(E_TE_GROTE_UITSLAG);
+        clearCompSamples();
+				stoppen();
+			}
+
+
+
+
+
+      //---------------------------------------------------------------------------------------------------------gecompenseerde snelheden
 			int leadTeller = rondTrip(teller - (8+9), pulsenPerRev); // fase verschuiving: 8 van de 16samples avg filter, en 9 van het gewonde filter er achteraan
 			float uitMiddenSnelheidsComp = ( ( ( sinus[leadTeller] * karSinFilt )  +  ( cosin[leadTeller] * karCosFilt ) )  / pulsenPerRev  ) * 2;
 
       centerComp = (( karPosMidden - uitMiddenSnelheidsComp ) / karPosMidden );
 			centerCompTargetRpm = targetRpm * centerComp;
       
-
-
-
-
-
-      //-----------------------------------------------------------------------------gecompenseerde snelheden
       if(plaatUitMiddenComp){
         vaartCenterComp = vaart / centerComp;
       }else{
         vaartCenterComp = vaart;
       }
 
+
+
+
+
+
+
+
+      //-------------------------------------------------------------------------------------------WOW FLUTTER METING
       vaartLowPass += (vaartCenterComp - vaartLowPass) / 100;
       vaartHighPass = vaartCenterComp - vaartLowPass;
 
@@ -304,6 +346,7 @@ class COMPVAART
       if(wow < 0.1 && wowEersteWeerLaag == true){
         wowEersteWeerLaag = false;
         Serial.println("loopt weer geleik na: " + String(tellerSindsReset / float(pulsenPerRev)) + " omwentelingen");
+        tellerSindsReset = 0;
       }
 
       if(wow > 0.3 &&  wowEersteWeerLaag == false){
@@ -314,56 +357,55 @@ class COMPVAART
 
 
 			
-      //------------------------------------------------------------------------------te grote uitslag ERROR
-			float sinBuff = karSinFilt / pulsenPerRev;
-			float cosBuff = karCosFilt / pulsenPerRev;
-			if( sinBuff * sinBuff  +  cosBuff * cosBuff  >  3 * 3){ // een uit het midden hijd van 6mm (3mm radius) triggerd error
-				setError(E_TE_GROTE_UITSLAG);
-        clearCompSamples();
-				stoppen();
-			}
 
 
 
 
 
-			procesTijd = micros();
-
-			//-----------------------------------------------------------------------------UIT BALANS COMPENSATIE
 
 			
-      digitalWrite(ledWit, 0);//zet led aan
+
+			//-----------------------------------------------------------------------------ONBALANS COMPENSATIE
+      // procesTijd = micros();
+      
+
 
 			if( onbalansCompAan &&   //alle mementen waarom de compensatie niet mag werken, omdat er dan verschillen zijn met als de naald er egt op is
-					plateauAan && 
-					draaienInterval.sinds() > 1000 && //moet 1 seconden aan staan
-					opsnelheid &&                      // en opsnelheid zijn     
-					
-          ((arm.isNaaldEropVoorZoLang(2000) && staat == S_SPELEN) )
-          //  ||
-          // staat == S_HOMEN_VOOR_SPELEN ||    
-					// staat == S_NAAR_BEGIN_PLAAT)
-		 
+					plateauAan 
+					&& draaienInterval.sinds() > 1000  //moet 1 seconden aan staan
+					&& opsnelheid                       // en opsnelheid zijn     
+					&& isOngeveer(vaart, targetRpm, 10)  //mag niet meer dan 10rpm van de target rpm afzijn
+
+          && ((arm.isNaaldEropVoorZoLang(2000) && staat == S_SPELEN) ||//)
+          staat == S_HOMEN_VOOR_SPELEN ||    
+					staat == S_NAAR_BEGIN_PLAAT)
 			){ 
-				if(isOngeveer(vaart, targetRpm, 10)){
-					onbalansCompensatie[teller] += ( vaartCenterComp - targetRpm ) * onbalansCompGewicht;
-				}
-        digitalWrite(ledWit, 1);//zet led aan
-			}
+        onbalansCompensatie[teller] +=  vaartCenterComp - targetRpm;
+        
+				digitalWrite(ledWit, 1);//zet led aan
+			}else{
+        digitalWrite(ledWit, 0);//zet led uit
+      }
 
-			float nieuweWaarde = onbalansCompensatie[teller];
+      if(onbalansCompAan){
+        onbalansSignaal = onbalansCompensatie[teller];
+      }else{
+        onbalansSignaal = vaartCenterComp - targetRpm;
+      }
 
-			onbalansCompFourier = 0;
+			
+      
+      onbalansCompFourier = 0;
 
 			for(int harm = 1; harm < harmonisen + 1; harm++){
 				int hoek = rondTrip(teller * harm,  pulsenPerRev); // hoek vermenigvuldigd met de uidige harmonici
 
 				onbalansSinTotaal[harm] -= onbalansSinWaardes[harm][teller]; // haal de ouwe waarde uit het totaal
-				onbalansSinWaardes[harm][teller] = sinus[hoek]  *  nieuweWaarde; // bereken de nieuwe waarde
+				onbalansSinWaardes[harm][teller] = sinus[hoek]  *  onbalansSignaal; // bereken de nieuwe waarde
 				onbalansSinTotaal[harm] += onbalansSinWaardes[harm][teller]; // voeg de nieuwe to aan het totaal
 				
 				onbalansCosTotaal[harm] -= onbalansCosWaardes[harm][teller];
-				onbalansCosWaardes[harm][teller] = cosin[hoek]  *  nieuweWaarde;
+				onbalansCosWaardes[harm][teller] = cosin[hoek]  *  onbalansSignaal;
 				onbalansCosTotaal[harm] += onbalansCosWaardes[harm][teller];
 
 				// hoek = rondTrip(hoek + onbalansFase - (onbalansHarm / harm),  pulsenPerRev); // hoek ofset om de compensati wat voorspellender te maken
@@ -372,8 +414,10 @@ class COMPVAART
 			}
 
 
+
+
 			if(onbalansCompAan){
-				onbalansComp = -onbalansCompFourier;
+				onbalansComp = -onbalansCompFourier * onbalansCompGewicht;
 			}else{
 				onbalansComp = 0;
 			}
@@ -381,7 +425,7 @@ class COMPVAART
 
 
 
-			procesInterval = micros() - procesTijd;
+			// procesInterval = micros() - procesTijd;
 
 
 
