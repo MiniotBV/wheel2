@@ -3,7 +3,7 @@
 
 //https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json
 
-#define versie 148
+#define versie 149
   
 
 #include <stdio.h>
@@ -70,12 +70,9 @@ Interval ledInt(200, MILLIS);
 
 #include "knoppen.h"
 
-#include "display.h"
-
-
-
-
 #include "opslag.h"
+
+#include "display.h"
 
 #include "serieel.h"
  

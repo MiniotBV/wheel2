@@ -218,11 +218,11 @@ void checkenVoorCommando(int info){
 	infoPrintln(info);
 	if(checkZinCommando("NE",     "naaldErop()",              info)){   arm.naaldErop(); return;}
 	if(checkZinCommando("NA",     "naaldEraf()",              info)){   arm.naaldEraf(); return;}
-	if(checkZinFloat(   "ATG",    "arm.targetGewicht",        info,     arm.targetGewicht)){return;}
+	if(checkZinFloat(   "ATG",    "arm.targetGewicht",        info,     arm.targetGewicht)){       eepromNogOpslaan = true; return;}
   if(checkZinFloat(   "AG",     "arm.gewicht",              info,     arm.gewicht)){return;}
-  if(checkZinCommando("AKHOK",  "armKrachtHok calibreer",   info)){   arm.netInHokGewicht = arm.gewicht; Serial.println("arm.netInHokGewicht: " + String(arm.netInHokGewicht, 5));   return;}
-	if(checkZinCommando("AKL",    "armKracht500mg calibreer", info)){   arm.krachtLaag = arm.kracht;   Serial.println("armKracht500mg: "  + String(arm.krachtLaag, 5));  return;}
-	if(checkZinCommando("AKH",    "armKracht4000mg calibreer",info)){   arm.krachtHoog = arm.kracht; Serial.println("armKracht4000mg: " + String(arm.krachtHoog, 5));   return;}
+  if(checkZinCommando("AKHOK",  "armKrachtHok calibreer",   info)){   arm.netInHokGewicht = arm.gewicht; Serial.println("arm.netInHokGewicht: " + String(arm.netInHokGewicht, 5));   eepromNogOpslaan = true;   return;}
+	if(checkZinCommando("AKL",    "armKracht500mg calibreer", info)){   arm.krachtLaag = arm.kracht;   Serial.println("armKracht500mg: "  + String(arm.krachtLaag, 5));     eepromNogOpslaan = true;  return;}
+	if(checkZinCommando("AKH",    "armKracht4000mg calibreer",info)){   arm.krachtHoog = arm.kracht; Serial.println("armKracht4000mg: " + String(arm.krachtHoog, 5));       eepromNogOpslaan = true;  return;}
   if(checkZinFloat(   "AK",     "arm.kracht",               info,     arm.kracht)){ arm.kracht = limieteerF(arm.kracht, 0, 1); return;}
 
 
@@ -271,9 +271,9 @@ void checkenVoorCommando(int info){
 	if(checkZinFloat(   "EV",     "eepromVersie",             info, eepromVersie)){return;}
 	if(checkZinCommando("EO",     "eepromOpslaan()",          info)){ eepromOpslaan();   return;}
 	if(checkZinCommando("EL",     "eepromUitlezen()",         info)){ eepromUitlezen();  return;}
-	if(checkZinCommando("OC",     "orientatie.calibreerOrientatie()", info)){ orientatie.calibreer(); return;}
-	if(checkZinFloat(   "TO",     "trackOffset",              info, trackOffset)){return;}
-	if(checkZinCommando("AHCal",  "armHoekCalibreer()",       info)){ armHoekCalibreer(); return;}
+	if(checkZinCommando("OC",     "orientatie.calibreerOrientatie()", info)){ orientatie.calibreer(); eepromNogOpslaan = true;return;}
+	if(checkZinFloat(   "TO",     "trackOffset",              info, trackOffset)){eepromNogOpslaan = true;   return;}
+	if(checkZinCommando("AHCal",  "armHoekCalibreer()",       info)){ armHoekCalibreer(); eepromNogOpslaan = true;return;}
 
 
 

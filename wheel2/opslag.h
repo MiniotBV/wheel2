@@ -1,6 +1,7 @@
 #include <EEPROM.h>
 
 int eepromShit = 0;
+bool eepromNogOpslaan = false;
 float eepromVersie;
 
 
@@ -27,7 +28,9 @@ float eepromVersie;
 void eepCommit(){
 	EEPROM.commit();
 	eepromShit = 0;
+  eepromNogOpslaan = false;
 }
+
 
 
 
@@ -87,6 +90,7 @@ void eepromOpslaan(){
 	EEPROM.put( EEPROM_ARMHOEK_MAX,         armHoekMax);
 
   eepromShit = 1;
+  eepromNogOpslaan = false;
 }
 
 

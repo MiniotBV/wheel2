@@ -360,6 +360,17 @@ void displayUpdate(){
 
 
 
+    if(eepromNogOpslaan){  // als de eeprom nog niet is opgeslagen, blijf dan lekker knipperen voor arco en floris
+      if(millis()%1000>500){
+        displayTekenBlok(0, displayLengte/20, 0.9);
+        displayTekenBlok(displayLengte,  displayLengte   -  displayLengte/20, 0.9);
+      }
+    }
+
+
+
+
+
 
 
 		//-----------------------------------------------------------KNOP BLINK
@@ -396,7 +407,7 @@ void displayUpdate(){
 		
 		digitalWrite(displayEN, 0);
 
-		while(micros() - displayDelay < 60){}
+		while(micros() - displayDelay < 200){}
 
 		digitalWrite(displayEN, 1);
 
@@ -407,7 +418,7 @@ void displayUpdate(){
 
 
 		digitalWrite(displayEN, 0);
-		delayMicroseconds(1000);
+		delayMicroseconds(1500);
 		digitalWrite(displayEN, 1);
 
 		// displayPrint(1);
