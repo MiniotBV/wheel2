@@ -11,7 +11,7 @@ float eepromVersie;
 #define EEPROM_ARMKRACHT_500MG    100
 #define EEPROM_ARMKRACHT_4000MG   110
 #define EEPROM_ARMKRACHT_HOK      130
-#define EEPROM_ARMGEWICHT         120
+// #define EEPROM_ARMGEWICHT         120
 
 #define EEPROM_WATERPAS_OFFSETX   200
 #define EEPROM_WATERPAS_OFFSETY   210
@@ -59,7 +59,7 @@ void eepromUitlezen(){
 	eepromLeesFloatWaarde( EEPROM_ARMKRACHT_4000MG,   arm.krachtHoog);
   eepromLeesFloatWaarde( EEPROM_ARMKRACHT_HOK,      arm.netInHokGewicht);
 
-	eepromLeesFloatWaarde( EEPROM_ARMGEWICHT,         arm.targetGewicht);
+	// eepromLeesFloatWaarde( EEPROM_ARMGEWICHT,         arm.targetGewicht);
 
 	eepromLeesFloatWaarde( EEPROM_WATERPAS_OFFSETX,   orientatie.xOffset);
   eepromLeesFloatWaarde( EEPROM_WATERPAS_OFFSETY,   orientatie.yOffset);
@@ -80,7 +80,7 @@ void eepromOpslaan(){
 	EEPROM.put( EEPROM_ARMKRACHT_500MG,     arm.krachtLaag);
 	EEPROM.put( EEPROM_ARMKRACHT_4000MG,    arm.krachtHoog);
   EEPROM.put( EEPROM_ARMKRACHT_HOK,       arm.netInHokGewicht);
-	EEPROM.put( EEPROM_ARMGEWICHT,          arm.targetGewicht);
+	// EEPROM.put( EEPROM_ARMGEWICHT,          arm.targetGewicht);
 	EEPROM.put( EEPROM_WATERPAS_OFFSETX,    orientatie.xOffset);
   EEPROM.put( EEPROM_WATERPAS_OFFSETY,    orientatie.yOffset);
   EEPROM.put( EEPROM_WATERPAS_OFFSETZ,    orientatie.zOffset);
@@ -100,7 +100,7 @@ void eepromPrint(){
 	Serial.println("EEPROM_ARMKRACHT_500MG:   " + String(arm.krachtLaag,                5));
 	Serial.println("EEPROM_ARMKRACHT_4000MG:  " + String(arm.krachtHoog,                5));
   Serial.println("EEPROM_ARMKRACHT_HOK:     " + String(arm.netInHokGewicht,           5));
-	Serial.println("EEPROM_ARMGEWICHT:        " + String(arm.targetGewicht,             5));
+	// Serial.println("EEPROM_ARMGEWICHT:        " + String(arm.targetGewicht,             5));
   Serial.println("EEPROM_WATERPAS_OFFSETX:  " + String(orientatie.xOffset,            5));
   Serial.println("EEPROM_WATERPAS_OFFSETY:  " + String(orientatie.yOffset,            5));
 	Serial.println("EEPROM_WATERPAS_OFFSETZ:  " + String(orientatie.zOffset,            5));

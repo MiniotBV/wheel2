@@ -1,9 +1,10 @@
 //  Wheel2 
 //  rp2040
 
+//board instaleren:
 //https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json
 
-#define versie 157
+#define versie 158
   
 
 #include <stdio.h>

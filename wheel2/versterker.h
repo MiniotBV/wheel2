@@ -79,6 +79,7 @@ class Orientatie //          QMA7981
 	// {
 	//   // i2cWrite(adress, 0x1B, 0b10000000);
 	// }
+  bool golven = false;
 	
 	bool isStaand    = false;
 	bool isStaandOud = false;
@@ -111,9 +112,10 @@ class Orientatie //          QMA7981
 			if(eersteKeer){
 				eersteKeer = false;
 				reset();
+        return;
 			}
 			
-			loop = millis();
+			// loop = millis();
 
 			// id = i2cRead(adress, 0x00);
 
@@ -157,6 +159,11 @@ class Orientatie //          QMA7981
 				isStaandOud = isStaand;
 				print();
 			}
+
+
+      if(golven){
+        debug(String(x, 5) + "," + String(y, 5) + "," + String(z, 5));
+      }
 		}
 
 	}

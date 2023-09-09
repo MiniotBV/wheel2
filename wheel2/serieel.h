@@ -197,6 +197,7 @@ void checkenVoorCommando(int info){
 	if(checkZinBool(    "PLG",    "plaatLeesGolven",          info, plaatLeesGolven)){return;}
 	if(checkZinBool(    "KG",     "karGolven",                info, karGolven)){return;}
 	if(checkZinBool(    "SG",     "strobo.golven",            info, strobo.golven)){return;}
+  if(checkZinBool(    "OG",     "orientatie.golven",            info, orientatie.golven)){return;}
 
 
 	//-------------------------------------------------STAAT   
