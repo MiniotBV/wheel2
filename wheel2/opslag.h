@@ -66,7 +66,7 @@ void eepromUitlezen(){
 
 
 void eepromOpslaan(){
-	EEPROM.put( EEPROM_VERSIE,              eepromVersie);
+	EEPROM.put( EEPROM_VERSIE,              versie);//eepromVersie);
 	EEPROM.put( EEPROM_ARMKRACHT_500MG,     arm.krachtLaag);
 	EEPROM.put( EEPROM_ARMKRACHT_4000MG,    arm.krachtHoog);
 	EEPROM.put( EEPROM_ARMGEWICHT,          arm.targetGewicht);
@@ -82,7 +82,7 @@ void eepromOpslaan(){
 
 
 void eepromPrint(){
-	// Serial.println("EEPROM_VERSIE:            " + String(eepromVersie,                  5));
+	Serial.println("EEPROM_VERSIE:            " + String(eepromVersie,                  5));
 	Serial.println("EEPROM_ARMKRACHT_500MG:   " + String(arm.krachtLaag,                5));
 	Serial.println("EEPROM_ARMKRACHT_4000MG:  " + String(arm.krachtHoog,               5));
 	Serial.println("EEPROM_ARMGEWICHT:        " + String(arm.targetGewicht,              5));

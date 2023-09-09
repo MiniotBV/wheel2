@@ -198,7 +198,7 @@ void checkenVoorCommando(int info){
 
 	infoPrintln(info);
 
-  if(checkZinCommando("BT", "bluetooth commando", info)){ zin.trim();zin.toUpperCase(); Serial2.print(zin); Serial.println("BT GESTUURD:" + zin); return;}
+  if(checkZinCommando("AT+", "bluetooth commando", info)){ zin.trim();zin.toUpperCase(); Serial2.print("AT+" + zin); Serial.println("BT GESTUURD:AT+" + zin); return;}
 
 	if(checkZinBool("g", "golven", info, golven)){return;}
 	if(checkZinBool("PLG", "plaatLeesGolven", info, plaatLeesGolven)){return;}

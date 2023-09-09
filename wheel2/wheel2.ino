@@ -87,7 +87,7 @@ void setup() {
   Wire1.setSCL(SCL);
 	Wire1.setSDA(SDA);
 
-  bluetoothInit();
+  
 
 	opslagInit();
 	eepromUitlezen();
@@ -118,6 +118,8 @@ void setup() {
 
 	pinMode(ledWit, OUTPUT);
 	// digitalWrite(ledWit, 1);//zet led aan
+
+
 
 }
 

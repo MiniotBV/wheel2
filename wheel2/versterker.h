@@ -384,6 +384,11 @@ void volumeFunc(){
 
 // #define BT_PAUZE_LANG
 
+//AT+
+//AT+SCAN
+//AT+REST
+//AT+DELVMLINK
+
 
 
 
@@ -399,10 +404,19 @@ void bluetoothInit(){
 
 
 Interval bluetoothInt(20, MILLIS);
+bool bluetoothInitNogDoen = true;
 
 String bluetoothBuffer = "";
 
 void bluetoothFunc(){
+  if(millis() < 1000)return;
+  
+  if(bluetoothInitNogDoen){
+    bluetoothInitNogDoen = false;
+    bluetoothInit();
+    return;    
+  }
+  
   if(bluetoothInt.loop()){
 
     while(Serial2.available() > 0){
