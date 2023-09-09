@@ -321,11 +321,11 @@ class COMPVAART
 
       if(wow < 0.1 && wowEersteWeerLaag == true){
         wowEersteWeerLaag = false;
-        Serial.println("loopt weer gelijk na: " + String(tellerSindsReset / float(pulsenPerRev)) + " omwentelingen");
-        Serial.println("onbalansFase: " + String(onbalansFase));
-        Serial.println("onbalansCompGewicht: " + String(onbalansCompGewicht));
-        Serial.println("onbalansFilterBreedte: " + String(onbalansFilterBreedte));
-        Serial.println();
+        debug("loopt weer gelijk na: " + String(tellerSindsReset / float(pulsenPerRev)) + " omwentelingen");
+        debug("onbalansFase: " + String(onbalansFase));
+        debug("onbalansCompGewicht: " + String(onbalansCompGewicht));
+        debug("onbalansFilterBreedte: " + String(onbalansFilterBreedte));
+        debug("");
         tellerSindsReset = 0;
       }
 

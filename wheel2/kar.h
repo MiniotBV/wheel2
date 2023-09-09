@@ -161,7 +161,7 @@ void armHoekCalibreer(){
 
 	armHoekMinCall = AMAX;
 	armHoekMaxCall = 0;
-	Serial.println("armHoek gecalibreed en buffer waardes gereset");
+	debug("armHoek gecalibreed en buffer waardes gereset");
 }
 
 
@@ -172,7 +172,7 @@ void armHoekCalibreer(){
 
 void gaNaarNummer(float pos){
 	targetNummerPos = pos;
-	Serial.println("naarpos: " + String(targetNummerPos));
+	debug("naarpos: " + String(targetNummerPos));
 	setStaat(S_NAAR_NUMMER);
 }
 
@@ -305,7 +305,7 @@ void staatDingen(){
 
     // if(armHoek > 0.5){//-800){//-1000)
 		if(armHoekCall > 0.75){//-800){//-1000)
-			// Serial.println("home verschill: " + String(karOffset + karPos));
+			// debug("home verschill: " + String(karOffset + karPos));
 			karOffset -= KAR_HOME - karPos;
 			karPos = KAR_HOME;
 
@@ -379,13 +379,13 @@ void staatDingen(){
 			
 
 			if(plaadDiaInch < 6){//kleiner dan 6" dan stoppen
-				Serial.println("geen plaat? plaatDia: " + String(plaadDiaInch));
+				debug("geen plaat? plaatDia: " + String(plaadDiaInch));
 				stoppen();
 				return;
 			}
 			
 			if(plaadDiaInch < 8){// ongeveer 
-				Serial.println("plaatDia: " + String(plaadDiaInch) + " : ±7\" ");
+				debug("plaatDia: " + String(plaadDiaInch) + " : ±7\" ");
 				setPlateauRpm(rpm45);
 				plaatBegin = SINGLETJE_PLAAT_BEGIN;
 				zetNummersAlsEenSingletje();
@@ -393,13 +393,13 @@ void staatDingen(){
 			
 			
 			}else if(plaadDiaInch < 11){ 
-				Serial.println("plaatDia: " + String(plaadDiaInch) + " : ±10\" ");
+				debug("plaatDia: " + String(plaadDiaInch) + " : ±10\" ");
 				setPlateauRpm(rpm33);
 				plaatBegin = TIEN_INCH_PLAAT_BEGIN;
 			
 			
 			}else{
-				Serial.println("plaatDia: " + String(plaadDiaInch) + " : ???????\" ");
+				debug("plaatDia: " + String(plaadDiaInch) + " : ???????\" ");
 				plaatBegin = sensorPos;
 				// setPlateauRpm(rpm33);
 			}
@@ -418,7 +418,7 @@ void staatDingen(){
 		if(  beweegKarNaarPos(ELPEE_PLAAT_BEGIN,   KAR_MAX_SNELHEID)  ){ // als aangelokomen eind van de kar berijk en altijd een plaat gezien
 			plaatBegin = ELPEE_PLAAT_BEGIN;
       targetNummerPos = plaatBegin;
-			Serial.println("plaatDia: 12inch");
+			debug("plaatDia: 12inch");
 			setPlateauRpm(rpm33);
       plaatLeesNaKijken();
 
@@ -466,13 +466,13 @@ void staatDingen(){
 
       //---------------------------------------------------------dingen die kunnen gebeuren tijdens spelen
 			if(egteKarPos <= PLAAT_EINDE){
-				Serial.println("kar heeft de limiet berijkt");
+				debug("kar heeft de limiet berijkt");
 				stoppenOfHerhalen();//stoppen();
 				return;
 			}
 
 			if(egteKarPos < karPosFilter - 3){
-				Serial.println("waarschijnlijk uitloop groef");
+				debug("waarschijnlijk uitloop groef");
 				stoppenOfHerhalen();//stoppen();
 				return;
 			}
@@ -499,7 +499,7 @@ void staatDingen(){
       if(puristenMode){
         if(strobo.wow < 0.15   ||  arm.isNaaldEropVoorZoLang(10000) ){// loop de plaat al geleleik of heeft het 10sec geduurd
           puristenMode = false;
-          Serial.println("loopt gelijk genoeg");
+          debug("loopt gelijk genoeg");
           // naarBeginPlaat();
           gaNaarNummer(targetNummerPos);
         }
@@ -573,7 +573,7 @@ void staatDingen(){
 		}
 
 		if(sensorPos > PLAAT_EINDE + 2  &&  sensorPos < PLAAT_EINDE + 12  && plaatAanwezig){  // ligt er een plaat op? dan stoppen
-      Serial.println("kan niet in schoonmaak, er is een plaat of iets vergelijkbaars");
+      debug("kan niet in schoonmaak, er is een plaat of iets vergelijkbaars");
 			stoppen();
 		}
 		return;
@@ -666,7 +666,8 @@ bool karMotorUitvoeren()
 
 
 	if(karMotorEnable){
-    pwmStapper(-karMotorPos,   stapperAP, stapperAN,  stapperBP, stapperBN,  true);	
+    // pwmStapper(-karMotorPos,   stapperAP, stapperAN,  stapperBP, stapperBN,  true);	
+    pwmStapper(karMotorPos,   stapperAP, stapperAN,  stapperBP, stapperBN,  true);	
 	}else{
 		pwmDisableStapper(stapperAP, stapperAN,  stapperBP, stapperBN);
 	}

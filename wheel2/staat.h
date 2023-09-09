@@ -72,8 +72,8 @@ void setStaat(enum staats s){
 	staatVeranderd.reset();
 	eersteKeerSindsStaatsVerandering = true;
 	
-  Serial.println("staat: " + printStaat(s));
-	// Serial.println(printStaat(staat) + " > " + printStaat(s));
+  debug("staat: " + printStaat(s));
+	// debug(printStaat(staat) + " > " + printStaat(s));
 
 	staat = s; // set staat
 }
@@ -186,10 +186,10 @@ String printError(enum errors s){
 void setError(enum errors err){
 	error = err;
 	errorVeranderd.reset();
-	Serial.println("V error: " + printError(err));
-  Serial.println("  staat: " + printStaat(staat));
-  Serial.println("  karPos: " + String(karPos));
-  Serial.println("^");
+	debug("V error: " + printError(err));
+  debug("  staat: " + printStaat(staat));
+  debug("  karPos: " + String(karPos));
+  debug("^");
 }
 
 

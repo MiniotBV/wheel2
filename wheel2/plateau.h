@@ -55,7 +55,7 @@ bool plateauDebug = true;
 
 void plateauPrint(String bericht){
 	if(plateauDebug){
-		Serial.println("plateau: " + bericht);
+		debug("plateau: " + bericht);
 	}
 }
 

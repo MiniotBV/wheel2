@@ -17,7 +17,7 @@ String vorrigeCommando = "";
 String debugBericht = "";
 
 void debug(String bericht){
-  debugBericht += bericht;
+  debugBericht += bericht + '\n';
 }
 
 void printDebug(){
@@ -354,7 +354,9 @@ Interval serieelInt(10000, MICROS);
 
 void serieelFunc(){
 	if(serieelInt.loop()){
-		if(golven){
+		printDebug();
+    
+    if(golven){
 			
 			
 			

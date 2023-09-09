@@ -168,7 +168,7 @@ class Orientatie //          QMA7981
 
 	void calibreer(){
 		gefilterdOffset += gefilterd;
-		Serial.println("orientatie.gefilterdOffset: " + String(gefilterdOffset, 5)); 
+		debug("orientatie.gefilterdOffset: " + String(gefilterdOffset, 5)); 
 	}  
 
 
@@ -352,7 +352,7 @@ void volumeFunc(){
 			
 
 			if(err){
-				Serial.println("geen koptelefoon versterker");
+				debug("geen koptelefoon versterker");
 			}else{
         // Serial.println("volume: " + String(volume) + " geschreven");
       }
@@ -438,7 +438,7 @@ void bluetoothInit(){
 
 void bluetoothOntcijfering(){
   if(bluetoothDebug){
-    Serial.println("BT IN:" + bluetoothBuffer);
+    debug("BT IN:" + bluetoothBuffer);
   }
 
 
@@ -448,7 +448,7 @@ void bluetoothOntcijfering(){
 
     if(bluetoothBuffer.startsWith(BT_KNOP_IN)){
       bluetoothBuffer.remove(0, 1); // gooi de in uit getal weg
-      Serial.println("BT KNOP_IN: " + bluetoothBuffer);
+      debug("BT KNOP_IN: " + bluetoothBuffer);
       
       // if(bluetoothBuffer == BT_PLAY){
       //   if(staat == S_PAUZE || staat == S_SPELEN) { pauze(); }//miscnien s_spelen dr uithalen
@@ -480,10 +480,10 @@ void bluetoothOntcijfering(){
     }
     else if(bluetoothBuffer.startsWith(BT_KNOP_UIT)){
       bluetoothBuffer.remove(0, 1); // gooi de in uit getal weg
-      Serial.println("BT KNOP_UIT: " + bluetoothBuffer);
+      debug("BT KNOP_UIT: " + bluetoothBuffer);
     }
     else {
-      Serial.println("BT KNOP_ONBEKENT: " + bluetoothBuffer);
+      debug("BT KNOP_ONBEKENT: " + bluetoothBuffer);
     }
   
   }

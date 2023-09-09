@@ -1,7 +1,7 @@
 //  Wheel2 
 //  rp2040
 
-#define versie 131
+#define versie 132
 
 
 #include <stdio.h>
@@ -175,7 +175,7 @@ void loop() {
 
 	karMotorFunc();
 
-	// volumeFunc();
+	volumeFunc();
 
   orientatie.update();
 

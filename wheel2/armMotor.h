@@ -30,6 +30,9 @@ class ArmMotor
 
   Interval armInt {10, MILLIS};
   Interval naaldEropInterval {0, MILLIS};
+  Interval aanInterval {0, MILLIS};
+  Interval uitInterval {0, MILLIS};
+
 
   void armInit() { setPwm(armMotor); }
 
@@ -44,12 +47,11 @@ class ArmMotor
   }
 
   bool isNaaldErop(){
-    // return gewicht == armTargetGewicht  &&  naaldEropInterval.sinds() > 250;
     return gewicht == targetGewicht;
   }
 
   bool isNaaldEraf(){
-	return gewicht == HOK_GEWICHT;
+    return gewicht == HOK_GEWICHT;
   }
 
   int isNaaldEropSinds(){
@@ -92,7 +94,7 @@ class ArmMotor
 
       if(staat == S_HOMEN_VOOR_SPELEN  ||  staat == S_HOMEN_VOOR_SCHOONMAAK  ||staat == S_NAAR_HOK){
         if(armMotorAan == true){
-          Serial.println("NAALD HAD NOOIT AAN MOGEN STAAN!!!");
+          debug("NAALD HAD NOOIT AAN MOGEN STAAN!!!");
           naaldNoodStop();
         }
       }
@@ -102,11 +104,14 @@ class ArmMotor
 
       if(armMotorAan == true){//moet de arm motor aan?
 
+        // uitInterval.reset();
+
         if(gewicht < netUitHokGewicht){//als de arm net aan staat jump meteen naar nognetInHokGewicht
           gewicht = netUitHokGewicht;
         }
 
         if(gewicht < targetGewicht){//is de arm al op het target gewicht?
+
           gewicht += snelheidOp;
         }
 
@@ -117,6 +122,8 @@ class ArmMotor
       
 
       if(armMotorAan == false){// moet de arm motor uit?
+
+        // aanInterval.reset();
         
         if(gewicht > netVanDePlaatGewicht){ //als de arm net is uitgezet
           gewicht = netVanDePlaatGewicht; // zet haal dan meteen het meeste gewicht van de arm

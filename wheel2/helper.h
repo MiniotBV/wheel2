@@ -187,4 +187,6 @@ void naarVolgendNummer();
 
 void plaatLeesNaKijken();
 
+void debug(String bericht);
+
 
