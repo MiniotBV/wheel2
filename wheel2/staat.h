@@ -12,20 +12,14 @@ enum staats{
   S_NAAR_HOK,
   S_HOMEN_VOOR_SPELEN,
   
-  // S_BEGINNEN_SPELEN,
-  // S_PLAAT_AANWEZIG,
-  
+ 
   S_NAAR_BEGIN_PLAAT,
-  // S_BEGIN_PLAAT,
-  // S_SPELEN,
-  // S_PLAAT_DIAMETER_METEN,
   S_NAALD_EROP,
 
 
   S_PAUZE,
 
-  // S_VOLGEND_NUMMER,
-  // S_VORRIG_NUMMER,
+
   S_NAAR_NUMMER,
   S_DOOR_SPOELEN,
   S_TERUG_SPOELEN,
@@ -61,22 +55,14 @@ String printStaat(int s){
   if( s == S_HOMEN_GEFAALD        ){ return "HOMEN_GEFAALD";}
 
 
-  // if( s == S_BEGINNEN_SPELEN      ){ return "BEGINNEN_SPELEN";}
   if( s == S_HOMEN_VOOR_SPELEN    ){ return "HOMEN_VOOR_SPELEN";}
-  // if( s == S_PLAAT_AANWEZIG       ){ return "PLAAT_AANWEZIG";}
   if( s == S_NAAR_BEGIN_PLAAT     ){ return "NAAR_BEGIN_PLAAT";}
-  // if( s == S_PLAAT_DIAMETER_METEN ){ return "PLAAT_DIAMETER_METEN";}
-  // if( s == S_BEGIN_PLAAT          ){ return "BEGIN_PLAAT";}
-  // if( s == S_SPELEN               ){ return "SPELEN";}
   if( s == S_NAALD_EROP           ){ return "NAALD_EROP";}
 
 
   if( s == S_PAUZE                ){ return "PAUZE";}
 
 
-
-  // if( s == S_VOLGEND_NUMMER       ){ return "VOLGEND_NUMMER";}
-  // if( s == S_VORRIG_NUMMER        ){ return "VORRIG_NUMMER";}
   if( s == S_NAAR_NUMMER          ){ return "NAAR_NUMMER";}
 
   if( s == S_DOOR_SPOELEN         ){ return "DOOR_SPOELEN";}

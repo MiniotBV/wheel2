@@ -193,8 +193,6 @@ class COMPVAART{
           draaienInterval.sinds() > 1000 &&
           opsnelheid &&           
           (staat == S_HOMEN_VOOR_SPELEN ||
-          // staat == S_BEGINNEN_SPELEN ||
-          // staat == S_PLAAT_AANWEZIG ||
           staat == S_NAAR_BEGIN_PLAAT || 
           staat == S_NAALD_EROP)
      

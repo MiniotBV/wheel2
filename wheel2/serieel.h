@@ -81,13 +81,13 @@ void serieelFunc(){
       // Serial.print(armHoekSlow);//1696);
       // Serial.print(", ");
       // Serial.print(armHoekRuw);//1696);
-      // Serial.print(", ");
-      // Serial.print(armHoek);//1696);
+      Serial.print(", ");
+      Serial.print(armHoek);//1696);
 
 
 
       Serial.print(", ");
-      Serial.print(karPos);
+      Serial.print(karPos, 4);
 
       // Serial.print(", ");
       // Serial.print(afstandOmTeStoppen );

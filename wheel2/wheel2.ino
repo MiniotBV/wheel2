@@ -1,4 +1,4 @@
-// # Wheel2 #
+//Wheel2
 //rp2040
 #define versie 27
 
@@ -111,8 +111,6 @@ void setup() {
 
   Serial.begin(115200);
 
-  
-
   EEPROM.begin(4096);
   
 
@@ -129,8 +127,6 @@ void setup() {
   setPwm(ledWit);
 
   plateauInit();
-
-
   
   enableInterupts(true);
 

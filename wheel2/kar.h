@@ -20,9 +20,11 @@ float karPcomp = 0;
 
 
 
-// #define ELPEE_PLAAT_BEGIN 148
+
 #define ELPEE_PLAAT_BEGIN 147
+#define TIEN_INCH_PLAAT_BEGIN 125
 #define SINGLETJE_PLAAT_BEGIN 85
+
 // #define PLAAT_EINDE 52.5
 #define PLAAT_EINDE 52.5
 
@@ -378,20 +380,6 @@ void staatDingen(){
 
 
 
-  // if(staat == S_PLAAT_AANWEZIG){
-  //   if( beweegKarNaarPos(PLAAT_EINDE + SENSOR_OFFSET,   KAR_MAX_SNELHEID)  ){
-  //     if(plaatAanwezig){
-  //       setStaat(S_NAAR_BEGIN_PLAAT);
-  //       return;
-  //     }
-  //     stoppen();
-  //     return;
-  //   }
-  //   return;
-  // }
-
-
-
 
 
   if(staat == S_NAAR_BEGIN_PLAAT){
@@ -403,23 +391,30 @@ void staatDingen(){
     if(!plaatAanwezig  ||  plaatBegin != 1000){ // is er een plaat aanwezig
       
       if(plaatBegin == 1000){    // voer maar 1 keer uit
-        plaatBegin = karPos - SENSOR_OFFSET;
-        Serial.println("plaatDia: " + String((plaatBegin / 25.4)*2) + "\"");
+        // plaatBegin = sensorPos;
+        float plaadDiaInch = (sensorPos / 25.4)*2;
+        
 
-        if(karPos < 60){
+        if(plaadDiaInch < 6){//kleiner dan 6" dan stoppen
           stoppen();
           return;
-        
         }
         
-        if(isPlaatOngeveer7Inch()){//isOngeveer(inchDia, 7, 1)){
-          Serial.print("±7\" ");
+        if(plaadDiaInch < 8){// ongeveer 
+          Serial.println("plaatDia: " + String(plaadDiaInch) + " : ±7\" ");
           setPlateauRpm(rpm45);
           plaatBegin = SINGLETJE_PLAAT_BEGIN;
           // return;
         
+        
+        }else if(plaadDiaInch < 11){ 
+          Serial.println("plaatDia: " + String(plaadDiaInch) + " : ±10\" ");
+          setPlateauRpm(rpm33);
+          plaatBegin = TIEN_INCH_PLAAT_BEGIN;
+        
+        
         }else{
-          
+          Serial.println("plaatDia: " + String(plaadDiaInch) + " : ?\" ");
         }
         
         setPlateauRpm(rpm33);
@@ -456,6 +451,7 @@ void staatDingen(){
 
   if(staat == S_NAALD_EROP){
     if(naaldErop()){
+      
       karPcomp += ( limieteerF( armHoek * -karP,     -3, 3) - karPcomp ) / 500;
       karPos += karPcomp * karI;
       karPos = limieteerF( karPos, PLAAT_EINDE, plaatBegin + 1);
