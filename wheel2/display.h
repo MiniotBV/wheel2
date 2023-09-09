@@ -156,7 +156,7 @@ void displayUpdate(){
         }
 
         while (dec > 0) {
-          if (dec > 5) {
+          if (dec >= 5) {
             dec -= 5;
             int einde = pos + blokLengte * 2;// dikke streep voor 5
             displayTekenBlok(pos, einde, 0.1);

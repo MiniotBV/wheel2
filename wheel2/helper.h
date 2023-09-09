@@ -30,7 +30,7 @@
 
 
 #define KAR_HOK 44
-#define KAR_HOME KAR_HOK - 2.5//2//
+#define KAR_HOME KAR_HOK - 1.5//2.5//2//
 
 #define SCHOONMAAK_PLEK 75//100
 

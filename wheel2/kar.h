@@ -104,6 +104,7 @@ bool beweegKarNaarPos(float target, float snelheid){
 }
 
 
+//////////////////CHATGPT S CURVE TEST
 
 // bool beweegKarNaarPos(float target, float snelheid){
 //     float teGaan = target - karPos;
@@ -307,9 +308,13 @@ void staatDingen(){
 
 	if(staat == S_NAAR_HOK  ||  staat == S_HOMEN_VOOR_SPELEN  ||  staat == S_HOMEN_VOOR_SCHOONMAAK){
 		
-    if(staatVeranderd.sinds() < 100){return;}// ff uittrillen na aanzetten stappermotor
+    if(staatVeranderd.sinds() < 300){return;}// ff uittrillen na aanzetten stappermotor
 
-		bool aangekomen = beweegKarNaarPos(-150,  KAR_MAX_SNELHEID);
+    float snelheid = mapF(armHoekCall, 0.75, 0.5, 0, KAR_MAX_SNELHEID);
+    snelheid = limieteerF(snelheid, KAR_MAX_SNELHEID/10, KAR_MAX_SNELHEID);
+    bool aangekomen = beweegKarNaarPos(-150,  snelheid);
+
+		// bool aangekomen = beweegKarNaarPos(-150,  KAR_MAX_SNELHEID);
 
 		if(aangekomen){
 			karOffset -= KAR_HOME - karPos;
@@ -322,17 +327,16 @@ void staatDingen(){
         setError(E_KON_NIET_HOMEN);
         setStaat(S_HOMEN_GEFAALD);
       }
-      
-			
-			
 			return;
 		}
 
-    // if(armHoek > 0.5){//-800){//-1000)
-		if(armHoekCall > 0.75){//-800){//-1000)
-			// debug("home verschill: " + String(karOffset + karPos));
-			karOffset -= KAR_HOME - karPos;
+		if(armHoekCall > 0.75){//75){//-800){//-1000)
+      // debug("home verschill: " + String(KAR_HOME - egteKarPos) + " egteKarPos:" + String(egteKarPos) + " KAR_HOME:" + String(KAR_HOME) + " karDcomp:" + String(karDcomp));
+      debug("home verschill: " + String(KAR_HOME - egteKarPos) + " egteKarPos:" + String(egteKarPos));
+      
+			karOffset -= KAR_HOME - egteKarPos;
 			karPos = KAR_HOME;
+      karDcomp = 0;
 
 			karNoodStop();
 			strobo.clearCompSamples();// dit is een mooi moment om te stoppen

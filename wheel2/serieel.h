@@ -410,8 +410,8 @@ void serieelFunc(){
 			Serial.print(", ");
 			Serial.print(strobo.onbalansComp, 4);
 
-			Serial.print(", ");
-			Serial.print(uitBuff, 2);
+			// Serial.print(", ");
+			// Serial.print(uitBuff, 2);
 
 			// Serial.print(", ");
 			// Serial.print(uitBuffPre, 2);
@@ -422,6 +422,8 @@ void serieelFunc(){
 			// Serial.print(armHoekRuw);//1696);
       
 			Serial.print(", ");
+			Serial.print(karDcomp, 4);//1696);
+      Serial.print(", ");
 			Serial.print(armHoekCall, 4);//1696);
       
 			// Serial.print(", ");
