@@ -281,7 +281,8 @@ void checkenVoorCommando(int info){
   	//-------------------------------------------------------KAR SENSORS / TRACK SHIT
 	infoPrintln(info);
 	// if(checkZinFloat("PLS",       "plaatLeesStroom",          info, plaatLeesStroom)){return;}
-	if(checkZinInt(     "VOL",    "volume",                   info, volume)){ volumeOverRide = true; return;}
+	if(checkZinInt(     "VOLUME",    "volume",                   info, volume)){return;}
+  if(checkZinInt(     "VOL",    "volume",                   info, volume)){ volumeOverRide = true; return;}
 	if(checkZinCommando("AHCent", "armHoekCentreer()",        info)){ armHoekCentreer(); return;}
 
 

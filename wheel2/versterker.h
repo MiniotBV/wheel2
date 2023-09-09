@@ -353,6 +353,7 @@ void volumeFunc(){
       debug("geen koptelefoon versterker");
     }else{
       // Serial.println("volume: " + String(volume) + " geschreven");
+      Serial.println("volume: " + String(volume));// + " geschreven");
     }
     
   }
