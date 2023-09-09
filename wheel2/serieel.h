@@ -318,16 +318,17 @@ void checkenVoorCommando(int info){
 
 		// Serial.println("strobo.onbalansFase: " + String(strobo.onbalansFase));
     // Serial.println("strobo.onbalansHarm: " + String(strobo.onbalansHarm));
-    Serial.println("strobo.harmVerschuiving[1]" + String(strobo.harmVerschuiving[1]));
-    Serial.println("strobo.harmVerschuiving[2]" + String(strobo.harmVerschuiving[2]));
-    Serial.println("strobo.harmVerschuiving[3]" + String(strobo.harmVerschuiving[3]));
 
-    Serial.println("strobo.harmEffect[1]" + String(strobo.harmEffect[1]));
-    Serial.println("strobo.harmEffect[2]" + String(strobo.harmEffect[2]));
-    Serial.println("strobo.harmEffect[3]" + String(strobo.harmEffect[3]));
+    // Serial.println("strobo.harmVerschuiving[1]" + String(strobo.harmVerschuiving[1]));
+    // Serial.println("strobo.harmVerschuiving[2]" + String(strobo.harmVerschuiving[2]));
+    // Serial.println("strobo.harmVerschuiving[3]" + String(strobo.harmVerschuiving[3]));
+
+    // Serial.println("strobo.harmEffect[1]" + String(strobo.harmEffect[1]));
+    // Serial.println("strobo.harmEffect[2]" + String(strobo.harmEffect[2]));
+    // Serial.println("strobo.harmEffect[3]" + String(strobo.harmEffect[3]));
   
-		Serial.println("strobo.sampleNum: " + String(strobo.sampleNum));
-		// Serial.println();
+		// Serial.println("strobo.sampleNum: " + String(strobo.sampleNum));
+
 
 
 		Serial.println("-----------------------------------------------");
@@ -373,12 +374,12 @@ void serieelFunc(){
       // }
 
 
-      for(int i = 1; i < strobo.harmonisen + 1; i++){
-        Serial.print(", ");
-        Serial.print(atan2(strobo.onbalansCosTotaal[i], strobo.onbalansSinTotaal[i]) * 114.6, 3);
-        Serial.print(", ");
-        Serial.print(sqrt( strobo.onbalansSinTotaal[i] * strobo.onbalansSinTotaal[i]   +  strobo.onbalansCosTotaal[i] * strobo.onbalansCosTotaal[i]), 3);
-      }
+      // for(int i = 1; i < strobo.harmonisen + 1; i++){
+      //   Serial.print(", ");
+      //   Serial.print(atan2(strobo.onbalansCosTotaal[i], strobo.onbalansSinTotaal[i]) * 114.6, 3);
+      //   Serial.print(", ");
+      //   Serial.print(sqrt( strobo.onbalansSinTotaal[i] * strobo.onbalansSinTotaal[i]   +  strobo.onbalansCosTotaal[i] * strobo.onbalansCosTotaal[i]), 3);
+      // }
 
 
 

@@ -359,6 +359,7 @@ void knoppenUpdate(){
 			riemDiv = riemFilter - riemFilterPrev;
 			riemFilterPrev = riemFilter;
 			
+      if(millis() < 1000){return;}//de band doet pas wat na 1seconden
 
 			if(!orientatie.isStaand){
 				riemDiv = -riemDiv; // flip
