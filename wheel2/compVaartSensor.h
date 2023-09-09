@@ -236,9 +236,9 @@ class COMPVAART
             hoek[i] = ( atan2(onbalansCosTotaal[i], onbalansSinTotaal[i]) * RAD_TO_DEG * 2  + 360 ) / i;
             amplitude[i] = sqrt( onbalansSinTotaal[i] * onbalansSinTotaal[i]   +  onbalansCosTotaal[i] * onbalansCosTotaal[i]);
             if(i == 1){
-              Serial.print("grondtoon a:" + voegMargeToe( String( amplitude[i], 2), 9) );           
+              Serial.print("grondtoon a: " + voegMargeToe( String( amplitude[i], 2), 9) );           
             }else{
-              Serial.print("    |     h" + String(i) + " a:" + voegMargeToe( String( amplitude[i] / amplitude[1], 2), 9) ); 
+              Serial.print(" |     h" + String(i) + " a:" + voegMargeToe( String( amplitude[i] / amplitude[1], 2), 9) ); 
             }
             Serial.print(" f:" + voegMargeToe(String(hoek[i], 2), 9)  +
             " +c:" + voegMargeToe(String(hoek[i] + harmVerschuiving[i], 2), 9));
@@ -376,9 +376,9 @@ class COMPVAART
 					&& opsnelheid                       // en opsnelheid zijn     
 					&& isOngeveer(vaart, targetRpm, 10)  //mag niet meer dan 10rpm van de target rpm afzijn
 
-          && ((arm.isNaaldEropVoorZoLang(2000) && staat == S_SPELEN) ||//)
-          staat == S_HOMEN_VOOR_SPELEN ||    
-					staat == S_NAAR_BEGIN_PLAAT)
+          && ((arm.isNaaldEropVoorZoLang(2000) && staat == S_SPELEN) )// ||  //)
+          // staat == S_HOMEN_VOOR_SPELEN ||    
+					// staat == S_NAAR_BEGIN_PLAAT)
 			){ 
         onbalansCompensatie[teller] +=  vaartCenterComp - targetRpm;
         

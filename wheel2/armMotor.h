@@ -8,7 +8,7 @@ class ArmMotor
   #define MAX_GEWICHT 4    // in gram
   #define HOK_GEWICHT -10
 
-  float targetGewicht = 2.3;
+  float targetGewicht = 2.1;
   float gewicht = HOK_GEWICHT;
   float kracht = 0;
 

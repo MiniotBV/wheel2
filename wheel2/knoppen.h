@@ -371,7 +371,7 @@ void knoppenUpdate(){
 			}
 
 			else if(staat == S_CALIBREER){
-				arm.kracht += riemDiv * 0.01;
+				arm.kracht += riemDiv * 0.001;
 				arm.kracht = limieteerF(arm.kracht, 0, 1);
 				
 			}
