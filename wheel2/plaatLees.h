@@ -12,9 +12,6 @@ float plaatLeesWaarde;
 float plaatLeesWaardePrev;
 float plaatLeesDiv;
 
-float plaatLeesAbsDivOudOud;
-float plaatLeesAbsDivOud;
-float plaatLeesWaardeJohan;
 
 float plaatLeesBuffer[2000][2];
 int plaatLeesBufferTeller = 0;
@@ -164,28 +161,6 @@ void scannenVoorTracks(){
 
 
 
-  if(plaatLeesGolven){
-    Serial.print(plaatLeesWaarde);
-
-    Serial.print(", ");
-    Serial.print(plaatLeesAbsDiv);
-
-        Serial.print(", ");
-    Serial.print(plaatLeesDiv);
-
-    // Serial.print(", ");
-    // Serial.print(plaatLeesMax);
-    // Serial.print(", ");
-    // Serial.print(plaatLeesMin);
-
-    Serial.print(", ");
-    Serial.print(plaatLeesStroom * 100);
-
-    Serial.print(", ");
-    Serial.print(plaatLeesWaardeJohan);
-
-    Serial.println();
-  }
 
 	
 }
@@ -258,8 +233,6 @@ void plaatLeesFunc(){
 
 	plaatLeesAbsDiv = abs(plaatLeesRuwDiv);
 
-	// plaatLeesWaarde = abs(plaatLeesAbsDiv - plaatSensorTarget);
-
   plaatLeesWaarde = (plaatLeesAbsDiv - plaatSensorTarget);
 
 
@@ -274,21 +247,10 @@ void plaatLeesFunc(){
 
 		plaatLeesStroom = limieteerF(plaatLeesStroom, 5, 30);
 
-		// plaatLeesMax = plaatLeesRuw;
-
-    plaatLeesDiv = plaatLeesWaarde - plaatLeesWaardePrev;
+		plaatLeesDiv = plaatLeesWaarde - plaatLeesWaardePrev;
     plaatLeesWaardePrev = plaatLeesWaarde;
 
-    // plaatLeesWaardeJohan = ( plaatLeesAbsDivOud * plaatLeesAbsDivOud )   -   ( plaatLeesAbsDivOudOud * plaatLeesAbsDiv );  // s[i] * s[i] - s[i - 1] * s[i + 1]
-    // plaatLeesAbsDivOudOud = plaatLeesAbsDivOud;
-    // plaatLeesAbsDivOud = plaatLeesAbsDiv;
 
-    plaatLeesWaardeJohan = ( plaatLeesAbsDivOud * plaatLeesAbsDivOud )   -   ( plaatLeesAbsDivOudOud * plaatLeesDiv );  // s[i] * s[i] - s[i - 1] * s[i + 1]
-    plaatLeesAbsDivOudOud = plaatLeesAbsDivOud;
-    plaatLeesAbsDivOud = plaatLeesDiv;
-
-    plaatLeesWaardeJohan /= 1000;
-    plaatLeesWaardeJohan -= 2000;
 
 
 		scannenVoorTracks();//--------------------------------                   TRACKS LEZEN
@@ -301,8 +263,29 @@ void plaatLeesFunc(){
 		// plaatLeesMin = plaatLeesRuw;
 	}
 
-	
+
 	knip = !knip; //toggle led
+
+
+
+
+
+  if(plaatLeesGolven){
+    Serial.print(plaatLeesWaarde);
+
+    Serial.print(", ");
+    Serial.print(plaatLeesAbsDiv);
+
+        Serial.print(", ");
+    Serial.print(plaatLeesDiv);
+
+
+    Serial.print(", ");
+    Serial.print(plaatLeesStroom * 100);
+
+
+    Serial.println();
+  }
 
 }
 

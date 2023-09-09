@@ -149,7 +149,6 @@ void karNoodStop(){
 
 
 
-
 void armHoekCentreer(){
 	armHoekOffset = armHoekSlow;
 }
