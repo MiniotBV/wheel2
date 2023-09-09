@@ -1,7 +1,7 @@
 #define MIN_ARMGEWICHT 0.5//gr
 #define MAX_ARMGEWICHT 4//gr
 
-float armGewicht = 3;
+float armGewicht = 2.3;
 float armTargetKracht;
 
 float armKracht = 0;

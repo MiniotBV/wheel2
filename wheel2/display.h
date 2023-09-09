@@ -38,7 +38,8 @@ void displayInit(){
 
 
 int egtePos2displayPos(float pos){
-  return mapF(pos, PLAAT_EINDE + SENSOR_OFFSET,  GROOTSTE_PLAAT_BEGIN, 0, displayLengte-1);
+  return mapF(pos, PLAAT_EINDE,  GROOTSTE_PLAAT_BEGIN, 0, displayLengte-1);
+  // return mapF(pos, PLAAT_EINDE + SENSOR_OFFSET,  GROOTSTE_PLAAT_BEGIN, 0, displayLengte-1);
 }
 
 
@@ -183,7 +184,7 @@ void displayUpdate(){
         // }
 
 
-        int volumePunt = mapF(volume, 0, 63, 0, 40);
+        int volumePunt = mapF(volume, 0, 63, 0, dispHalf);//40
 
         if(i < dispHalf + volumePunt    &&    i > dispHalf - volumePunt){
           displayData[i] = 0.1;
@@ -191,27 +192,27 @@ void displayUpdate(){
 
 
 
-        if( i == (displayLengte-1) - 2   &&   rpmStaat == AUTO){
-          displayData[i] = 0.9;              
-        }
+        // if( i == (displayLengte-1) - 2   &&   rpmStaat == AUTO){
+        //   displayData[i] = 0.9;              
+        // }
 
-        if(i == (displayLengte-1) - 7){
-          if(isOngeveer(targetRpm, rpm33, 0.1)){
-            displayData[i] = 0.1;
-          }
-          if(rpmStaat == R33){
-            displayData[i] = 0.9;
-          }        
-        }
+        // if(i == (displayLengte-1) - 7){
+        //   if(isOngeveer(targetRpm, rpm33, 0.1)){
+        //     displayData[i] = 0.1;
+        //   }
+        //   if(rpmStaat == R33){
+        //     displayData[i] = 0.9;
+        //   }        
+        // }
 
-        if(i == (displayLengte-1) - 12){
-          if(targetRpm == rpm45){
-            displayData[i] = 0.1;
-          }
-          if(rpmStaat == R45){
-            displayData[i] = 0.9;
-          }        
-        }    
+        // if(i == (displayLengte-1) - 12){
+        //   if(targetRpm == rpm45){
+        //     displayData[i] = 0.1;
+        //   }
+        //   if(rpmStaat == R45){
+        //     displayData[i] = 0.9;
+        //   }        
+        // }    
 
 
       }

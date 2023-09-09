@@ -4,7 +4,7 @@ bool plateauLogica = false;
 
 // float targetRpm = 0;//staat nu in compVaartSensor.h
 
-float basis = 0;
+
 float uitBuff;
 
 
@@ -21,8 +21,8 @@ float plateauRustP = 0.01;
 float plateauRustI = 0.04;
 
 
-float plateauP = plateau33P;    //pid
-float plateauI = plateau33I;
+float plateauP = 0.01;//plateau33P;    //pid
+float plateauI = 0.01;//plateau33I;
 // float plateauP = plateauRustP;    //pid
 // float plateauI = plateauRustI;
 float plateauD = 0;

@@ -72,7 +72,7 @@ VAART calibratieToon(10, 1800); //1800
 // COMPVAART strobo(64, 8192); //elker 5ms is 11.4 samples en 22.75 per 10ms
 
 // COMPVAART strobo(8, 720);//360); //elker 5ms is 11.4 samples en 22.75 per 10ms
-COMPVAART strobo(16, 720);//360); //elker 5ms is 11.4 samples en 22.75 per 10ms
+COMPVAART strobo(32, 720);//360); //elker 5ms is 11.4 samples en 22.75 per 10ms
 
 
 
@@ -218,11 +218,9 @@ void loop() {
 
   // staatFunc(); // zit in karFunc()
 
-  pwmWriteF(ledWit, pow( ((sin( (PI*millis()) / 500.0 )+1)/2), 3));
+  pwmWriteF(ledWit, pow( ((sin( (PI*millis()) / 500.0 )+1)/2), 3) + plaatAanwezig);
+    // pwmWriteF(ledWit, pow( ((sin( (PI*millis()) / 500.0 )+1)/2), 3));
   // pwmWriteF(ledWit, 0.5);
-  // pwmWrite(ledRood, pow( ((cos( (PI*millis()) / 500.0 )+1)/2), 3) * PMAX);
-
-  // pwmWriteF(ledRood, plaatAanwezig ? 1 : 0);
 }
 
 

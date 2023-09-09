@@ -417,7 +417,7 @@ void staatDingen(){
     if(naaldErop()){
       karPcomp += ( limieteerF( armHoek * -karP,     -3, 3) - karPcomp ) / 500;
       karPos += karPcomp * karI;
-      karPos = limieteerF( karPos, PLAAT_EINDE, GROOTSTE_PLAAT_BEGIN + 2);
+      karPos = limieteerF( karPos, PLAAT_EINDE, plaatBegin + 1);
       
       if(karPos <= PLAAT_EINDE){
         stoppen();
@@ -465,7 +465,7 @@ void staatDingen(){
         armHoekCalibreer();
       }
       
-      targetNummerPos = limieteerF(targetNummerPos, PLAAT_EINDE, plaatBegin);
+      // targetNummerPos = limieteerF(targetNummerPos, PLAAT_EINDE, plaatBegin);
       beweegKarNaarPos(targetNummerPos, KAR_MAX_SNELHEID);
       
       // karPos += limieteerF( (targetNummerPos - karPos) / 10 , -KAR_MAX_SNELHEID, KAR_MAX_SNELHEID);

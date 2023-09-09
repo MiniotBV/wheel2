@@ -205,7 +205,7 @@ class COMPVAART{
         
         if(isOngeveer(div, 1, 0.3)){
 
-          compSamples[teller] += (div - compSamples[teller]) * 0.5;
+          compSamples[teller] += (div - compSamples[teller]) * 2;
           // compSamples[rondTrip(teller - 10,  pulsenPerRev)] += ( div - 1 ) / 3;
         }
       }

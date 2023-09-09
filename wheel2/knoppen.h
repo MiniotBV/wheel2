@@ -352,7 +352,8 @@ void knoppenUpdate(){
       if( !isOngeveer(potVolumeDiv, 0, 0.005) ){
         potVolumePrev = potVolume;
         
-        targetNummerPos -= potVolumeDiv * 50;           
+        targetNummerPos -= potVolumeDiv * 50;
+        targetNummerPos = limieteerF(targetNummerPos, PLAAT_EINDE, plaatBegin);      
       }
     
            

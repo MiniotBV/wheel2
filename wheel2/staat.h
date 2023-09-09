@@ -7,6 +7,8 @@ bool plateauAan = false;
 bool opsnelheid;
 bool uitdraaien;
 
+float basis = 0;
+
 Interval draaienInterval(10, MILLIS);
 
 
@@ -63,6 +65,8 @@ void setPlateauRpm(float rpm){
 void plateauDraaien(){
   plateauAan = true;
   setPlateauRpm(rpm33);
+
+  basis = 0.1;
   
   draaienInterval.reset();
   
