@@ -481,10 +481,13 @@ void staatDingen(){
   //  ================================================================
 	if(staat == S_SPELEN){
 		if(staatVeranderd.sinds() < 1000){
-      armHoekCentreer(); 
+      armHoekCentreer();
       return; 
     } // eerst ff centrere
 
+    if(arm.isNaaldEropVoorZoLang(3000)){ // error 3 fix denk ik
+      naaldNaarVorenBewogen.reset(); // ff de timer reseten zodat hij niet een error 3 krijgt
+    }
 
 		
 		if(arm.naaldErop()){

@@ -281,8 +281,7 @@ void checkenVoorCommando(int info){
   	//-------------------------------------------------------KAR SENSORS / TRACK SHIT
 	infoPrintln(info);
 	// if(checkZinFloat("PLS",       "plaatLeesStroom",          info, plaatLeesStroom)){return;}
-	if(checkZinInt(     "VOLUME",    "volume",                   info, volume)){return;}
-  if(checkZinInt(     "VOL",    "volume",                   info, volume)){ volumeOverRide = true; return;}
+	if(checkZinInt(     "VOL",    "volume",                   info, volume)){ volumeOverRide = true; return;}
 	if(checkZinCommando("AHCent", "armHoekCentreer()",        info)){ armHoekCentreer(); return;}
 
 
@@ -328,10 +327,10 @@ void checkenVoorCommando(int info){
 		orientatie.print();
 		// Serial.println();
 
-		Serial.println("strobo.onbalansFase: " + String(strobo.onbalansFase));
-    Serial.println("strobo.onbalansCompGewicht: " + String(strobo.onbalansCompGewicht));
-    Serial.println("strobo.onbalansFilterBreedte: " + String(strobo.onbalansFilterBreedte));
-    Serial.println("strobo.onbalansFilterCurveBreedte: " + String(strobo.onbalansFilterCurveBreedte));
+		// Serial.println("strobo.onbalansFase: " + String(strobo.onbalansFase));
+    // Serial.println("strobo.onbalansCompGewicht: " + String(strobo.onbalansCompGewicht));
+    // Serial.println("strobo.onbalansFilterBreedte: " + String(strobo.onbalansFilterBreedte));
+    // Serial.println("strobo.onbalansFilterCurveBreedte: " + String(strobo.onbalansFilterCurveBreedte));
     
 
   
@@ -438,8 +437,8 @@ void serieelFunc(){
 
 
 
-			Serial.print(", ");
-			Serial.print(karPos, 3);  
+			// Serial.print(", ");
+			// Serial.print(karPos, 3);  
 			Serial.print(", ");
 			Serial.print(egteKarPos, 3);
 
@@ -453,8 +452,8 @@ void serieelFunc(){
 			// Serial.print(karPosMidden + strobo.karFourierFilt, 3);  
 
 
-      // Serial.print(", ");
-			// Serial.print(spoorafstand, 3);
+      Serial.print(", ");
+			Serial.print(spoorafstand, 3);
 
 
 

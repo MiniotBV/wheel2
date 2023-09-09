@@ -4,7 +4,7 @@
 //board instaleren:
 //https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json
 
-#define versie 163
+#define versie 164
   
 
 #include <stdio.h>
@@ -180,7 +180,7 @@ void loop() {
 
 	plateauFunc();
 
-  // bluetoothFunc();
+  bluetoothFunc();
 
   digitalWrite(ledWit, millis() < 1000);//zet led aan
 	// digitalWrite(ledWit, isNaaldEropVoorZoLang(1000));
