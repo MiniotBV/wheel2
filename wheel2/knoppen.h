@@ -111,12 +111,13 @@ void knopLog(int knop, const char* actie){
 
 void getKnopData(){
     gpio_put(displayLATCH, 0);
+    delayMicroseconds(1);
     gpio_put(displayLATCH, 1);
 
     for(int i = 0; i < 8; i++){
-    
-      knopIn[i] = digitalRead(displayUIT);
+      
       delayMicroseconds(1);
+      knopIn[i] = digitalRead(displayUIT);
 
       gpio_put(displayKLOK, 1);
       delayMicroseconds(1);

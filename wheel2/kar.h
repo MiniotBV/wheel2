@@ -14,7 +14,7 @@ float karInterval;
 
 float karP = 0.0001;//0.0005; //0.00005;//0.00025;
 float karI = 0;//0.005; //0.00005;//0.00025;
-float karD = 0.0001;//-0.003;
+float karD = -0.0004;//-0.003;
 
 float karBasis;
 float karPcomp = 0;

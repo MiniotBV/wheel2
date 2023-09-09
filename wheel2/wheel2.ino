@@ -213,7 +213,7 @@ void loop() {
 
   // staatFunc(); // zit in karFunc()
 
-  pwmWriteF(ledWit, plaatAanwezig);
+  pwmWriteF(ledWit, plaatAanwezigGefilterd);
 }
 
 

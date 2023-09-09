@@ -63,10 +63,8 @@ void displayPrint(float tijd){
     
     gpio_put(displayIN, displayData[pix] >  tijd ? 1 : 0);
 
-    delayMicroseconds(1);
 
     gpio_put(displayKLOK, 1);
-    delayMicroseconds(1);
     gpio_put(displayKLOK, 0);
   }
   
