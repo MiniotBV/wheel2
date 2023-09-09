@@ -3,6 +3,8 @@
 
 Interval draaienInterval(10, MILLIS);
 
+Interval naaldNaarVorenBewogen(1, MILLIS);
+
 #define sampleMax 65500               //samples
 
 #define pprmax 1000
@@ -76,13 +78,15 @@ class COMPVAART
 		float karCosFilt;
 		float karFourierFilt;
 
+    float karPosMiddenGeschiedenis[pprmax];
+
 
 
 
 		//---------------------------------------------onbalans compensatie
 
-		int onbalansFase = 90;//100;//70;//90;//75;//90;  50 in pulsen per rev
-    int onbalansHarm = 10;
+		int onbalansFase = 180;//90;//100;//70;//90;//75;//90;  50 in pulsen per rev
+    int onbalansHarm = 120;
 		
 		float gemiddeldeSnelheidPre, gemiddeldeSnelheid;
 		
@@ -91,7 +95,7 @@ class COMPVAART
 		volatile float onbalansComp = 0;
 		
 		float compVerval = 1.0;//0.6;//0.8;
-		float onbalansCompGewicht = 1.5;//2;//0.8;
+		float onbalansCompGewicht = 1.9;//1.5;//2;//0.8;
 
 
 		float  onbalansSinTotaal[10];
@@ -192,8 +196,6 @@ class COMPVAART
 
       tellerRuw += dir;
 			teller = rondTrip(teller + dir,  pulsenPerRev);
-			// cosTeller = rondTrip(teller + (pulsenPerRev / 4), pulsenPerRev);
-			// radiaalTeller = ( teller * TAU ) / pulsenPerRev;
 
 			shiftSamples(interval);// * dir);
 
@@ -208,13 +210,19 @@ class COMPVAART
 
 			//-----------------------------------------------------------------------UIT HET MIDDEN COMPENSATIE
 			karPosMiddenPre -= karUitCenterGolf[teller];
-      ouweEgteKarPos = karUitCenterGolf[teller];
 			karUitCenterGolf[teller] = egteKarPos;
 			karPosMiddenPre += karUitCenterGolf[teller];
 
-      trackTussenRuimte = ouweEgteKarPos - egteKarPos;
-
 			karPosMidden = karPosMiddenPre / pulsenPerRev;
+
+      spoorafstand = karPosMiddenGeschiedenis[teller] - karPosMidden;
+      karPosMiddenGeschiedenis[teller] = karPosMidden;
+
+      if(spoorafstand > 0.01  ||  (staat == S_SPELEN  &&  arm.isNaaldEropVoorZoLang(2000))){
+        naaldNaarVorenBewogen.reset();
+      }
+
+
 
 			float karPosUitMidden = egteKarPos - karPosMidden;
 
@@ -308,7 +316,7 @@ class COMPVAART
 				onbalansCosWaardes[harm][teller] = cosin[hoek]  *  nieuweWaarde;
 				onbalansCosTotaal[harm] += onbalansCosWaardes[harm][teller];
 
-				hoek = rondTrip(hoek + onbalansFase + (onbalansHarm / harm),  pulsenPerRev); // hoek ofset om de compensati wat voorspellender te maken
+				hoek = rondTrip(hoek + onbalansFase - (onbalansHarm / harm),  pulsenPerRev); // hoek ofset om de compensati wat voorspellender te maken
         // hoek = rondTrip(hoek +8+ (onbalansFase / harm),  pulsenPerRev); // hoek ofset om de compensati wat voorspellender te maken (vaste 8 voor 16sample avg filter)
 				onbalansCompFourier += ( ( sinus[hoek] * onbalansSinTotaal[harm] ) + ( cosin[hoek] * onbalansCosTotaal[harm] ) ) / pulsenPerRev;
 			}
@@ -387,6 +395,8 @@ class COMPVAART
 				karSinWaardes[i] = 0;
 				karCosWaardes[i] = 0;
 				karUitCenterGolf[i] = pos;
+
+        karPosMiddenGeschiedenis[i] = pos;
 			}
 
       karSinFilt = 0;

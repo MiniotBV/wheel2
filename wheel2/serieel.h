@@ -243,7 +243,7 @@ void checkenVoorCommando(int info){
 	if(checkZin("EO", "eepromOpslaan()", info)){   eepromOpslaan();  eepromShit = 1; return;}
 	if(checkZin("EL", "eepromUitlezen()", info)){ eepromUitlezen();  return;}
 	
-	if(checkZin("OC", "orientatie.calibreerOrientatie()", info)){ orientatie.calibreerOrientatie(); return;}
+	if(checkZin("OC", "orientatie.calibreerOrientatie()", info)){ orientatie.calibreer(); return;}
 
 
 
@@ -391,7 +391,7 @@ void serieelFunc(){
 
 
       Serial.print(", ");
-			Serial.print(trackTussenRuimte, 3);
+			Serial.print(spoorafstand, 3);
 
 
 

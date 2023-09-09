@@ -32,7 +32,7 @@ float karDcomp = 0;
 
 
 float targetNummerPos = 0;
-float sensorPos;
+//float sensorPos;
 float karOffset = 0; // om te kijken wat de homing afwijking is
 
 
@@ -53,7 +53,7 @@ float armHoekSlow = armHoekRuw;
 float armHoekOffset;
 
 
-Interval naaldNaarVorenBewogen(1, MILLIS);
+
 
 
 
@@ -460,7 +460,7 @@ void staatDingen(){
 			if(naaldNaarVorenBewogen.sinds() > 6000){
 				setError(E_NAALD_NIET_BEWOGEN); //kar te lang niet bewogen
         naaldNaarVorenBewogen.reset(); // ff de timer reseten zodat hij niet straks weer triggerd
-        nieuwePos -= 0.5; // beweeg de kar 0.5mm naar binne om over de skip te skippen
+        gaNaarNummer(karPos - 0.25); // beweeg de kar 0.5mm naar binne om over de skip te skippen
 				// stoppen();
 				return;
 			}      
@@ -560,7 +560,9 @@ void staatDingen(){
 
 
 
-
+  //  ================================================================
+  //      MOTOR EN SENSORS
+  //  ================================================================
 
 
 
@@ -587,16 +589,8 @@ bool karMotorUitvoeren()
 
 	armHoek = armHoekCall - armHoekOffset;
 
-  
-	if( staat == S_NAAR_BEGIN_PLAAT || //------------------------------limiet error
-      staat == S_UITROLLEN_VOOR_SPELEN || 
-      staat == S_SPELEN || 
-      staat == S_PAUZE || 
-      staat == S_NAAR_NUMMER || 
-      staat == S_DOOR_SPOELEN || 
-      staat == S_TERUG_SPOELEN || 
-      staat == S_UITROLLEN_NA_SPOELEN )
-  {
+  //------------------------------limiet error
+	if( staat == S_NAAR_BEGIN_PLAAT || staat == S_UITROLLEN_VOOR_SPELEN || staat == S_SPELEN || staat == S_PAUZE || staat == S_NAAR_NUMMER || staat == S_DOOR_SPOELEN || staat == S_TERUG_SPOELEN || staat == S_UITROLLEN_NA_SPOELEN ){
 		if(armHoekCall > 0.9){
 			setError(E_ARMHOEK_LIMIET_POS);
 			staat = S_HOK;
@@ -631,7 +625,7 @@ bool karMotorUitvoeren()
 
 
 	if(karMotorEnable){
-		pwmStapper(-karMotorPos,   stapperAP, stapperAN,  stapperBP, stapperBN,  true);
+    pwmStapper(-karMotorPos,   stapperAP, stapperAN,  stapperBP, stapperBN,  true);
 	
 	}else{
 		pwmDisableStapper(stapperAP, stapperAN,  stapperBP, stapperBN);
@@ -643,21 +637,13 @@ bool karMotorUitvoeren()
 	
 
 
-	if(staat == S_SPELEN  &&  arm.isNaaldErop()){
+	if(staat == S_SPELEN  &&  arm.isNaaldErop()){ // kar pos filter voor display
 		float div = karPos - karPosFilter;
 		if(div < 0){
-			karPosFilter += div / 1000;
-						
-		}
-
-		if(karPos < karPosMinimaal){
-			karPosMinimaal = karPos;
-			naaldNaarVorenBewogen.reset();
+			karPosFilter += (div) / 1000;				
 		}
 	}else{
 		karPosFilter = karPos;
-		karPosMinimaal = karPos;
-		naaldNaarVorenBewogen.reset();
 	}
 
 
