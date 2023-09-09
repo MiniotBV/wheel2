@@ -147,9 +147,9 @@ float pid(float rpmIn){
   basis += uit * plateauI;            //breng basis voltage naar gemiddelde voor de juiste snelheid
   basis = limieteerF(basis, 0, 1);
 
-  basis = limieteerF(basis, 0, 0.7 + (rpmIn / 30) );
+  basis = limieteerF(basis, 0, 0.6 + (rpmIn / 30) );
   
-  return  limieteerF(uit + basis,  -1,  1);
+  return  uit + basis;
 }
 
 
@@ -248,6 +248,8 @@ void plateauFunc(){
 
       uitBuff = pid(vaart);//                  bereken motor kracht
       uitBuff += strobo.plateauComp / 100;
+
+      uitBuff = limieteerF(uitBuff, -1, 1);
       
       pwmFase(uitBuff, motorP, motorN, false);
       

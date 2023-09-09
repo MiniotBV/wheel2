@@ -1,44 +1,29 @@
 //motor heeft 48 stappen
-//tandwiel heeft 12 tanden
+//tandwiel heeft 8 tanden
 //tandheugel heeft 1.5mm tand pitch 
 //48 stappen / 12 tanden = 4 stappen per tand
 //1.5mm / 4 stappen per tand = 0.375mm per stap
-
 //PI = 2 stappen
-// #include "plaatLees.h"
+float mmPerStap = 1.5 / ( 48 / 8 );// / 12 );
+float stap2mm = ( 2 / PI ) * mmPerStap;  // 0.238732414637843
+float mm2stap = 1 / stap2mm;   
 
 
 float karInterval;
 
 
-bool plaatAanwezig = false;
-
-float karP = 0.001; //0.00005;//0.00025;
+float karP = 0.001;//0.0005; //0.00005;//0.00025;
 // float karI = 0.005; //0.00005;//0.00025;
 float karPcomp = 0;
 
 
 
 
+float plaatBegin = 0;
 
-#define ELPEE_PLAAT_BEGIN 147
-#define TIEN_INCH_PLAAT_BEGIN 125
-#define SINGLETJE_PLAAT_BEGIN 85
+float nummers[100];// = {0.2, 0.3, 0.6, 0.68, 0.85}; //staat nu in staat.h
+int hoeveelNummers = 0;
 
-// #define PLAAT_EINDE 52.5
-#define PLAAT_EINDE 52.5
-
-#define KAR_HOME 44//44.5
-#define KAR_HOK 45.5
-
-#define SCHOONMAAK_PLEK 100
-
-#define SENSOR_OFFSET 7.5//mm
-
-// float mmPerStap = 1.5 / ( 48 / 12 );
-float mmPerStap = 1.5 / ( 48 / 8 );
-float stap2mm = ( 2 / PI ) * mmPerStap;  // 0.238732414637843
-float mm2stap = 1 / stap2mm;             // 4.188790204786391
 
 
 
@@ -48,19 +33,21 @@ float karMotorPos = 0;
 
 float nieuwePos;
 float karPos = KAR_HOK;
+float karPosFilter = karPos;
+float karPosFilterSlow = karPos;
+
 float targetNummerPos = 0;
 float sensorPos;
 float karOffset = 0; // om te kijken wat de homing afwijking is
 
-float plaatBegin = 0;
+
 
 
 float armHoekRuw = analogRead(hoekSensor);
 float armHoek;
 float armHoekFilterWaarde = 1;
 float armHoekSlow = armHoekRuw;
-float armHoekSlowFilterWaarde = 100;
-float armHoekOffset = 1920;
+float armHoekOffset;
 
 
 
@@ -150,6 +137,7 @@ void karNoodStop(){
 
 
 
+
 void armHoekCalibreer(){
   armHoekOffset = armHoekSlow;
   // Serial.print("armHoekofset: ");
@@ -171,13 +159,6 @@ void gaNaarNummer(float pos){
 
 
 
-
-float nummers[100];// = {0.2, 0.3, 0.6, 0.68, 0.85}; //staat nu in staat.h
-int hoeveelNummers = 0;
-
-
-
-#define NUMMER_TERUG_OPFSET 2 //hoeveel mm kan de kar bewegen voor er terug gespoeld kan worden naar het begin van het nummer ipv naar een vorrig nummer
 
 void naarVorrigNummer(){
   if(hoeveelNummers < 2){// als er 1 nummer is is dat ook te weinig
@@ -439,6 +420,13 @@ void staatDingen(){
 
 
   if(staat == S_NAALD_EROP){
+    // if(!decelereerKar()){return;}
+
+    if(plaatAanwezigGefilterd < 0.5){ // is er nog een plaat aanwezig?
+      stoppen();
+      return;
+    }
+    
     if(naaldErop()){
       
       nieuwePos = karPos + limieteerF(armHoek * -karP, -3, 3);
@@ -475,11 +463,19 @@ void staatDingen(){
 
   if(staat == S_DOOR_SPOELEN){
     if(naaldEraf()){
+      beweegKarNaarPos(PLAAT_EINDE, KAR_MAX_SNELHEID/4);  
     }
   }
 
   if(staat == S_TERUG_SPOELEN){
+    // if(knopStaat[KNOP_TERUGSPOEL] == LOSGELATEN){
+    //   if(decelereerKar()){
+    //     setStaat(S_NAALD_EROP);   
+    //   }
+    //   return;
+    // }
     if(naaldEraf()){
+      beweegKarNaarPos(plaatBegin, KAR_MAX_SNELHEID/4);
     }
   }
 
@@ -556,9 +552,8 @@ bool karMotorUitvoeren(){
   
   karInterval = (micros() - karMotorInt.vorrigeVorrigeTijd) / 1000000.0;
 
-  // armHoekRuw += (analogRead(hoekSensor) - armHoekRuw) / armHoekFilterWaarde;
   armHoekRuw = analogRead(hoekSensor);
-  armHoekSlow += (armHoekRuw - armHoekSlow) / armHoekSlowFilterWaarde;
+  armHoekSlow += (armHoekRuw - armHoekSlow) / 100;
 
   armHoek = armHoekRuw - armHoekOffset;
 
@@ -574,7 +569,8 @@ bool karMotorUitvoeren(){
   // karMotorPos = (karPos + karOffset + karPcomp)  *  mm2stap;
   karMotorPos = (karPos + karOffset)  *  mm2stap;
   
-
+  karPosFilter += (karPos - karPosFilter) / 3000;
+  karPosFilterSlow += (karPosFilter - karPosFilterSlow) / 3000;
 
 
   if(karMotorEnable){

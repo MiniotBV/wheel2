@@ -31,8 +31,8 @@ void serieelFunc(){
       Serial.print(", ");
       Serial.print(strobo.preComp, 4);
 
-      Serial.print(", ");
-      Serial.print(strobo.mean, 4);
+      // Serial.print(", ");
+      // Serial.print(strobo.mean, 4);
 
       Serial.print(", ");
       Serial.print(strobo.plateauComp, 4);
@@ -92,6 +92,15 @@ void serieelFunc(){
       Serial.print(", ");
       Serial.print(karPos, 4);
 
+      // Serial.print(", ");
+      // Serial.print(karPosFilter, 4);
+
+      // Serial.print(", ");
+      // Serial.print(karPosFilterSlow, 4);
+
+      Serial.print(", ");
+      Serial.print(plaatAanwezigGefilterd, 3);
+      
       // Serial.print(", ");
       // Serial.print(afstandOmTeStoppen );
       

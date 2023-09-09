@@ -1,6 +1,6 @@
 //Wheel2
 //rp2040
-#define versie 27
+#define versie 48
 
 
 #include <stdio.h>
@@ -103,16 +103,24 @@ Interval ledInt(200, MILLIS);
 
 
 
+// static repeating_timer_t timers[10] = {0,};
 
 
 
+// void callback(void) {
+//   Serial.println("hallo: " + String(micros()));
+// }
 
 void setup() {
+
 
   Serial.begin(115200);
 
   EEPROM.begin(4096);
   
+
+  // add_repeating_timer_ms( 2000, callback, &timers[1] );
+
 
   versterkerInit();
 
@@ -141,7 +149,6 @@ void setup() {
   // stoppen();
 
 }
-
 
 
 

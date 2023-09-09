@@ -72,15 +72,13 @@ void plaatLeesInit(){
 #define plaatDetectieTreshold 100
 
 void plaatDetectie(){
-  
-  bool goedeKnip = false;
   if(knip){
-    goedeKnip = plaatLeesRuwDiv < -plaatDetectieTreshold;
+    plaatAanwezig = plaatLeesRuwDiv < -plaatDetectieTreshold;
   }else{
-    goedeKnip = plaatLeesRuwDiv > plaatDetectieTreshold;
+    plaatAanwezig = plaatLeesRuwDiv > plaatDetectieTreshold;
   }
 
-  plaatAanwezig = goedeKnip;
+  plaatAanwezigGefilterd += (plaatAanwezig - plaatAanwezigGefilterd) / 10;
 
   knip = !knip;
 

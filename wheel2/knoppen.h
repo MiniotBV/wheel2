@@ -312,7 +312,7 @@ void knoppenUpdate(){
         knopAlleInterval.reset();  //led blink
         
         knopLog(  knop, " super lang los ");
-
+        
         
         if(  (  staat == S_DOOR_SPOELEN   ||   staat == S_TERUG_SPOELEN  )  &&  (  knop == KNOP_DOORSPOEL  ||  knop == KNOP_TERUGSPOEL  )  ){//WEER BEGINNEN NA SPOELEN
           setStaat(S_NAALD_EROP);
@@ -381,7 +381,9 @@ void knoppenUpdate(){
       }
     
       else{
-        volumeDisplayActie.reset();
+        if(staat != S_DOOR_SPOELEN   &&  staat != S_TERUG_SPOELEN   &&  staat != S_NAAR_NUMMER   &&  staat != S_PAUZE){ //zodat niet volume oppopt na een knop indruk met een doorspoel ofzo
+          volumeDisplayActie.reset();
+        }
         
         // volume = limieteerF(volume + (riemDiv * stappenPerOmwenteling), 0, 63);
         volume += round(riemDiv * 100);

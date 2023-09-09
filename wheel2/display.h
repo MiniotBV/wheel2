@@ -212,7 +212,7 @@ void displayUpdate(){
 
 
     //------------------------------------------------------------------------VOLUME
-    else if(volumeDisplayActie.sinds() < 2000){
+    else if(volumeDisplayActie.sinds() < 2000   &&  staat != S_DOOR_SPOELEN   &&  staat != S_TERUG_SPOELEN   &&  staat != S_NAAR_NUMMER   &&  staat != S_PAUZE){
       for(int i = 0; i < displayLengte; i++){
         displayData[i] = 0;          
 
@@ -229,32 +229,38 @@ void displayUpdate(){
     else{
       for(int i = 0; i < displayLengte; i++){
 
-
-        int volgendeNummerDisplay  =  egtePos2displayPos(nummers[nummersTeller]);
-
-        if( i > plaatGroote){
+        //-------------------------------------------------------------------------------TRACKS
+        if( staat == S_STOPPEN  ||  staat == S_PARKEREN  ||  staat == S_NAAR_HOK  ||  staat == S_HOK){
           displayData[i] = 0;
-
-        }else if( staat == S_NAAR_BEGIN_PLAAT   &&  i > sensor  &&  plaatBegin == 1000){
-          displayData[i] = 0;
-        
-        }else if(i > sensorMaxBerijk){
-          displayData[i] = 0;
-        
-        }else if(volgendeNummerDisplay <= i     &&    nummersTeller < hoeveelNummers){
-          nummersTeller++;
-          displayData[i] = 0;
-        
         }else{
-          if(nummersTeller == 0){
+          
+          int volgendeNummerDisplay  =  egtePos2displayPos(nummers[nummersTeller]);
+
+          if( i > plaatGroote){
             displayData[i] = 0;
+
+          }else if( staat == S_NAAR_BEGIN_PLAAT   &&  i > sensor  &&  plaatBegin == 1000){
+            displayData[i] = 0;
+          
+          }else if(i > sensorMaxBerijk){
+            displayData[i] = 0;
+          
+          }else if(volgendeNummerDisplay <= i     &&    nummersTeller < hoeveelNummers){
+            nummersTeller++;
+            displayData[i] = 0;
+          
           }else{
-            displayData[i] = 0.1;
-          }
+            if(nummersTeller == 0){
+              displayData[i] = 0;
+            }else{
+              displayData[i] = 0.1;
+            }
+          }          
         }
 
-        
-        if(staat == S_NAAR_NUMMER  ||  staat ==  S_DOOR_SPOELEN  ||  staat == S_TERUG_SPOELEN  ||  staat == S_PAUZE){ // pauze cursor
+
+        //---------------------------------------------------------------------------------------------------------------CURSOR
+        if(staat == S_NAAR_NUMMER  ||  staat ==  S_DOOR_SPOELEN  ||  staat == S_TERUG_SPOELEN  ||  staat == S_PAUZE){ 
           if(naald-1 == i || naald+1 == i){
             displayData[i] = 0.9;
           }

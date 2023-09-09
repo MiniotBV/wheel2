@@ -154,11 +154,9 @@ class COMPVAART{
       sensPrev = sens;
 
 
-      if(dirPrev != dir  &&  andereDirTeller < 2){
-        andereDirTeller++;
-        return;
+      if(dirPrev != dir){
+        clearSamples();
       }
-      andereDirTeller = 0;
       dirPrev = dir;
 
 
@@ -273,23 +271,23 @@ class COMPVAART{
 
     float getVaart(){
 
-      if(micros() - tijd > sampleMax){
+      // if(micros() - tijd > sampleMax){
         
-        glitchTeller++;
+      //   glitchTeller++;
 
-        if(glitchTeller > 6){
-          glitchTeller = 0;
-          clearSamples();        
-        }
+      //   if(glitchTeller > 6){
+      //     glitchTeller = 0;
+      //     clearSamples();        
+      //   }
       
-      }else{
-        glitchTeller = 0;
-      }
+      // }else{
+      //   glitchTeller = 0;
+      // }
 
 
       
       gemiddelde = gemiddeldeInterval();
-      vaart = huidigeVaart(gemiddelde);
+      vaart = huidigeVaart(gemiddelde) * dir;
 
 
       return vaart;//niet compensenre
@@ -328,7 +326,7 @@ class COMPVAART{
       for(byte i = 0;   i < sampleNum;   i++){
         totaal += samples[i];
       }
-      return (totaal / float(sampleNum)) * dir;      
+      return totaal / float(sampleNum);      
     }
 
 
