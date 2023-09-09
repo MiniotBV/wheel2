@@ -49,10 +49,14 @@ void serieelFunc(){
       Serial.print(", ");
       Serial.print(plaatLeesRuw);
 
-      // Serial.print(", ");
-      // Serial.print(plaatLeesGefilterd);
-      // Serial.print(", ");
-      // Serial.print(plaatLeesGefilterdBodem);
+      Serial.print(", ");
+      Serial.print(plaatLeesGefilterd);
+
+      Serial.print(", ");
+      Serial.print(plaatLeesDiv);
+
+      Serial.print(", ");
+      Serial.print(plaatLeesGefilterdBodem);
       // Serial.print(", ");
       // Serial.print(trackTresshold);
       // Serial.print(", ");
@@ -67,10 +71,8 @@ void serieelFunc(){
       
       Serial.print(", ");
       Serial.print(armHoekSlow);//1696);
-      
       Serial.print(", ");
       Serial.print(armHoekRuw);//1696);
-
       Serial.print(", ");
       Serial.print(armHoek);//1696);
 
@@ -81,8 +83,8 @@ void serieelFunc(){
       Serial.print(", ");
       Serial.print(karPos);
 
-      Serial.print(", ");
-      Serial.print(afstandOmTeStoppen );
+      // Serial.print(", ");
+      // Serial.print(afstandOmTeStoppen );
       
       // Serial.print(", ");
       // Serial.print(armKracht);

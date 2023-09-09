@@ -11,6 +11,7 @@ float plaatLeesRuw;
 float plaatLeesRuwOud;
 float plaatLeesDiv;
 float plaatLeesGefilterd;
+float plaatLeesGefilterdOud;
 float plaatLeesGefilterdBodem;
 float plaatLeesDivTrack;
 
@@ -28,9 +29,7 @@ bool laatsteKnipperRichting;
 bool knip;
 
 
-int trackTresshold = 3200;
-bool trackOnderTresh = true;
-int minimumTrackSpacing = 0.05;
+
 
 
 
@@ -104,42 +103,47 @@ void plaatDetectie(){
 
 #define MINIMALE_TRACK_AFSTAND 3//mm
 
+int trackTresshold = 3200;
+bool trackOnderTresh = true;
+
 
 void scannenVoorTracks(){
   
-  plaatLeesLedSetMilliAmp(20);
+  plaatLeesLedSetMilliAmp(10);
 
   // trackTresshold = plaatLeesGefilterdBodem + ((AMAX - plaatLeesGefilterdBodem) / 3);
   trackTresshold = (AMAX - plaatLeesGefilterdBodem) * 0.35;
   
-  if(sensorPos > PLAAT_EINDE + 2){
+  if(sensorPos < PLAAT_EINDE + 2){
+    return;
+  }
     
-    if(plaatLeesDivTrack < trackTresshold && trackOnderTresh){
-      trackOnderTresh = false;
-    }
+  if(plaatLeesDivTrack < trackTresshold && trackOnderTresh){
+    trackOnderTresh = false;
+  }
 
-    if(plaatLeesDivTrack > trackTresshold && !trackOnderTresh){
-      trackOnderTresh = true;
+  if(plaatLeesDivTrack > trackTresshold && !trackOnderTresh){
+    trackOnderTresh = true;
 
-      if(hoeveelNummers == 0){
-        Serial.print("begin plaat: ");
+    if(hoeveelNummers == 0){
+      Serial.print("begin plaat: ");
+      Serial.println(sensorPos);
+      nummers[hoeveelNummers] = sensorPos;
+      hoeveelNummers++;    
+    }else{
+      if(sensorPos - nummers[hoeveelNummers] > MINIMALE_TRACK_AFSTAND){
+        Serial.print("track op: ");
         Serial.println(sensorPos);
         nummers[hoeveelNummers] = sensorPos;
-        hoeveelNummers++;    
-      }else{
-        if(sensorPos - nummers[hoeveelNummers] > MINIMALE_TRACK_AFSTAND){
-          Serial.print("track op: ");
-          Serial.println(sensorPos);
-          nummers[hoeveelNummers] = sensorPos;
-          hoeveelNummers++;
-        }
-
-
+        hoeveelNummers++;
       }
 
-      
+
     }
+
+    
   }
+  
 }
 
 
@@ -167,8 +171,11 @@ void plaatLeesFunc(){
   if(plaatLeesInt.loop()){
     
     plaatLeesRuw = analogRead(plaatLees);
+
+    plaatLeesGefilterd += (plaatLeesRuw - plaatLeesGefilterd) / 5;
     
-    plaatLeesDiv = plaatLeesRuw - plaatLeesRuwOud;
+    plaatLeesDiv = plaatLeesGefilterd - plaatLeesGefilterdOud;
+    // plaatLeesDiv = plaatLeesRuw - plaatLeesRuwOud;
 
     if(plaatLeesDiv > 0){//                     vermeer het effect van omhooggaande flanken, om nummer te vinden
       plaatLeesDivTrack += plaatLeesDiv;
@@ -178,9 +185,10 @@ void plaatLeesFunc(){
 
     // plaatLeesDivTrack = plaatLeesRuwOud - plaatLeesRuw;
 
-    plaatLeesRuwOud = plaatLeesRuw;
+    plaatLeesGefilterdOud = plaatLeesGefilterd;
+    // plaatLeesRuwOud = plaatLeesRuw;
 
-    plaatLeesGefilterd += (plaatLeesRuw - plaatLeesGefilterd) / 5;
+
 
 
     if(staat == S_HOK){

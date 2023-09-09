@@ -390,12 +390,9 @@ void staatDingen(){
 
   if(staat == S_NAALD_EROP){
     if(naaldErop()){
-      // if(abs(armHoek) > 10){
-        // karPcomp = limieteerF( -karP * armHoek , -KAR_MAX_SNELHEID / 2, KAR_MAX_SNELHEID / 2);
-        karPcomp += ( limieteerF( armHoek * -karP,     -3, 3) - karPcomp ) / 500;
-        karPos += karPcomp * karI;
-        karPos = limieteerF( karPos, PLAAT_EINDE, GROOTSTE_PLAAT_BEGIN + 2);
-      // }
+      karPcomp += ( limieteerF( armHoek * -karP,     -3, 3) - karPcomp ) / 500;
+      karPos += karPcomp * karI;
+      karPos = limieteerF( karPos, PLAAT_EINDE, GROOTSTE_PLAAT_BEGIN + 2);
       
       if(karPos <= PLAAT_EINDE){
         stoppen();
