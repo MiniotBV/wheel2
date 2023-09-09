@@ -16,7 +16,8 @@ void serieelFunc(){
       Serial.print(TLE5012.glad);
       Serial.print(", ");
       Serial.print(TLE5012.gladglad);
-
+      Serial.print(", ");
+      Serial.print(TLE5012.teller);
 
       // Serial.print(", ");
       // Serial.print(TLE5012.vaartRuw);
@@ -39,8 +40,8 @@ void serieelFunc(){
       
       
       
-      // Serial.print(", ");
-      // Serial.print(plaatLeesRuw);
+      Serial.print(", ");
+      Serial.print(plaatLeesRuw);
 
       // Serial.print(", ");
       // Serial.print(plaatLeesGefilterd);

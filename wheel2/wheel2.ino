@@ -53,10 +53,8 @@ void toggleAudioFreqMeting(){
 VAART strobo(14, 1800); //1800
 
 #include "compVaartSensor.h"
-// COMPVAART TLE5012(16, 4096); //elker 5ms is 11.4 samples en 22.75 per 10ms
+COMPVAART TLE5012(2, 1024); //elker 5ms is 11.4 samples en 22.75 per 10ms
 // COMPVAART TLE5012(64, 4096); //elker 5ms is 11.4 samples en 22.75 per 10ms
-COMPVAART TLE5012(32, 4096); //elker 5ms is 11.4 samples en 22.75 per 10ms
-
 // COMPVAART TLE5012(64, 8192); //elker 5ms is 11.4 samples en 22.75 per 10ms
 
 
@@ -115,13 +113,13 @@ void setup() {
   plaatLeesInit();
 
   setPwm(ledWit);
-  setPwm(ledRood);
+  // setPwm(ledRood);
 
   plateauInit();
 
   delay(1);
 
-  // TLE5012.recalCompSamples();
+  TLE5012.recalCompSamples();
   
   enableInterupts(true);
 
@@ -190,7 +188,7 @@ void loop() {
   // pwmWriteF(ledWit, 0.5);
   // pwmWrite(ledRood, pow( ((cos( (PI*millis()) / 500.0 )+1)/2), 3) * PMAX);
 
-  pwmWriteF(ledRood, plaatAanwezig ? 1 : 0);
+  // pwmWriteF(ledRood, plaatAanwezig ? 1 : 0);
 }
 
 

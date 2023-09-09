@@ -15,8 +15,7 @@ float karP = 0.0001; //0.00005;//0.00025;
 #define KAR_SNELHEID 0.02
 
 // #define PLAAT_BEGIN 148
-// #define PLAAT_BEGIN 147
-#define PLAAT_BEGIN 146
+#define PLAAT_BEGIN 147
 // #define PLAAT_EINDE 52.5
 #define PLAAT_EINDE 55
 

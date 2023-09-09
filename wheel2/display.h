@@ -3,22 +3,29 @@
 
 
 
-#define displayLengte 80
+#define displayLengte 120
 float displayData[displayLengte];
 
 int nummersTeller = 0;
 
 unsigned int displayDelay = 0;
 
+int lichtLevel;
+
 
 
 
 
 void displayInit(){
-  pinMode(displayKLOK    , OUTPUT);
   pinMode(displayIN      , OUTPUT);
   pinMode(displayUIT     , INPUT);
+  pinMode(displayKLOK    , OUTPUT);
   pinMode(displayLATCH   , OUTPUT);
+
+  setPwm(displayEN);
+
+  // pwmWriteF(displayEN, 0.9);
+
   pinMode(displayPOTMETER, INPUT);
 }
 
@@ -40,7 +47,9 @@ void displayPrint(float tijd){
   for(int i = 0; i < displayLengte; i++){
     
     
-    gpio_put(displayIN, displayData[i] >  tijd ? 1 : 0);
+    // gpio_put(displayIN, displayData[i] >  tijd ? 1 : 0);//flip
+    int pix = (i + 7) - ((i % 8) * 2);
+    gpio_put(displayIN, displayData[pix] >  tijd ? 1 : 0);//flip byte
 
     gpio_put(displayKLOK, 1);
     gpio_put(displayKLOK, 0);
@@ -79,7 +88,7 @@ void displayUpdate(){
     int sensor = egtePos2displayPos(sensorPos);
     int sensorMaxBerijk = egtePos2displayPos(PLAAT_BEGIN - SENSOR_OFFSET)  +  3;
 
-    int volumeMargin = 16;
+    int volumeMargin = displayLengte/5;//16;
 
 
 
@@ -243,5 +252,29 @@ void displayUpdate(){
     displayPrint(1);
     while(micros() - displayDelay < 400){}
     commitDisplay();
+
+    
+    
+
+    // if(lichtLevel == 0){
+    //   displayPrint(0);//alles boven helderheid 0
+
+    //   pwmWriteF(displayEN, 0.8); // display uit
+
+    //   commitDisplay();
+
+    //   lichtLevel++;
+    // }
+    // if(lichtLevel >= 1){
+    //   displayPrint(0.5);//alles boven helderheid 0.5
+      
+    //   pwmWriteF(displayEN, 0.1); // display uit
+
+    //   commitDisplay();
+
+    //   lichtLevel = 0;
+    // }
+
+
   }
 }

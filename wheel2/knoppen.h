@@ -1,8 +1,6 @@
 #define KNOP_PLAY 2//~5  knop3
 #define KNOP_DOORSPOEL 3//~4  knop2
 #define KNOP_TERUGSPOEL 1//~6   knop4
-#define KNOP_BT 7//~0     knop1
-#define KNOP_RPM 0//~7    knop5
 
 
 #define KNOP_LANG 700  //wat is een lange klik
@@ -68,12 +66,12 @@ const char* knopNaam(int knop){
   if(knop == KNOP_TERUGSPOEL){
     return "terugspoel";
   }
-  if(knop == KNOP_BT){
-    return "bt";
-  }
-  if(knop == KNOP_RPM){
-    return "rpm";
-  }
+  // if(knop == KNOP_BT){
+  //   return "bt";
+  // }
+  // if(knop == KNOP_RPM){
+  //   return "rpm";
+  // }
 
   return "?";
 }
@@ -306,7 +304,7 @@ void knoppenUpdate(){
 
 
 
-    potVal = analogRead(displayPOTMETERanaloog);
+    potVal = analogRead(displayPOTMETER);
 
     if(!isOngeveer(potVal, potValPrev, AMAX/2)){
       if(potVal > potValPrev){

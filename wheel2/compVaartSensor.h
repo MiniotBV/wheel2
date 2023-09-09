@@ -125,7 +125,6 @@ class COMPVAART{
       if(interval > sampleMax){interval = sampleMax;}
       
       shiftSamples((interval * dir) * compSamples[teller]);
-      // shiftSamples((interval * dir) / compSamples[teller]);
       
 
       teller = rondTrip(teller + dir,  pulsenPerRev);
@@ -146,7 +145,6 @@ class COMPVAART{
         
         if(isOngeveer(div, 1, 0.3)){
           compSamples[rondTrip(teller - 10,  pulsenPerRev)] += ( div - 1 ) / 3;
-          // compSamples[rondTrip(teller - 10,  pulsenPerRev)] -= ( div - 1 ) / 3;
         }
       }
 
