@@ -103,7 +103,8 @@ class COMPVAART{
         if(glitchTeller > 6){
           shiftSamples(sampleMax * dir);
           vaart = 0;
-          glad = 0;
+          glad += (vaart - glad) / 10;
+          gladglad += (glad - gladglad) / 100;
         }else{
           glitchTeller++;
         }

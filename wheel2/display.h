@@ -228,7 +228,7 @@ void displayUpdate(){
 
         int volgendeNummerDisplay  =  egtePos2displayPos(nummers[nummersTeller]);
 
-        if(staat == S_NAAR_BEGIN_PLAAT  &&  i > sensor){
+        if( ( staat == S_NAAR_BEGIN_PLAAT  ||  staat == S_PLAAT_DIAMETER_METEN )    &&  i > sensor){
           displayData[i] = 0;
         }
 

@@ -8,11 +8,20 @@ float basis = 0;
 float uitBuff;
 
 
+
+
 float plateauP = 0.1;    //pid
 float plateauI = 0.005;
 float plateauD = 0;
 
+float plateau33P = 0.1;    //pid
+float plateau33I = 0.005;
 
+float plateau45P = 0.02;    //pid
+float plateau45I = 0.005;
+
+float plateauRustP = 0.01;
+float plateauRustI = 0.005;
 
 
 
@@ -34,14 +43,15 @@ void plateauInit(){
 
 
 
-float maakP(){
-  return plateauP;
+void updatePIDwaarde(){
 }   
 
 
 
 float pid(float rpmIn){
-  double uit = (targetRpm - rpmIn) * maakP();
+  // updatePIDwaarde();  
+
+  double uit = (targetRpm - rpmIn) * plateauP;
   
   uit = limieteerF(uit, -1, 1);
   
@@ -72,16 +82,9 @@ void plateauFunc(){
 
     if(plateauAan){             //staat de motor aan?
 
-      // if(!isTussen(vaart, 2, 45) ){
-      //   Serial.print("no: ");
-      //   Serial.println(vaart);
-      //   return;
-      // }
-      // float vaart = calibratieToon.getVaart();
 
       uitBuff = pid(vaart);//                  bereken motor kracht
-      // uitBuff = pid(calibratieToon.getVaart());//                  bereken motor kracht
-    
+      
       pwmFase(uitBuff, motorP, motorN, false);
       
     }else{
@@ -104,7 +107,7 @@ void plateauFunc(){
 
 
     // float glad = strobo.getGlad();
-    float glad = strobo.glad;
+    float glad = strobo.gladglad;
 
     if(plateauLogica){
       if(plateauAan){                   //staat de motor aan?
@@ -120,7 +123,7 @@ void plateauFunc(){
             // }
             // stoppen();
           }
-          else if(glad  <  targetRpm * 0.70   &&   draaienInterval.sinds() > 500){ //te langzaam 70%
+          else if(glad  <  targetRpm * 0.80   &&   draaienInterval.sinds() > 500){ //te langzaam 70%
             Serial.println("T");//----------------
             // if(test){
             //   plateauStoppen();
@@ -142,7 +145,7 @@ void plateauFunc(){
 
 
 
-        if( targetRpm > 1   &&   glad  >  targetRpm * 0.95   &&   opsnelheid == false ){ //                       op snelheid (95% van de snelheid)
+        if(glad  >  targetRpm * 0.95   &&   opsnelheid == false ){ //                       op snelheid (95% van de snelheid)
           Serial.println("O");
           opsnelheid = true;
         }
@@ -155,9 +158,6 @@ void plateauFunc(){
       if( !plateauAan   &&   draaienInterval.sinds() > 1000   &&   uitdraaien == false){//                              aangeslingerd
         if(vaart  >  rpm33 * 0.50){                                                       //50% van de 33.3 snelheid
           Serial.println("A");
-          if(test){
-            plateauDraaien();
-          }
           if(staat == S_HOK){
             spelen();
           }

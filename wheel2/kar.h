@@ -150,7 +150,7 @@ void gaNaarNummer(float pos){
 
 void naarVorrigNummer(){
   if(hoeveelNummers < 2){// als er 1 nummer is is dat ook te weinig
-    gaNaarNummer(GROOTSTE_PLAAT_BEGIN);
+    gaNaarNummer(plaatBegin);
     return;
   }
 
@@ -165,7 +165,7 @@ void naarVorrigNummer(){
   while(pos + 2 >= nummers[nummer]){
     nummer++;
     if(nummer > hoeveelNummers - 1){
-      gaNaarNummer(GROOTSTE_PLAAT_BEGIN);
+      gaNaarNummer(plaatBegin);
       return;
     }
   }
@@ -202,6 +202,13 @@ void naarVolgendNummer(){
 
   gaNaarNummer(nummers[nummer]);
 }
+
+
+
+
+
+
+
 
 
 
@@ -349,12 +356,13 @@ void staatDingen(){
       return;
     }
 
-    if(plaatAanwezig  ||  plaatBegin != 0){
+    if(plaatAanwezig  ||  plaatBegin != 0){ // is er een plaat aanwezig
       
-      if(plaatBegin == 0){
+      if(plaatBegin == 0){    // voer maar 1 keer uit
         if(isOngeveer(karPos, GROOTSTE_PLAAT_BEGIN, 1)){
           plaatBegin = GROOTSTE_PLAAT_BEGIN;
-          Serial.println("plaatDia: 12inch");      
+          Serial.println("plaatDia: 12inch");
+          setPlateauRpm(rpm33);
         
         }else{
           // anders moet er gekeken worden wat de maat is en welke rpm daar bijhoort
@@ -363,13 +371,16 @@ void staatDingen(){
           float inchDia = (plaatBegin / 25.4)*2;
           if(inchDia < 8){//isOngeveer(inchDia, 7, 1)){
             Serial.print("±7\" ");
-            setPlateauRpm(45);
+            setPlateauRpm(rpm45);
+          }else{
+            setPlateauRpm(rpm33);
           }
           Serial.println("plaatDia: " + String(inchDia) + "\"");
+          
         }
       }
       
-      if(beweegKarNaarPos(plaatBegin, KAR_MAX_SNELHEID)){
+      if(beweegKarNaarPos(plaatBegin, KAR_MAX_SNELHEID)){ 
         setStaat(S_NAALD_EROP);
         return;
       }
@@ -421,11 +432,16 @@ void staatDingen(){
 
 
 
-  else if(staat == S_JOGGEN){
+  if(staat == S_DOOR_SPOELEN){
     if(naaldEraf()){
-      karPos += limieteerF( targetNummerPos - karPos , -KAR_MAX_SNELHEID, KAR_MAX_SNELHEID);
     }
   }
+
+  if(staat == S_TERUG_SPOELEN){
+    if(naaldEraf()){
+    }
+  }
+
 
 
 
@@ -435,7 +451,7 @@ void staatDingen(){
         armHoekCalibreer();
       }
       
-      targetNummerPos = limieteerF(targetNummerPos, PLAAT_EINDE, GROOTSTE_PLAAT_BEGIN);
+      targetNummerPos = limieteerF(targetNummerPos, PLAAT_EINDE, plaatBegin);
       beweegKarNaarPos(targetNummerPos, KAR_MAX_SNELHEID);
       
       // karPos += limieteerF( (targetNummerPos - karPos) / 10 , -KAR_MAX_SNELHEID, KAR_MAX_SNELHEID);

@@ -6,6 +6,9 @@
 // int hoeveelNummers = 5;
 
 
+bool plaatLeesGolven = false;
+
+
 
 float plaatLeesRuw;
 
@@ -18,11 +21,14 @@ float plaatLeesDivOud;
 float plaatLeesDivDiv;
 float plaatLeesDivDivOud;
 
+float plaatLeesPre;
+float plaatLeesOmhoog;
+float plaatLeesOmlaag;
+
 float plaatLeesTrack;
 
 
 float plaatLeesGefilterdBodem;
-float plaatLeesDivTrack;
 
 
 
@@ -110,6 +116,24 @@ void plaatDetectie(){
 
 
 
+
+void nieuwNummer(float pos){
+  if(hoeveelNummers == 0){
+    Serial.println("begin plaat: " + String(pos));
+  }else{
+    float afstand = pos - nummers[hoeveelNummers-1];
+    if(afstand < 2){return;}
+    Serial.println("track op: " + String(pos));
+    // Serial.println("afstand tot vorrige track: " + String(afstand));
+  }
+
+  nummers[hoeveelNummers] = pos;
+  hoeveelNummers++;  
+}
+
+
+
+
 #define MINIMALE_TRACK_AFSTAND 3//mm
 
 int trackTresshold = 3200;
@@ -120,43 +144,18 @@ void scannenVoorTracks(){
   
   plaatLeesLedSetMilliAmp(10);
 
-  // trackTresshold = plaatLeesGefilterdBodem + ((AMAX - plaatLeesGefilterdBodem) / 3);
-  trackTresshold = 100;//(AMAX - plaatLeesGefilterdBodem) * 0.35;
+  trackTresshold = 50;
   
   if(sensorPos < PLAAT_EINDE + 2){
     return;
   }
-    
-  // if(plaatLeesDivTrack < trackTresshold && trackOnderTresh){
-  //   trackOnderTresh = false;
-  // }
 
-  // if(plaatLeesDivTrack > trackTresshold && !trackOnderTresh){
+  if(plaatLeesOmhoog < trackTresshold && trackOnderTresh){  trackOnderTresh = false; }
 
-  if(plaatLeesTrack < trackTresshold && trackOnderTresh){
-    trackOnderTresh = false;
-  }
-
-  if(plaatLeesTrack > trackTresshold && !trackOnderTresh){
+  if(plaatLeesOmhoog > trackTresshold && !trackOnderTresh){
     trackOnderTresh = true;
 
-    if(hoeveelNummers == 0){
-      Serial.print("begin plaat: ");
-      Serial.println(sensorPos);
-      nummers[hoeveelNummers] = sensorPos;
-      hoeveelNummers++;    
-    }else{
-      if(sensorPos - nummers[hoeveelNummers] > MINIMALE_TRACK_AFSTAND){
-        Serial.print("track op: ");
-        Serial.println(sensorPos);
-        nummers[hoeveelNummers] = sensorPos;
-        hoeveelNummers++;
-      }
-
-
-    }
-
-    
+    nieuwNummer(sensorPos);
   }
   
 }
@@ -192,24 +191,41 @@ void plaatLeesFunc(){
     plaatLeesDiv = plaatLeesGefilterd - plaatLeesGefilterdOud;
     plaatLeesGefilterdOud = plaatLeesGefilterd;
 
+    // if(plaatLeesDiv > 0) plaatLeesTrack += plaatLeesDiv; else plaatLeesTrack = 0;
+    
     plaatLeesDivDiv = plaatLeesDiv - plaatLeesDivOud;
     plaatLeesDivOud = plaatLeesDiv;
 
-    if(plaatLeesDivDiv > 0) plaatLeesTrack += plaatLeesDivDiv; else plaatLeesTrack = 0;
+    plaatLeesPre += (plaatLeesDivDiv - plaatLeesPre)/5;
 
-    // plaatLeesDiv = plaatLeesRuw - plaatLeesRuwOud;
+    if(plaatLeesPre > 0) plaatLeesOmhoog += plaatLeesPre; else plaatLeesOmhoog = 0;
+    if(plaatLeesPre < 0) plaatLeesOmlaag += plaatLeesPre; else plaatLeesOmlaag = 0;
 
-    // if(plaatLeesDiv > 0){//                     vermeer het effect van omhooggaande flanken, om nummer te vinden
-    //   plaatLeesDivTrack += plaatLeesDiv;
-    // }else{
-    //   plaatLeesDivTrack = 0;
-    // }
 
-    // plaatLeesDivTrack = plaatLeesRuwOud - plaatLeesRuw;
+    if(plaatLeesGolven){
+      Serial.print(plaatLeesRuw);
 
-    
-    // plaatLeesRuwOud = plaatLeesRuw;
+      Serial.print(", ");
+      Serial.print(plaatLeesGefilterd);
 
+      Serial.print(", ");
+      Serial.print(plaatLeesDiv);
+
+      Serial.print(", ");
+      Serial.print(plaatLeesDivDiv);
+
+      // Serial.print(", ");
+      // Serial.print(plaatLeesTrack);
+
+      Serial.print(", ");
+      Serial.print(plaatLeesPre);
+      Serial.print(", ");
+      Serial.print(plaatLeesOmhoog);
+      Serial.print(", ");
+      Serial.print(plaatLeesOmlaag);
+
+      Serial.println();
+    }
 
 
 

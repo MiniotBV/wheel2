@@ -6,11 +6,13 @@ bool golven = false;
 
 
 Interval serieelInt(10000, MICROS);
+// Interval serieelInt(5000, MICROS);
 
 void serieelFunc(){
   if(serieelInt.loop()){
     if(golven){
-      // strobo.getDiv();
+      
+      
       Serial.print(strobo.vaart,3);
       Serial.print(", ");
       Serial.print(strobo.glad,3);
@@ -20,58 +22,47 @@ void serieelFunc(){
       Serial.print(", ");
       Serial.print(calibratieToon.vaart);
 
-      // Serial.print(", ");
-      // Serial.print(strobo.teller);
+
+      Serial.print(", ");
+      Serial.print(strobo.teller);
 
       // Serial.print(", ");
       // Serial.print(karPcomp);
 
-      // Serial.print(", ");
-      // Serial.print(strobo.vaartRuw);
-      // Serial.print(", ");
-      // Serial.print(strobo.gladNieuw);
-      // Serial.print(", ");
-      // Serial.print(strobo.plateauComp);
-      
 
-      
-      // Serial.print(", ");
-      // Serial.print(calibratieToon.glad);
-      
-      // Serial.print(", ");
-      // Serial.print(strobo.div, 3);
-      // Serial.print(", ");
-      // Serial.print(strobo.dav, 3);
 
       
       
       
-      Serial.print(", ");
-      Serial.print(plaatLeesRuw);
+      // Serial.print(", ");
+      // Serial.print(plaatLeesRuw);
 
-      Serial.print(", ");
-      Serial.print(plaatLeesGefilterd);
+      // Serial.print(", ");
+      // Serial.print(plaatLeesGefilterd);
 
-      Serial.print(", ");
-      Serial.print(plaatLeesDiv);
+      // Serial.print(", ");
+      // Serial.print(plaatLeesDiv);
 
-      Serial.print(", ");
-      Serial.print(plaatLeesDivDiv);
+      // Serial.print(", ");
+      // Serial.print(plaatLeesDivDiv);
 
-      Serial.print(", ");
-      Serial.print(plaatLeesTrack);
+      // // Serial.print(", ");
+      // // Serial.print(plaatLeesTrack);
+
+      // Serial.print(", ");
+      // Serial.print(plaatLeesPre);
+      // Serial.print(", ");
+      // Serial.print(plaatLeesOmhoog);
+      // Serial.print(", ");
+      // Serial.print(plaatLeesOmlaag);
       
       // Serial.print(", ");
       // Serial.print(trackTresshold);
       // Serial.print(", ");
       // Serial.print(plaatLeesDivTrack);
-      // Serial.print(", ");
-      // Serial.print(potVal);
-      // Serial.print(", ");
-      // Serial.print(potVolume);
+
       
-      // Serial.print(", ");
-      // Serial.print(uitBuff * 30);
+
       
       Serial.print(", ");
       Serial.print(armHoekSlow);//1696);
@@ -80,9 +71,7 @@ void serieelFunc(){
       Serial.print(", ");
       Serial.print(armHoek);//1696);
 
-      // Serial.print(", ");
-      // Serial.print((karPos - karPosPrev)*1000.0);//1696);
-      // karPosPrev = karPos;
+
 
       Serial.print(", ");
       Serial.print(karPos);
@@ -125,6 +114,9 @@ void serieelFunc(){
       else if(letter == 'g'){    //golven uit
         golven = false;
       }
+      else if(letter == 'y'){    //plaat lees golven
+        plaatLeesGolven = !plaatLeesGolven;
+      }
       else if(letter == '>'){    //set armhoekOfset
         naarVolgendNummer();
       }
@@ -142,12 +134,6 @@ void serieelFunc(){
       }
       else if(letter == 'P'){    //set armhoekOfset
         pauze();
-      }
-      else if(letter == 'J'){    //set armhoekOfset
-        setStaat(S_JOGGEN);
-        targetNummerPos = Serial.parseFloat();
-        Serial.print("targetNummerPos: ");
-        Serial.println(targetNummerPos);
       }
       else if(letter == 'O'){    //set armhoekOfset
         armHoekCalibreer();

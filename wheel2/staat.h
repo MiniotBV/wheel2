@@ -1,5 +1,3 @@
-bool test;
-
 
 
 float autoRpm;
@@ -34,10 +32,15 @@ void updatePlateauRpm(){
 
   if(rpmStaat == AUTO){
     targetRpm = autoRpm;
-  }else if(rpmStaat == R33){
+    return;
+  }
+  if(rpmStaat == R33){
     targetRpm = rpm33;
-  }else if(rpmStaat == R45){
+    return;
+  }
+  if(rpmStaat == R45){
     targetRpm = rpm45;
+    return;
   }
 }
 
@@ -59,11 +62,10 @@ void setPlateauRpm(float rpm){
 void plateauDraaien(){
   plateauAan = true;
   setPlateauRpm(rpm33);
-  // basis = 0;//basis33 * ((in / targetRpm));
   
   draaienInterval.reset();
+  
   Serial.println("plateauStart()");
-  if(test){Serial.print("target: "); Serial.println(targetRpm);}
 }
 
 
@@ -102,6 +104,22 @@ int hoeveelNummers = 0;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 enum staats{
   S_NAAR_HOK,
   S_HOK,
@@ -133,13 +151,14 @@ enum staats{
   S_NAAR_NUMMER,
   S_DOOR_SPOELEN,
   S_TERUG_SPOELEN,
+  // S_JOGGEN,
 
 
   S_ERROR,
 
   S_FOUTE_ORIENTATIE,
 
-  S_JOGGEN,
+
 };
 
 
