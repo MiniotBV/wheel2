@@ -15,7 +15,7 @@ class COMPVAART{
     float vaart;
     float gemiddelde = sampleMax;
 
-    float glad, gladDiv, gladOud;
+    float glad;
 
     int glitchTeller;
 
@@ -112,8 +112,7 @@ class COMPVAART{
 
         if(glitchTeller > 6){
           glitchTeller = 0;
-          clearSamples();
-          // return vaart;          
+          clearSamples();        
         }
       
       }else{
@@ -139,9 +138,6 @@ class COMPVAART{
 
     float getGlad(){
       glad += (vaart - glad) / 10;
-      gladDiv = glad - gladOud;
-      gladOud = glad;
-
       return glad;
     }
 

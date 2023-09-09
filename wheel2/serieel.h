@@ -15,8 +15,6 @@ void serieelFunc(){
       Serial.print(", ");
       Serial.print(TLE5012.glad);
       Serial.print(", ");
-      Serial.print(TLE5012.gladDiv);
-      Serial.print(", ");
       Serial.print(plaatLeesRuw);
       // Serial.print(", ");
       // Serial.print(plaatLeesGefilterd);

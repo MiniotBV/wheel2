@@ -115,7 +115,7 @@ void printStaat(int s){
   if( s == S_NAAR_HOK             ){ Serial.print("NAAR_HOK");            return;}
   if( s == S_HOK                  ){ Serial.print("HOK");                 return;}
   if( s == S_STOPPEN              ){ Serial.print("STOPPEN");             return;}
-w
+
   if( s == S_SCHOONMAAK           ){ Serial.print("SCHOONMAAK");          return;}
 
 

@@ -19,7 +19,7 @@ bool plaatAanwezig = false;
 
 #define SCHOONMAAK_PLEK 100
 
-#define SENSOR_NAALT_OFFSET 7.5//mm
+#define SENSOR_OFFSET 7.5//mm
 
 // float mmPerStap = 1.5 / ( 48 / 12 );
 float mmPerStap = 1.5 / ( 48 / 8 );
@@ -232,7 +232,7 @@ void karMotorFunc(){
 
 
     else if(staat == S_BEGINNEN_SPELEN){
-      if(karPos  <  PLAAT_EINDE + SENSOR_NAALT_OFFSET){
+      if(karPos  <  PLAAT_EINDE + SENSOR_OFFSET){
         karPos += KAR_SNELHEID;
       }else{
         setStaat(S_PLAAT_AANWEZIG);
@@ -255,27 +255,38 @@ void karMotorFunc(){
 
 
     else if(staat == S_PLAAT_DIAMETER_METEN){
-      if(staatVeranderd.sinds() > 500){
+      if(staatVeranderd.sinds() > 500){ // even een halve seconden wachten om de plaat detectie te laten werken
+        
         if(plaatAanwezig){
           if(isOngeveer(karPos, PLAAT_BEGIN, 1)){
             naaldErop();
             Serial.println("plaatDia: 12inch");
           
           }else if(plaatAanwezigSindsKarPos == 0){
-            plaatAanwezigSindsKarPos = karPos;
+            plaatAanwezigSindsKarPos = karPos - SENSOR_OFFSET;
+            float inchDia = (plaatAanwezigSindsKarPos / 25.4)*2;
+            if(isOngeveer(inchDia, 7, 1)){
+              Serial.println("7\"");
+            }
             Serial.print("plaatDia: ");
-            Serial.println((karPos / 25.4)*2);
+            Serial.println(inchDia);
           
-          }else if(plaatAanwezigSindsKarPos - karPos <  SENSOR_NAALT_OFFSET + 0){
+          }else if(karPos >  plaatAanwezigSindsKarPos + 0){
             karPos -= KAR_SNELHEID;
           
           }else{
             naaldErop();
             
           }
-        }else{
+        
+        }
+        
+        if(!plaatAanwezig){
           plaatAanwezigSindsKarPos = 0;
           karPos -= KAR_SNELHEID;
+          if(karPos <= SENSOR_OFFSET + PLAAT_EINDE){
+            stoppen();
+          }   
         }
       }
     }
@@ -349,7 +360,7 @@ void karMotorFunc(){
       if(karPos < SCHOONMAAK_PLEK){
         karPos += KAR_SNELHEID;
       }else{
-        naaldErop();
+        isNaaldErop();
       }
     }
 
@@ -357,7 +368,7 @@ void karMotorFunc(){
 
 
 
-    sensorPos = karPos - SENSOR_NAALT_OFFSET;
+    sensorPos = karPos - SENSOR_OFFSET;
     karMotorPos = (karPos + karOffset)  *  mm2stap;
 
 

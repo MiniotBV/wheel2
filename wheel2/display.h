@@ -27,7 +27,7 @@ void displayInit(){
 
 
 int trackPos2displayPos(float kp){
-  return mapF(kp, PLAAT_EINDE + SENSOR_NAALT_OFFSET,  PLAAT_BEGIN, 0, displayLengte-1);
+  return mapF(kp, PLAAT_EINDE + SENSOR_OFFSET,  PLAAT_BEGIN, 0, displayLengte-1);
 }
 
 
@@ -76,7 +76,7 @@ void displayUpdate(){
     nummersTeller = 0;
     int naald = trackPos2displayPos(karPos);
     int sensor = trackPos2displayPos(sensorPos);
-    int sensorMaxBerijk = trackPos2displayPos(PLAAT_BEGIN - SENSOR_NAALT_OFFSET)  +  3;
+    int sensorMaxBerijk = trackPos2displayPos(PLAAT_BEGIN - SENSOR_OFFSET)  +  3;
 
 
 
