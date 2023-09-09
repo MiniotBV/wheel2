@@ -17,6 +17,13 @@ void pwmWriteF(int pin, float level){
 
 
 void pwmFase(float kracht, int pinP, int pinN, bool omgekeerd){
+  
+  if(kracht == 0){
+    pwmWrite(pinP,  0);
+    pwmWrite(pinN,  0);
+    return;
+  }
+  
   int fase = kracht * PMAX;
   
   if(omgekeerd){

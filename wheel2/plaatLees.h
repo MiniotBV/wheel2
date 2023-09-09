@@ -93,7 +93,7 @@ void plaatDetectie(){
 
 
 
-
+#define MINIMALE_TRACK_AFSTAND 3//mm
 
 
 void scannenVoorTracks(){
@@ -101,9 +101,9 @@ void scannenVoorTracks(){
   plaatLeesLedSetMilliAmp(20);
 
   // trackTresshold = plaatLeesGefilterdBodem + ((AMAX - plaatLeesGefilterdBodem) / 3);
-  trackTresshold = (AMAX - plaatLeesGefilterdBodem) *0.35;
+  trackTresshold = (AMAX - plaatLeesGefilterdBodem) * 0.35;
   
-  if(sensorPos > PLAAT_EINDE){
+  if(sensorPos > PLAAT_EINDE + 2){
     
     if(plaatLeesDivTrack < trackTresshold && trackOnderTresh){
       trackOnderTresh = false;
@@ -112,11 +112,23 @@ void scannenVoorTracks(){
     if(plaatLeesDivTrack > trackTresshold && !trackOnderTresh){
       trackOnderTresh = true;
 
-      Serial.print("track op: ");
-      Serial.println(sensorPos);
+      if(hoeveelNummers == 0){
+        Serial.print("begin plaat: ");
+        Serial.println(sensorPos);
+        nummers[hoeveelNummers] = sensorPos;
+        hoeveelNummers++;    
+      }else{
+        if(sensorPos - nummers[hoeveelNummers] > MINIMALE_TRACK_AFSTAND){
+          Serial.print("track op: ");
+          Serial.println(sensorPos);
+          nummers[hoeveelNummers] = sensorPos;
+          hoeveelNummers++;
+        }
 
-      nummers[hoeveelNummers] = sensorPos;
-      hoeveelNummers++;
+
+      }
+
+      
     }
   }
 }

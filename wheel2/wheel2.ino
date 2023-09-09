@@ -15,12 +15,14 @@
 
 #include "compVaartSensor.h"
 
-COMPVAART TLE5012(64, plateauA, 4096);
+COMPVAART TLE5012(16, plateauA, 4096);
 // VAART strobo(8, 0, 180*2);
 
-#include "plateau.h"
+
 
 #include "staat.h"
+
+#include "plateau.h"
 
 Interval ledInt(200, MILLIS);
 
@@ -92,8 +94,12 @@ void setup() {
 void core1_entry(){
   while(1){
     displayUpdate();
+    
     serieelFunc();
+    
     knoppenUpdate();
+
+    armFunc();
   }
 }
 
@@ -104,7 +110,7 @@ void loop() {
 
   plaatLeesFunc();
 
-  armFunc();
+  
 
   karMotorFunc();
 
@@ -112,7 +118,7 @@ void loop() {
 
   plateauFunc();
 
-  staatFunc();
+  // staatFunc();
 
   // pwmWrite(ledWit, pow( ((sin( (PI*millis()) / 500.0 )+1)/2), 3) * PMAX);
   pwmWriteF(ledWit, 0.5);

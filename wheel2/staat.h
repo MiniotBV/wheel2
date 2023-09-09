@@ -1,5 +1,65 @@
+bool test;
+
+#define rpm33 33.333
+
+bool opsnelheid;
+bool uitdraaien;
+
+Interval draaienInterval(10, MILLIS);
+
+
+enum rpmStaats{
+  AUTO,
+  R33,
+  R45,
+  R78
+};
+
+
+enum rpmStaats rpmStaat = AUTO;
+
+
+void plateauDraaien(){
+  targetRpm = 33.333;
+  // basis = 0;//basis33 * ((in / targetRpm));
+  
+  draaienInterval.reset();
+  Serial.println("plateauStart()");
+  if(test){Serial.print("target: "); Serial.println(targetRpm);}
+}
+
+
+
+
+void plateauStoppen(){
+  targetRpm = 0;
+
+  draaienInterval.reset();
+  uitdraaien = true;
+  opsnelheid = false;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 float nummers[20];// = {0.2, 0.3, 0.6, 0.68, 0.85}; //staat nu in staat.h
 int hoeveelNummers = 0;
+
+
+
+
+
 
 
 enum staats{
@@ -7,8 +67,6 @@ enum staats{
   S_HOK,
   S_STOPPEN,
 
-  S_BEGINNEN_SCHOONMAAK,
-  S_SCHOONMAAK_BEWEGEN,
   S_SCHOONMAAK,
 
 
@@ -57,14 +115,13 @@ void printStaat(int s){
   if( s == S_NAAR_HOK             ){ Serial.print("NAAR_HOK");            return;}
   if( s == S_HOK                  ){ Serial.print("HOK");                 return;}
   if( s == S_STOPPEN              ){ Serial.print("STOPPEN");             return;}
-
-  if( s == S_BEGINNEN_SCHOONMAAK  ){ Serial.print("BEGINNEN_SCHOONMAAK"); return;}
-  if( s == S_SCHOONMAAK_BEWEGEN   ){ Serial.print("SCHOONMAAK_BEWEGEN");  return;}
+w
   if( s == S_SCHOONMAAK           ){ Serial.print("SCHOONMAAK");          return;}
 
 
 
   if( s == S_BEGINNEN_SPELEN      ){ Serial.print("BEGINNEN_SPELEN");     return;}
+  if( s == S_HOMEN_VOOR_SPELEN    ){ Serial.print("HOMEN_VOOR_SPELEN");     return;}
   if( s == S_PLAAT_AANWEZIG       ){ Serial.print("PLAAT_AANWEZIG");      return;}
   if( s == S_NAAR_BEGIN_PLAAT     ){ Serial.print("NAAR_BEGIN_PLAAT");    return;}
   if( s == S_PLAAT_DIAMETER_METEN ){ Serial.print("PLAAT_DIAMETER_METEN");    return;}
@@ -142,18 +199,18 @@ void naaldErop(){
 
 
 
-Interval staatInt(10000, MICROS);
+// Interval staatInt(10000, MICROS);
 
 
-void staatFunc(){
-  if(staatInt.loop()){
+// void staatFunc(){
+//   if(staatInt.loop()){
 
 
 
 
 
-  }
-}
+//   }
+// }
 
 
 

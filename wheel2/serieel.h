@@ -11,7 +11,11 @@ void serieelFunc(){
   if(serieelInt.loop()){
 
     if(golven){
-      Serial.print(TLE5012.getVaart());
+      Serial.print(TLE5012.vaart);
+      Serial.print(", ");
+      Serial.print(TLE5012.glad);
+      Serial.print(", ");
+      Serial.print(TLE5012.gladDiv);
       Serial.print(", ");
       Serial.print(plaatLeesRuw);
       // Serial.print(", ");

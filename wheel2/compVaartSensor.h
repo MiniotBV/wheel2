@@ -15,6 +15,10 @@ class COMPVAART{
     float vaart;
     float gemiddelde = sampleMax;
 
+    float glad, gladDiv, gladOud;
+
+    int glitchTeller;
+
     bool Anu;
     bool Aoud;
     int dir;
@@ -36,9 +40,7 @@ class COMPVAART{
       sampleNum = samps;
       pin = p;
       pulsenPerRev = ppr;
-      for(int i = 0; i < sampleNum; i++){
-        samples[i] = sampleMax;        
-      }
+      clearSamples();
     }
 
 
@@ -50,11 +52,11 @@ class COMPVAART{
       tijd = micros();
 
       Aoud = Anu;     
-      Anu = digitalRead(plateauA);
+      Anu = gpio_get(plateauA);
 
       if(Anu && !Aoud){
         dir = 1;
-        if(digitalRead(plateauB)){
+        if(gpio_get(plateauB)){
           dir = -1;
         }
       }
@@ -100,23 +102,62 @@ class COMPVAART{
     }
 
 
+
+
     float getVaart(){
+
+      if(micros() - tijd > sampleMax){
+        
+        glitchTeller++;
+
+        if(glitchTeller > 6){
+          glitchTeller = 0;
+          clearSamples();
+          // return vaart;          
+        }
+      
+      }else{
+        glitchTeller = 0;
+      }
+      
       gemiddelde = gemiddeldeInterval();
       vaart =  huidigeVaart();
+
+      return vaart;//niet compensenre
+
       
       float b = targetRpm / vaart; //compenstaie berekenen
       compensatie[teller / compensatiePerSample]    +=    (b - compensatie[teller / compensatiePerSample]) / 12;
       
-      return vaart;//niet compensenre
-
-      // return vaart * compensatieAct[teller / compensatiePerSample]; // compenseren
+      return vaart * compensatieAct[teller / compensatiePerSample]; // compenseren
     }    
+
+
+
+
+
+
+    float getGlad(){
+      glad += (vaart - glad) / 10;
+      gladDiv = glad - gladOud;
+      gladOud = glad;
+
+      return glad;
+    }
 
 
 
 
     void shiftSamples(int samp){
       samples[ sampleTeller++ % sampleNum ] = samp;   
+    }
+
+
+
+    void clearSamples(){
+      for(int i = 0; i < sampleNum; i++){
+        samples[i] = sampleMax;        
+      }
     }
 
 
@@ -133,6 +174,9 @@ class COMPVAART{
 
 
     float huidigeVaart(){//                                                           RPM BEREKENEN
+      if(gemiddelde >= sampleMax){
+        return 0;          
+      }
       // return (1000000 / gemiddeldeInterval())/4;  //  return totaal
       // return (((1000000.0 / gemiddelde)*60) / pulsenPerRev;  //  return totaal
       return (((1000000.0 * 60) / gemiddelde)) / pulsenPerRev;  //  return totaal

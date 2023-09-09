@@ -1,13 +1,23 @@
 int armTargetKracht = 1600;
 int armKracht = 0;
-int armSnelheidOp = 2;
+int armSnelheidOp = 4;
 int armSnelheidAf = 4;
 unsigned int armLoop = 0;
 
 
+// //op de plaat
+// int netUitHokKracht = 800;
+// int netOpDePlaatKracht = 1500;
+
+
+// //van de plaat af
+// int netVanDePlaatKracht = 1000;
+// int netInHokKracht = 500;
+
+
 //op de plaat
-int netUitHokKracht = 800;
-int netOpDePlaatKracht = 1500;
+int netUitHokKracht = 500;
+int netOpDePlaatKracht = 1000;
 
 
 //van de plaat af

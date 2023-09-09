@@ -17,6 +17,8 @@ bool plaatAanwezig = false;
 #define KAR_HOME 44.5
 #define KAR_HOK 45.5
 
+#define SCHOONMAAK_PLEK 100
+
 #define SENSOR_NAALT_OFFSET 7.5//mm
 
 // float mmPerStap = 1.5 / ( 48 / 12 );
@@ -343,12 +345,11 @@ void karMotorFunc(){
 
 
 
-    else if(staat == S_JOGGEN){
-      karPos += limieteerF( karTargetPos - karPos , -KAR_SNELHEID, KAR_SNELHEID);
-      // karPos = limieteerF( karPos, 0, PLAAT_BEGIN);
-
-      if(karPos == karTargetPos){
-        setStaat(S_PAUZE);
+    else if(staat == S_SCHOONMAAK){
+      if(karPos < SCHOONMAAK_PLEK){
+        karPos += KAR_SNELHEID;
+      }else{
+        naaldErop();
       }
     }
 
@@ -366,11 +367,9 @@ void karMotorFunc(){
       pwmFase( cos(karMotorPos),  stapperBP, stapperBN, true);
     
     }else{
-      pwmWrite(stapperAP,  0 );
-      pwmWrite(stapperAN,  0 );
-      
-      pwmWrite(stapperBP,  0 );
-      pwmWrite(stapperBN,  0 );
+
+      pwmFase( 0,  stapperAP, stapperAN, true);
+      pwmFase( 0,  stapperBP, stapperBN, true);
     }
 
   }

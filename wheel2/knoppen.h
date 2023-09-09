@@ -89,6 +89,12 @@ const char* knopNaam(int knop){
 
 
 
+
+
+
+
+
+
 Interval knoppenInt(10000, MICROS);
 
 void knoppenUpdate(){
@@ -140,7 +146,7 @@ void knoppenUpdate(){
         
         // Serial.print(knopNaam( knop));Serial.println(" in ");
         
-        if( staat == S_SCHOONMAAK_BEWEGEN  ||  staat == S_SCHOONMAAK ){//   SCHOONMAAK STAND STOPPEN
+        if( staat == S_SCHOONMAAK ){//   SCHOONMAAK STAND STOPPEN
           stoppen();
           ledBlink();  //led blink
         }
@@ -208,11 +214,11 @@ void knoppenUpdate(){
 
 
         if(knop == KNOP_PLAY){
-          if(staat == S_BEGINNEN_SPELEN || staat == S_NAAR_BEGIN_PLAAT || staat == S_PLAAT_DIAMETER_METEN || staat == S_NAALD_EROP){//         STOPPEN
-            stoppen();
+          if(staat == S_HOK){//         SPELEN
+            spelen();//                       SPELEN
             ledBlink();  //                  led blink
           }else{                                 
-            spelen();//                       SPELEN
+            stoppen();
             ledBlink();  //                  led blink
           }
         }
@@ -247,7 +253,7 @@ void knoppenUpdate(){
 
 
         if(  staat == S_HOK  &&  knop == KNOP_TERUGSPOEL  ){//               NAALD TEST STAND
-          setStaat( S_BEGINNEN_SCHOONMAAK);
+          setStaat( S_SCHOONMAAK );
           ledBlink();  //led blink
         }
       }
