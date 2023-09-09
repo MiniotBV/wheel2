@@ -350,7 +350,7 @@ void knoppenUpdate(){
       if( !isOngeveer(potVolumeDiv, 0, 0.005) ){
         potVolumePrev = potVolume;
         
-        karTargetPos -= potVolumeDiv * 50;           
+        targetNummerPos -= potVolumeDiv * 50;           
       }
     
            

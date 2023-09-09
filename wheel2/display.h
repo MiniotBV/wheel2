@@ -94,7 +94,7 @@ void displayUpdate(){
 
     nummersTeller = 0;
     int naald = egtePos2displayPos(karPos);
-    int target = egtePos2displayPos(karTargetPos);
+    int target = egtePos2displayPos(targetNummerPos);
     int sensor = egtePos2displayPos(sensorPos);
     int sensorMaxBerijk = egtePos2displayPos(PLAAT_BEGIN - SENSOR_OFFSET)  +  3;
 

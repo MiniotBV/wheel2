@@ -14,7 +14,7 @@ float karI = 0.005; //0.00005;//0.00025;
 float karPcomp = 0;
 
 
-#define KAR_SNELHEID 0.02
+
 
 // #define PLAAT_BEGIN 148
 #define PLAAT_BEGIN 147
@@ -35,16 +35,14 @@ float mm2stap = 1 / stap2mm;             // 4.188790204786391
 
 
 
-int stapperFaseA = 0;
-int stapperFaseB = 0;
 
 bool karMotorEnable = true;
 float karMotorPos = 0;
-float karOffset = 0;
+
 float karPos = KAR_HOK;
-float karPosPrev = 0;
-float karTargetPos = 0;
+float targetNummerPos = 0;
 float sensorPos;
+float karOffset = 0; // om te kijken wat de homing afwijking is
 
 float plaatAanwezigSindsKarPos = 0;
 
@@ -68,6 +66,69 @@ void karInit(){
 
 
 
+#define KAR_MAX_SNELHEID 0.02
+#define KAR_VERSNELLING  0.00004
+
+double karSnelHeid = 0;
+// float karTargetPos = 0;
+float versnelling = 0;
+
+
+
+bool beweegKarNaarPos(float target, float snelheid){
+
+  versnelling = 0;
+  
+  float afstandTeGaan = abs(target - karPos);
+  
+  int richting =  target - karPos > 0 ? 1 : -1;
+
+  float afstandOmTeStoppen = (karSnelHeid * karSnelHeid) / ( 2 * KAR_VERSNELLING );
+
+
+  if(isOngeveer(afstandTeGaan,  0,  0.01)  &&  afstandOmTeStoppen < 0.1){ // moet nog ff checken of 1mm goed is waarschijnlek niet
+    karSnelHeid = 0;
+    return true;
+  }
+
+  if(afstandOmTeStoppen >= afstandTeGaan){
+    versnelling = -KAR_VERSNELLING * richting;
+  }
+  else if(abs(karSnelHeid) < KAR_MAX_SNELHEID){
+    versnelling = KAR_VERSNELLING * richting;
+  }
+
+  
+  karPos += karSnelHeid + (versnelling / 2);
+
+  karSnelHeid += versnelling;
+
+
+
+  karSnelHeid = limieteerF(karSnelHeid, -snelheid, snelheid);
+
+  return false;
+}
+
+
+//accel         0   2   2   2   0   0   0   -2  -2  -2
+//speed         0   2   4   6   6   6   6   4   2   0
+//pos           0   1   4   9   15  21  27  32  35  36
+
+//accel     0   2   2   2   2   0   0   0   -2  -2  -2  -2
+//speed     0   2   4   6   8   8   8   8   6   4   2   0
+//pos       0   1   4   9   16  24  32  40  47  52  55  56
+
+
+
+
+
+
+
+
+
+
+
 
 void armHoekCalibreer(){
   armHoekOffset = armHoekSlow;
@@ -79,9 +140,9 @@ void armHoekCalibreer(){
 
 
 void gaNaarNummer(float pos){
-  karTargetPos = pos;
+  targetNummerPos = pos;
   Serial.print("naarpos:");
-  Serial.println(karTargetPos);
+  Serial.println(targetNummerPos);
   setStaat(S_NAAR_NUMMER);
 }
 
@@ -101,7 +162,7 @@ void naarVorrigNummer(){
   float pos = karPos;
 
   if(staat == S_NAAR_NUMMER){//als er al word door gespoeld doe dan een extra nummer verder
-    pos = karTargetPos;
+    pos = targetNummerPos;
   }
 
   int nummer = 0;
@@ -131,7 +192,7 @@ void naarVolgendNummer(){
   float pos = karPos;
   
   if(staat == S_NAAR_NUMMER){//als er al word door gespoeld doe dan een extra nummer verder
-    pos = karTargetPos;
+    pos = targetNummerPos;
   }
 
   int nummer = hoeveelNummers - 1;
@@ -158,12 +219,17 @@ void naarVolgendNummer(){
 void pauze(){
   if(staat == S_NAALD_EROP){
     setStaat(S_PAUZE);
-    karTargetPos = karPos;
+    targetNummerPos = karPos;
   }
   else if(staat == S_PAUZE){
     setStaat(S_NAALD_EROP);
   }
 }
+
+
+
+
+
 
 
 
@@ -199,7 +265,7 @@ void staatDingen(){
 
   if(staat == S_NAAR_HOK  ||  staat == S_HOMEN_VOOR_SPELEN){
     if(staatVeranderd.sinds() < 400){//even wachten en teruch rijden
-      karPos += KAR_SNELHEID/5;
+      karPos += KAR_MAX_SNELHEID/5;
       return;
     }
 
@@ -224,21 +290,21 @@ void staatDingen(){
     }
     
     if(armHoek < -200){
-      karPos -= KAR_SNELHEID/10;
+      karPos -= KAR_MAX_SNELHEID/10;
       return;
     }
     
-    karPos -= KAR_SNELHEID;
+    karPos -= KAR_MAX_SNELHEID;
     return;
   }
 
 
 
   if(staat == S_HOK){
-    if(karPos < KAR_HOK){
-      karPos += KAR_SNELHEID;
+    if(!beweegKarNaarPos(KAR_HOK, KAR_MAX_SNELHEID)){
       return;
-    }
+    } 
+    
     armHoekCalibreer();
     karMotorEnable = false;
     return;
@@ -255,10 +321,10 @@ void staatDingen(){
 
 
   if(staat == S_BEGINNEN_SPELEN){
-    if(karPos  <  PLAAT_EINDE + SENSOR_OFFSET){
-      karPos += KAR_SNELHEID;
-      return;
-    }
+    
+    // if(karPos  <  PLAAT_EINDE + SENSOR_OFFSET){
+    //   karPos += KAR_MAX_SNELHEID;
+    if(  !beweegKarNaarPos(PLAAT_EINDE + SENSOR_OFFSET,   KAR_MAX_SNELHEID)  ){ return;}
     
     setStaat(S_PLAAT_AANWEZIG);
     return;
@@ -267,13 +333,12 @@ void staatDingen(){
 
 
   if(staat == S_NAAR_BEGIN_PLAAT){
-    if(karPos < PLAAT_BEGIN){
-      karPos += KAR_SNELHEID;
-    }else{
-      setStaat(S_PLAAT_DIAMETER_METEN);
-      Serial.print("nummers gevonden: ");
-      Serial.println(hoeveelNummers);
-    }
+    if(  !beweegKarNaarPos(PLAAT_BEGIN,   KAR_MAX_SNELHEID)  ){ return;}
+
+    setStaat(S_PLAAT_DIAMETER_METEN);
+    Serial.print("nummers gevonden: ");
+    Serial.println(hoeveelNummers);
+    
     return;
   }
 
@@ -307,7 +372,7 @@ void staatDingen(){
       
       if(karPos >  plaatAanwezigSindsKarPos + 0){
         
-        karPos -= KAR_SNELHEID;
+        karPos -= KAR_MAX_SNELHEID;
         if(karPos <= SENSOR_OFFSET + PLAAT_EINDE){
           stoppen();
         }
@@ -330,7 +395,7 @@ void staatDingen(){
   if(staat == S_NAALD_EROP){
     if(naaldErop()){
       // if(abs(armHoek) > 10){
-        // karPcomp = limieteerF( -karP * armHoek , -KAR_SNELHEID / 2, KAR_SNELHEID / 2);
+        // karPcomp = limieteerF( -karP * armHoek , -KAR_MAX_SNELHEID / 2, KAR_MAX_SNELHEID / 2);
         karPcomp += ( limieteerF( armHoek * -karP,     -3, 3) - karPcomp ) / 500;
         karPos += karPcomp * karI;
         karPos = limieteerF( karPos, PLAAT_EINDE, PLAAT_BEGIN + 2);
@@ -349,12 +414,13 @@ void staatDingen(){
 
   if(staat == S_NAAR_NUMMER){
     if(naaldEraf()){
-      if(karPos == karTargetPos){
+      if(beweegKarNaarPos(targetNummerPos, KAR_MAX_SNELHEID)){
+      // if(karPos == targetNummerPos){
         setStaat(S_NAALD_EROP);
         return;
       }
       
-      karPos += limieteerF( karTargetPos - karPos , -KAR_SNELHEID, KAR_SNELHEID);
+      // karPos += limieteerF( targetNummerPos - karPos , -KAR_MAX_SNELHEID, KAR_MAX_SNELHEID);
     }
     return;
   }
@@ -364,7 +430,7 @@ void staatDingen(){
 
   else if(staat == S_JOGGEN){
     if(naaldEraf()){
-      karPos += limieteerF( karTargetPos - karPos , -KAR_SNELHEID, KAR_SNELHEID);
+      karPos += limieteerF( targetNummerPos - karPos , -KAR_MAX_SNELHEID, KAR_MAX_SNELHEID);
     }
   }
 
@@ -376,8 +442,11 @@ void staatDingen(){
         armHoekCalibreer();
       }
       
-      karPos += limieteerF( (karTargetPos - karPos) / 10 , -KAR_SNELHEID, KAR_SNELHEID);
-      karPos = limieteerF( karPos, PLAAT_EINDE, PLAAT_BEGIN);
+      targetNummerPos = limieteerF(targetNummerPos, PLAAT_EINDE, PLAAT_BEGIN);
+      beweegKarNaarPos(targetNummerPos, KAR_MAX_SNELHEID);
+      
+      // karPos += limieteerF( (targetNummerPos - karPos) / 10 , -KAR_MAX_SNELHEID, KAR_MAX_SNELHEID);
+      // karPos = limieteerF( karPos, PLAAT_EINDE, PLAAT_BEGIN);
       
     }
     return;
@@ -385,34 +454,9 @@ void staatDingen(){
 
 
 
-  if(staat == S_DOOR_SPOELEN){
-    if(naaldEraf()){
-      if(karPos >= PLAAT_EINDE){
-        karPos -= KAR_SNELHEID/2;
-      }
-    }
-    return;
-  }
-
-
-
-  if(staat == S_TERUG_SPOELEN){
-    if(naaldEraf()){
-      if(karPos <= PLAAT_BEGIN){
-        karPos += KAR_SNELHEID/2;
-      }
-    }
-    return;
-  }
-
-
 
   if(staat == S_SCHOONMAAK){
-    if(karPos < SCHOONMAAK_PLEK){
-      karPos += KAR_SNELHEID;
-    }else{
-      naaldErop();
-    }
+    if(beweegKarNaarPos( SCHOONMAAK_PLEK,   KAR_MAX_SNELHEID)){  naaldErop(); }
     return;
   }
 

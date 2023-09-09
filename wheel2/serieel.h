@@ -20,11 +20,11 @@ void serieelFunc(){
       Serial.print(", ");
       Serial.print(calibratieToon.vaart);
 
-      Serial.print(", ");
-      Serial.print(strobo.teller);
+      // Serial.print(", ");
+      // Serial.print(strobo.teller);
 
-      Serial.print(", ");
-      Serial.print(karPcomp);
+      // Serial.print(", ");
+      // Serial.print(karPcomp);
 
       // Serial.print(", ");
       // Serial.print(strobo.vaartRuw);
@@ -78,8 +78,8 @@ void serieelFunc(){
       // Serial.print((karPos - karPosPrev)*1000.0);//1696);
       // karPosPrev = karPos;
 
-      // Serial.print(", ");
-      // Serial.print(karPos);
+      Serial.print(", ");
+      Serial.print(karPos);
       
       // Serial.print(", ");
       // Serial.print(armKracht);
@@ -136,9 +136,9 @@ void serieelFunc(){
       }
       else if(letter == 'J'){    //set armhoekOfset
         setStaat(S_JOGGEN);
-        karTargetPos = Serial.parseFloat();
-        Serial.print("karTargetPos: ");
-        Serial.println(karTargetPos);
+        targetNummerPos = Serial.parseFloat();
+        Serial.print("targetNummerPos: ");
+        Serial.println(targetNummerPos);
       }
       else if(letter == 'O'){    //set armhoekOfset
         armHoekCalibreer();
