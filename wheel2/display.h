@@ -26,8 +26,8 @@ void displayInit(){
 
 
 
-int trackPos2displayPos(float kp){
-  return mapF(kp, PLAAT_EINDE + SENSOR_OFFSET,  PLAAT_BEGIN, 0, displayLengte-1);
+int egtePos2displayPos(float pos){
+  return mapF(pos, PLAAT_EINDE + SENSOR_OFFSET,  PLAAT_BEGIN, 0, displayLengte-1);
 }
 
 
@@ -74,9 +74,10 @@ void displayUpdate(){
   // if(true){
 
     nummersTeller = 0;
-    int naald = trackPos2displayPos(karPos);
-    int sensor = trackPos2displayPos(sensorPos);
-    int sensorMaxBerijk = trackPos2displayPos(PLAAT_BEGIN - SENSOR_OFFSET)  +  3;
+    int naald = egtePos2displayPos(karPos);
+    int target = egtePos2displayPos(karTargetPos);
+    int sensor = egtePos2displayPos(sensorPos);
+    int sensorMaxBerijk = egtePos2displayPos(PLAAT_BEGIN - SENSOR_OFFSET)  +  3;
 
     int volumeMargin = 16;
 
@@ -167,7 +168,7 @@ void displayUpdate(){
       for(int i = 0; i < displayLengte; i++){
 
 
-        int volgendeNummerDisplay  =  trackPos2displayPos(nummers[nummersTeller]);
+        int volgendeNummerDisplay  =  egtePos2displayPos(nummers[nummersTeller]);
 
         if(staat == S_NAAR_BEGIN_PLAAT  &&  i > sensor){
           displayData[i] = 0;
@@ -192,10 +193,35 @@ void displayUpdate(){
           
         }
 
+        
+        if(staat == S_NAAR_NUMMER  ||  staat ==  S_DOOR_SPOELEN  ||  staat == S_TERUG_SPOELEN  ||  staat == S_PAUZE){
+          
+          
+          if(naald-1 == i || naald+1 == i){
+            // displayData[i] = 0;
+            if(millis()%1000 > 300){
+              displayData[i] = 0.9;
+            }
+          }
+          
+          else if( i == target  &&  naald != i){
+            displayData[i] = 0.9;
+          }
 
-        if(naald == i){
+          // if(naald == i){
+          //   displayData[i] = 0;
+          //   if(millis()%400 > 100){
+          //     displayData[i] = 0.9;
+          //   }
+          // }
+
+        }
+        else if(naald == i){
           displayData[i] = 0.9;
-        }      
+        }
+
+
+        
       }
     }
 

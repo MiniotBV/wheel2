@@ -128,10 +128,9 @@ enum staats{
 
 
 
-  S_VOLGEND_NUMMER,
-  S_VORRIG_NUMMER,
+  // S_VOLGEND_NUMMER,
+  // S_VORRIG_NUMMER,
   S_NAAR_NUMMER,
-
   S_DOOR_SPOELEN,
   S_TERUG_SPOELEN,
 
@@ -174,8 +173,8 @@ void printStaat(int s){
 
 
 
-  if( s == S_VOLGEND_NUMMER       ){ Serial.print("VOLGEND_NUMMER");      return;}
-  if( s == S_VORRIG_NUMMER        ){ Serial.print("VORRIG_NUMMER");       return;}
+  // if( s == S_VOLGEND_NUMMER       ){ Serial.print("VOLGEND_NUMMER");      return;}
+  // if( s == S_VORRIG_NUMMER        ){ Serial.print("VORRIG_NUMMER");       return;}
   if( s == S_NAAR_NUMMER          ){ Serial.print("NAAR_NUMMER");         return;}
 
   if( s == S_DOOR_SPOELEN         ){ Serial.print("DOOR_SPOELEN");        return;}

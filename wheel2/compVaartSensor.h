@@ -58,7 +58,7 @@ class COMPVAART{
 
     float divAvrg[64];
     int divTeller;
-    int divSamps = 20;
+    int divSamps = 10;
 
     int glitchTeller;
 
@@ -108,71 +108,32 @@ class COMPVAART{
       // shiftSamples(interval);
 
       // teller = limieteerI(teller + dir,   0,   pulsenPerRev);  
-      teller += dir;
-      if(teller >= pulsenPerRev){teller = 0;}
-      if(teller < 0){teller = pulsenPerRev - 1;}
+      teller = rondTrip(teller + dir,  pulsenPerRev);
       
-      int tellerMinEen = teller - 1;
-      if(tellerMinEen < 0){tellerMinEen = pulsenPerRev - 1;}
-
-      int tellerPlusEen = (teller+1) % pulsenPerRev;
-
-      
-      // vaartRuw = huidigeVaart(interval);    
-      // vaart = getVaart();
-
-
-      // filter[0] = vaartRuw;
-            
-      // for(int i = 1;   i < filterOrde + 1;   i++){
-      //   filter[i] +=  ( filter[i-1] - filter[i]) * filterWaarde;
+      // divAvrg[divTeller++ % divSamps] = getVaart() / strobo.getVaart();
+      // float buf = 0;
+      // for(int i = 0;  i < divSamps; i++){
+      //   buf += divAvrg[i];
       // }
+      // div = buf / divSamps;
 
       
-      
 
-      // div = strobo.getVaart() / getVaart();
-      // div = getVaart() / strobo.getVaart();
-      divAvrg[divTeller++ % divSamps] = getVaart() / strobo.getVaart();
-      float buf = 0;
-      for(int i = 0;  i < divSamps; i++){
-        buf += divAvrg[i];
-      }
-      div = buf / divSamps;
 
-      // div = strobo.glad / vaart ;
-      
-      if(compensatieMeten){
-        
-
-        if(isOngeveer(div, 1, 0.3)){
-          // if(compInt.sinds() < 20000){//als er pas net compensatie modus is;
-          //   compSamples[teller] += ( div - compSamples[teller] ) / 2;
-          // }else{
-          //   compSamples[teller] += ( div - compSamples[teller] ) / 100;
-          // }
-
-          
-          // compSamples[teller] += (compSamples[ tellerMinEen ]   -   compSamples[teller]) *0.9;
-          // compSamples[teller] += (compSamples[ tellerPlusEen  ]   -   compSamples[teller]) *0.9;
-
-          compSamples[teller] += (div-1) / 3;
-        }
-        
-        // shiftSamples((interval * dir));
-        // shiftSamples((interval * dir) * compSamples[teller]);
-      }
-      
-
-      // gladNieuw = filter[filterOrde] * compSamples[teller];
-      
-      // shiftSamples((interval * dir) / compSamples[teller]);
       shiftSamples((interval * dir) * compSamples[teller]);
       
       dav = compSamples[teller];
-      
+
+
+      if(compensatieMeten){
+        if(isOngeveer(div, 1, 0.3)){
+          compSamples[teller] += ( getDiv() - 1 ) / 3;
+        }
+      }
       
     }
+
+
 
 
     void setCompensatieModus(bool c){
@@ -252,6 +213,9 @@ class COMPVAART{
 
 
     void saveCompSamples(){
+      noInterrupts();
+      rp2040.idleOtherCore();
+      delay(10);      
 
       for(int i = 0;   i < pulsenPerRev;   i+=4){
         float inpol = ( compSamples[i+0] + 
@@ -333,6 +297,12 @@ class COMPVAART{
     float getGlad(){
       glad += (vaart - glad) / 10;
       return glad;
+    }
+
+
+    float getDiv(){
+      div = getVaart() / strobo.getVaart();
+      return div;
     }
 
 

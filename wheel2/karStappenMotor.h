@@ -34,7 +34,7 @@ float mm2stap = 1 / stap2mm;             // 4.188790204786391
 int stapperFaseA = 0;
 int stapperFaseB = 0;
 
-bool karMotorEnable = true;
+bool karMotorEnable = false;
 float karMotorPos = 0;
 float karOffset = 0;
 float karPos = 0;
@@ -66,8 +66,8 @@ void karInit(){
 
 void armHoekCalibreer(){
   armHoekOffset = armHoekSlow;
-  Serial.print("armHoekofset: ");
-  Serial.println(armHoekOffset);
+  // Serial.print("armHoekofset: ");
+  // Serial.println(armHoekOffset);
 }
 
 
@@ -179,8 +179,12 @@ void pauze(){
 void staatDingen(){
   
   if(staat == S_STOPPEN){
-    if(isNaaldEraf()  &&  millis() > 1000){//pas 1 seconden na opstart naar home gaan om de armhoek sensor te calibreren
+    if(millis() < 3000){//pas 1 seconden na opstart naar home gaan om de armhoek sensor te calibreren
       armHoekCalibreer();
+      return;
+    }
+    if(isNaaldEraf()){
+      karMotorEnable = true;
       setStaat(S_NAAR_HOK);
     }
   }

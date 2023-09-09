@@ -6,6 +6,8 @@
 
 #include <EEPROM.h>
 
+// #include <LittleFS.h>
+
 #include "pwm.h"
 
 #include "pins.h"
@@ -39,8 +41,10 @@ void enableInterupts(bool aan){
 }
 
 #include "vaartSensor.h"
-VAART strobo(12, (60 / rpm33) * 1000); //1800
+// VAART strobo(12, (60 / rpm33) * 1000); //1800
+// VAART strobo(24, (60 / rpm33) * 1000); //1800
 // VAART strobo(7*2, (60 / rpm33) * 1000 * 2); //1800
+VAART strobo(14, 1800); //1800
 
 #include "compVaartSensor.h"
 // COMPVAART TLE5012(16, 4096); //elker 5ms is 11.4 samples en 22.75 per 10ms
@@ -85,6 +89,8 @@ Interval ledInt(200, MILLIS);
 void setup() {
 
   Serial.begin(115200);
+
+  
 
   EEPROM.begin(4096);
   
