@@ -574,7 +574,10 @@ bool karMotorUitvoeren(){
   karInterval = (micros() - karMotorInt.vorrigeVorrigeTijd) / 1000000.0;
 
   armHoekRuw = analogRead(hoekSensor);
-  armHoekFilt += (armHoekRuw - armHoekFilt)/2;
+  armHoekFilt += (armHoekRuw - armHoekFilt)/6;
+
+  armHoekRuw = armHoekFilt;
+  
   armHoekDiv = armHoekRuw - armHoekRuwPrev;
   armHoekRuwPrev = armHoekRuw;
 

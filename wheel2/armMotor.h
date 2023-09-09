@@ -1,9 +1,11 @@
 #define MIN_ARMGEWICHT 0.5//gr
 #define MAX_ARMGEWICHT 4//gr
 
+#define HOK_ARMGEWICHT -10
+
 
 float armTargetGewicht = 2.3;
-float armGewicht = -10;
+float armGewicht = HOK_ARMGEWICHT;
 float armKracht = 0;
 
 float armSnelheidOp = 0.004;
@@ -85,12 +87,12 @@ void armFunc(){
         armGewicht = netVanDePlaatGewicht; // zet haal dan meteen het meeste gewicht van de arm
       }
 
-      if(armGewicht > -10){ //is de arm nog niet helemaal uit
+      if(armGewicht > HOK_ARMGEWICHT){ //is de arm nog niet helemaal uit
         armGewicht -= armSnelheidAf; // zet hem dan wat minder hard
       }
       
       if(armGewicht < netInHokGewicht){ //is de arm al van de plaat?
-        armGewicht = -10; // zet de arm dan meteen uit
+        armGewicht = HOK_ARMGEWICHT; // zet de arm dan meteen uit
       }
     }
 
@@ -109,7 +111,7 @@ bool isNaaldErop(){
 }
 
 bool isNaaldEraf(){
-  return armGewicht < 5;
+  return armGewicht == HOK_ARMGEWICHT;
 }
 
 
