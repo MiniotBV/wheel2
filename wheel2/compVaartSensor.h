@@ -333,14 +333,10 @@ class COMPVAART
 					draaienInterval.sinds() > 1000 && //moet 1 seconden aan staan
 					opsnelheid &&                      // en opsnelheid zijn     
 					
-          ((arm.isNaaldEropVoorZoLang(200) && staat == S_SPELEN) ||
-          staat == S_HOMEN_VOOR_SPELEN ||    
-					staat == S_NAAR_BEGIN_PLAAT)
-					// staat == S_SPELEN)
-
-
-
-					// true
+          ((arm.isNaaldEropVoorZoLang(2000) && staat == S_SPELEN) )
+          //  ||
+          // staat == S_HOMEN_VOOR_SPELEN ||    
+					// staat == S_NAAR_BEGIN_PLAAT)
 		 
 			){ 
 				if(isOngeveer(vaart, targetRpm, 10)){

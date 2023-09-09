@@ -5,10 +5,10 @@ bool herhaalDeHelePlaat = false;
 
 
 enum staats{
-	S_STOPPEN,
-	S_PARKEREN,
-	S_NAAR_HOK,
-	S_HOK,
+	S_STOPPEN,   //wachten tot de naalt eraf is en armhoek nullen
+	S_NAAR_HOK,  //homen
+  S_PARKEREN,  //iets naar buiten rijden na het homen
+	S_HOK,       //niks doen
 	
 	S_HOMEN_VOOR_SPELEN,
 	S_NAAR_BEGIN_PLAAT,

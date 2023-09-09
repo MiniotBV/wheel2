@@ -66,7 +66,8 @@ void eepromUitlezen(){
 
 
 void eepromOpslaan(){
-	EEPROM.put( EEPROM_VERSIE,              versie);//eepromVersie);
+  eepromVersie = versie;
+	EEPROM.put( EEPROM_VERSIE,              eepromVersie);//eepromVersie);
 	EEPROM.put( EEPROM_ARMKRACHT_500MG,     arm.krachtLaag);
 	EEPROM.put( EEPROM_ARMKRACHT_4000MG,    arm.krachtHoog);
 	EEPROM.put( EEPROM_ARMGEWICHT,          arm.targetGewicht);
@@ -76,7 +77,7 @@ void eepromOpslaan(){
 	EEPROM.put( EEPROM_ARMHOEK_MIN,         armHoekMin);
 	EEPROM.put( EEPROM_ARMHOEK_MAX,         armHoekMax);
 
-  
+  eepromShit = 1;
 }
 
 

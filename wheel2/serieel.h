@@ -96,12 +96,6 @@ bool checkZinCommando(String vergelijking, String beschrijving, int infoPrinten)
 	}
   
   if(!checkZin(vergelijking, beschrijving, infoPrinten)) return false;
-  
-  // if( zin.indexOf('?') != -1){ // als er een '?' is
-	// 	Serial.println(" commando");
-  //   zin = "";
-  //   return false;
-	// }
 	
   Serial.println();
 	return true;
@@ -198,7 +192,8 @@ void checkenVoorCommando(int info){
 
 	infoPrintln(info);
 
-  if(checkZinCommando("AT+", "bluetooth commando", info)){ zin.trim();zin.toUpperCase(); Serial2.print("AT+" + zin); Serial.println("BT GESTUURD:AT+" + zin); return;}
+  if(checkZinCommando("AT+", "bluetooth commando", info)){ Serial2.print("AT+" + zin); Serial.println("BT GESTUURD:AT+" + zin); return;}
+  if(checkZinBool("BT", "bluetoot uart", info, bluetoothDebug)){return;}
 
 	if(checkZinBool("g", "golven", info, golven)){return;}
 	if(checkZinBool("PLG", "plaatLeesGolven", info, plaatLeesGolven)){return;}
@@ -281,7 +276,7 @@ void checkenVoorCommando(int info){
 	//------------------------------------------------------OPSLAG
 	infoPrintln(info);
 	if(checkZinFloat("EV", "eepromVersie", info, eepromVersie)){return;}
-	if(checkZinCommando("EO", "eepromOpslaan()",  info)){ eepromOpslaan(); eepromShit = 1;  return;}
+	if(checkZinFunc("EO", "eepromOpslaan()",  info, eepromOpslaan)){    return;}
 	if(checkZinFunc("EL", "eepromUitlezen()", info, eepromUitlezen)){   return;}
 	
 	if(checkZinCommando("OC", "orientatie.calibreerOrientatie()", info)){ orientatie.calibreer(); return;}
@@ -338,7 +333,7 @@ void checkenVoorCommando(int info){
 	}
 
 
-	Serial.println("fout commando: \"" + zin + "\"");
+	Serial.println("fout commando:\"" + zin + "\"");
 }
 
 
@@ -366,16 +361,19 @@ void serieelFunc(){
 			
 			
 			Serial.print(strobo.vaartRuw - targetRpm, 3);
-			
-			Serial.print(", ");
+      Serial.print(", ");
 			Serial.print(strobo.vaart - targetRpm, 3);
-			// Serial.print(", ");
-			// Serial.print(targetRpm, 2);
+
+      Serial.print(", ");
+			Serial.print(strobo.vaart, 3);
+      Serial.print(", ");
+			Serial.print(strobo.vaartLowPass, 3);
+			
+
 
 			Serial.print(", ");
 			Serial.print(strobo.vaartCenterComp - targetRpm, 3);
-      // Serial.print(", ");
-			// Serial.print(strobo.vaart - centerCompTargetRpm, 3);
+
 
 			// Serial.print(", ");
 			// Serial.print(strobo.vaartLowPass - targetRpm, 3);
@@ -458,7 +456,7 @@ void serieelFunc(){
 			
 			if( ( letter == '\n' || letter == '\r' )&& zin != ""){
 				zin.trim();
-				zin.toLowerCase();
+				// zin.toLowerCase();
 
 				if(zin.startsWith("l")){zin.replace("l", vorrigeCommando);} // 'L' is laatste commando voeg laatste commando toe aan zin
 

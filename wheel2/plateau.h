@@ -2,14 +2,6 @@
 bool plateauLogica = true;
 bool onbalansComp = true;
 
-// float plateauP = 0.005;//plateau33P;    //pid
-// float plateauI = 0.03;//plateau33I;
-// float plateauD = 0;
-
-// float plateauP = 1;//plateau33P;    //pid
-// float plateauI = 0.1;//plateau33I;
-// float plateauD = -3;
-
 float plateauP = 1;//0.5;//plateau33P;    //pid
 float plateauI = 0.02;//plateau33I;
 float plateauD = 0;
@@ -18,9 +10,6 @@ float plateauD = 0;
 float basis = 0;
 float uitBuff;
 float uitBuffPre;
-
-
-
 
 
 
@@ -34,7 +23,6 @@ enum rpmStaats{
 
 
 enum rpmStaats rpmStaat = AUTO;
-
 
 
 
@@ -155,7 +143,6 @@ float pid(float rpmIn){
 	float divTarget = targetRpm - rpmIn;
 
 
-
 	if(onbalansComp){
 		pp = divTarget * plateauP;
     
@@ -164,7 +151,6 @@ float pid(float rpmIn){
 
 		pd = divTijd * plateauD;
 	}
-	
 
 	return  pp + basis + pd;
 }
@@ -180,16 +166,16 @@ void plateauStaatDingen(){
 
 	if(!plateauLogica){return;}  
 	
-	float glad = strobo.vaart;//gladglad;
+	float vaart = strobo.vaart;//gladglad;
 
 
 
 	if(plateauAan){                   //staat de motor aan?
 
 		if(staat == S_FOUTE_ORIENTATIE  ||
-			staat == S_HOK ||
-      staat == S_PARKEREN ||
-	    staat == S_NAAR_HOK
+			staat == S_HOK// ||
+      // staat == S_PARKEREN ||
+	    // staat == S_NAAR_HOK
 		){
 			plateauPrint("was nog aant draaien ofzo? IETS FOUT!!!!!");
 			plateauStoppen();
@@ -199,13 +185,12 @@ void plateauStaatDingen(){
 
 		if( opsnelheid == true){ //         tegen gehouden
 			
-			// if(glad > targetRpm * 4 ){ //te snel 200%
+			// if(vaart > targetRpm * 4 ){ //te snel 200%
 			// 	plateauPrint("tesnel");
 			// 	stoppen();
 			// 	return;
 			// }
-			// else 
-      if(glad  <  targetRpm * 0.65   &&   draaienInterval.sinds() > 1000){ //te langzaam 70%
+      if(vaart  <  targetRpm * 0.65){//   &&   draaienInterval.sinds() > 1000){ //te langzaam 70%
 				plateauPrint("tegengehouden");
 				stoppen();
 				return;
@@ -216,13 +201,13 @@ void plateauStaatDingen(){
 		
 		if(  opsnelheid == false    ){ //                                                 tegen gehouden
 			
-			if(glad  >  targetRpm * 0.95){ //                       op snelheid (95% van de snelheid)
+			if(vaart  >  targetRpm * 0.95){ //                       op snelheid (95% van de snelheid)
 				plateauPrint("opsnelheid");
 				opsnelheid = true;
 				return;
 			}
 
-			if(glad  <  targetRpm * 0.1   &&     draaienInterval.sinds() > 500){//   <5% target snelheid na een kort tijd
+			if(vaart  <  targetRpm * 0.1   &&     draaienInterval.sinds() > 500){//   <5% target snelheid na een kort tijd
 				
 				plateauPrint("kon niet opgang komen");
 				stoppen();//--------------------------------------------
@@ -234,14 +219,14 @@ void plateauStaatDingen(){
 	
 	}else{
 		if(draaienInterval.sinds() > 1000   &&   uitdraaien == false){//                              aangeslingerd
-			if(glad  >  rpm33 * 0.50   &&   staat == S_HOK){                                                       //50% van de 33.3 snelheid
+			if(vaart  >  rpm33 * 0.666   &&   (staat == S_HOK || staat == S_NAAR_HOK || staat == S_PARKEREN)){                                                       //50% van de 33.3 snelheid
 				plateauPrint("aangeslingerd");
 				spelen();
 				return;
 			}
 		}
 
-		if(uitdraaien == true && glad < rpm33 * 0.05){ //     <5% van de 33.3 snelheid                                                    uitgedraaid
+		if(uitdraaien == true && vaart < rpm33 * 0.05){ //     <5% van de 33.3 snelheid                                                    uitgedraaid
 			uitdraaien = false;
 			draaienInterval.reset();
 			plateauPrint("uitgedraaid");

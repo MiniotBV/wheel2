@@ -293,8 +293,8 @@ bool volumeOverRide = false;
 
 
 
-bool isNaaldLangGenoegOpDePlaat(){
-	return arm.isNaaldEropSinds() > 500  &&  staat == S_SPELEN;
+bool isNaaldLangGenoegOpDePlaatVoorGeluid(){
+	return arm.isNaaldEropVoorZoLang(2000)  &&  staat == S_SPELEN;
 }
 
 
@@ -317,7 +317,7 @@ void volumeFunc(){
   
   if(versterkerInt.loop()){
 		
-		if( volume != volumeOud   ||   isNaaldEropOud !=    isNaaldLangGenoegOpDePlaat()    ||   volumeOverRide){//  ||   jackIn != digitalRead(koptelefoonAangesloten)){
+		if( volume != volumeOud   ||   isNaaldEropOud !=    isNaaldLangGenoegOpDePlaatVoorGeluid()    ||   volumeOverRide){//  ||   jackIn != digitalRead(koptelefoonAangesloten)){
 			
 			
 			if(!(arm.isNaaldErop() && staat == S_SPELEN)   &&    !volumeOverRide){
@@ -332,7 +332,7 @@ void volumeFunc(){
 			int waarde = volume;
 			
 			volumeOud = volume;
-			isNaaldEropOud = isNaaldLangGenoegOpDePlaat();
+			isNaaldEropOud = isNaaldLangGenoegOpDePlaatVoorGeluid();
 			
 			
 			int err = 0;
@@ -394,7 +394,6 @@ void volumeFunc(){
 
 
 void bluetoothInit(){
-  delay(100);
   Serial2.setRX(BT_RXD);
   Serial2.setTX(BT_TXD);
   Serial2.setPollingMode(true);
@@ -405,6 +404,8 @@ void bluetoothInit(){
 
 Interval bluetoothInt(20, MILLIS);
 bool bluetoothInitNogDoen = true;
+bool bluetoothDebug = false;
+
 
 String bluetoothBuffer = "";
 
@@ -422,13 +423,11 @@ void bluetoothFunc(){
     while(Serial2.available() > 0){
       char c = Serial2.read();
       if( c == '\n' || c == '\r' ){
-        if(bluetoothBuffer == "")return;
-
         // if(c == '\n')Serial.print("<nl>");
         // if(c == '\r')Serial.print("<cr>");
-        
+        if(bluetoothBuffer == "")return;
 
-        bluetoothBuffer.trim();
+        // bluetoothBuffer.trim();
 
         if(bluetoothBuffer.startsWith("income_opid:")){
           bluetoothBuffer.replace("income_opid:", "");
@@ -477,7 +476,7 @@ void bluetoothFunc(){
           }
         
         
-        }else{
+        }else if(bluetoothDebug){
           Serial.println("BT ONTVANGEN:" + bluetoothBuffer);
         }
 
