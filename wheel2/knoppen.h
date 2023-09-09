@@ -175,17 +175,20 @@ void knopLogica(int knop){
       else if(staat == S_HOK) { spelen(); }
 		}
 
-		if(knop == KNOP_TERUGSPOEL)
-    {
-			if(staat == S_HOK)
-      {
-				if(rpmStaat == AUTO) { rpmStaat = R33; }
-				else if(rpmStaat == R33) { rpmStaat = R45; }
-				else { rpmStaat = AUTO; }
 
-				updatePlateauRpm();
-				rpmDisplayActie.reset();
-			}
+		if(staat == S_HOK   &&   knop == KNOP_TERUGSPOEL){ //-----rpm
+    
+			if(rpmStaat == AUTO) { rpmStaat = R33; }
+      else if(rpmStaat == R33) { rpmStaat = R45; }
+      else { rpmStaat = AUTO; }
+
+      updatePlateauRpm();
+      rpmDisplayActie.reset();
+		}
+
+
+    if(staat == S_HOK   &&   knop == KNOP_DOORSPOEL){ //-----bluetooth knop
+			Serial2.print("AT+DELVMLINK");
 		}
 
 
@@ -223,6 +226,10 @@ void knopLogica(int knop){
 				stoppen();
 			}
 		}
+
+    if(staat == S_HOK   &&   knop == KNOP_DOORSPOEL){ //-----bluetooth reset
+			bluetoothScrijf("AT+REST");
+		}
 		return;
 	}
 	
@@ -234,7 +241,7 @@ void knopLogica(int knop){
 		knopStaat[knop] = LOSGELATEN;
 		knopAlleInterval.reset();
 		
-		knopLog(  knop," lang los ");
+		knopLog(  knop," lang-los ");
 
 
 
@@ -254,7 +261,7 @@ void knopLogica(int knop){
 		knopStaat[knop] = SUPER_LANG_INGEDRUKT;
 		knopAlleInterval.reset();   //led blink
 		
-		knopLog(  knop, " super lang ");
+		knopLog(  knop, " super-lang ");
 
 		if(  knop == KNOP_PLAY  ){//               NAALD TEST STAND
 			if(staat == S_HOMEN_VOOR_SPELEN ||  staat == S_NAAR_BEGIN_PLAAT ){
@@ -276,7 +283,7 @@ void knopLogica(int knop){
 		knopStaat[knop] = LOSGELATEN;
 		knopAlleInterval.reset();  //led blink
 		
-		knopLog(  knop, " super lang los ");
+		knopLog(  knop, " super-lang-los ");
 		
 		
 		if(  (  staat == S_DOOR_SPOELEN   ||   staat == S_TERUG_SPOELEN  )  &&  (  knop == KNOP_DOORSPOEL  ||  knop == KNOP_TERUGSPOEL  )  ){//WEER BEGINNEN NA SPOELEN

@@ -389,7 +389,25 @@ void volumeFunc(){
 //AT+REST
 //AT+DELVMLINK
 
+Interval bluetoothInt(20, MILLIS);
+bool bluetoothInitNogDoen = true;
+bool bluetoothDebug = false;
 
+
+String bluetoothBuffer = "";
+
+
+
+
+
+
+void bluetoothScrijf(String commando){
+  Serial2.print(commando);
+
+  if(bluetoothDebug){
+    Serial.println("BT UIT:" + commando);
+  }
+}
 
 
 
@@ -402,12 +420,74 @@ void bluetoothInit(){
 }
 
 
-Interval bluetoothInt(20, MILLIS);
-bool bluetoothInitNogDoen = true;
-bool bluetoothDebug = false;
 
 
-String bluetoothBuffer = "";
+
+
+
+
+
+
+
+void bluetoothOntcijfering(){
+  if(bluetoothBuffer.startsWith("income_opid:")){
+    bluetoothBuffer.replace("income_opid:", "");
+    bluetoothBuffer.trim();
+
+    // Serial.println("knop: " + bluetoothBuffer);
+    
+    if(bluetoothBuffer.startsWith(BT_KNOP_IN)){
+      bluetoothBuffer.remove(0, 1); // gooi de in uit getal weg
+      Serial.println("BT KNOP_IN: " + bluetoothBuffer);
+      
+      // if(bluetoothBuffer == BT_PLAY){
+      //   if(staat == S_PAUZE || staat == S_SPELEN) { pauze(); }//miscnien s_spelen dr uithalen
+      //   else if(staat == S_HOK) { spelen(); }
+      // }
+
+      if(bluetoothBuffer == BT_PLAY){
+        if(staat == S_PAUZE) { pauze(); }//miscnien s_spelen dr uithalen
+        else if(staat == S_HOK) { spelen(); }
+      }
+
+      else if(bluetoothBuffer == BT_PAUZE){
+        if(staat == S_PAUZE || staat == S_SPELEN) { pauze(); }//miscnien s_spelen dr uithalen
+      }
+
+      else if(bluetoothBuffer == BT_VOLGEND_NUMMER){
+        if((staat == S_SPELEN || staat == S_PAUZE || staat == S_NAAR_NUMMER)){
+          naarVolgendNummer();
+        }
+      }
+
+      else if(bluetoothBuffer == BT_VORRIG_NUMMER){
+        if((staat == S_SPELEN || staat == S_PAUZE || staat == S_NAAR_NUMMER)){
+          naarVorrigNummer();
+        }
+      }
+
+
+    }
+    else if(bluetoothBuffer.startsWith(BT_KNOP_UIT)){
+      bluetoothBuffer.remove(0, 1); // gooi de in uit getal weg
+      Serial.println("BT KNOP_UIT: " + bluetoothBuffer);
+    }
+    else {
+      Serial.println("BT KNOP_ONBEKENT: " + bluetoothBuffer);
+    }
+  }else if(bluetoothDebug){
+    Serial.println("BT IN:" + bluetoothBuffer);
+  }
+}
+
+
+
+
+
+
+
+
+
 
 void bluetoothFunc(){
   if(millis() < 1000)return;
@@ -425,61 +505,9 @@ void bluetoothFunc(){
       if( c == '\n' || c == '\r' ){
         // if(c == '\n')Serial.print("<nl>");
         // if(c == '\r')Serial.print("<cr>");
-        if(bluetoothBuffer == "")return;
-
-        // bluetoothBuffer.trim();
-
-        if(bluetoothBuffer.startsWith("income_opid:")){
-          bluetoothBuffer.replace("income_opid:", "");
-          bluetoothBuffer.trim();
-
-          // Serial.println("knop: " + bluetoothBuffer);
-          
-          if(bluetoothBuffer.startsWith(BT_KNOP_IN)){
-            bluetoothBuffer.remove(0, 1); // gooi de in uit getal weg
-            Serial.println("BT KNOP_IN: " + bluetoothBuffer);
-            
-            // if(bluetoothBuffer == BT_PLAY){
-            //   if(staat == S_PAUZE || staat == S_SPELEN) { pauze(); }//miscnien s_spelen dr uithalen
-            //   else if(staat == S_HOK) { spelen(); }
-            // }
-
-            if(bluetoothBuffer == BT_PLAY){
-              if(staat == S_PAUZE) { pauze(); }//miscnien s_spelen dr uithalen
-              else if(staat == S_HOK) { spelen(); }
-            }
-
-            else if(bluetoothBuffer == BT_PAUZE){
-              if(staat == S_PAUZE || staat == S_SPELEN) { pauze(); }//miscnien s_spelen dr uithalen
-            }
-
-            else if(bluetoothBuffer == BT_VOLGEND_NUMMER){
-              if((staat == S_SPELEN || staat == S_PAUZE || staat == S_NAAR_NUMMER)){
-                naarVolgendNummer();
-              }
-            }
-
-            else if(bluetoothBuffer == BT_VORRIG_NUMMER){
-              if((staat == S_SPELEN || staat == S_PAUZE || staat == S_NAAR_NUMMER)){
-                naarVorrigNummer();
-              }
-            }
-
-
-          }
-          else if(bluetoothBuffer.startsWith(BT_KNOP_UIT)){
-            bluetoothBuffer.remove(0, 1); // gooi de in uit getal weg
-            Serial.println("BT KNOP_UIT: " + bluetoothBuffer);
-          }
-          else {
-            Serial.println("BT KNOP_ONBEKENT: " + bluetoothBuffer);
-          }
-        
-        
-        }else if(bluetoothDebug){
-          Serial.println("BT ONTVANGEN:" + bluetoothBuffer);
+        if(bluetoothBuffer != ""){
+          bluetoothOntcijfering();
         }
-
 
         bluetoothBuffer = "";
       }else{

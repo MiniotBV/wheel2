@@ -4,6 +4,7 @@ bool karPIDveranderen = true;
 
 
 String zin = "";
+String zinRuw = "";
 String vorrigeCommando = "";
 
 #define COMMANDO_INFO 1
@@ -76,7 +77,8 @@ bool checkZinFunc( String vergelijking, String beschrijving, int infoPrinten, vo
   if(!checkZin(vergelijking, beschrijving, infoPrinten)) return false;
   
   if( zin.indexOf('?') != -1){ // als er een '?' is
-		Serial.println(" <commando>");
+		// Serial.println(" <commando>");
+    Serial.println(int(func));
     return true;
 	}
   
@@ -192,7 +194,7 @@ void checkenVoorCommando(int info){
 
 	infoPrintln(info);
 
-  if(checkZinCommando("AT+", "bluetooth commando", info)){ Serial2.print("AT+" + zin); Serial.println("BT GESTUURD:AT+" + zin); return;}
+  if(checkZinCommando("AT+", "bluetooth commando", info)){ bluetoothScrijf(zinRuw); return;}
   if(checkZinBool("BT", "bluetoot uart", info, bluetoothDebug)){return;}
 
 	if(checkZinBool("g", "golven", info, golven)){return;}
@@ -455,8 +457,10 @@ void serieelFunc(){
 			char letter = Serial.read();
 			
 			if( ( letter == '\n' || letter == '\r' )&& zin != ""){
-				zin.trim();
-				// zin.toLowerCase();
+				
+        zinRuw = zin;
+        zin.trim();
+				zin.toLowerCase();
 
 				if(zin.startsWith("l")){zin.replace("l", vorrigeCommando);} // 'L' is laatste commando voeg laatste commando toe aan zin
 
