@@ -61,6 +61,9 @@ class COMPVAART
 		float vaartLowPass;
     float vaartHighPass;
 
+    float lowpassRect;
+    float wow;
+
 
 
 
@@ -118,6 +121,9 @@ class COMPVAART
 		bool onbalansCompAan = true;
 		bool plaatUitMiddenComp = true;
 		bool clearCompSamplesWachtrij = false;
+
+    bool wowEersteWeerLaag;
+    int tellerSindsReset;
 
 
 
@@ -198,6 +204,7 @@ class COMPVAART
 			if(interval > sampleMax){interval = sampleMax;}
 
 			tellerRuw += dir;
+      tellerSindsReset += dir;
 			teller = rondTrip(teller + dir,  pulsenPerRev);
 
 
@@ -214,6 +221,7 @@ class COMPVAART
 			//--------------------------------------------------------T = 0 COMP RESET
 			if(clearCompSamplesWachtrij  && teller == 0){
 				clearCompSamplesWachtrij = false;
+        tellerSindsReset = 0;
 				clearOnbalansCompSamples();
 				// clearCompSamples();
 			}
@@ -279,13 +287,28 @@ class COMPVAART
       vaartLowPass += (vaartCenterComp - vaartLowPass) / 100;
       vaartHighPass = vaartCenterComp - vaartLowPass;
 
+      lowpassRect = abs(vaartLowPass - targetRpm);
+      if(lowpassRect > wow){
+        wow = lowpassRect;
+      }else{
+        wow += (lowpassRect - wow) / 1000;
+      }
 
+
+      if(wow < 0.1 && wowEersteWeerLaag == true){
+        wowEersteWeerLaag = false;
+        Serial.println("loopt weer geleik na: " + String(tellerSindsReset / float(pulsenPerRev)) + " omwentelingen");
+      }
+
+      if(wow > 1 &&  wowEersteWeerLaag == false){
+        wowEersteWeerLaag = true;
+      }
 
 
 
 
 			
-
+      //------------------------------------------------------------------------------te grote uitslag ERROR
 			float sinBuff = karSinFilt / pulsenPerRev;
 			float cosBuff = karCosFilt / pulsenPerRev;
 			if( sinBuff * sinBuff  +  cosBuff * cosBuff  >  3 * 3){ // een uit het midden hijd van 6mm (3mm radius) triggerd error
@@ -321,7 +344,7 @@ class COMPVAART
 		 
 			){ 
 				if(isOngeveer(vaart, targetRpm, 10)){
-					onbalansCompensatie[teller] += ( centerCompTargetRpm - targetRpm ) * onbalansCompGewicht;
+					onbalansCompensatie[teller] += ( vaartCenterComp - targetRpm ) * onbalansCompGewicht;
 				}
         digitalWrite(ledWit, 1);//zet led aan
 			}

@@ -327,21 +327,25 @@ void serieelFunc(){
 			
 			Serial.print(strobo.vaartRuw - targetRpm, 3);
 			
-			// Serial.print(", ");
-			// Serial.print(strobo.vaart, 3);
+			Serial.print(", ");
+			Serial.print(strobo.vaart - targetRpm, 3);
 			// Serial.print(", ");
 			// Serial.print(targetRpm, 2);
 
 			Serial.print(", ");
 			Serial.print(strobo.vaartCenterComp - targetRpm, 3);
-      Serial.print(", ");
-			Serial.print(strobo.vaart - centerCompTargetRpm, 3);
+      // Serial.print(", ");
+			// Serial.print(strobo.vaart - centerCompTargetRpm, 3);
 
 			Serial.print(", ");
 			Serial.print(strobo.vaartLowPass - targetRpm, 3);
-
       Serial.print(", ");
-			Serial.print(strobo.vaartHighPass, 3);
+			Serial.print(strobo.lowpassRect, 3);
+      Serial.print(", ");
+			Serial.print(strobo.wow, 3);
+
+      // Serial.print(", ");
+			// Serial.print(strobo.vaartHighPass, 3);
 
 			Serial.print(", ");
 			Serial.print(centerCompTargetRpm - targetRpm, 3);
@@ -371,8 +375,8 @@ void serieelFunc(){
 			Serial.print(armHoekCall, 4);//1696);
 			// Serial.print(", ");
 			// Serial.print(armHoekSlow, 5);//1696);
-			Serial.print(", ");
-			Serial.print(armHoekOffset, 5);//1696);
+			// Serial.print(", ");
+			// Serial.print(armHoekOffset, 5);//1696);
 
 
 
@@ -398,24 +402,6 @@ void serieelFunc(){
 			// Serial.print(spoorafstand, 3);
 
 
-
-
-			// Serial.print(", ");
-			// Serial.print(karPosMinimaal, 3);
-			
-			// Serial.print(", ");
-			// Serial.print(karPosFilter, 3);
-			
-
-			// Serial.print(", ");
-			// Serial.print(orientatie.x);
-			// Serial.print(", ");
-			// Serial.print(orientatie.y);
-			// Serial.print(", ");
-			// Serial.print(orientatie.z);
-
-			// Serial.print(", ");
-			// Serial.print(strobo.procesInterval);
 
 
 
