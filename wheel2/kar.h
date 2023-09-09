@@ -285,8 +285,17 @@ void staatDingen(){
 		if(aangekomen){
 			karOffset -= KAR_HOME - karPos;
 			karPos = KAR_HOME;
-			setStaat(S_HOMEN_GEFAALD);
-			setError(E_KON_NIET_HOMEN);
+      
+      if(error == E_KON_NIET_HOMEN){
+        setError(E_KON_NIET_HOMEN);
+        setStaat(S_PARKEREN);
+      }else{
+        setError(E_KON_NIET_HOMEN);
+        setStaat(S_HOMEN_GEFAALD);
+      }
+      
+			
+			
 			return;
 		}
 
@@ -331,6 +340,10 @@ void staatDingen(){
 
 	if(staat == S_HOMEN_GEFAALD){
 		if(beweegKarNaarPos(KAR_HOK+10, KAR_MAX_SNELHEID)){
+      if(staatVeranderd.sinds() < 2000){
+        armHoekCentreer();
+        return;
+      }
 			setStaat(S_NAAR_HOK);
 		} 
 		return;
@@ -599,7 +612,6 @@ bool karMotorUitvoeren()
 
 	sensorPos = karPos - SENSOR_OFFSET;
 
-	
 
 	staatDingen();
 
