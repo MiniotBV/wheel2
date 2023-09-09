@@ -49,7 +49,7 @@ void pauze(){
     targetNummerPos = karPos;
   }
   else if(staat == S_PAUZE){
-    setStaat(S_SPELEN);
+    setStaat(S_UITROLLEN_VOOR_SPELEN);
   }
 }
 
@@ -281,8 +281,6 @@ void knopLogica(int knop){
     if(  (  staat == S_DOOR_SPOELEN   ||   staat == S_TERUG_SPOELEN  )  &&  (  knop == KNOP_DOORSPOEL  ||  knop == KNOP_TERUGSPOEL  )  ){//WEER BEGINNEN NA SPOELEN
       targetNummerPos = karPos;
       setStaat(S_UITROLLEN_NA_SPOELEN);
-      // ledBlink();  //led blink
-      
     }
     return;
   }
@@ -314,7 +312,8 @@ void knopLogica(int knop){
     
     
     if(  (  staat == S_DOOR_SPOELEN   ||   staat == S_TERUG_SPOELEN  )  &&  (  knop == KNOP_DOORSPOEL  ||  knop == KNOP_TERUGSPOEL  )  ){//WEER BEGINNEN NA SPOELEN
-      setStaat(S_SPELEN);
+      targetNummerPos = karPos;
+      setStaat(S_UITROLLEN_NA_SPOELEN);
     }
     return;
   }

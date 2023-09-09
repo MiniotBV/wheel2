@@ -145,6 +145,15 @@ void karNoodStop(){
 
 
 
+
+
+
+
+
+
+
+
+
 void armHoekCalibreer(){
   armHoekOffset = armHoekSlow;
   // Serial.print("armHoekofset: ");
@@ -373,7 +382,7 @@ void staatDingen(){
       
       
       }else{
-        Serial.println("plaatDia: " + String(plaadDiaInch) + " : ?\" ");
+        Serial.println("plaatDia: " + String(plaadDiaInch) + " : ???????\" ");
         plaatBegin = sensorPos;
         // setPlateauRpm(rpm33);
       }
@@ -449,14 +458,20 @@ void staatDingen(){
         return;
       }
 
-      if(!isOngeveer(karPos, karPosFilter, 2.5)){
-        Serial.println("kar te ver terug gelopen / plaat te ver uit het midden");
+      if(karPos < karPosFilter - 2.5){
+        Serial.println("waarschijnlijk uitloop groef");
         stoppen();
         return;
       }
 
-      if(naaldNaarVorenBewogen.sinds() > 5000){
-        Serial.println("kar te lang niet bewogen");
+      if(karPos > karPosFilter + 2.5){
+        setError(E_NAALD_TERUG_GELOPEN);     
+        stoppen();
+        return;
+      }
+
+      if(naaldNaarVorenBewogen.sinds() > 6000){
+        setError(E_NAALD_NIET_BEWOGEN); //kar te lang niet bewogen
         stoppen();
         return;
       }      
@@ -488,12 +503,14 @@ void staatDingen(){
     if(naaldEraf()){
       beweegKarNaarPos(PLAAT_EINDE, KAR_MAX_SNELHEID/4);  
     }
+    targetNummerPos = karPos;//om het display opteschonene
   }
 
   if(staat == S_TERUG_SPOELEN){
     if(naaldEraf()){
       beweegKarNaarPos(plaatBegin, KAR_MAX_SNELHEID/4);
     }
+    targetNummerPos = karPos;//om het display opteschonene
   }
 
   if(staat == S_UITROLLEN_NA_SPOELEN){

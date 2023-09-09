@@ -1,3 +1,57 @@
+// //3mei22 moederbord----------------------------------------------
+// //voeding
+// #define slaapStand                0
+// #define VUSBsens                  1
+
+// //kar stapper
+// #define stapperAN                 2//~ PWM1 A
+// #define stapperAP                 3//~ PWM1 B
+// #define stapperBN                 4//~ PWM2 A
+// #define stapperBP                 5//~ PWM2 B
+
+// // plateau encoder      
+// #define plateauA                  8
+// #define plateauB                  7
+// #define plateauIndex              6
+
+// // display
+
+// #define displayIN                 9
+// #define displayUIT                10
+// #define displayKLOK               11
+// #define displayLATCH              12
+// #define displayEN                 13//~ PWM6 B
+// #define displayPOTMETER           28
+
+// // plateau motor      
+// #define motorP                    15//14//~ PWM7 A
+// #define motorN                    14//15//~ PWM7 B
+
+// // leds     
+// #define ledWit                    19//            ~ PWM0 A
+
+// // arm      
+// #define armMotor                  16//~ PWM0 B
+// #define plaatLeesLed              17//~ PWM4 A
+// #define hoekSensor                26
+// #define plaatLees                 27
+
+
+// #define BT_TXD                    20
+// #define BT_RXD                    21
+
+// #define SDA                       22
+// #define SCL                       23
+
+// #define koptelefoonAangesloten    25
+// #define koptelefoonEn             24
+
+
+
+
+
+
+//14jan22 moederbord----------------------------------------------
 //voeding
 #define slaapStand                0
 #define VUSBsens                  1

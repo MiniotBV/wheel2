@@ -45,7 +45,7 @@ class COMPVAART{
 
     float glad;
     float gladglad;
-    float div;
+    // float div;
 
     byte sens, sensPrev;
 
@@ -155,7 +155,6 @@ class COMPVAART{
 
 
       getVaart();
-      // getDiv();
 
       glad += (vaart - glad) / 10;
       gladglad += (glad - gladglad) / 10;
@@ -168,7 +167,7 @@ class COMPVAART{
       
       // plateauCompensatie[teller] += ( glad - targetRpm ) / 4;
       
-      if( compMeten && 
+      if( compMeten &&   //alle mementen waarom de compensatie niet mag werken, omdat er dan verschillen zijn met als de naald er egt op is
           plateauAan && 
           draaienInterval.sinds() > 1000 &&
           opsnelheid &&           
@@ -253,21 +252,6 @@ class COMPVAART{
 
     float getVaart(){
 
-      // if(micros() - tijd > sampleMax){
-        
-      //   glitchTeller++;
-
-      //   if(glitchTeller > 6){
-      //     glitchTeller = 0;
-      //     clearSamples();        
-      //   }
-      
-      // }else{
-      //   glitchTeller = 0;
-      // }
-
-
-      
       gemiddelde = gemiddeldeInterval();
       vaart = huidigeVaart(gemiddelde) * dir;
 
@@ -276,14 +260,6 @@ class COMPVAART{
     }    
 
 
-
-
-
-    float getDiv(){
-      div = getVaart() / calibratieToon.getVaart();
-
-      return div;
-    }
 
 
 

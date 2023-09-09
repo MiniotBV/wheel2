@@ -1,16 +1,5 @@
 
 
-enum errors{
-  E_GEEN = 0,
-  
-  E_KON_NIET_HOMEN,
-    
-  E_NAALD_TERUG_GELOPEN,
-  E_NAALD_NIET_BEWOGEN,
-
-  E_PLAAT_NIET_OPGANG,
-  
-};
 
 
 enum staats{
@@ -103,6 +92,51 @@ void spelen(){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+enum errors{
+  E_GEEN = 0,
+  
+  E_KON_NIET_HOMEN,
+    
+  E_NAALD_TERUG_GELOPEN,
+  E_NAALD_NIET_BEWOGEN,
+
+  E_PLAAT_NIET_OPGANG,
+  
+};
+
+enum errors error = E_GEEN;
+
+Interval errorVeranderd(0, MILLIS);
+
+
+String printError(enum errors s){
+  if( s == E_GEEN                   ){ return "E_GEEN";}
+  if( s == E_KON_NIET_HOMEN         ){ return "E_KON_NIET_HOMEN";}
+  if( s == E_NAALD_TERUG_GELOPEN    ){ return "E_NAALD_TERUG_GELOPEN";}
+  if( s == E_NAALD_NIET_BEWOGEN     ){ return "E_NAALD_NIET_BEWOGEN";}
+  if( s == E_PLAAT_NIET_OPGANG      ){ return "E_PLAAT_NIET_OPGANG";}
+
+  return "??????";
+}
+
+
+void setError(enum errors err){
+  error = err;
+  errorVeranderd.reset();
+  Serial.println("error: " + printError(err));
+}
 
 
 
