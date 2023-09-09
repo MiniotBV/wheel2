@@ -227,7 +227,7 @@ class Orientatie //          QMA7981
 
 	void reset(){
 		//reset
-		i2cWrite(adress, 0x36, 0xB6);
+		i2cWrite(adress, 0x36, 0xB6);//soft reset
 		i2cWrite(adress, 0x36, 0x00);
 
 		delay(10);

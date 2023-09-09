@@ -352,9 +352,9 @@ class COMPVAART
 					&& opsnelheid                       // en opsnelheid zijn     
 					&& isOngeveer(vaart, targetRpm, 10)  //mag niet meer dan 10rpm van de target rpm afzijn
 
-          && ((arm.isNaaldEropVoorZoLang(2000) && staat == S_SPELEN)  )// ||  //)
-          // staat == S_HOMEN_VOOR_SPELEN ||    
-					// staat == S_NAAR_BEGIN_PLAAT)
+          && ((arm.isNaaldEropVoorZoLang(2000) && staat == S_SPELEN)   ||  //)
+          staat == S_HOMEN_VOOR_SPELEN ||    
+					staat == S_NAAR_BEGIN_PLAAT)
 
 
 
