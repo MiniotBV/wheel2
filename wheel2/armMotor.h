@@ -1,26 +1,33 @@
-int armTargetKracht = 500;
+int armTargetKracht = 2000;
 int armKracht = 0;
-int armSnelheid = 1;
+int armSnelheid = 2;
 unsigned int armLoop = 0;
 
 
 //op de plaat
-int netUitHokKracht = 250;
-int netOpDePlaatKracht = 400;
+int netUitHokKracht = 800;
+int netOpDePlaatKracht = 1500;
 
 
 //van de plaat af
-int netVanDePlaatKracht = 300;
-int netInHokKracht = 100;
+int netVanDePlaatKracht = 1000;
+int netInHokKracht = 500;
 
 
 bool armMotorAan = false;
 
 
+void armInit(){
+  setPwm(armMotor);
+}
+
+
+
+
+INTERVAL armInt(10, MILLIS);
 
 void armFunc(){
-  if(millis() - armLoop > 10){
-    armLoop = millis();
+  if(armInt.loop()){
 
     if(armMotorAan == true){//moet de arm motor aan?
 

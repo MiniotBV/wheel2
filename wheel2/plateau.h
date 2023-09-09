@@ -1,5 +1,3 @@
-unsigned long motorLoop;
-
 
 
 float basis = 0;
@@ -15,7 +13,13 @@ int call;
 
 
 
+void plateauInit(){
+  setPwm(motorP);
+  pwmWrite(motorP, 0);
 
+  setPwm(motorN);
+  pwmWrite(motorN, 0);
+}
 
 
 
@@ -43,12 +47,11 @@ float pid(float rpmIn){
 
 
 
-
+INTERVAL plateauInt(10000, MICROS);
 
 void plateauFunc(){
 
-  if(micros() - motorLoop > 10000){
-    motorLoop = micros();
+  if(plateauInt.loop()){
 
     uitBuff = pid(TLE5012.getVaart());//                  bereken motor kracht
     // uitBuff = pid(strobo.getVaart());//                  bereken motor kracht
@@ -60,8 +63,8 @@ void plateauFunc(){
         pwmWrite(motorN,  0);
       }else{
         pwmWrite(motorP,  0);
-        pwmWrite(motorN,  0);
-        // pwmWrite(motorN,  uint16_t(-uitBuff));        
+        // pwmWrite(motorN,  0);
+        pwmWrite(motorN,  uint16_t(-uitBuff));        
       }
         
       

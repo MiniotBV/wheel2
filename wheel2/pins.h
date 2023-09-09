@@ -1,23 +1,46 @@
+//kar stapper
+#define stapperAN           8//~ 
+#define stapperAP           9//~ 
+#define stapperBN           10//~ 
+#define stapperBP           11//~ 
 
-int stapperAP = 10;//kar stapper
-int stapperAN = 11;
-int stapperBP = 12;
-int stapperBN = 13;
+// plateau motor
+#define motorP              12//~  
+#define motorN              13//~ 
 
-int motorP = 4; // plateau motor
-int motorN = 3;
+// plateau encoder
+#define plateauA            0//~ 
+#define plateauB            1//~
+#define plateauIndex        2//~
 
-int plateauA = 20; // plateau encoder
-int plateauB = 19;
-int plateauIndex = 18;
+// wheel1 style strobo
+#define plaatStrobo         17 
 
-int plaatStrobo = 17; // wheel1 style strobo
+// leds
+#define ledWit              14//~
+#define ledRood             15//~
 
-int led = LED_BUILTIN;
+// arm
+#define armMotor            16//~ 
+#define plaatLeesLed        17//~ 
+#define karIndex            18//~
 
-int hoekSensor = 27; // kar hoeksensor
-int plaatLees = 26; // track sensor
+#define hoekSensor          26//~ 
+#define plaatLees           27//~ 
 
-int karIndex = 22; // kar in hok
 
-int armMotor = 16; // arm motor
+
+// display
+#define displayKLOK         3//~
+#define displayIN           4//~
+#define displayUIT          5//~
+#define displayLATCH        6//~
+#define displayPOTMETER     7//~
+
+
+#define SCL                 23//~
+#define SDA                 22//~
+#define koptelefoonAangesloten     25//~
+
+#define BT_TXD              20//~
+#define BT_RXD              21//~

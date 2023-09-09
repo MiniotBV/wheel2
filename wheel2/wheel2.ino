@@ -6,15 +6,21 @@
 #include "pins.h"
 #include "helper.h"
 
+#include "interval.h"
+
+INTERVAL ledInt(200, MILLIS);
+
 #include "pwm.h"
+
+
+#include "versterker.h"
 
 #include "armMotor.h"
 
 #include "karStappenMotor.h"
 
 
-
-
+#include "plaatLees.h"
 
 
 
@@ -23,13 +29,13 @@ float targetRpm = 33.333;
 #include "vaartSensor.h"
 #include "compVaartSensor.h"
 
-COMPVAART TLE5012(64, plateauA, 4096);
+COMPVAART TLE5012(64, plateauA, 4096 * 4);
 VAART strobo(8, 0, 180*2);
 
 
 #include "plateau.h"
 
-
+#include "display.h"
 
 #include "serieel.h"
 
@@ -42,26 +48,27 @@ void setup() {
 
   Serial.begin(115200);
 
-  setPwm(armMotor);
+  versterkerInit();
 
-  setPwm(stapperAP);
-  setPwm(stapperAN);
-  setPwm(stapperBP);
-  setPwm(stapperBN);
+  displayInit();  
 
-  setPwm(led);
+  armInit();
 
-  setPwm(motorP);
-  pwmWrite(motorP, 0);
+  karInit();
 
-  setPwm(motorN);
-  pwmWrite(motorN, 0);
+  plaatLeesInit();
+
+  setPwm(ledWit);
+  setPwm(ledRood);
+
+  plateauInit();
 
 
-  gpio_set_irq_enabled_with_callback(plateauA,   GPIO_IRQ_EDGE_FALL,  true,   &gpio_callback);
+  gpio_set_irq_enabled_with_callback(plateauA,   GPIO_IRQ_EDGE_FALL + GPIO_IRQ_EDGE_RISE,  true,   &gpio_callback);
+  gpio_set_irq_enabled_with_callback(plateauB,   GPIO_IRQ_EDGE_FALL + GPIO_IRQ_EDGE_RISE,  true,   &gpio_callback);
   gpio_set_irq_enabled_with_callback(plateauIndex,   GPIO_IRQ_EDGE_FALL,  true,   &gpio_callback);
 
-  gpio_set_irq_enabled_with_callback(plaatStrobo,   GPIO_IRQ_EDGE_FALL + GPIO_IRQ_EDGE_RISE,  true,   &gpio_callback);
+  // gpio_set_irq_enabled_with_callback(plaatStrobo,   GPIO_IRQ_EDGE_FALL + GPIO_IRQ_EDGE_RISE,  true,   &gpio_callback);
 }
 
 
@@ -70,7 +77,7 @@ void setup() {
 
 
 
-
+bool ll = false;
 
 
 void loop() {
@@ -81,9 +88,21 @@ void loop() {
 
   serieelFunc();
 
+  volumeFunc();
+
   plateauFunc();
 
-  pwmWrite(led, pow( ((sin( (PI*millis()) / 500.0 )+1)/2), 3) * PMAX);
+  if(ledInt.loop()){
+    if(ll){
+      pwmWrite(ledWit, PMAX);
+    }else{
+      pwmWrite(ledWit, 0);
+    }   
+    ll = !ll;
+  }
+
+  // pwmWrite(ledWit, pow( ((sin( (PI*millis()) / 500.0 )+1)/2), 3) * PMAX);
+  // pwmWrite(ledRood, pow( ((cos( (PI*millis()) / 500.0 )+1)/2), 3) * PMAX);
 }
 
 
@@ -97,9 +116,10 @@ void loop() {
 
 
 void gpio_callback(uint gpio, uint32_t events) {
-  if(gpio == plateauA){
+  if(gpio == plateauA || gpio == plateauB){
     TLE5012.interrupt();
   }
+  
   if(gpio == plateauIndex){
     call = TLE5012.teller;
     TLE5012.teller = 0;

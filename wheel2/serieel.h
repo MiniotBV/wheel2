@@ -1,18 +1,16 @@
 
-unsigned long serialLoop;
-bool golven = true;
+bool golven = false;
 
 
 
-
+INTERVAL serieelInt(10000, MICROS);
 
 void serieelFunc(){
-  if(micros() - serialLoop > 10000){
-    serialLoop = micros();
+  if(serieelInt.loop()){
 
     Serial.print(TLE5012.getVaart());
     Serial.print(", ");
-    Serial.print(TLE5012.vaart);
+    Serial.print(TLE5012.teller);
     Serial.print(", ");
     Serial.print(targetRpm);
     Serial.print(", ");
@@ -22,11 +20,13 @@ void serieelFunc(){
     Serial.print(", ");
     Serial.print(uitBuff);
     Serial.print(", ");
-    Serial.print(analogRead(hoekSensor) - 1696);
+    Serial.print(analogRead(hoekSensor) - 1890);//1696);
     Serial.print(", ");
-    Serial.print(armHoek - 1696);
+    Serial.print(armHoek - 1890);//1696);
     Serial.print(", ");
     Serial.print(karPositie);
+    Serial.print(", ");
+    Serial.print(armKracht);
 
     Serial.println();
 
@@ -76,6 +76,11 @@ void serieelFunc(){
       else if(letter == 'F'){    //arm motor aan
         armMotorAan = true;
         Serial.println("arm motor aan");
+      }
+      else if(letter == 'v'){    //set volume
+        int i = Serial.parseInt();
+        volume = i;
+        Serial.println(i);
       }
       else if(letter == '?'){    //help
         Serial.print("p: ");

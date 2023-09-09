@@ -6,12 +6,16 @@ class COMPVAART{
   public:
     volatile unsigned int vaartInterval;
     volatile unsigned int sampleNum;
-    volatile unsigned int samples[100];
+    volatile          int samples[100];
     volatile unsigned int sampleTeller = 0;
     volatile unsigned long tijd;
     volatile unsigned int interval;
     float vaart;
     float gemiddelde = sampleMax;
+
+    bool Anu;
+    bool Aoud;
+    int dir;
 
     float pulsenPerRev;
     int teller = 0;
@@ -24,6 +28,8 @@ class COMPVAART{
     int compensatiePerSample = 8;
 
 
+
+
     COMPVAART(int samps, int p, float ppr){
       sampleNum = samps;
       pin = p;
@@ -33,21 +39,44 @@ class COMPVAART{
       }
     }
 
+
+
+
+
+
     void interrupt(){
       tijd = micros();
+
+      Aoud = Anu;     
+      Anu = digitalRead(plateauA);
+
+      if(Anu && !Aoud){
+        dir = 1;
+        if(digitalRead(plateauB)){
+          dir = -1;
+        }
+      }
+      else{
+        return;
+      }   
+      
+      
       interval = tijd - vaartInterval;
       vaartInterval = tijd;
       
       if(interval > sampleMax){interval = sampleMax;}
       
-      shiftSamples(interval);
 
-      teller = teller > 4096 ? 4096 : teller + 1;  
+      shiftSamples(interval * dir);
+      // shiftSamples(interval);
+
+      // teller = limieteerI(teller + dir,   0,   pulsenPerRev);  
+      teller += dir; 
     }
 
 
 
-
+    
 
 
 
@@ -74,15 +103,15 @@ class COMPVAART{
       float b = targetRpm / vaart; //compenstaie berekenen
       compensatie[teller / compensatiePerSample]    +=    (b - compensatie[teller / compensatiePerSample]) / 12;
       
-      // return vaart;
+      return vaart;//niet compensenre
 
-      return vaart * compensatieAct[teller / compensatiePerSample]; // compenseren
+      // return vaart * compensatieAct[teller / compensatiePerSample]; // compenseren
     }    
 
 
 
 
-    void shiftSamples(unsigned int samp){
+    void shiftSamples(int samp){
       samples[ sampleTeller++ % sampleNum ] = samp;   
     }
 
