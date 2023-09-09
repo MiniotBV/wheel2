@@ -135,6 +135,9 @@ void serieelFunc(){
         
       
       }
+      else if(letter == 'R'){    //golven uit
+        TLE5012.recalCompSamples();
+      }
       else if(letter == '~'){    //golven uit
         TLE5012.printSamples();
       }

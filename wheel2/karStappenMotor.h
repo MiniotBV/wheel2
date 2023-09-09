@@ -26,7 +26,7 @@ float mmPerStap = 1.5 / ( 48 / 8 );
 float stap2mm = ( 2 / PI ) * mmPerStap;  // 0.238732414637843
 float mm2stap = 1 / stap2mm;             // 4.188790204786391
 
-float karP = 0.0001;//0.00025;
+float karP = 0.00001;//0.00025;
 
 int stapperFaseA = 0;
 int stapperFaseB = 0;

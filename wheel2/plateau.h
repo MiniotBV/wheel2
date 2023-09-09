@@ -102,18 +102,18 @@ void plateauFunc(){
       if( opsnelheid == true){ //         tegen gehouden
         
         if(glad > targetRpm * 2 ){ //te snel 200%
-          Serial.println("^");
+          // Serial.println("^");
           // if(test){
           //   plateauStoppen();
           // }
           // stoppen();
         }
         else if(glad  <  targetRpm * 0.70   &&   draaienInterval.sinds() > 500){ //te langzaam 70%
-          // Serial.println("T");----------------
+          // Serial.println("T");//----------------
           if(test){
             plateauStoppen();
           }
-          // stoppen();--------------------
+          // stoppen();//--------------------
         }
       }
 
@@ -123,8 +123,8 @@ void plateauFunc(){
         
         if(glad  <  targetRpm * 0.01   &&     draaienInterval.sinds() > 1000){//   <5% target snelheid na een kort tijd
           
-          // Serial.println("kon niet opgang komen");
-          // stoppen();--------------------------------------------
+          Serial.println("kon niet opgang komen");
+          stoppen();//--------------------------------------------
         }
       }
 

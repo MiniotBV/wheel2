@@ -58,6 +58,8 @@ void setup() {
 
   Serial.begin(115200);
 
+  EEPROM.begin(4096);
+
   versterkerInit();
 
   displayInit();  
@@ -74,8 +76,11 @@ void setup() {
   plateauInit();
 
 
-  gpio_set_irq_enabled_with_callback(plateauA,   GPIO_IRQ_EDGE_FALL + GPIO_IRQ_EDGE_RISE,  true,   &gpio_callback);
-  gpio_set_irq_enabled_with_callback(plateauB,   GPIO_IRQ_EDGE_FALL + GPIO_IRQ_EDGE_RISE,  true,   &gpio_callback);
+  gpio_set_irq_enabled_with_callback(plateauA,   GPIO_IRQ_EDGE_RISE,  true,   &gpio_callback);
+
+  // gpio_set_irq_enabled_with_callback(plateauA,   GPIO_IRQ_EDGE_FALL + GPIO_IRQ_EDGE_RISE,  true,   &gpio_callback);
+  // gpio_set_irq_enabled_with_callback(plateauB,   GPIO_IRQ_EDGE_FALL + GPIO_IRQ_EDGE_RISE,  true,   &gpio_callback);
+
   gpio_set_irq_enabled_with_callback(plateauIndex,   GPIO_IRQ_EDGE_FALL,  true,   &gpio_callback);
 
   // gpio_set_irq_enabled_with_callback(plaatStrobo,   GPIO_IRQ_EDGE_FALL + GPIO_IRQ_EDGE_RISE,  true,   &gpio_callback);
@@ -141,7 +146,7 @@ void gpio_callback(uint gpio, uint32_t events) {
   // if(interruptBezig){return}
   // interruptBezig = true;
 
-  if(gpio == plateauA || gpio == plateauB){
+  if(gpio == plateauA){// || gpio == plateauB){
     TLE5012.interrupt();
   }
   
