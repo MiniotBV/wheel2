@@ -460,7 +460,7 @@ void staatDingen(){
 			if(naaldNaarVorenBewogen.sinds() > 6000){
 				setError(E_NAALD_NIET_BEWOGEN); //kar te lang niet bewogen
         naaldNaarVorenBewogen.reset(); // ff de timer reseten zodat hij niet straks weer triggerd
-        gaNaarNummer(karPos - 0.25); // beweeg de kar 0.5mm naar binne om over de skip te skippen
+        nieuwePos -= 0.5; // beweeg de kar 0.5mm naar binne om over de skip te skippen
 				// stoppen();
 				return;
 			}      
@@ -631,7 +631,7 @@ bool karMotorUitvoeren()
 
 
 	if(karMotorEnable){
-    pwmStapper(-karMotorPos,   stapperAP, stapperAN,  stapperBP, stapperBN,  true);
+		pwmStapper(-karMotorPos,   stapperAP, stapperAN,  stapperBP, stapperBN,  true);
 	
 	}else{
 		pwmDisableStapper(stapperAP, stapperAN,  stapperBP, stapperBN);

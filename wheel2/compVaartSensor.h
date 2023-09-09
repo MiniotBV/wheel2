@@ -76,15 +76,13 @@ class COMPVAART
 		float karCosFilt;
 		float karFourierFilt;
 
-    float karPosMiddenGeschiedenis[pprmax];
-
 
 
 
 		//---------------------------------------------onbalans compensatie
 
-		int onbalansFase = 180;//90;//100;//70;//90;//75;//90;  50 in pulsen per rev
-    int onbalansHarm = -120;
+		int onbalansFase = 90;//100;//70;//90;//75;//90;  50 in pulsen per rev
+    int onbalansHarm = 10;
 		
 		float gemiddeldeSnelheidPre, gemiddeldeSnelheid;
 		
@@ -210,15 +208,13 @@ class COMPVAART
 
 			//-----------------------------------------------------------------------UIT HET MIDDEN COMPENSATIE
 			karPosMiddenPre -= karUitCenterGolf[teller];
+      ouweEgteKarPos = karUitCenterGolf[teller];
 			karUitCenterGolf[teller] = egteKarPos;
 			karPosMiddenPre += karUitCenterGolf[teller];
 
+      trackTussenRuimte = ouweEgteKarPos - egteKarPos;
+
 			karPosMidden = karPosMiddenPre / pulsenPerRev;
-
-      trackTussenRuimte = karPosMiddenGeschiedenis[teller] - karPosMidden;
-      karPosMiddenGeschiedenis[teller] = karPosMidden;
-
-
 
 			float karPosUitMidden = egteKarPos - karPosMidden;
 

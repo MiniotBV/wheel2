@@ -60,6 +60,7 @@ float karPosMinimaal = karPos;
 
 float karPosMidden;
 float trackTussenRuimte;
+float ouweEgteKarPos;
 
 
 
