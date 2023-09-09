@@ -36,6 +36,7 @@ float karMotorPos = 0;
 
 float nieuwePos;
 float karPos = KAR_HOK;
+float egteKarPos = karPos;
 float karPosFilter = karPos;
 float karPosFilterSlow = karPos;
 float karPosMinimaal = karPos;;
@@ -612,8 +613,8 @@ bool karMotorUitvoeren(){
   // karDcomp = limieteerF(karDcomp, -3, 3);
 
   //  karMotorPos = (karPos + karOffset + limieteerF(armHoekDiv * -karD, -1, 1) )  *  mm2stap;
-
-  karMotorPos = (karPos + karOffset + karDcomp)  *  mm2stap;
+  egteKarPos  = karPos + karDcomp;
+  karMotorPos = (egteKarPos + karOffset)  *  mm2stap;
   // karMotorPos = (karPos + karOffset + karPcomp)  *  mm2stap;
   // karMotorPos = (karPos + karOffset)  *  mm2stap;
 

@@ -78,14 +78,14 @@ void serieelFunc(){
       
 
       
-      Serial.print(", ");
-      Serial.print(armHoekSlow);//1696);
-      Serial.print(", ");
-      Serial.print(armHoekOffset);//1696);
+      // Serial.print(", ");
+      // Serial.print(armHoekSlow);//1696);
+      // Serial.print(", ");
+      // Serial.print(armHoekOffset);//1696);
       Serial.print(", ");
       Serial.print(armHoekRuw);//1696);
       Serial.print(", ");
-      Serial.print(armHoek);//1696);
+      Serial.print(armHoek, 5);//1696);
 
 
 
@@ -96,6 +96,9 @@ void serieelFunc(){
 
       Serial.print(", ");
       Serial.print(karPos, 4);  
+      Serial.print(", ");
+      Serial.print(egteKarPos, 4);  
+      
 
       // Serial.print(", ");
       // Serial.print(nieuwePos, 4);
@@ -190,7 +193,7 @@ void serieelFunc(){
       else if(letter == 'O'){
         armHoekCentreer();
       }
-      else if(letter == 'o'){
+      else if(letter == 'a'){
         armHoekMin = armHoekMinCall;
         armHoekMax = armHoekMaxCall;
 
@@ -315,8 +318,8 @@ void serieelFunc(){
         eepromUitlezen();
       }
 
-      else if(letter == 'a'){
-        orientatie.gefilterdOffset = orientatie.gefilterd;
+      else if(letter == 'o'){
+        orientatie.gefilterdOffset += orientatie.gefilterd;
         Serial.println("orientatie.gefilterdOffset: " + String(orientatie.gefilterdOffset, 5)); 
       }
 
