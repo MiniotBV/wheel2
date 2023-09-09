@@ -1,8 +1,6 @@
 
-
-
 bool golven = false;
-bool karPIDveranderen = false;
+bool karPIDveranderen = true;
 
 
 
@@ -29,8 +27,8 @@ void serieelFunc(){
       Serial.print(", ");
       Serial.print(strobo.teller);
 
-      Serial.print(", ");
-      Serial.print(strobo.preComp, 4);
+      // Serial.print(", ");
+      // Serial.print(strobo.preComp, 4);
 
       // Serial.print(", ");
       // Serial.print(strobo.mean, 4);
@@ -81,8 +79,8 @@ void serieelFunc(){
       
 
       
-      // Serial.print(", ");
-      // Serial.print(armHoekSlow);//1696);
+      Serial.print(", ");
+      Serial.print(armHoekSlow);//1696);
       Serial.print(", ");
       Serial.print(armHoekOffset);//1696);
       Serial.print(", ");
@@ -90,16 +88,17 @@ void serieelFunc(){
       Serial.print(", ");
       Serial.print(armHoek);//1696);
 
+      Serial.print(", ");
+      Serial.print(karDcomp, 4);
 
 
       Serial.print(", ");
       Serial.print(karPos, 4);
 
-      Serial.print(", ");
-      Serial.print(karPosFilter, 4);
+      
 
-      Serial.print(", ");
-      Serial.print(nieuwePos, 4);
+      // Serial.print(", ");
+      // Serial.print(nieuwePos, 4);
 
       // Serial.print(", ");
       // Serial.print(plaatAanwezigGefilterd, 3);
@@ -152,6 +151,11 @@ void serieelFunc(){
       }
       else if(letter == 'y'){    //plaat lees golven
         plaatLeesGolven = !plaatLeesGolven;
+        Serial.println("plaatLeesGolven: " + String(plaatLeesGolven));
+      }
+      else if(letter == 'Y'){    //kar golven
+        karGolven = !karGolven;
+        Serial.println("karGolven: " + String(karGolven));
       }
       else if(letter == '>'){
         naarVolgendNummer();
@@ -261,10 +265,6 @@ void serieelFunc(){
         
         Serial.println("staat: " + printStaat(staat));
         Serial.println("volume: " + String(volume));
-        Serial.println();
-
-        eepromPrint();
-
         Serial.println();
         
         Serial.println("armKracht: " + String(armKracht));

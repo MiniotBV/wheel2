@@ -10,6 +10,7 @@ float mm2stap = 1 / stap2mm;
 
 
 float karInterval;
+bool karGolven;
 
 
 float karP = 0.002;//0.001;//0.0005; //0.00005;//0.00025;
@@ -39,6 +40,7 @@ float nieuwePos;
 float karPos = KAR_HOK;
 float karPosFilter = karPos;
 float karPosFilterSlow = karPos;
+float karPosMinimaal = karPos;;
 
 float targetNummerPos = 0;
 float sensorPos;
@@ -49,6 +51,7 @@ float karOffset = 0; // om te kijken wat de homing afwijking is
 
 float armHoekRuw = analogRead(hoekSensor);
 float armHoekRuwPrev;
+float armHoekFilt;
 float armHoekDiv;
 
 float armHoek;
@@ -347,10 +350,8 @@ void staatDingen(){
       return;
     }
 
-    if(!plaatAanwezig  ||  plaatBegin != 1000){ // is er een plaat aanwezig
+    if(!plaatAanwezig){ // is er een plaat aanwezig
       
-      // if(plaatBegin == 1000){    // voer maar 1 keer uit
-        // plaatBegin = sensorPos;
       float plaadDiaInch = (sensorPos / 25.4)*2;
       
 
@@ -382,20 +383,11 @@ void staatDingen(){
       targetNummerPos = plaatBegin;
       setStaat(S_UITROLLEN_VOOR_SPELEN);
       return;
-        // return;
-      // }
-      
-      // if(beweegKarNaarPos(plaatBegin, KAR_MAX_SNELHEID)){ 
-      //   setStaat(S_SPELEN);
-      //   return;
-      // }
-
-      // return;
     }
     
+
+
     if(  beweegKarNaarPos(ELPEE_PLAAT_BEGIN,   KAR_MAX_SNELHEID)  ){
-      // setStaat(S_PLAAT_DIAMETER_METEN);
-      // Serial.print("nummers gevonden: " + String(hoeveelNummers));
       plaatBegin = ELPEE_PLAAT_BEGIN;
       Serial.println("plaatDia: 12inch");
       setPlateauRpm(rpm33);
@@ -582,6 +574,7 @@ bool karMotorUitvoeren(){
   karInterval = (micros() - karMotorInt.vorrigeVorrigeTijd) / 1000000.0;
 
   armHoekRuw = analogRead(hoekSensor);
+  armHoekFilt += (armHoekRuw - armHoekFilt)/2;
   armHoekDiv = armHoekRuw - armHoekRuwPrev;
   armHoekRuwPrev = armHoekRuw;
 
@@ -601,7 +594,7 @@ bool karMotorUitvoeren(){
 
   karDcomp *= 0.99;
   karDcomp += armHoekDiv * -karD;//------------ Om oscilatie te voorkomen
-  karDcomp = limieteerF(karDcomp, -1, 1);
+  karDcomp = limieteerF(karDcomp, -3, 3);
 
   //  karMotorPos = (karPos + karOffset + limieteerF(armHoekDiv * -karD, -1, 1) )  *  mm2stap;
 
@@ -628,16 +621,35 @@ bool karMotorUitvoeren(){
     float div = karPos - karPosFilter;
     if(div < 0){
       karPosFilter += div / 1000;
-      naaldNaarVorenBewogen.reset();        
-    }  
+            
+    }
+
+    if(karPos < karPosMinimaal){
+      karPosMinimaal = karPos;
+      naaldNaarVorenBewogen.reset();
+    }
   }else{
     karPosFilter = karPos;
+    karPosMinimaal = karPos;
     naaldNaarVorenBewogen.reset();
   }
 
 
 
   karMotorEnable = true;  
+
+
+
+
+  if(karGolven){
+    // Serial.print(karDcomp, 5);
+    Serial.print(armHoekRuw);
+    Serial.print(',');
+    
+    Serial.print(armHoekFilt);
+
+    Serial.println();
+  }
 
   return 1;
 }

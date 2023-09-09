@@ -233,9 +233,9 @@ void displayUpdate(){
       for(int i = 0; i < displayLengte; i++){
         displayData[i] = 0;          
 
-        int volumePunt = mapF(volume, 0, 63, 0, dispHalf);//40
+        int volumePunt = mapF(volume, 0, 63, 2, dispHalf + 1);//40
 
-        if(i < dispHalf + volumePunt    &&    i > dispHalf - volumePunt){
+        if(i < (dispHalf - 1) + volumePunt    &&    i > dispHalf - volumePunt){
           displayData[i] = 0.1;
         }
       }
