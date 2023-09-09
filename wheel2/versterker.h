@@ -1,11 +1,6 @@
 #include <Wire.h>
 
 
-bool jackIn = false;
-int volume = 32;
-int volumeOud;
-bool isNaaldEropOud = false;
-bool volumeOverRide = false;
 
 
 
@@ -61,6 +56,16 @@ bool get_bit(uint8_t byte, uint8_t n)
 
 
 
+
+
+
+
+
+
+
+
+
+
 Interval orientatieInt(10, MILLIS);
 Interval staatGoedInterval( 0, MILLIS);
 
@@ -95,10 +100,6 @@ class Orientatie //          QMA7981
 
   void print()
   {
-    // update();
-    // Serial.print("id: ");
-    // Serial.print(id);
-
     Serial.print("x:");
     Serial.print(x,3);
     Serial.print(" y:");
@@ -267,31 +268,70 @@ Orientatie orientatie;
 
 
 
+
+
+
+
+
+
+
+
+
+bool jackIn = false;
+int volume = 32;
+int volumeOud;
+bool isNaaldEropOud = false;
+bool volumeOverRide = false;
+
+
+
+
+
+bool isNaaldLangGenoegOpDePlaat(){
+  return isNaaldEropSinds() > 500  &&  staat == S_SPELEN;
+}
+
+
+
+
+
+
+
+
 void versterkerInit(){
   Wire1.setSCL(SCL);
   Wire1.setSDA(SDA);
-
+  pinMode(koptelefoonEn, OUTPUT);
+  digitalWrite(koptelefoonEn, 1);
 }
 
 Interval versterkerInt(20, MILLIS);
 
 
 void volumeFunc(){
+  orientatie.update();
+
+
   if(versterkerInt.loop()){
     
-    if( volume != volumeOud   ||   isNaaldEropOud !=    (isNaaldErop() && staat == S_SPELEN)    || volumeOverRide){//  ||   jackIn != digitalRead(koptelefoonAangesloten)){
+    if( volume != volumeOud   ||   isNaaldEropOud !=    isNaaldLangGenoegOpDePlaat()    || volumeOverRide){//  ||   jackIn != digitalRead(koptelefoonAangesloten)){
       
       
-      int waarde = volume;
+ 
       
       if(!(isNaaldErop() && staat == S_SPELEN)   &&    !volumeOverRide){
-        waarde = 0;
+        // waarde = 0;
+        digitalWrite(koptelefoonEn, 0);
+        return;
       }
 
       volumeOverRide = false;
+      digitalWrite(koptelefoonEn, 1);      
+      
+      int waarde = volume;
       
       volumeOud = volume;
-      isNaaldEropOud = (isNaaldErop() && staat == S_SPELEN);
+      isNaaldEropOud = isNaaldLangGenoegOpDePlaat();
       
       
       int err = 0;
@@ -308,19 +348,10 @@ void volumeFunc(){
 
       if(err){
         Serial.println("geen koptelefoon versterker");
-      }else{
-        // Serial.print("volume: ");
-        // Serial.println(volume);
       }
       
     }
   }
-
-
-
-  orientatie.update();
-
-
 }
 
 

@@ -120,12 +120,16 @@ void armFunc(){
 
 
 bool isNaaldErop(){
-  return armGewicht == armTargetGewicht  &&  naaldEropInterval.sinds() > 250;
-  // return armGewicht == armTargetGewicht;
+  // return armGewicht == armTargetGewicht  &&  naaldEropInterval.sinds() > 250;
+  return armGewicht == armTargetGewicht;
 }
 
 bool isNaaldEraf(){
   return armGewicht == HOK_ARMGEWICHT;
+}
+
+int isNaaldEropSinds(){
+  return naaldEropInterval.sinds();
 }
 
 

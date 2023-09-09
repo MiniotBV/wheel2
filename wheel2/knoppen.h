@@ -372,16 +372,13 @@ void knoppenUpdate(){
     riemFilter += (riem - riemFilter)/3;
 
 
-    if(orientatie.isStaand){
-
-    }
 
 
-    if( !isOngeveer(riemFilter, riemFilterPrev, 0.01) ){
+    if( !isOngeveer(riemFilter, riemFilterPrev, 0.02) ){
       riemFilterDiv = riemFilter - riemFilterPrev;
       riemFilterPrev = riemFilter;
       
-      riemDiv = riemFilterDiv;    
+      riemDiv = riemFilterDiv / 2;    
       // riemDiv = riem - riemPrev;
 
       if(!orientatie.isStaand){

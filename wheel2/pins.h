@@ -1,4 +1,58 @@
-// //3mei22 moederbord----------------------------------------------
+//3mei22 moederbord----------------------------------------------
+//voeding
+#define slaapStand                0
+#define VUSBsens                  1
+#define VBATsens                  29// ADC3
+
+//kar stapper
+#define stapperAN                 2//~ PWM1 A
+#define stapperAP                 3//~ PWM1 B
+#define stapperBN                 4//~ PWM2 A
+#define stapperBP                 5//~ PWM2 B
+
+// plateau encoder      
+#define plateauA                  8
+#define plateauB                  7
+#define plateauIndex              6
+
+// display
+
+#define displayIN                 9
+#define displayUIT                10
+#define displayKLOK               11
+#define displayLATCH              12
+#define displayEN                 13//~ PWM6 B
+#define displayPOTMETER           28// ADC2
+
+// plateau motor      
+#define motorP                    15//~ PWM7 B
+#define motorN                    14//~ PWM7 A
+
+// leds     
+#define ledWit                    19//~ PWM1 B ----zelfe als 'stapperAP'
+
+// arm      
+#define armMotor                  16//~ PWM0 A
+#define plaatLeesLed              17//~ PWM0 B
+#define hoekSensor                26// ADC0
+#define plaatLees                 27// ADC1
+
+
+#define BT_TXD                    20// UART1 TX
+#define BT_RXD                    21// UART1 RX
+
+#define SDA                       22// I2C1 SDA 
+#define SCL                       23// I2C1 SCL
+
+#define koptelefoonAangesloten    25
+#define koptelefoonEn             24
+ 
+
+
+
+
+
+// //14jan22 moederbord----------------------------------------------
 // //voeding
 // #define slaapStand                0
 // #define VUSBsens                  1
@@ -13,6 +67,9 @@
 // #define plateauA                  8
 // #define plateauB                  7
 // #define plateauIndex              6
+// // #define plateauA                  6
+// // #define plateauB                  7
+// // #define plateauIndex              8
 
 // // display
 
@@ -28,14 +85,16 @@
 // #define motorN                    14//15//~ PWM7 B
 
 // // leds     
-// #define ledWit                    19//            ~ PWM0 A
+// #define ledWit                    16//~ PWM0 A
 
 // // arm      
-// #define armMotor                  16//~ PWM0 B
-// #define plaatLeesLed              17//~ PWM4 A
+// #define armMotor                  17//~ PWM0 B
+// // #define plaatLeesLed              18//~ PWM1 A
+// #define plaatLeesLed              24//~ PWM4 A
 // #define hoekSensor                26
 // #define plaatLees                 27
 
+// #define audioFreqPin              19
 
 // #define BT_TXD                    20
 // #define BT_RXD                    21
@@ -43,65 +102,7 @@
 // #define SDA                       22
 // #define SCL                       23
 
-// #define koptelefoonAangesloten    25
-// #define koptelefoonEn             24
-
-
-
-
-
-
-//14jan22 moederbord----------------------------------------------
-//voeding
-#define slaapStand                0
-#define VUSBsens                  1
-
-//kar stapper
-#define stapperAN                 2//~ PWM1 A
-#define stapperAP                 3//~ PWM1 B
-#define stapperBN                 4//~ PWM2 A
-#define stapperBP                 5//~ PWM2 B
-
-// plateau encoder      
-#define plateauA                  8
-#define plateauB                  7
-#define plateauIndex              6
-// #define plateauA                  6
-// #define plateauB                  7
-// #define plateauIndex              8
-
-// display
-
-#define displayIN                 9
-#define displayUIT                10
-#define displayKLOK               11
-#define displayLATCH              12
-#define displayEN                 13//~ PWM6 B
-#define displayPOTMETER           28
-
-// plateau motor      
-#define motorP                    15//14//~ PWM7 A
-#define motorN                    14//15//~ PWM7 B
-
-// leds     
-#define ledWit                    16//~ PWM0 A
-
-// arm      
-#define armMotor                  17//~ PWM0 B
-// #define plaatLeesLed              18//~ PWM1 A
-#define plaatLeesLed              24//~ PWM4 A
-#define hoekSensor                26
-#define plaatLees                 27
-
-#define audioFreqPin              19
-
-#define BT_TXD                    20
-#define BT_RXD                    21
-
-#define SDA                       22
-#define SCL                       23
-
-// #define koptelefoonAangesloten    24//  PWM4 A
+// // #define koptelefoonAangesloten    24//  PWM4 A
 
 
 

@@ -357,7 +357,7 @@ void staatDingen(){
       return;
     }
 
-    if(!plaatAanwezig){ // is er een plaat aanwezig
+    if(!plaatAanwezig  &&  sensorPos > PLAAT_EINDE + 1){ // is er een plaat aanwezig
       
       float plaadDiaInch = (sensorPos / 25.4)*2;
       
@@ -633,8 +633,8 @@ bool karMotorUitvoeren(){
   if(karMotorEnable){
   // if(staat != S_HOK){
 
-    pwmFase( sin(karMotorPos),  stapperAP, stapperAN, true);
-    pwmFase( cos(karMotorPos),  stapperBP, stapperBN, true);
+    pwmFase( sin(-karMotorPos),  stapperAP, stapperAN, true);
+    pwmFase( cos(-karMotorPos),  stapperBP, stapperBN, true);
   
   }else{
 

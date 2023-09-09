@@ -1,26 +1,9 @@
+
 bool plateauLogica = true;
-
-
-
-
-float plateau33P = 0.1;    //pid
-float plateau33I = 0.005;
-
-float plateau45P = 0.02;    //pid
-float plateau45I = 0.005;
-
-float plateauRustP = 0.01;
-float plateauRustI = 0.04;
 
 
 float plateauP = 0.005;//plateau33P;    //pid
 float plateauI = 0.03;//plateau33I;
-
-// float plateauP = 0.01;//plateau33P;    //pid
-// float plateauI = 0.02;//plateau33I;
-
-// float plateauP = plateauRustP;    //pid
-// float plateauI = plateauRustI;
 float plateauD = 0;
 
 
