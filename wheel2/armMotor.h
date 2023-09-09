@@ -104,7 +104,7 @@ class ArmMotor
 
         uitInterval.reset();
         
-        if(gewicht > netOpDePlaatGewicht){//is de arm al op de plaat?
+        if(gewicht > netOpDePlaatGewicht - 0.01){//is de arm al op de plaat? (-0.01gr omdat hij dan niet glitcht)
           gewicht = targetGewicht;//zet dan de arm meteen op target gewicht
         }else{
           gewicht = mapF(aanInterval.sinds(), 0, snelheidOp, netInHokGewicht, netOpDePlaatGewicht);

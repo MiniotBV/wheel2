@@ -110,6 +110,7 @@ void displayUpdate(){
 
 
 		//--------------------------------------------------------------------INTRO
+    // if(0){
 		if(millis()<4000){
 
 			int pos = displayLengte - (millis()/10);

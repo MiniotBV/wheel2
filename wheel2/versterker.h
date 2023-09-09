@@ -139,8 +139,9 @@ class Orientatie //          QMA7981
 
       x += ( (xRuw - xOffset) - x) / 10;
 
-			gefilterdYPrev += ( (yRuw - yOffset) - gefilterdYPrev) / 10;
-			y += (gefilterdYPrev - y) / 10;
+      y += ( (yRuw - yOffset) - y) / 10;
+			// gefilterdYPrev += ( (yRuw - yOffset) - gefilterdYPrev) / 10;
+			// y += (gefilterdYPrev - y) / 10;
 
       z += ( (zRuw - zOffset) - z) / 10;
 
@@ -265,6 +266,7 @@ class Orientatie //          QMA7981
 		//set_bandwidth
 		data = 0b11100000;
 		data |= (MCLK_DIV_BY_7695 & 0b111);
+    // data |= (MCLK_DIV_BY_61455 & 0b111);
 		i2cWrite(adress, 0x10, data);
 
 		//set_full_scale_range
