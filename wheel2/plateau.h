@@ -164,9 +164,9 @@ void plateauFunc(){
     // float vaart = strobo.vaart;
     float vaart = strobo.glad;
     
-    if(strobo.compMeten){
+    // if(strobo.compMeten){
       vaart += (1/plateauP) * (strobo.plateauComp/100);
-    }
+    // }
     
 
     if(plateauAan){             //staat de motor aan?

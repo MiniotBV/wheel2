@@ -253,8 +253,6 @@ void displayUpdate(){
           }else{
             displayData[i] = 0.1;
           }
-          
-          
         }
 
         
@@ -271,24 +269,10 @@ void displayUpdate(){
           else if( i == target  &&  naald != i){
             displayData[i] = 0.9;
           }
-
-          // if(naald == i){
-          //   displayData[i] = 0;
-          //   if(millis()%400 > 100){
-          //     displayData[i] = 0.9;
-          //   }
-          // }
-
         }
         else if(naald == i){
           displayData[i] = 0.9;
         }
-
-        // if(staat == S_NAALD_EROP  ||  staat == S_SPELEN){
-        //   if(i > plaatBegin){
-        //     displayData[i] = 0;
-        //   }
-        // }
 
         
       }

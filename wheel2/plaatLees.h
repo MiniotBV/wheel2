@@ -82,7 +82,8 @@ void plaatDetectie(){
   }
 
   knip =  ( millis()/plaatKnipperInterval ) % 2;
-  
+  // knip = !knip;
+
   if(knip){
     plaatLeesLedSetMilliAmp(10);
   }else{

@@ -338,7 +338,7 @@ void knoppenUpdate(){
     riem    +=     float(potVal - potValPrev) / AMAX;
     potValPrev = potVal;
     
-    riemFilter += (riem - riemFilter)/10;
+    riemFilter += (riem - riemFilter)/3;
 
 
     

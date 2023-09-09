@@ -132,9 +132,7 @@ void setup() {
 
   plateauInit();
 
-  // delay(1);
 
-  // strobo.recalCompSamples();
   
   enableInterupts(true);
 

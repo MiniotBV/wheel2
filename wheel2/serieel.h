@@ -13,11 +13,11 @@ void serieelFunc(){
     if(golven){
       
       
-      Serial.print(strobo.vaart,3);
+      Serial.print(strobo.vaart, 3);
       Serial.print(", ");
-      Serial.print(strobo.glad,3);
+      Serial.print(strobo.gladglad, 3);
       Serial.print(", ");
-      Serial.print(strobo.gladglad,3);
+      Serial.print(strobo.glad - targetRpm, 3);
 
       // Serial.print(", ");
       // Serial.print(calibratieToon.vaart);
@@ -27,14 +27,18 @@ void serieelFunc(){
       Serial.print(strobo.teller);
 
       Serial.print(", ");
-      Serial.print(strobo.plateauComp, 4);
+      // Serial.print(strobo.plateauComp, 4);
+      Serial.print(strobo.preComp, 4);
+
+      Serial.print(", ");
+      Serial.print(strobo.plateauCompFourier, 4);
 
 
       Serial.print(", ");
       Serial.print(basis, 4);
 
-      Serial.print(", ");
-      Serial.print(karInterval);
+      // Serial.print(", ");
+      // Serial.print(karInterval);
       
       
       
@@ -190,10 +194,15 @@ void serieelFunc(){
         Serial.println("help--------------");   
         Serial.println("p: " + String(plateauP, 3));
         Serial.println("i: " + String(plateauI, 3));
-
+        Serial.println("d: " + String(plateauD, 3));
 
         Serial.println("staat: " + printStaat(staat));
         Serial.println("volume: " + String(volume));
+
+        Serial.println("V faseVerschuiving: " + String(strobo.faseVerschuiving));
+        Serial.println("C compFilter: " + String(strobo.compFilter));
+        Serial.println("c compVermenigvuldiging: " + String(strobo.compVermenigvuldiging));
+        Serial.println("I compverval: " + String(strobo.compVerval));
         
         printKnoppen();
         orientatie.print();
@@ -201,24 +210,24 @@ void serieelFunc(){
         Serial.println();
       }
 
-      else if(letter == 'I'){   
-        toggleAudioFreqMeting();
-      }
-      else if(letter == 'C'){    
-        strobo.clearCompSamples();
-      }
-      else if(letter == 'r'){    //
-        strobo.recalCompSamples();
-      }
-      else if(letter == 's'){    //
-        strobo.saveCompSamples();
-      }
-      else if(letter == 'c'){    //
-        strobo.toggleCompensatieModus();
-      }
-      else if(letter == '~'){    //
-        strobo.printCompSamples();
-      }
+      // else if(letter == 'I'){   
+      //   toggleAudioFreqMeting();
+      // }
+      // else if(letter == 'C'){    
+      //   strobo.clearCompSamples();
+      // }
+      // else if(letter == 'r'){    //
+      //   strobo.recalCompSamples();
+      // }
+      // else if(letter == 's'){    //
+      //   strobo.saveCompSamples();
+      // }
+      // else if(letter == 'c'){    //
+      //   strobo.toggleCompensatieModus();
+      // }
+      // else if(letter == '~'){    //
+      //   strobo.printCompSamples();
+      // }
 
 
       else if(letter == 'Q'){    //
@@ -229,6 +238,25 @@ void serieelFunc(){
       else if(letter == 'q'){    //
         // strobo.compMeten = !strobo.compMeten;
         strobo.clearPlateauSamples();
+        Serial.println("clearComp");
+      }
+
+      else if(letter == 'V'){    //
+        // strobo.compMeten = !strobo.compMeten;
+        strobo.faseVerschuiving = Serial.parseInt();
+        Serial.println("faseVerschuiving: " + String(strobo.faseVerschuiving));
+      }
+      else if(letter == 'C'){    //
+        strobo.compFilter = Serial.parseFloat();
+        Serial.println("C compFilter: " + String(strobo.compFilter));
+      }
+      else if(letter == 'c'){    //
+        strobo.compVermenigvuldiging = Serial.parseFloat();
+        Serial.println("c compVermenigvuldiging: " + String(strobo.compVermenigvuldiging));
+      }
+      else if(letter == 'I'){    //
+        strobo.compVerval = Serial.parseFloat();
+        Serial.println("I compverval: " + String(strobo.compVerval));
       }
     
     }

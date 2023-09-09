@@ -130,9 +130,7 @@ enum staats{
   S_HOK,
   S_STOPPEN,
 
-  S_SCHOONMAAK,
 
-  S_HOMEN_GEFAALD,
 
 
 
@@ -142,14 +140,12 @@ enum staats{
   
   S_NAAR_BEGIN_PLAAT,
   // S_BEGIN_PLAAT,
-  S_SPELEN,
+  // S_SPELEN,
   S_PLAAT_DIAMETER_METEN,
   S_NAALD_EROP,
 
 
   S_PAUZE,
-
-
 
   // S_VOLGEND_NUMMER,
   // S_VORRIG_NUMMER,
@@ -159,6 +155,9 @@ enum staats{
   // S_JOGGEN,
 
 
+  S_SCHOONMAAK,
+
+  S_HOMEN_GEFAALD,
   S_FOUTE_ORIENTATIE,
   S_ERROR,
 };
@@ -190,7 +189,7 @@ String printStaat(int s){
   if( s == S_NAAR_BEGIN_PLAAT     ){ return "NAAR_BEGIN_PLAAT";}
   if( s == S_PLAAT_DIAMETER_METEN ){ return "PLAAT_DIAMETER_METEN";}
   // if( s == S_BEGIN_PLAAT          ){ return "BEGIN_PLAAT";}
-  if( s == S_SPELEN               ){ return "SPELEN";}
+  // if( s == S_SPELEN               ){ return "SPELEN";}
   if( s == S_NAALD_EROP           ){ return "NAALD_EROP";}
 
 
