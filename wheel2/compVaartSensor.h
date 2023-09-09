@@ -91,13 +91,13 @@ class COMPVAART
 
 
 		//---------------------------------------------onbalans compensatie
-
-		float onbalansFilterCurve[pprmax];
+    float preOnbalansFilterCurve[pprmax];
+		int onbalansFilterCurve[pprmax];
     float onbalansFilterBreedte = 65;//50;//100;
     int onbalansFase = 25;//50;//50;
 		float onbalansCompGewicht = 1.3;//2;
     
-		float onbalansCompensatie[pprmax];
+		int onbalansCompensatie[pprmax];
 		volatile float onbalansComp = 0;
 		
 
@@ -349,13 +349,17 @@ class COMPVAART
 					&& opsnelheid                       // en opsnelheid zijn     
 					&& isOngeveer(vaart, targetRpm, 10)  //mag niet meer dan 10rpm van de target rpm afzijn
 
-          && ((arm.isNaaldEropVoorZoLang(2000) && staat == S_SPELEN) )// ||  //)
-          // staat == S_HOMEN_VOOR_SPELEN ||    
-					// staat == S_NAAR_BEGIN_PLAAT)
+          // && ((arm.isNaaldEropVoorZoLang(2000) && staat == S_SPELEN) )// ||  //)
+
+          && ((arm.isNaaldEropVoorZoLang(2000) && staat == S_SPELEN)  ||  //)
+          staat == S_HOMEN_VOOR_SPELEN ||    
+					staat == S_NAAR_BEGIN_PLAAT)
 			){ 
-        float snelheidsError = vaartCenterComp - targetRpm;
+        // float snelheidsError = vaartCenterComp - targetRpm;
+        int snelheidsError = (vaartCenterComp - targetRpm ) * 1000.0;
         for(int i = 0; i < pulsenPerRev; i++){
-          onbalansCompensatie[rondTrip(teller + i, pulsenPerRev)] += onbalansFilterCurve[i] * snelheidsError;
+          onbalansCompensatie[(teller + i) % pulsenPerRev] += onbalansFilterCurve[i] * snelheidsError;
+          // onbalansCompensatie[rondTrip(teller + i, pulsenPerRev)] += onbalansFilterCurve[i] * snelheidsError;
         }
         
 				digitalWrite(ledWit, 1);//zet led aan
@@ -366,7 +370,7 @@ class COMPVAART
 
 
 			if(onbalansCompAan){
-				onbalansComp = -onbalansCompensatie[rondTrip( teller + onbalansFase, pulsenPerRev)] * onbalansCompGewicht;
+				onbalansComp = - (onbalansCompensatie[rondTrip( teller + onbalansFase, pulsenPerRev)] / (100000000.0) ) * onbalansCompGewicht;
 			}else{
 				onbalansComp = 0;
 			}
@@ -453,12 +457,16 @@ class COMPVAART
       for(int i = 0; i < pulsenPerRev; i++){
         int verschovenI = i - (pulsenPerRev / 2) ;
         float j = float(verschovenI) / pulsenPerRev;
-        onbalansFilterCurve[rondTrip(verschovenI, pulsenPerRev)]  =  exp( -onbalansFilterBreedte * (j*j));
-        totaal += onbalansFilterCurve[rondTrip(verschovenI, pulsenPerRev)];
+        float waarde = exp( -onbalansFilterBreedte * (j*j));
+        // int test = int(1000.0 * exp( -onbalansFilterBreedte * (j*j)) );//waarde;// * 100.0);
+
+        preOnbalansFilterCurve[rondTrip(verschovenI, pulsenPerRev)]  =  waarde * 1000;
+        // totaal += waarde;
       }
 
       for(int i = 0; i < pulsenPerRev; i++){
-        onbalansFilterCurve[i] /= totaal;
+        // onbalansFilterCurve[i] /= totaal;
+        onbalansFilterCurve[i] = preOnbalansFilterCurve[i];
       }
     }
 

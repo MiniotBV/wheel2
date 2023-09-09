@@ -352,7 +352,10 @@ void serieelFunc(){
 			Serial.print((float)strobo.teller / strobo.pulsenPerRev, 3);
 
       Serial.print(", ");
-			Serial.print(strobo.onbalansFilterCurve[strobo.teller], 4);
+			Serial.print(strobo.onbalansFilterCurve[strobo.teller]);
+
+            Serial.print(", ");
+			Serial.print(strobo.preOnbalansFilterCurve[strobo.teller], 4);
 
       
       // Serial.print(", ");

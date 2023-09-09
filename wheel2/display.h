@@ -240,7 +240,6 @@ void displayUpdate(){
 		else if(staat == S_SCHOONMAAK  ||  staat == S_HOMEN_VOOR_SCHOONMAAK){
 			
 			int volumePunt = mapF(arm.targetGewicht, 0, 4, 0, displayLengte) / 2.0;
-
       float verdeelPuntTeller = 0.5;//arm.targetGewicht / 2;
 
 			for(int i = 0; i < displayLengte; i++){
@@ -257,6 +256,8 @@ void displayUpdate(){
 
           displayData[i] = 0;         
 				}
+
+
       }
 
       if(orientatie.isStaand){
@@ -269,12 +270,19 @@ void displayUpdate(){
 		else if(staat == S_CALIBREER){
 			
 			int volumePunt = mapF(arm.kracht, 0, 1, displayLengte - 1,   0);
+      int krachtLaagPunt = mapF(arm.krachtLaag, 0, 1, displayLengte - 1,   0);
+      int krachtHoogPunt = mapF(arm.krachtHoog, 0, 1, displayLengte - 1,   0);
+      int armHoekPunt = mapF(armHoekCall, 1, -1, 0, displayLengte-1);
 
 			for(int i = 0; i < displayLengte; i++){
 				displayData[i] = 0;
 
 				if(i > volumePunt){
 					displayData[i] = 0.1;
+				}
+
+        if(i == armHoekPunt  ||  i == krachtLaagPunt  ||  i == krachtHoogPunt){
+					displayData[i] = 0.9;         
 				}
 			}
 		}
