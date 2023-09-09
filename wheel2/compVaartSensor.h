@@ -364,9 +364,9 @@ class COMPVAART
           onbalansCompensatie[(teller + pulsenPerRev - i    ) % pulsenPerRev] += waarde;
         }
         
-				digitalWrite(ledWit, 1);//zet led aan
+				// digitalWrite(ledWit, 1);//zet led aan
 			}else{
-        digitalWrite(ledWit, 0);//zet led uit
+        // digitalWrite(ledWit, 0);//zet led uit
       }
 
 
