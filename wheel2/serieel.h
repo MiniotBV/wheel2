@@ -2,7 +2,7 @@
 bool golven = false;
 bool karPIDveranderen = true;
 
-
+float eepp;
 
 Interval serieelInt(10000, MICROS);
 // Interval serieelInt(5000, MICROS);
@@ -188,16 +188,10 @@ void serieelFunc(){
       else if(letter == 'f'){
         naaldEraf();
       }
-      else if(letter == 'a'){    //arm motor target
+      else if(letter == 'A'){    //arm motor target
         armTargetGewicht = Serial.parseFloat();
         Serial.println("armTargetGewicht: " + String(armTargetGewicht));
       }
-      else if(letter == 'k'){    //set karP
-        karP = Serial.parseFloat();
-        Serial.println("karP: " + String(karP, 5));
-      }
-      
-
 
       else if(letter == 'K'){    //set karP
         karPIDveranderen = !karPIDveranderen;
@@ -271,6 +265,9 @@ void serieelFunc(){
         Serial.println("armGewicht: " + String(armGewicht));
         Serial.println("isNaaldErop(): " + String(isNaaldErop()));
         Serial.println();
+
+        eepromUitlezen();
+        Serial.println();
         
         // Serial.println("V faseVerschuiving: " + String(strobo.faseVerschuiving));
         // Serial.println("C compFilter: " + String(strobo.compFilter));
@@ -292,13 +289,15 @@ void serieelFunc(){
 
 
       else if(letter == 'e'){ 
-        int eep = Serial.parseFloat();
-        eepSchrijfInt(EEPROM_VERSIE, eep);
-        Serial.println("eep: " + String(eep));
+        float eepromVersie = Serial.parseFloat();
+        EEPROM.put(EEPROM_VERSIE, eepromVersie);
+        // eepSchrijfInt(EEPROM_VERSIE, eep);
+        Serial.println("eepromVersie: " + String(eepromVersie, 5));
       }
 
       else if(letter == 'E'){ 
-        Serial.println("hallo");
+        Serial.println("opslaan...");
+        eepromOpslaan();               
         eepromShit = true;
       }
 

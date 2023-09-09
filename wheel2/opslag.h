@@ -2,35 +2,21 @@
 
 
 bool eepromShit = false;
+float eepromVersie = 1;
 
-#define EEPROM_VERSIE     0
+#define EEPROM_VERSIE             0
 
-#define EEPROM_ARMKRACHT_500MG 10
-#define EEPROM_ARMKRACHT_4000MG 20
+#define EEPROM_ARMKRACHT_500MG    100
+#define EEPROM_ARMKRACHT_4000MG   110
+#define EEPROM_ARMGEWICHT         120
 
-#define EEPROM_WATERPAS_OFFSET 30
+#define EEPROM_WATERPAS_OFFSET    200
 
-
-
-
-void eepSchrijfInt(int addr, int val){
-  EEPROM.write(addr,     (val >> 8) & 255);
-  EEPROM.write(addr + 1,  val       & 255);
-}
-
-int eepLeesInt(int addr){
-  return (EEPROM.read(addr) << 8) + EEPROM.read(addr + 1);
-}
+#define EEPROM_TRACK_OFFSET       300
 
 
 
-void eepSchrijfFloat(int addr, float val){
-  eepSchrijfInt(addr, int( val * 10000.0 ) );
-}
 
-float eepLeesFloat(int addr){
-  return eepLeesInt(addr) / 10000.0;
-}
 
 
 void eepCommit(){
@@ -45,12 +31,59 @@ void eepCommit(){
 
 
 
+void eepromLeesFloatWaarde(int adress, float& waarde){
+  float buffer = 0;
+  buffer = EEPROM.get(adress, buffer);
 
+  if(isfinite(buffer)){
+    waarde = buffer;
+    Serial.println("gelezen adress: " + String(adress) + "  waarde: " + String(buffer, 5));
+  }else{
+    EEPROM.put(adress, waarde);    
+    Serial.println("geschreven adress: " + String(adress) + "  waarde: " + String(buffer, 5));
+  }
+}
+
+
+
+
+
+
+void eepromUitlezen(){
+  
+  eepromLeesFloatWaarde( EEPROM_VERSIE,  eepromVersie);
+  
+  eepromLeesFloatWaarde( EEPROM_ARMKRACHT_500MG,  armKracht500mg);
+  eepromLeesFloatWaarde( EEPROM_ARMKRACHT_4000MG,  armKracht4000mg);
+
+  eepromLeesFloatWaarde( EEPROM_ARMGEWICHT,  armTargetGewicht);
+
+  eepromLeesFloatWaarde( EEPROM_WATERPAS_OFFSET,  orientatie.gefilterdOffset);
+
+  eepromLeesFloatWaarde( EEPROM_TRACK_OFFSET,  trackOffset);
+
+}
+
+
+
+void eepromOpslaan(){
+  EEPROM.put( EEPROM_VERSIE,              eepromVersie);
+  EEPROM.put( EEPROM_ARMKRACHT_500MG,     armKracht500mg);
+  EEPROM.put( EEPROM_ARMKRACHT_4000MG,    armKracht4000mg);
+  EEPROM.put( EEPROM_ARMGEWICHT,          armTargetGewicht);
+  EEPROM.put( EEPROM_WATERPAS_OFFSET,     orientatie.gefilterdOffset);
+  EEPROM.put( EEPROM_TRACK_OFFSET,        trackOffset);
+}
 
 
 
 void eepromPrint(){
-  Serial.println("EEPROM VERSIE: " + String(eepLeesInt(EEPROM_VERSIE)));
+  Serial.println("EEPROM_VERSIE: "            +String(eepromVersie));
+  Serial.println("EEPROM_ARMKRACHT_500MG: "   +String(armKracht500mg));
+  Serial.println("EEPROM_ARMKRACHT_4000MG: "  +String(armKracht4000mg));
+  Serial.println("EEPROM_ARMGEWICHT: "        +String(armTargetGewicht));
+  Serial.println("EEPROM_WATERPAS_OFFSET: "   +String(orientatie.gefilterdOffset));
+  Serial.println("EEPROM_TRACK_OFFSET: "      +String(trackOffset));
 }
 
 

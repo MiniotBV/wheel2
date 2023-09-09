@@ -23,14 +23,15 @@
 // #define KAR_HOME 44//44.5 //met ouwe sparing
 // #define KAR_HOK 45.5
 
-#define KAR_HOME 42.5
+
 #define KAR_HOK 44//43.5
+#define KAR_HOME KAR_HOK - 2//42.5
 
 #define SCHOONMAAK_PLEK 100
 
 #define SENSOR_OFFSET 7.5//mm
 
-
+float trackOffset = 0;
 
 
 

@@ -15,7 +15,7 @@ bool karGolven;
 
 float karP = 0.002;//0.001;//0.0005; //0.00005;//0.00025;
 float karI = 0;//0.005; //0.00005;//0.00025;
-float karD = 0.001;//0.0006;//-0.003;
+float karD = 0.0015;//0.0006;//-0.003;
 
 float karBasis;
 float karPcomp = 0;
@@ -595,9 +595,10 @@ bool karMotorUitvoeren(){
 
   // karPos += limieteerF(armHoekDiv * -karD, -0.05, 0.05);//------------ Om oscilatie te voorkomen  
 
-  karDcomp *= 0.99;
-  karDcomp += armHoekDiv * -karD;//------------ Om oscilatie te voorkomen
-  karDcomp = limieteerF(karDcomp, -3, 3);
+  // karDcomp = 0;
+  karDcomp *= 0.999;
+  karDcomp += limieteerF(armHoekDiv * -karD, -KAR_MAX_SNELHEID, KAR_MAX_SNELHEID);//------------ Om oscilatie te voorkomen
+  // karDcomp = limieteerF(karDcomp, -3, 3);
 
   //  karMotorPos = (karPos + karOffset + limieteerF(armHoekDiv * -karD, -1, 1) )  *  mm2stap;
 
@@ -647,9 +648,9 @@ bool karMotorUitvoeren(){
   if(karGolven){
     // Serial.print(karDcomp, 5);
     Serial.print(armHoekRuw);
-    Serial.print(',');
+    // Serial.print(',');
     
-    Serial.print(armHoekFilt);
+    // Serial.print(armHoekFilt);
 
     Serial.println();
   }

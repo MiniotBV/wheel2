@@ -268,7 +268,6 @@ Interval orientatieInt(100, MILLIS);
 void volumeFunc(){
   if(versterkerInt.loop()){
     
-
     if( volume != volumeOud   ||   isNaaldEropOud !=    (isNaaldErop() && staat == S_SPELEN)    || volumeOverRide){//  ||   jackIn != digitalRead(koptelefoonAangesloten)){
       
       

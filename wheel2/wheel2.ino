@@ -10,7 +10,7 @@
 #include "hardware/gpio.h"
 
 
-#include "opslag.h"
+
 
 
 
@@ -101,6 +101,13 @@ Interval ledInt(200, MILLIS);
 
 #include "display.h"
 
+
+
+
+#include "opslag.h"
+
+
+
 #include "serieel.h"
 
 
@@ -179,7 +186,6 @@ void loop2(){
 
     if(eepromShit){
       delay(100);
-      eepromShit = false;
     }
   }
 }
@@ -196,9 +202,9 @@ void loop() {
 
 
   if(eepromShit){
+    delay(10);
     eepCommit();
-    Serial.println("doei");
-    delay(100);
+    Serial.println("gelukt");
   }
 
 
