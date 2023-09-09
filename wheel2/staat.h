@@ -225,7 +225,7 @@ void stoppen(){
 
 void spelen(){
   setStaat(S_HOMEN_VOOR_SPELEN);
-  plateauDraaien();
+  // plateauDraaien();
 }
 
 

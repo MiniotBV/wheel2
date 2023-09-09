@@ -125,9 +125,9 @@ class Orientatie //          QMA7981
 
     // id = i2cRead(adress, 0x00);
 
-    x = read_accel_axis(1);
-    y = read_accel_axis(3);
-    z = read_accel_axis(5);
+    x += (read_accel_axis(1) - x)/10;
+    y += (read_accel_axis(3) - y)/10;
+    z += (read_accel_axis(5) - z)/10;
 
     gefilterdPrev += ((y - gefilterdOffset) - gefilterdPrev) / 10;
     gefilterd += (gefilterdPrev - gefilterd) / 10;

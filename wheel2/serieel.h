@@ -23,6 +23,9 @@ void serieelFunc(){
       Serial.print(", ");
       Serial.print(strobo.teller);
 
+      Serial.print(", ");
+      Serial.print(karPcomp);
+
       // Serial.print(", ");
       // Serial.print(strobo.vaartRuw);
       // Serial.print(", ");

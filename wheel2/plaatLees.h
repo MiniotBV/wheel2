@@ -63,7 +63,12 @@ void plaatLeesInit(){
 #define plaatKnipperInterval 50
 
 void plaatDetectie(){
+  if(knip){
+    plaatLeesGefilterdBodem += (plaatLeesRuw - plaatLeesGefilterdBodem) / 5;
+  }
+
   knip =  ( millis()/plaatKnipperInterval ) % 2;
+  
   if(knip){
     plaatLeesLedSetMilliAmp(20);
   }else{
@@ -182,42 +187,37 @@ void plaatLeesFunc(){
       hoeveelNummers = 0;
       nummers[hoeveelNummers] = 1;
       plaatLeesLedSetMilliAmp(0);
+      return;
     }
     
 
 
-
-
-    else if(staat == S_NAAR_BEGIN_PLAAT){//--------------------------------                   TRACKS LEZEN
+    if(staat == S_NAAR_BEGIN_PLAAT){//--------------------------------                   TRACKS LEZEN
 
       scannenVoorTracks();
-
+      return;
     }
 
 
 
 
 
-    else{//---------------------------------------------------------------                    PLAAT DETECTIE
-      
-      if(knip){
-        plaatLeesGefilterdBodem += (plaatLeesRuw - plaatLeesGefilterdBodem) / 5;
-      }
-      
+    //---------------------------------------------------------------                    PLAAT DETECTIE
 
-      plaatDetectie();
+    plaatDetectie();
 
-      if(staat == S_PLAAT_AANWEZIG){
-        if(staatVeranderd.sinds() > 1000){
-          if(plaatAanwezig){
-            armHoekCalibreer();
-            setStaat(S_NAAR_BEGIN_PLAAT);
-          }else{
-            stoppen();
-          }
+    if(staat == S_PLAAT_AANWEZIG){
+      if(staatVeranderd.sinds() > 1000){
+        if(plaatAanwezig){
+          armHoekCalibreer();
+          setStaat(S_NAAR_BEGIN_PLAAT);
+          plateauDraaien();
+        }else{
+          stoppen();
         }
       }
     }
+    
 
 
   }
