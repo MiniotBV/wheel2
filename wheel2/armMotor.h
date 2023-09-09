@@ -54,6 +54,7 @@ float pwm2armGewicht(float pwm){
 
 
 Interval armInt(10, MILLIS);
+Interval naaldEropInterval(0, MILLIS);
 
 void armFunc(){
   if(armInt.loop()){
@@ -64,6 +65,8 @@ void armFunc(){
       return;
     }
 
+
+    
 
     if(armMotorAan == true){//moet de arm motor aan?
 
@@ -96,9 +99,19 @@ void armFunc(){
       }
     }
 
+
+
     armKracht = armGewicht2pwm(armGewicht);
 
     pwmWriteF(armMotor, armKracht);
+
+
+
+
+
+    if(armGewicht != armTargetGewicht){
+      naaldEropInterval.reset();
+    }
   }
 
 }
@@ -107,7 +120,8 @@ void armFunc(){
 
 
 bool isNaaldErop(){
-  return armGewicht == armTargetGewicht;
+  return armGewicht == armTargetGewicht  &&  naaldEropInterval.sinds() > 250;
+  // return armGewicht == armTargetGewicht;
 }
 
 bool isNaaldEraf(){
@@ -127,6 +141,12 @@ bool naaldEraf(){
 }
 
 
+
+bool naaldNoodStop(){
+  armGewicht = HOK_ARMGEWICHT; // zet de arm dan meteen uit
+  armMotorAan = false;
+  return true;  
+}
 
 
 

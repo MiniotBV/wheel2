@@ -23,12 +23,10 @@ float karDcomp = 0;
 
 
 
-
 float plaatBegin = 0;
 
 float nummers[100];// = {0.2, 0.3, 0.6, 0.68, 0.85}; //staat nu in staat.h
 int hoeveelNummers = 0;
-
 
 
 
@@ -170,12 +168,12 @@ void gaNaarNummer(float pos){
 
 
 void naarVorrigNummer(){
-  if(hoeveelNummers < 2){// als er 1 nummer is is dat ook te weinig
+  if(hoeveelNummers < 2){// als er 1 nummer is is dat ook te weinig want dat is het eind van de muziek
     gaNaarNummer(plaatBegin);
     return;
   }
 
-  float pos = karPos;
+  float pos = karPosFilter;
 
   if(staat == S_NAAR_NUMMER){//als er al word door gespoeld doe dan een extra nummer verder
     pos = targetNummerPos;
@@ -209,7 +207,7 @@ void naarVolgendNummer(){
     return;
   }
 
-  float pos = karPos;
+  float pos = karPosFilter;
   
   if(staat == S_NAAR_NUMMER){//als er al word door gespoeld doe dan een extra nummer verder
     pos = targetNummerPos;
@@ -654,9 +652,11 @@ bool karMotorUitvoeren(){
 
 
   if(karGolven){
-    // Serial.print(karDcomp, 5);
+    Serial.print(karDcomp, 5);
+    Serial.print(',');
     Serial.print(armHoekRuw);
-    // Serial.print(',');
+    Serial.print(',');
+    Serial.print(nieuwePos, 2);
     
     // Serial.print(armHoekFilt);
 

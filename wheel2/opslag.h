@@ -1,8 +1,9 @@
 #include <EEPROM.h>
 
-
 int eepromShit = 0;
-float eepromVersie = 1;
+float eepromVersie;
+
+
 
 #define EEPROM_VERSIE             0
 
@@ -27,7 +28,6 @@ void eepCommit(){
 
 
 
-
 void eepromLeesFloatWaarde(int adress, float& waarde){
   float buffer = 0;
   buffer = EEPROM.get(adress, buffer);
@@ -40,8 +40,6 @@ void eepromLeesFloatWaarde(int adress, float& waarde){
     Serial.println("geschreven adress: " + String(adress) + "  waarde: " + String(buffer, 5));
   }
 }
-
-
 
 
 
@@ -75,12 +73,12 @@ void eepromOpslaan(){
 
 
 void eepromPrint(){
-  Serial.println("EEPROM_VERSIE: "            +String(eepromVersie));
-  Serial.println("EEPROM_ARMKRACHT_500MG: "   +String(armKracht500mg));
-  Serial.println("EEPROM_ARMKRACHT_4000MG: "  +String(armKracht4000mg));
-  Serial.println("EEPROM_ARMGEWICHT: "        +String(armTargetGewicht));
-  Serial.println("EEPROM_WATERPAS_OFFSET: "   +String(orientatie.gefilterdOffset));
-  Serial.println("EEPROM_TRACK_OFFSET: "      +String(trackOffset));
+  Serial.println("EEPROM_VERSIE:            " + String(eepromVersie, 5)                );
+  Serial.println("EEPROM_ARMKRACHT_500MG:   " + String(armKracht500mg, 5)              );
+  Serial.println("EEPROM_ARMKRACHT_4000MG:  " + String(armKracht4000mg, 5)             );
+  Serial.println("EEPROM_ARMGEWICHT:        " + String(armTargetGewicht, 5)            );
+  Serial.println("EEPROM_WATERPAS_OFFSET:   " + String(orientatie.gefilterdOffset, 5)  );
+  Serial.println("EEPROM_TRACK_OFFSET:      " + String(trackOffset, 5)                 );
 }
 
 

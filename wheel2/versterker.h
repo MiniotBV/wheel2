@@ -61,8 +61,8 @@ bool get_bit(uint8_t byte, uint8_t n)
 
 
 
-
-
+Interval orientatieInt(10, MILLIS);
+Interval staatGoedInterval( 0, MILLIS);
 
 // ========================
 //    ORIENTATIE
@@ -90,6 +90,8 @@ class Orientatie //          QMA7981
   unsigned long loop;
   bool eersteKeer = true;
 
+  
+
 
   void print()
   {
@@ -109,51 +111,61 @@ class Orientatie //          QMA7981
 
   void update()
   {
-    if(millis() - loop <= 10 || millis() < 200) return;
-    /*if(state.isNotSPELEN() && millis() - loop > 1000) { */
-    // if(millis() - loop <= 1000)return;
+    if(orientatieInt.loop() && millis() > 200){
+      
+      if(eersteKeer){
+        eersteKeer = false;
+        reset();
+      }
+      
+      loop = millis();
 
-    if(eersteKeer){
-      eersteKeer = false;
-      reset();
-    }
-    
-    loop = millis();
+      // id = i2cRead(adress, 0x00);
 
-    // id = i2cRead(adress, 0x00);
+      x += (read_accel_axis(1) - x)/10;
+      y += (read_accel_axis(3) - y)/10;
+      z += (read_accel_axis(5) - z)/10;
 
-    x += (read_accel_axis(1) - x)/10;
-    y += (read_accel_axis(3) - y)/10;
-    z += (read_accel_axis(5) - z)/10;
-
-    gefilterdPrev += ((y - gefilterdOffset) - gefilterdPrev) / 10;
-    gefilterd += (gefilterdPrev - gefilterd) / 10;
-
-    isFout = ! isOngeveer(gefilterd, 0, 0.1);
-
-    if( isFout  != isFoutOud ){
-      isFoutOud = isFout;
+      gefilterdPrev += ((y - gefilterdOffset) - gefilterdPrev) / 10;
+      gefilterd += (gefilterdPrev - gefilterd) / 10;
 
       if(isFout){
+        isFout = ! isOngeveer(gefilterd, 0, 0.025);
+      }else{
+        isFout = ! isOngeveer(gefilterd, 0, 0.1);        
+      }
+      
+
+      if( isFout && !isFoutOud ){
+        isFoutOud = isFout;
         setStaat(S_FOUTE_ORIENTATIE);
       }
+
+      if( !isFout ){
+        if(isFout != isFoutOud)  {
+          isFoutOud = isFout;
+          staatGoedInterval.reset();
+        }  
+
+        if(staatGoedInterval.sinds() > 5000  &&  staat == S_FOUTE_ORIENTATIE){
+          setStaat(S_HOK);
+        }
+      }
+
+      
+      isStaand = !(  isOngeveer(x, 0, 0.4)   &&   isOngeveer(z, -1, 0.4)  );
+
+
+      if(isStaand != isStaandOud)
+      {
+        isStaandOud = isStaand;
+        print();
+      }
     }
-    
-    isStaand = !(  isOngeveer(x, 0, 0.4)   &&   isOngeveer(z, -1, 0.4)  );
 
-
-
-    if(isStaand != isStaandOud)
-    {
-      isStaandOud = isStaand;
-      // Serial.print("orientatie veranderd: ");
-      print();
-    }
-
-    // stick.isStaand = isStaand;
-
-    // print();
   }
+
+
 
   float read_accel_axis(uint8_t reg)
   {
@@ -262,7 +274,7 @@ void versterkerInit(){
 }
 
 Interval versterkerInt(20, MILLIS);
-Interval orientatieInt(100, MILLIS);
+
 
 void volumeFunc(){
   if(versterkerInt.loop()){

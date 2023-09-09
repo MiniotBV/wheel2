@@ -25,12 +25,6 @@ float plaatLeesTrack;
 
 
 
-
-
-// bool plaatAanwezig = false;
-
-
-
 unsigned int laatsteKnipperMeet;
 unsigned int laatsteKnipperMeetLengte;
 unsigned int vorrigeKnipperMeetLengte;
@@ -137,7 +131,7 @@ void scannenVoorTracks(){
   if(plaatLeesOmhoog > trackTresshold && !trackOnderTresh){
     trackOnderTresh = true;
 
-    nieuwNummer(sensorPos);
+    nieuwNummer(sensorPos - trackOffset);
   }
   
 }

@@ -12,10 +12,12 @@ void serieelFunc(){
       
       
       Serial.print(strobo.vaart, 3);
-      Serial.print(", ");
-      Serial.print(strobo.glad, 3);
+      
+      // Serial.print(", ");
+      // Serial.print(strobo.glad, 3);
       // Serial.print(", ");
       // Serial.print(targetRpm, 2);
+
       Serial.print(", ");
       Serial.print(strobo.glad - targetRpm, 3);
 
@@ -23,8 +25,8 @@ void serieelFunc(){
       // Serial.print(calibratieToon.vaart);
 
 
-      Serial.print(", ");
-      Serial.print(strobo.teller);
+      // Serial.print(", ");
+      // Serial.print(strobo.teller);
 
       // Serial.print(", ");
       // Serial.print(strobo.preComp, 4);
@@ -34,8 +36,6 @@ void serieelFunc(){
 
       Serial.print(", ");
       Serial.print(strobo.plateauComp, 4);
-      // Serial.print(strobo.plateauCompFourier, 4);
-
 
       Serial.print(", ");
       Serial.print(uitBuff, 4);
@@ -87,17 +87,18 @@ void serieelFunc(){
       Serial.print(", ");
       Serial.print(armHoek);//1696);
 
+
+
+
+
       Serial.print(", ");
       Serial.print(karDcomp, 4);
 
+      Serial.print(", ");
+      Serial.print(karPos, 4);  
 
       Serial.print(", ");
-      Serial.print(karPos, 4);
-
-      
-
-      // Serial.print(", ");
-      // Serial.print(nieuwePos, 4);
+      Serial.print(nieuwePos, 4);
 
       // Serial.print(", ");
       // Serial.print(plaatAanwezigGefilterd, 3);
@@ -175,6 +176,15 @@ void serieelFunc(){
       else if(letter == 'P'){
         pauze();
       }
+      else if(letter == 'N'){    //
+        setStaat(S_SCHOONMAAK);
+      }
+      else if(letter == '~'){    //
+        setStaat(S_CALIBREER);
+      }
+      
+      
+      
       else if(letter == 'O'){
         armHoekCalibreer();
       }
@@ -191,6 +201,10 @@ void serieelFunc(){
         armTargetGewicht = Serial.parseFloat();
         Serial.println("armTargetGewicht: " + String(armTargetGewicht));
       }
+
+
+
+
 
       else if(letter == 'K'){    //set karP
         karPIDveranderen = !karPIDveranderen;
@@ -228,15 +242,18 @@ void serieelFunc(){
         }
       }
 
+
+
+
       
       else if(letter == '='){    //set basisVaart
         float i = Serial.parseFloat();
         targetRpm = i;
         Serial.println("targetRpm: " + String(targetRpm));
       }
-      else if(letter == 'N'){    //arm motor aan
-        setStaat(S_SCHOONMAAK);
-      }
+
+
+
 
       else if(letter == 'v'){    //set volume
         int i = Serial.parseInt();
@@ -245,12 +262,16 @@ void serieelFunc(){
         Serial.println("volume: " + String(i));
       }
 
-
-
-
-      else if(letter == '~'){    //
-        setStaat(S_CALIBREER);
+      else if(letter == 't'){    //set track offset
+        float i = Serial.parseFloat();
+        trackOffset = i;
+        Serial.println("trackOffset: " + String(i));
       }
+
+
+
+
+
 
 
       else if(letter == 'e'){ 
@@ -265,10 +286,11 @@ void serieelFunc(){
         eepromShit = 1;
       }
 
-
       else if(letter == 'r'){ 
         eepromUitlezen();
       }
+
+
 
 
       else if(letter == 'Q'){    //
@@ -305,6 +327,8 @@ void serieelFunc(){
 
 
 
+
+
       else if(letter == '?'){    //help
         Serial.println("help---------------------------------------------");   
         Serial.println("plateau P: " + String(plateauP, 5));
@@ -326,11 +350,11 @@ void serieelFunc(){
         Serial.println("isNaaldErop(): " + String(isNaaldErop()));
         Serial.println();
 
-        Serial.println("trackOffset: " + String(trackOffset);
+        Serial.println("trackOffset: " + String(trackOffset));
         Serial.println();
 
 
-        eepromUitlezen();
+        eepromPrint();
         Serial.println();
         
         // Serial.println("V faseVerschuiving: " + String(strobo.faseVerschuiving));

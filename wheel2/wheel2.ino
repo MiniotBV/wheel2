@@ -95,8 +95,6 @@ Interval ledInt(200, MILLIS);
 
 
 
-
-
 #include "knoppen.h"
 
 #include "display.h"
@@ -106,13 +104,12 @@ Interval ledInt(200, MILLIS);
 
 #include "opslag.h"
 
-
-
 #include "serieel.h"
 
-// ====================================================
-//  HARDWARE TIMER TEST
-// ====================================================
+
+
+
+
 
 #include <stdio.h>
 #include "pico/stdlib.h"
@@ -133,57 +130,6 @@ bool repeating_timer_callback(struct repeating_timer *t)
     return true;
 }
  
-// int main() {
-//     // stdio_init_all();
-//     // printf("Hello Timer!\n");
- 
-//     // Call alarm_callback in 2 seconds
-//     add_alarm_in_ms(2000, alarm_callback, NULL, false);
- 
-//     // Wait for alarm callback to set timer_fired
-//     while (!timer_fired) {
-//         tight_loop_contents();
-//     }
- 
-//     // Create a repeating timer that calls repeating_timer_callback.
-//     // If the delay is > 0 then this is the delay between the previous callback ending and the next starting.
-//     // If the delay is negative (see below) then the next call to the callback will be exactly 500ms after the
-//     // start of the call to the last callback
-//     struct repeating_timer timer;
-//     add_repeating_timer_ms(500, repeating_timer_callback, NULL, &timer);
-//     sleep_ms(3000);
-//     bool cancelled = cancel_repeating_timer(&timer);
-//     printf("cancelled... %d\n", cancelled);
-//     sleep_ms(2000);
- 
-//     // Negative delay so means we will call repeating_timer_callback, and call it again
-//     // 500ms later regardless of how long the callback took to execute
-//     add_repeating_timer_ms(-500, repeating_timer_callback, NULL, &timer);
-//     sleep_ms(3000);
-//     cancelled = cancel_repeating_timer(&timer);
-//     printf("cancelled... %d\n", cancelled);
-//     sleep_ms(2000);
-//     printf("Done\n");
-//     return 0;
-// }
-
-
-
-// static repeating_timer_t timers[10] = {0,};
-
-// repeating_timer_t testt;
-// testt.callback = &testCallback;
-
-// bool testCallback()
-// {
-//   Serial.println("hallo: " + String(micros()));
-// }
-
-// bool testt.repeating_timer_callback_t(){  //} *callback() {
-//   Serial.println("hallo: " + String(micros()));
-//   return testt;
-// }
-
 
 
 
@@ -196,44 +142,34 @@ void setup() {
 
   eepromUitlezen();
   
-// ====================================================
-//  HARDWARE TIMER TEST
-// ====================================================
 
-//https://raspberrypi.github.io/pico-sdk-doxygen/group__repeating__timer.html
+  // //https://raspberrypi.github.io/pico-sdk-doxygen/group__repeating__timer.html
+  // // Call alarm_callback in 2 seconds
+  // add_alarm_in_ms(2000, alarm_callback, NULL, false);
 
-  // add_repeating_timer_ms( 2000, callback, &timers[1], testt );
-  
-  // Call alarm_callback in 2 seconds
-    add_alarm_in_ms(2000, alarm_callback, NULL, false);
- 
-    // Wait for alarm callback to set timer_fired
-    while (!timer_fired) {
-        tight_loop_contents();
-    }
- 
-    // Create a repeating timer that calls repeating_timer_callback.
-    // If the delay is > 0 then this is the delay between the previous callback ending and the next starting.
-    // If the delay is negative (see below) then the next call to the callback will be exactly 500ms after the
-    // start of the call to the last callback
-    struct repeating_timer timer;
-    add_repeating_timer_us(500, repeating_timer_callback, NULL, &timer);
-    sleep_ms(3000);
-    bool cancelled = cancel_repeating_timer(&timer);
-    Serial.print("cancelled... "); Serial.println(cancelled);
-    sleep_ms(2000);
- 
-    // Negative delay so means we will call repeating_timer_callback, and call it again
-    // 500ms later regardless of how long the callback took to execute
-    add_repeating_timer_ms(-500, repeating_timer_callback, NULL, &timer);
-    sleep_ms(3000);
-    cancelled = cancel_repeating_timer(&timer);
-    Serial.print("cancelled..."); Serial.println(cancelled);
-    sleep_ms(2000);
-    // Done
-// ====================================================
-//  End HARDWARE TIMER TEST
-// ====================================================
+  // // Wait for alarm callback to set timer_fired
+  // while (!timer_fired) {
+  //     tight_loop_contents();
+  // }
+
+  // // Create a repeating timer that calls repeating_timer_callback.
+  // // If the delay is > 0 then this is the delay between the previous callback ending and the next starting.
+  // // If the delay is negative (see below) then the next call to the callback will be exactly 500ms after the
+  // // start of the call to the last callback
+  // struct repeating_timer timer;
+  // add_repeating_timer_ms(500, repeating_timer_callback, NULL, &timer);
+  // sleep_ms(3000);
+  // bool cancelled = cancel_repeating_timer(&timer);
+  // Serial.print("cancelled... "); Serial.println(cancelled);
+  // sleep_ms(2000);
+
+  // // Negative delay so means we will call repeating_timer_callback, and call it again
+  // // 500ms later regardless of how long the callback took to execute
+  // add_repeating_timer_ms(-500, repeating_timer_callback, NULL, &timer);
+  // sleep_ms(3000);
+  // cancelled = cancel_repeating_timer(&timer);
+  // Serial.print("cancelled..."); Serial.println(cancelled);
+  // sleep_ms(2000);
 
 
 
@@ -291,7 +227,7 @@ void loop2(){
 
     if(eepromShit > 0){
       eepromShit = 2;
-      delay(100);
+      sleep_ms(100);
     }
   }
 }
@@ -325,8 +261,6 @@ void loop() {
   volumeFunc();
 
   plateauFunc();
-
-  // staatFunc(); // zit in karFunc()
 
   pwmWriteF(ledWit, plaatAanwezigGefilterd);
 }

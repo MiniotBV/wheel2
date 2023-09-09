@@ -11,7 +11,7 @@
 
 
 
-#define NUMMER_TERUG_OPFSET 2 //hoeveel mm kan de kar bewegen voor er terug gespoeld kan worden naar het begin van het nummer ipv naar een vorrig nummer
+#define NUMMER_TERUG_OPFSET 1 //hoeveel mm kan de kar bewegen voor er terug gespoeld kan worden naar het begin van het nummer ipv naar een vorrig nummer
 
 #define ELPEE_PLAAT_BEGIN 147
 #define TIEN_INCH_PLAAT_BEGIN 125
@@ -31,7 +31,7 @@
 
 #define SENSOR_OFFSET 7.5//mm
 
-float trackOffset = 0;
+float trackOffset = 1;
 
 
 

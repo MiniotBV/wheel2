@@ -1,5 +1,17 @@
 
 
+enum errors{
+  E_GEEN = 0,
+  
+  E_KON_NIET_HOMEN,
+    
+  E_NAALD_TERUG_GELOPEN,
+  E_NAALD_NIET_BEWOGEN,
+
+  E_PLAAT_NIET_OPGANG,
+  
+};
+
 
 enum staats{
   S_STOPPEN,
