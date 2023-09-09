@@ -21,7 +21,7 @@ class ArmMotor
   float krachtHoog = 0.22;
 
 
-  float netOpDePlaatGewicht = 0.25;
+  float netOpDePlaatGewicht = 0.5;//0.25;
   float netInHokGewicht = -1.5;
 
 

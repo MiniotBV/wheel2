@@ -1,7 +1,9 @@
 //  Wheel2 
 //  rp2040
 
-#define versie 142
+//https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json
+
+#define versie 143
 
 
 #include <stdio.h>
