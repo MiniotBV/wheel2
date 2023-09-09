@@ -145,10 +145,12 @@ class Orientatie //          QMA7981
 
       z += ( (zRuw - zOffset) - z) / 10;
 
+
+
 			if(isFout){
-				isFout = ! isOngeveer(y, 0, 0.025);
+				isFout = ! isOngeveer(y, 0, 0.1);
 			}else{
-				isFout = ! isOngeveer(y, 0, 0.1);        
+				isFout = ! isOngeveer(y, 0, 0.15);        
 			}
 			
 
@@ -163,7 +165,7 @@ class Orientatie //          QMA7981
 					staatGoedInterval.reset();
 				}  
 
-				if(staatGoedInterval.sinds() > 5000  &&  staat == S_FOUTE_ORIENTATIE){
+				if(staatGoedInterval.sinds() > 1000  &&  staat == S_FOUTE_ORIENTATIE){
 					setStaat(S_HOK);
 				}
 			}
@@ -259,7 +261,8 @@ class Orientatie //          QMA7981
 
 		//set_clock_freq
 		data &= 0b11110000;      // clear bits 0-3
-		data |= (CLK_500_KHZ & 0b1111); // set freq on bits 0-3
+		data |= (CLK_500_KHZ & 0b1111); // set freq on bits 0-3 
+    // data |= (CLK_50_KHZ & 0b1111); // set freq on bits 0-3 
 		i2cWrite(adress, 0x11, data);
 
 

@@ -3,8 +3,8 @@
 
 //https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json
 
-#define versie 145
-
+#define versie 146
+  
 
 #include <stdio.h>
 #include "pico/stdlib.h"

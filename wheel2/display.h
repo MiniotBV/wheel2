@@ -88,6 +88,26 @@ void flipDisplayData(){
 
 
 
+void displayClear(){
+  for(int i = 0; i < displayLengte; i++){
+    displayData[i] = 0;
+  }    
+}
+
+
+// void displayTekenBlok(int begin, int einde, float kleur){
+//   int min = min(begin, einde);
+//   int max = max(begin, einde);
+//   for(int i = min; i < max; i++){
+//     if( i >= 0 && i < displayLengte){
+//       displayData[i] = kleur;
+//     }
+//   }  
+// }
+
+
+
+
 
 
 Interval displayInt(10000, MICROS);
@@ -107,93 +127,74 @@ void displayUpdate(){
 
 		int dispHalf = displayLengte/2;
 
+    displayClear();
+
 
 
 		//--------------------------------------------------------------------INTRO
     // if(0){
 		if(millis()<4000){
 
-			int pos = displayLengte - (millis()/10);
+      int pos = displayLengte - (millis()/10);
       int blokLengte = 10;
       int gatLengte = 3;
 
       char versieDisplay[500];
+      for(int i = 0; i < 500; i++){versieDisplay[i] = 0;}
       int versieDisplayTeller = 0;
 
       int decimalen = 3;
-      int versieDecimaal[decimalen] = {(versie) % 10,  (versie/10) % 10, (versie/100) % 10};
+      int versieDecimaal[decimalen];
 
-      for(int i = 0; i < decimalen; i++){
+      versieDecimaal[0] = (versie) % 10;
+      versieDecimaal[1] = (versie / 10) % 10;
+      versieDecimaal[2] = (versie / 100) % 10;
+
+      for (int i = 0; i < decimalen; i++) {
         int dec = versieDecimaal[i];
 
-        if(dec == 0){
-          for(int j = 0; j < gatLengte*2; j++){
-            if(j < gatLengte){
-              versieDisplay[versieDisplayTeller++] = 0;
-            }else{
-              versieDisplay[versieDisplayTeller++] = 1;
-            }
-          }        
-        } 
-        
-        while(dec > 0){
-          if(dec > 5){
-            dec -= 5;
-            for(int j = 0; j < gatLengte + blokLengte*2; j++){
-              if(j < gatLengte){
-                versieDisplay[versieDisplayTeller++] = 0;
-              }else{
-                versieDisplay[versieDisplayTeller++] = 1;
-              }
-            }
+        if (dec == 0) {
+          for (int j = 0; j < gatLengte * 2; j++) {
+            versieDisplay[versieDisplayTeller++] = (j < gatLengte) ? 0 : 1;
           }
-
-          if(dec > 0){
-            dec -= 1;
-            for(int j = 0; j < gatLengte + blokLengte; j++){
-              if(j < gatLengte){
-                versieDisplay[versieDisplayTeller++] = 0;
-              }else{
-                versieDisplay[versieDisplayTeller++] = 1;
-              }
-            }
-          }
-           
         }
 
+        while (dec > 0) {
+          if (dec > 5) {
+            dec -= 5;
+            for (int j = 0; j < gatLengte + blokLengte * 2; j++) {
+              versieDisplay[versieDisplayTeller++] = (j < gatLengte) ? 0 : 1;
+            }
+          }
 
-        if(dec == 0){
-          for(int j = 0; j < blokLengte; j++){
+          if (dec > 0) {
+            dec -= 1;
+            for (int j = 0; j < gatLengte + blokLengte; j++) {
+              versieDisplay[versieDisplayTeller++] = (j < gatLengte) ? 0 : 1;
+            }
+          }
+        }
+
+        if (dec == 0) {
+          for (int j = 0; j < blokLengte; j++) {
             versieDisplay[versieDisplayTeller++] = 0;
-          }            
-        } 
-
+          }
+        }
       }
 
+      for (int i = 0; i < displayLengte; i++) {
+        displayData[i] = (i >= pos) ? (versieDisplay[i - pos] == 1 ? 0.1 : 0) : 0;
+      }
+    }
 
-      for(int i = 0; i < displayLengte; i++){
-				if(i >= pos){
-					
-					if(versieDisplay[i - pos] == 1){
-						displayData[i] = 0.1;
-					}else{
-						displayData[i] = 0;
-					}
-				}else{
-					displayData[i] = 0;
-				}
-			}
-		}
+
+
 
 
     //----------------------------------------------------------------ERROR WEERGEVEN
 		else if(errorVeranderd.sinds() < 10000  &&  error != E_GEEN){ // 10seonden knipperen
 
 			if((millis()%1000) > 800){//                knipper
-				for(int i = 0; i < displayLengte; i++){
-					displayData[i] = 0;
-				}
-			}else{
 
 
 				int blokken = error;
@@ -275,28 +276,26 @@ void displayUpdate(){
 
 		//-------------------------------------------------------------------------WATER PAS STAND
 		else if(staat == S_FOUTE_ORIENTATIE){
-			float verdeelPuntTeller = 0;
+			
 
-			for(int i = 0; i < displayLengte; i++){
-				displayData[i] = 0;
+      for(int i = 0; i < displayLengte; i++){
+        float floatI = float(i) / displayLengte;
 
-				float floatI = float(i) / displayLengte;
+        if((  i < displayLengte/4  ||  i  > displayLengte - (displayLengte/4))  &&  (millis()%1000) < 800 ){
+          displayData[i] = 0.1;
+        }else{
+          displayData[i] = 0;
+        }
 
-				if(isOngeveer(floatI, (-orientatie.y*4) + 0.5, 0.1)){ // belltje
-					displayData[i] = 0.1;
-				}
 
-
-				
-				if(i == int(dispHalf + displayLengte * 0.1 * 2 )){ // puntje
+        if(isOngeveer(floatI, (-orientatie.y*3) + 0.5, 0.02)){ // belltje
 					displayData[i] = 0.9;
 				}
+      }
 
-				if(i == int(dispHalf - displayLengte * 0.1 * 2 )){ // puntje
-					displayData[i] = 0.9;
-				}
 
-			}
+      
+
 		}
 
 
@@ -463,7 +462,7 @@ void displayUpdate(){
 		
 		digitalWrite(displayEN, 0);
 
-		while(micros() - displayDelay < 200){}
+		while(micros() - displayDelay < 60){}
 
 		digitalWrite(displayEN, 1);
 
@@ -474,7 +473,7 @@ void displayUpdate(){
 
 
 		digitalWrite(displayEN, 0);
-		delayMicroseconds(4000);
+		delayMicroseconds(1000);
 		digitalWrite(displayEN, 1);
 
 		// displayPrint(1);
@@ -483,100 +482,9 @@ void displayUpdate(){
 
 
 
-		
-		
-
-		// if(lichtLevel == 0){
-		//   displayPrint(0);//alles boven helderheid 0
-
-		//   pwmWriteF(displayEN, 0.8); // display uit
-
-		//   commitDisplay();
-
-		//   lichtLevel++;
-		// }
-		// if(lichtLevel >= 1){
-		//   displayPrint(0.5);//alles boven helderheid 0.5
-			
-		//   pwmWriteF(displayEN, 0.1); // display uit
-
-		//   commitDisplay();
-
-		//   lichtLevel = 0;
-		// }
-
 
 	}
 }
 
-
-
-
-
-
-
-// volatile bool timer_fired = false;
-
-// int64_t alarm_callback(alarm_id_t id, void *user_data) {
-//     Serial.print("Timer fired ");
-//     Serial.println( (int) id);
-//     timer_fired = true;
-//     return 0; // Can return a value here in us to fire in the future
-// }
- 
-// bool repeating_timer_callback(struct repeating_timer *t) 
-// {
-//     Serial.print("Repeat at: ");
-//     Serial.println(time_us_64());
-//     return true;
-// }
-
-
-
-
-//   //https://raspberrypi.github.io/pico-sdk-doxygen/group__repeating__timer.html
-//   // Call alarm_callback in 2 seconds
-//   add_alarm_in_ms(2000, alarm_callback, NULL, false);
-
-//   // Wait for alarm callback to set timer_fired
-//   while (!timer_fired) {
-//       tight_loop_contents();
-//   }
-
-//   // Create a repeating timer that calls repeating_timer_callback.
-//   // If the delay is > 0 then this is the delay between the previous callback ending and the next starting.
-//   // If the delay is negative (see below) then the next call to the callback will be exactly 500ms after the
-//   // start of the call to the last callback
-//   struct repeating_timer timer;
-//   add_repeating_timer_ms(500, repeating_timer_callback, NULL, &timer);
-//   sleep_ms(3000);
-//   bool cancelled = cancel_repeating_timer(&timer);
-//   Serial.print("cancelled... "); Serial.println(cancelled);
-//   sleep_ms(2000);
-
-//   // Negative delay so means we will call repeating_timer_callback, and call it again
-//   // 500ms later regardless of how long the callback took to execute
-//   add_repeating_timer_ms(-500, repeating_timer_callback, NULL, &timer);
-//   sleep_ms(3000);
-//   cancelled = cancel_repeating_timer(&timer);
-//   Serial.print("cancelled..."); Serial.println(cancelled);
-//   sleep_ms(2000);
-
-
-
-
-
-
-
-
-// void setPwm(int pin){
-// 	gpio_set_function(pin, GPIO_FUNC_PWM);
-// 	pwm_set_enabled(  pwm_gpio_to_slice_num(pin),  true);
-// 	pwm_set_wrap(  pwm_gpio_to_slice_num(pin),   PMAX + 1);
-// }
-
-// void pwmWrite(int pin, int level){
-// 	pwm_set_chan_level(  pwm_gpio_to_slice_num(pin),  pwm_gpio_to_channel(pin), level);
-// }
 
 
