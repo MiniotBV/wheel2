@@ -1,4 +1,3 @@
-#include "api/Common.h"
 
 
 
@@ -94,9 +93,9 @@ class COMPVAART
 		//---------------------------------------------onbalans compensatie
 
 		float onbalansFilterCurve[pprmax];
-    float onbalansFilterCurveBreedte = 100;
-    int onbalansFase = 50;
-		float onbalansCompGewicht = 2;
+    float onbalansFilterBreedte = 65;//50;//100;
+    int onbalansFase = 25;//50;//50;
+		float onbalansCompGewicht = 1.3;//2;
     
 		float onbalansCompensatie[pprmax];
 		volatile float onbalansComp = 0;
@@ -454,7 +453,7 @@ class COMPVAART
       for(int i = 0; i < pulsenPerRev; i++){
         int verschovenI = i - (pulsenPerRev / 2) ;
         float j = float(verschovenI) / pulsenPerRev;
-        onbalansFilterCurve[rondTrip(verschovenI, pulsenPerRev)]  =  exp( -onbalansFilterCurveBreedte * (j*j));
+        onbalansFilterCurve[rondTrip(verschovenI, pulsenPerRev)]  =  exp( -onbalansFilterBreedte * (j*j));
         totaal += onbalansFilterCurve[rondTrip(verschovenI, pulsenPerRev)];
       }
 

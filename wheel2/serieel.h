@@ -243,9 +243,9 @@ void checkenVoorCommando(int info){
 	if(checkZinBool(    "KC",     "karUitMiddenCompAan",      info, karUitMiddenCompAan)){return;}
 
 
-  if(checkZinInt(     "SOF",    "strobo.onbalansFase",      info, strobo.onbalansFase)){return;}
 	if(checkZinFloat(   "SOG",    "strobo.onbalansCompGewicht", info, strobo.onbalansCompGewicht)){return;}
-  if(checkZinFloat(   "SOFCB",  "strobo.onbalansFilterCurveBreedte",  info, strobo.onbalansFilterCurveBreedte)){strobo.maakOnbalansFilterCurve(); return;}
+  if(checkZinFloat(   "SOFB",  "strobo.onbalansFilterBreedte",  info, strobo.onbalansFilterBreedte)){strobo.maakOnbalansFilterCurve(); return;}
+  if(checkZinInt(     "SOF",    "strobo.onbalansFase",      info, strobo.onbalansFase)){return;}
 
 	if(checkZinCommando("SCZ",    "strobo.clearCompSamplesOpTellerNull()", info)){   strobo.clearCompSamplesOpTellerNull(); return;}
 	if(checkZinCommando("SCC",    "strobo.clearCompSamples()", info)){   strobo.clearCompSamples(); return;}
@@ -310,7 +310,9 @@ void checkenVoorCommando(int info){
 		// orientatie.print();
 		// Serial.println();
 
-		// Serial.println("strobo.onbalansFase: " + String(strobo.onbalansFase));
+		Serial.println("strobo.onbalansFase: " + String(strobo.onbalansFase));
+    Serial.println("strobo.onbalansCompGewicht: " + String(strobo.onbalansCompGewicht));
+    Serial.println("strobo.onbalansFilterBreedte: " + String(strobo.onbalansFilterBreedte));
 
   
 		// Serial.println("strobo.sampleNum: " + String(strobo.sampleNum));
@@ -352,8 +354,6 @@ void serieelFunc(){
       Serial.print(", ");
 			Serial.print(strobo.onbalansFilterCurve[strobo.teller], 4);
 
-      Serial.print(", ");
-			Serial.print(strobo.onbalansFilterCurve[strobo.teller], 4);
       
       // Serial.print(", ");
 			// Serial.print(strobo.vaartLowPass, 3);
