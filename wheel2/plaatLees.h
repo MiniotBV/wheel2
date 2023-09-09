@@ -17,9 +17,6 @@ float plaatLeesBuffer[2000][2];
 int plaatLeesBufferTeller = 0;
 int plaatLeesBufferLengte = 0;
 
-// float plaatLeesMax;
-// float plaatLeesMin;
-
 bool knip;
 
 
@@ -74,7 +71,7 @@ bool isPlaatAanwezig(){
 
 
 // #define plaatKnipperInterval 50
-#define plaatDetectieTreshold 100
+#define plaatDetectieTreshold 200
 
 void plaatDetectie(){
 	
@@ -250,9 +247,6 @@ void plaatLeesFunc(){
 		plaatLeesDiv = plaatLeesWaarde - plaatLeesWaardePrev;
     plaatLeesWaardePrev = plaatLeesWaarde;
 
-
-
-
 		scannenVoorTracks();//--------------------------------                   TRACKS LEZEN
 
 
@@ -260,7 +254,6 @@ void plaatLeesFunc(){
 	
 	}else{
 		plaatLeesLedSetMilliAmp(plaatLeesStroom);
-		// plaatLeesMin = plaatLeesRuw;
 	}
 
 
