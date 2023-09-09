@@ -498,14 +498,6 @@ void staatDingen(){
     }
   }
 
-  if(staat == S_UITROLLEN_NA_SPOELEN){
-    if(beweegKarNaarPos(targetNummerPos, KAR_MAX_SNELHEID/4)){ 
-      setStaat(S_SPELEN);
-      return;
-    }
-    return;
-  }
-
 
 
 
