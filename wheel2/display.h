@@ -82,6 +82,14 @@ void commitDisplay(){
 
 
 
+void flipDisplayData(){
+	for(int i = 0; i < displayLengte/2; i++){
+		float buff = displayData[i];
+		displayData[i] = displayData[(displayLengte-1) - i];
+		displayData[(displayLengte-1) - i] = buff;
+	}
+}
+
 
 
 
@@ -106,25 +114,38 @@ void displayUpdate(){
 
 
 
-    //--------------------------------------------------------------------INTRO
-    if(millis()<4000)
-    {
+		//--------------------------------------------------------------------INTRO
+		if(millis()<4000){
 
-      int pos = (millis()/5) - 200;
+			int pos = (millis()/5) - 300;
 
-      for(int i = 0; i < displayLengte; i++){
-        if(i > pos  &&  i < pos + 200){
-          
-          if((i - pos) % 20 < 16){
-            displayData[i] = 0.1;
-          }else{
-            displayData[i] = 0;
-          }
-        }else{
-          displayData[i] = 0;
-        }
-      }
-    }
+			for(int i = 0; i < displayLengte; i++){
+				if(i > pos  &&  i < pos + 200){
+					
+					if((i - pos) % 20 < 16){
+						displayData[i] = 0.1;
+					}else{
+						displayData[i] = 0;
+					}
+				}else{
+					displayData[i] = 0;
+				}
+			}
+
+      // float pos = millis()/1000.0;
+
+      // int x = dispHalf + sin(      pos * TAU ) * dispHalf;
+      // int y = dispHalf + sin(0.4 + pos * TAU ) * dispHalf;
+
+
+      // for(int i = 0; i < displayLengte; i++){
+			// 	if(i > min(x, y) && i < max(x, y)){
+      //     displayData[i] = 0.1;
+      //   }else{
+      //     displayData[i] = 0;
+      //   }
+			// }
+		}
 
 
 				//----------------------------------------------------------------ERROR WEERGEVEN
@@ -193,6 +214,10 @@ void displayUpdate(){
 				}
 
 			}
+
+      if(!orientatie.isStaand){
+        flipDisplayData();
+      }
 		}
 
 	 
@@ -222,17 +247,17 @@ void displayUpdate(){
 
 				float floatI = float(i) / displayLengte;
 
-				if(isOngeveer(floatI, (orientatie.gefilterd*4) + 0.5, 0.1)){
+				if(isOngeveer(floatI, (-orientatie.gefilterd*4) + 0.5, 0.1)){ // belltje
 					displayData[i] = 0.1;
 				}
 
 
 				
-				if(i == int(dispHalf + displayLengte * 0.1 * 2 )){
+				if(i == int(dispHalf + displayLengte * 0.1 * 2 )){ // puntje
 					displayData[i] = 0.9;
 				}
 
-				if(i == int(dispHalf - displayLengte * 0.1 * 2 )){
+				if(i == int(dispHalf - displayLengte * 0.1 * 2 )){ // puntje
 					displayData[i] = 0.9;
 				}
 
@@ -347,13 +372,18 @@ void displayUpdate(){
 
 				
 			}
+
+
+      if(!orientatie.isStaand){
+        flipDisplayData();
+      }
 		}
 
 
 		//-----------------------------------------------------------KNOP BLINK
 		if(ledBlinkInterval.sinds() < 50){
 			
-			int knopGroote = 4;//0.01 * displayLengte;
+			int knopGroote = 4;
 			int knopGrooteHalf = knopGroote/2;
 			int knopUitMidden = 0.23 * displayLengte;
 
@@ -363,13 +393,13 @@ void displayUpdate(){
 				}
 			}
 
-			if(knopStaat[gecompenseerdeDoorspoel()] != LOSGELATEN){
+			if(knopStaat[KNOP_TERUGSPOEL] != LOSGELATEN){
 				for(int i = dispHalf - knopUitMidden - knopGroote; i < dispHalf - knopUitMidden; i++){
 					displayData[i] = 0.9;
 				}
 			}
 
-			if(knopStaat[gecompenseerdeTerugspoel()] != LOSGELATEN){
+			if(knopStaat[KNOP_DOORSPOEL] != LOSGELATEN){
 				for(int i = dispHalf + knopUitMidden; i < dispHalf + knopUitMidden + knopGroote; i++){
 					displayData[i] = 0.9;
 				}

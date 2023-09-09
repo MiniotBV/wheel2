@@ -27,32 +27,32 @@ float plaatSensorTarget = 1500;
 
 
 int volt2pwm(float volt){
-  return (volt * PMAX) / 3.3;
+	return (volt * PMAX) / 3.3;
 }
 
 
 
 void plaatLeesLedSetMilliAmp(float amp){
-  amp /= 1000.0;
-  pwmWrite(plaatLeesLed, volt2pwm(1 + (100 * amp)));  //100ohm + 1volt led drop
+	amp /= 1000.0;
+	pwmWrite(plaatLeesLed, volt2pwm(1 + (100 * amp)));  //100ohm + 1volt led drop
 }
 
 void plaatLeesLeduit(){
-  pwmWrite(plaatLeesLed, 0);  //100ohm + 1volt led drop
+	pwmWrite(plaatLeesLed, 0);  //100ohm + 1volt led drop
 }
 
 
 
 
 void plaatLeesInit(){
-  setPwm(plaatLeesLed);
-  plaatLeesLedSetMilliAmp(0);//10mA
+	setPwm(plaatLeesLed);
+	plaatLeesLedSetMilliAmp(0);//10mA
 }
 
 
 
 bool isPlaatAanwezig(){
-  return plaatAanwezigGefilterd > 0.5;
+	return plaatAanwezigGefilterd > 0.5;
 }
 
 
@@ -66,17 +66,17 @@ bool isPlaatAanwezig(){
 #define plaatDetectieTreshold 100
 
 void plaatDetectie(){
-  
-  plaatAanwezig = plaatLeesAbsDiv > plaatDetectieTreshold;//als er genoeg amplitude is is er een plaat
+	
+	plaatAanwezig = plaatLeesAbsDiv > plaatDetectieTreshold;//als er genoeg amplitude is is er een plaat
 
-  plaatAanwezigGefilterd += (plaatAanwezig - plaatAanwezigGefilterd) / 10;
+	plaatAanwezigGefilterd += (plaatAanwezig - plaatAanwezigGefilterd) / 10;
 
 
-  if(!isPlaatAanwezig() &&  (staat == S_SPELEN  ||  staat == S_PAUZE)){   // is er nog een plaat aanwezig?
-    Serial.println("plaat is verdrwedene??");
-    stoppen();
-    return;
-  }
+	if(!isPlaatAanwezig() &&  (staat == S_SPELEN  ||  staat == S_PAUZE)){   // is er nog een plaat aanwezig?
+		Serial.println("plaat is verdrwedene??");
+		stoppen();
+		return;
+	}
 }
 
 
@@ -85,29 +85,29 @@ void plaatDetectie(){
 
 
 void zetNummersAlsEenSingletje(){
-  hoeveelNummers = 1;
-  nummers[1] = SINGLETJE_PLAAT_BEGIN;
+	hoeveelNummers = 1;
+	nummers[1] = SINGLETJE_PLAAT_BEGIN;
 
-  if(nummers[0] > SINGLETJE_PLAAT_BEGIN - 12){
-    nummers[0] = 55;
-    Serial.println("moest einde plaat aanpassen");
-  }
+	if(nummers[0] > SINGLETJE_PLAAT_BEGIN - 12){
+		nummers[0] = 55;
+		Serial.println("moest einde plaat aanpassen");
+	}
 }
 
 
 
 void nieuwNummer(float pos){
-  if(hoeveelNummers == 0){
-    Serial.println("einde plaat: " + String(pos));
-  }else{
-    float afstand = pos - nummers[hoeveelNummers-1];
-    if(afstand < 2){return;}
-    Serial.println("track op: " + String(pos));
-    // Serial.println("afstand tot vorrige track: " + String(afstand));
-  }
+	if(hoeveelNummers == 0){
+		Serial.println("einde plaat: " + String(pos));
+	}else{
+		float afstand = pos - nummers[hoeveelNummers-1];
+		if(afstand < 2){return;}
+		Serial.println("track op: " + String(pos));
+		// Serial.println("afstand tot vorrige track: " + String(afstand));
+	}
 
-  nummers[hoeveelNummers] = pos;
-  hoeveelNummers++;  
+	nummers[hoeveelNummers] = pos;
+	hoeveelNummers++;  
 }
 
 
@@ -120,38 +120,38 @@ bool trackOnderTresh = true;
 
 
 void scannenVoorTracks(){
-  
-  if(sensorPos < PLAAT_EINDE + 2  ||  staat != S_NAAR_BEGIN_PLAAT){
-    return;
-  }
+	
+	if(sensorPos < PLAAT_EINDE + 2  ||  staat != S_NAAR_BEGIN_PLAAT){
+		return;
+	}
 
-  if(plaatLeesWaarde < trackTresshold / 2 &&   trackOnderTresh){  trackOnderTresh = false; }
+	if(plaatLeesWaarde < trackTresshold / 2 &&   trackOnderTresh){  trackOnderTresh = false; }
 
-  if(plaatLeesWaarde > trackTresshold     &&  !trackOnderTresh){
-    trackOnderTresh = true;
+	if(plaatLeesWaarde > trackTresshold     &&  !trackOnderTresh){
+		trackOnderTresh = true;
 
-    nieuwNummer(sensorPos - trackOffset);
-  }
+		nieuwNummer(sensorPos - trackOffset);
+	}
 
 
-  if(plaatLeesGolven){
+	if(plaatLeesGolven){
 
-    Serial.print(plaatLeesWaarde);
+		Serial.print(plaatLeesWaarde);
 
-    Serial.print(", ");
-    Serial.print(plaatLeesAbsDiv);
+		Serial.print(", ");
+		Serial.print(plaatLeesAbsDiv);
 
-    Serial.print(", ");
-    Serial.print(plaatLeesMax);
-    Serial.print(", ");
-    Serial.print(plaatLeesMin);
+		Serial.print(", ");
+		Serial.print(plaatLeesMax);
+		Serial.print(", ");
+		Serial.print(plaatLeesMin);
 
-    Serial.print(", ");
-    Serial.print(plaatLeesStroom * 100);
+		Serial.print(", ");
+		Serial.print(plaatLeesStroom * 100);
 
-    Serial.println();
-  }
-  
+		Serial.println();
+	}
+	
 }
 
 
@@ -169,50 +169,50 @@ void scannenVoorTracks(){
 Interval plaatLeesInt(10000, MICROS);
 
 void plaatLeesFunc(){
-  if(!plaatLeesInt.loop()){return;}
-    
-  if(staat == S_HOK){ // als de kar in hok is, plaat scanner uitzetten
-    hoeveelNummers = 0;
-    nummers[hoeveelNummers] = 1;
-    plaatLeesLeduit();
-    return;
-  }
+	if(!plaatLeesInt.loop()){return;}
+		
+	if(staat == S_HOK){ // als de kar in hok is, plaat scanner uitzetten
+		hoeveelNummers = 0;
+		nummers[hoeveelNummers] = 1;
+		plaatLeesLeduit();
+		return;
+	}
 
 
 
-  plaatLeesRuwPrev = plaatLeesRuw;
-  plaatLeesRuw = analogRead(plaatLees);
-  plaatLeesRuwDiv = plaatLeesRuw - plaatLeesRuwPrev;
+	plaatLeesRuwPrev = plaatLeesRuw;
+	plaatLeesRuw = analogRead(plaatLees);
+	plaatLeesRuwDiv = plaatLeesRuw - plaatLeesRuwPrev;
 
 
-  plaatLeesAbsDiv = abs(plaatLeesRuwDiv);
+	plaatLeesAbsDiv = abs(plaatLeesRuwDiv);
 
-  plaatLeesWaarde = abs(plaatLeesAbsDiv - plaatSensorTarget);
+	plaatLeesWaarde = abs(plaatLeesAbsDiv - plaatSensorTarget);
 
 
-  plaatDetectie();
-  
+	plaatDetectie();
+	
 
-  if(knip){
-    plaatLeesLeduit();
+	if(knip){
+		plaatLeesLeduit();
 
-    float ledStroomP = (plaatSensorTarget - plaatLeesAbsDiv) * plaatLedStroomP;
-    plaatLeesStroom += limieteerF(ledStroomP,  -1, 1);
+		float ledStroomP = (plaatSensorTarget - plaatLeesAbsDiv) * plaatLedStroomP;
+		plaatLeesStroom += limieteerF(ledStroomP,  -1, 1);
 
-    plaatLeesStroom = limieteerF(plaatLeesStroom, 5, 30);
+		plaatLeesStroom = limieteerF(plaatLeesStroom, 5, 30);
 
-    plaatLeesMax = plaatLeesRuw;
+		plaatLeesMax = plaatLeesRuw;
 
-    scannenVoorTracks();//--------------------------------                   TRACKS LEZEN
-  
-  
-  }else{
-    plaatLeesLedSetMilliAmp(plaatLeesStroom);
-    plaatLeesMin = plaatLeesRuw;
-  }
+		scannenVoorTracks();//--------------------------------                   TRACKS LEZEN
+	
+	
+	}else{
+		plaatLeesLedSetMilliAmp(plaatLeesStroom);
+		plaatLeesMin = plaatLeesRuw;
+	}
 
-  
-  knip = !knip; //toggle led
+	
+	knip = !knip; //toggle led
 
 }
 

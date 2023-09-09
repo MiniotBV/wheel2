@@ -220,8 +220,8 @@ void naarVolgendNummer(){
 	int nummer = hoeveelNummers - 1;
 
   if(nummer <= 0){ // nummer 0 is het begin van nummers (dus niet en egt nummer)
-    stoppenOfHerhalen();//stoppen();
-    return;
+	stoppenOfHerhalen();//stoppen();
+	return;
   }
 
 	while(pos - 2 <= nummers[nummer]){ // 2mm lopen voordat hij hetzelfde nummer gaat herhalen
@@ -468,7 +468,7 @@ void staatDingen(){
 	if(staat == S_NAAR_NUMMER){
 		if(naaldEraf()){
 			if(beweegKarNaarPos(targetNummerPos, KAR_MAX_SNELHEID)){
-        setStaat(S_SPELEN);
+		setStaat(S_SPELEN);
 				return;
 			}
 		}
@@ -582,8 +582,10 @@ bool karMotorUitvoeren(){
 
 	armHoekRuw += ( analogRead(hoekSensor) - armHoekRuw ) / 6;
 
-	if(armHoekRuw < armHoekMinCall){armHoekMinCall = armHoekRuw;}
-	if(armHoekRuw > armHoekMaxCall){armHoekMaxCall = armHoekRuw;}
+  if(staat == S_CALIBREER){
+    	if(armHoekRuw < armHoekMinCall){armHoekMinCall = armHoekRuw;}
+      if(armHoekRuw > armHoekMaxCall){armHoekMaxCall = armHoekRuw;}
+  }
 	
 	armHoekCall = mapF(armHoekRuw, armHoekMin, armHoekMax, 0, 1);
 	
@@ -594,17 +596,17 @@ bool karMotorUitvoeren(){
 
 	armHoek = armHoekCall - armHoekOffset;
 
-
-  if(  !(   staat == S_HOK  ||  staat == S_NAAR_HOK  ||  staat == S_HOMEN_VOOR_SPELEN  ||  staat == S_HOMEN_VOOR_SCHOONMAAK  ||  staat == S_SCHOONMAAK||  staat == S_FOUTE_ORIENTATIE   ) ){
-    if(armHoekCall > 0.95){
-      setError(E_ARMHOEK_LIMIET_POS);
-      staat = S_HOK;
-    }
-    if(armHoekCall < 0.05){
-      setError(E_ARMHOEK_LIMIET_NEG);
-      staat = S_HOK;
-    }
-  }
+  
+	if( staat == S_NAAR_BEGIN_PLAAT || staat == S_UITROLLEN_VOOR_SPELEN || staat == S_SPELEN || staat == S_PAUZE || staat == S_NAAR_NUMMER || staat == S_DOOR_SPOELEN || staat == S_TERUG_SPOELEN || staat == S_UITROLLEN_NA_SPOELEN ){
+		if(armHoekCall > 0.95){
+			setError(E_ARMHOEK_LIMIET_POS);
+			staat = S_HOK;
+		}
+		if(armHoekCall < 0.05){
+			setError(E_ARMHOEK_LIMIET_NEG);
+			staat = S_HOK;
+		}
+	}
 
 
 	sensorPos = karPos - SENSOR_OFFSET;

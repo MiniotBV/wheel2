@@ -1,7 +1,7 @@
 //  ## Wheel2 ##
 //      rp2040
 
-#define versie 78
+#define versie 79
 
 
 #include <stdio.h>
@@ -31,12 +31,12 @@
 
 
 void enableInterupts(bool aan){
-  // pinMode(plateauA,     INPUT_PULLUP);
-  // pinMode(plateauB,     INPUT_PULLUP);
-  // pinMode(plateauIndex, INPUT_PULLUP);
+	// pinMode(plateauA,     INPUT_PULLUP);
+	// pinMode(plateauB,     INPUT_PULLUP);
+	// pinMode(plateauIndex, INPUT_PULLUP);
 
-  gpio_set_irq_enabled_with_callback(plateauA,   GPIO_IRQ_EDGE_RISE + GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
-  gpio_set_irq_enabled_with_callback(plateauB,   GPIO_IRQ_EDGE_RISE + GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
+	gpio_set_irq_enabled_with_callback(plateauA,   GPIO_IRQ_EDGE_RISE + GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
+	gpio_set_irq_enabled_with_callback(plateauB,   GPIO_IRQ_EDGE_RISE + GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
 }
 
 
@@ -80,43 +80,43 @@ Interval ledInt(200, MILLIS);
 
 
 void setup() {
-  analogReadResolution(12);// moet sinds nieuwe core versie, anders leest hij in 10bit
+	analogReadResolution(12);// moet sinds nieuwe core versie, anders leest hij in 10bit
 
-  Serial.begin(115200);
+	Serial.begin(115200);
 
-  opslagInit();
-  eepromUitlezen();
-
-
-  versterkerInit();
-
-  displayInit();  
-
-  armInit();
-
-  karInit();
-
-  plaatLeesInit();
-
-  plateauInit();
+	opslagInit();
+	eepromUitlezen();
 
 
-  
-  multicore_launch_core1(loop2);
-  
-  pinMode(slaapStand, OUTPUT);
-  digitalWrite(slaapStand, 1); // hou de batterij aan
+	versterkerInit();
+
+	displayInit();  
+
+	armInit();
+
+	karInit();
+
+	plaatLeesInit();
+
+	plateauInit();
 
 
-  enableInterupts(true);//zet interrupts aan
+	
+	multicore_launch_core1(loop2);
+	
+	pinMode(slaapStand, OUTPUT);
+	digitalWrite(slaapStand, 1); // hou de batterij aan
 
 
-  pinMode(ledWit, OUTPUT);
-  digitalWrite(ledWit, 1);//zet led aan
+	enableInterupts(true);//zet interrupts aan
+
+
+	pinMode(ledWit, OUTPUT);
+	digitalWrite(ledWit, 1);//zet led aan
 
 
 
-  berekenAntiCogging();
+	berekenAntiCogging();
 
 
 
@@ -130,26 +130,26 @@ void setup() {
 
 
 void core1Dingen(){
-  displayUpdate();
-  
-  serieelFunc();
+	displayUpdate();
+	
+	serieelFunc();
 
-  knoppenUpdate();
+	knoppenUpdate();
 
-  armFunc();  
+	armFunc();  
 }
 
 
 
 
 void loop2(){
-  while(1){
-    core1Dingen();
+	while(1){
+		core1Dingen();
 
-    if(eepromShit){//sckakel core2 tijdelijk uit om te zorge dat er vijlig flash beschreven kan worde
-      sleep_ms(100);
-    }
-  }
+		if(eepromShit){//sckakel core2 tijdelijk uit om te zorge dat er vijlig flash beschreven kan worde
+			sleep_ms(100);
+		}
+	}
 }
 
 
@@ -159,24 +159,24 @@ void loop2(){
 
 void loop() {
 
-  if(eepromShit){//dit moet omdat je core2 moet uitschakelen om in flash te schrijven, zodat je niet leest en schrijft tegelijkertijd
-    delay(20);
-    eepCommit();
-    Serial.println("opgelagen!");
-  }
+	if(eepromShit){//dit moet omdat je core2 moet uitschakelen om in flash te schrijven, zodat je niet leest en schrijft tegelijkertijd
+		delay(20);
+		eepCommit();
+		Serial.println("opgelagen!");
+	}
 
 
-  plaatLeesFunc();
+	plaatLeesFunc();
 
-  karMotorFunc();
+	karMotorFunc();
 
-  volumeFunc();
+	volumeFunc();
 
-  plateauFunc();
+	plateauFunc();
 
 
-  // digitalWrite(ledWit, isNaaldEropVoorZoLang(1000));
-  digitalWrite(ledWit, isPlaatAanwezig());
+	// digitalWrite(ledWit, isNaaldEropVoorZoLang(1000));
+	digitalWrite(ledWit, isPlaatAanwezig());
 }
 
 
@@ -186,6 +186,6 @@ void loop() {
 
 
 void gpio_callback(uint gpio, uint32_t events) {
-  strobo.interrupt();
+	strobo.interrupt();
 }
 
