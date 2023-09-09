@@ -233,7 +233,7 @@ void plateauStaatDingen(){
 				return;
 			}
 
-			if(glad  <  targetRpm * 0.1   &&     draaienInterval.sinds() > 1000){//   <5% target snelheid na een kort tijd
+			if(glad  <  targetRpm * 0.1   &&     draaienInterval.sinds() > 500){//   <5% target snelheid na een kort tijd
 				
 				plateauPrint("kon niet opgang komen");
 				stoppen();//--------------------------------------------

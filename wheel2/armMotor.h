@@ -134,7 +134,7 @@ void armFunc(){
 			return;
 		}
 
-    if(staat == S_HOMEN_VOOR_SPELEN  ||  staat == S_NAAR_HOK){
+    if(staat == S_HOMEN_VOOR_SPELEN  ||  staat == S_HOMEN_VOOR_SCHOONMAAK  ||staat == S_NAAR_HOK){
       if(armMotorAan == true){
         Serial.println("NAALD HAD NOOIT AAN MOGEN STAAN!!!");
         naaldNoodStop();

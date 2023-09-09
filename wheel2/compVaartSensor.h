@@ -25,18 +25,13 @@ class COMPVAART
 	public:
 		//-------------------------------------snelheid
 		volatile unsigned int vaartInterval;
-											int sampleNum;
-		volatile          int samples[100];
-		volatile unsigned int sampleTeller = 0;
 		volatile unsigned int tijd;
 		volatile unsigned int interval;
-		float gemiddelde = sampleMax;
 
-		unsigned int procesTijd;
-		unsigned int procesInterval;
+
 
 		//-----------------------------------richting
-		byte sens, sensPrev;
+		char sens, sensPrev;
 		int dir;
 		int dirPrev;
 		int glitchTeller;
@@ -52,6 +47,12 @@ class COMPVAART
 		
 
 		//---------------------------------------filter
+                      int sampleNum;
+		volatile          int samples[100];
+		volatile unsigned int sampleTeller = 0;
+
+    float gemiddelde = sampleMax;
+
 		float vaart;
 		float glad;
 		float gladglad;
@@ -79,7 +80,7 @@ class COMPVAART
 
 
 		//---------------------------------------------onbalans compensatie
-		bool onbalansCompAan = true;
+
 		int onbalansFase = 70;//90;//75;//90;  50 in pulsen per rev
 		
 		float gemiddeldeSnelheidPre, gemiddeldeSnelheid;
@@ -101,9 +102,17 @@ class COMPVAART
 
 
 
+    //------------------------------------------------debug
+    unsigned int procesTijd;
+		unsigned int procesInterval;
 
 		bool golven = false;    
+    bool onbalansCompAan = true;
 		bool plaatUitMiddenComp = true;
+
+
+
+
 
 
 

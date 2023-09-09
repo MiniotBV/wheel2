@@ -177,7 +177,7 @@ void checkenVoorCommando(bool info){
 	if(checkZinFloat("PI", "plateauI", info, plateauI)){return;}
 	if(checkZinFloat("PD", "plateauD", info, plateauD)){return;}
 
-	if(checkZinFloat("TR", "targetRpm", info, targetRpm)){return;}
+	if(checkZinFloat("TR", "targetRpm", info, targetRpm)){draaienInterval.reset(); return;}
 
 	if(checkZin("PA", "plateauDraaien()", info)){ plateauDraaien(); return;}
 	if(checkZin("PS", "plateauStoppen()", info)){ plateauStoppen(); return;}

@@ -418,6 +418,8 @@ void staatDingen(){
 		return;
 	}
 
+  
+
 
 
 
@@ -492,22 +494,13 @@ void staatDingen(){
 		targetNummerPos = karPos;//om het display opteschonene
 	}
 
-	if(staat == S_UITROLLEN_NA_SPOELEN){
-		if(beweegKarNaarPos(targetNummerPos, KAR_MAX_SNELHEID/4)){ 
-			setStaat(S_SPELEN);
-			return;
-		}
-		return;
-	}
+
 
 
 
 
 	if(staat == S_PAUZE){
 		if(naaldEraf()){
-			// if(staatVeranderd.sinds() > 3000){
-			//   armHoekCentreer();
-			// }
 			beweegKarNaarPos(targetNummerPos, KAR_MAX_SNELHEID);
 		}
 		return;
