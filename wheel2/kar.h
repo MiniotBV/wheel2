@@ -582,7 +582,7 @@ bool karMotorUitvoeren(){
 
 	armHoekRuw += ( analogRead(hoekSensor) - armHoekRuw ) / 6;
 
-  if(staat == S_CALIBREER){
+  if(millis() > 1000){
     	if(armHoekRuw < armHoekMinCall){armHoekMinCall = armHoekRuw;}
       if(armHoekRuw > armHoekMaxCall){armHoekMaxCall = armHoekRuw;}
   }
