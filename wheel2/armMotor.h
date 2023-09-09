@@ -68,12 +68,12 @@ void armFunc(){
 }
 
 
-bool naaldErrop(){
+bool isNaaldErop(){
   armMotorAan = true;
   return armKracht == armTargetKracht;
 }
 
-bool naaldErraf(){
+bool isNaaldEraf(){
   armMotorAan = false;
   return armKracht == 0;
 }

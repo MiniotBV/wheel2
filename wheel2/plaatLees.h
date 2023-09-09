@@ -6,6 +6,7 @@
 // int hoeveelNummers = 5;
 
 
+
 float plaatLeesRuw;
 float plaatLeesRuwOud;
 float plaatLeesDiv;
@@ -22,6 +23,7 @@ float plaatLeesDivTrack;
 
 unsigned int laatsteKnipperMeet;
 unsigned int laatsteKnipperMeetLengte;
+unsigned int vorrigeKnipperMeetLengte;
 bool laatsteKnipperRichting;
 bool knip;
 
@@ -31,13 +33,6 @@ bool trackOnderTresh = true;
 int minimumTrackSpacing = 0.05;
 
 
-float karPos2trackPos(float kp){
-  return mapF(kp, KAR_EINDE_PLAAT + SENSOR_NAALT_OFFSET,  KAR_BUITEN, 0, 1);
-}
-
-float trackPos2karPos(float tp){
-  return mapF(tp, 0, 1, KAR_EINDE_PLAAT + SENSOR_NAALT_OFFSET, KAR_BUITEN);
-}
 
 
 
@@ -52,9 +47,11 @@ void plaatLeesLedSetMilliAmp(float amp){
 void plaatLeesInit(){
   setPwm(plaatLeesLed);
   plaatLeesLedSetMilliAmp(0);//10mA
-
-  // pinMode(plaatLees, INPUT_PULLUP);
 }
+
+
+
+
 
 
 
@@ -73,6 +70,8 @@ void plaatDetectie(){
   if(  plaatLeesRuw  >  plaatLeesGefilterd + 20     ^   laatsteKnipperRichting ){ //is er een knipper zichtbaar
     laatsteKnipperRichting = !laatsteKnipperRichting;
 
+    vorrigeKnipperMeetLengte = laatsteKnipperMeetLengte;
+
     laatsteKnipperMeetLengte = millis() - laatsteKnipperMeet;   //bewaar de tijd van de flank
     laatsteKnipperMeet = millis();
   }
@@ -81,7 +80,45 @@ void plaatDetectie(){
   
   plaatAanwezig = 
         (millis() - laatsteKnipperMeet) < plaatKnipperInterval* 1.2    
-  &&    isOngeveer(laatsteKnipperMeetLengte,  plaatKnipperInterval,  plaatKnipperInterval*0.2);
+  &&    isOngeveer(laatsteKnipperMeetLengte,  plaatKnipperInterval,  plaatKnipperInterval*0.2)
+  &&    isOngeveer(vorrigeKnipperMeetLengte,  plaatKnipperInterval,  plaatKnipperInterval*0.2);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+void scannenVoorTracks(){
+  
+  plaatLeesLedSetMilliAmp(20);
+
+  // trackTresshold = plaatLeesGefilterdBodem + ((AMAX - plaatLeesGefilterdBodem) / 3);
+  trackTresshold = (AMAX - plaatLeesGefilterdBodem) / 2;
+  
+  if(sensorPos > PLAAT_EINDE){
+    
+    if(plaatLeesDivTrack < trackTresshold && trackOnderTresh){
+      trackOnderTresh = false;
+    }
+
+    if(plaatLeesDivTrack > trackTresshold && !trackOnderTresh){
+      trackOnderTresh = true;
+
+      Serial.print("nummer: ");
+      Serial.println(sensorPos);
+
+      nummers[hoeveelNummers] = sensorPos;
+      hoeveelNummers++;
+    }
+  }
 }
 
 
@@ -103,9 +140,7 @@ void plaatDetectie(){
 
 
 
-
-
-Interval plaatLeesInt(10000, MICROS);
+Interval plaatLeesInt(5000, MICROS);
 
 void plaatLeesFunc(){
   if(plaatLeesInt.loop()){
@@ -127,47 +162,28 @@ void plaatLeesFunc(){
     plaatLeesGefilterd += (plaatLeesRuw - plaatLeesGefilterd) / 5;
 
 
-    float sensorPos = karPos - SENSOR_NAALT_OFFSET;
-
-
     if(staat == S_HOK){
       hoeveelNummers = 0;
       nummers[hoeveelNummers] = 1;
+      plaatLeesLedSetMilliAmp(0);
     }
     
 
+
+
+
     else if(staat == S_NAAR_BEGIN_PLAAT){//--------------------------------                   TRACKS LEZEN
 
-      plaatLeesLedSetMilliAmp(20);
+      scannenVoorTracks();
 
-      trackTresshold = plaatLeesGefilterdBodem + ((AMAX - plaatLeesGefilterdBodem) / 3);
-      
-      if(sensorPos > KAR_EINDE_PLAAT){
-        
-        if(plaatLeesRuw < trackTresshold && trackOnderTresh){
-          trackOnderTresh = false;
-        }
-
-        if(plaatLeesRuw > trackTresshold && !trackOnderTresh){
-          trackOnderTresh = true;
-
-          Serial.print("nummer: ");
-          Serial.print(sensorPos);
-          Serial.print(" = ");
-          Serial.println(  karPos2trackPos(sensorPos) );
-
-          nummers[hoeveelNummers] = karPos2trackPos(sensorPos);
-          hoeveelNummers++;
-        }
-      }
     }
+
+
 
 
 
     else{//---------------------------------------------------------------                    PLAAT DETECTIE
       
-      
-
       if(knip){
         plaatLeesGefilterdBodem += (plaatLeesRuw - plaatLeesGefilterdBodem) / 5;
       }
@@ -181,7 +197,7 @@ void plaatLeesFunc(){
             armHoekCalibreer();
             setStaat(S_NAAR_BEGIN_PLAAT);
           }else{
-            setStaat(S_STOPPEN);
+            stoppen();
           }
         }
       }

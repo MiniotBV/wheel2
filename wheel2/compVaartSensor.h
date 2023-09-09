@@ -1,3 +1,5 @@
+float targetRpm = 0;
+
 #define sampleMax 65500               //samples
 
 

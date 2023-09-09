@@ -6,15 +6,7 @@
 #define displayLengte 80
 float displayData[displayLengte];
 
-int displayRefreshDelay  = 20000;
-float displayRefreshDelayNu;
-
 int nummersTeller = 0;
-
-float aa;
-
-
-
 
 unsigned int displayDelay = 0;
 
@@ -34,6 +26,10 @@ void displayInit(){
 
 
 
+int trackPos2displayPos(float kp){
+  return mapF(kp, PLAAT_EINDE + SENSOR_NAALT_OFFSET,  PLAAT_BEGIN, 0, displayLengte-1);
+}
+
 
 
 
@@ -46,9 +42,7 @@ void displayPrint(float tijd){
     
     gpio_put(displayIN, displayData[i] >  tijd ? 1 : 0);
 
-    // delayMicroseconds(1);
     gpio_put(displayKLOK, 1);
-    // delayMicroseconds(1);
     gpio_put(displayKLOK, 0);
   }
   
@@ -80,9 +74,9 @@ void displayUpdate(){
   // if(true){
 
     nummersTeller = 0;
-    int naald = karPos2trackPos(karPos) * (displayLengte-1);
-    int sensor = karPos2trackPos(karPos - SENSOR_NAALT_OFFSET) * (displayLengte-1);
-    int sensorMaxBerijk = karPos2trackPos(KAR_BUITEN - SENSOR_NAALT_OFFSET) * (displayLengte-1)  +  3;
+    int naald = trackPos2displayPos(karPos);
+    int sensor = trackPos2displayPos(sensorPos);
+    int sensorMaxBerijk = trackPos2displayPos(PLAAT_BEGIN - SENSOR_NAALT_OFFSET)  +  3;
 
 
 
@@ -90,7 +84,7 @@ void displayUpdate(){
     for(int i = 0; i < displayLengte; i++){
 
 
-      int volgendeNummerDisplay  =  nummers[nummersTeller] * (displayLengte - 1);
+      int volgendeNummerDisplay  =  trackPos2displayPos(nummers[nummersTeller]);
 
       if(staat == S_NAAR_BEGIN_PLAAT  &&  i > sensor){
         displayData[i] = 0;
@@ -114,15 +108,9 @@ void displayUpdate(){
         
         // displayData[i] = 0;
       }
-
-      // displayData[i] = (sin( (i / 0.02) + aa )+1)/4;
     }
 
-    // aa += 0.1;
 
-    
-    // int naald = ((sin( millis()/2000.0)+1)/2) * (displayLengte-1);
-    // int naald = ((sin( aa += 0.01 )+1.0)/2.0) * (displayLengte-1);
 
     for(int pixel = 0; pixel < displayLengte; pixel++){
       if(naald == pixel){
@@ -144,10 +132,5 @@ void displayUpdate(){
     displayPrint(1);
     while(micros() - displayDelay < 400){}
     commitDisplay();
-
-
-
-    // delayMicroseconds(10000);
-
   }
 }

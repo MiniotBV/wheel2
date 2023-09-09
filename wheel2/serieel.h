@@ -24,16 +24,16 @@ void serieelFunc(){
       Serial.print(plaatLeesDivTrack);
       // Serial.print(", ");
       // Serial.print(strobo.getVaart());
-      // Serial.print(", ");
-      // Serial.print(uitBuff);plaatLeesGefilterd
+      Serial.print(", ");
+      Serial.print(uitBuff);
       Serial.print(", ");
       Serial.print(armHoekSlow);//1696);
       Serial.print(", ");
       Serial.print(armHoek);//1696);
       Serial.print(", ");
       Serial.print(karPos);
-      Serial.print(", ");
-      Serial.print(armKracht);
+      // Serial.print(", ");
+      // Serial.print(armKracht);
 
       Serial.println();
     }
@@ -51,14 +51,20 @@ void serieelFunc(){
       else if(letter == 'g'){    //golven uit
         golven = false;
       }
+      else if(letter == '>'){    //set armhoekOfset
+        naarVolgendNummer();
+      }
+      else if(letter == '<'){    //set armhoekOfset
+        naarVorrigNummer();
+      }
       else if(letter == 'H'){    //set armhoekOfset
         setStaat(S_NAAR_HOK);
       }
       else if(letter == 's'){    //set armhoekOfset
-        setStaat(S_STOPPEN);
+        stoppen();
       }
       else if(letter == 'S'){    //set armhoekOfset
-        setStaat(S_BEGINNEN_SPELEN);
+        spelen();
       }
       else if(letter == 'P'){    //set armhoekOfset
         pauze();
@@ -118,12 +124,8 @@ void serieelFunc(){
         Serial.print("d: ");
         Serial.println(plateauD);
         
-        Serial.print("knoppen= ");
-        for(int i = 0; i < 8; i++){
-          Serial.print(knopIn[i]);
-          Serial.print(' ');
-        }
-        Serial.println();
+        printKnoppen();
+        
       
       }
       else if(letter == 'S'){    //golven uit

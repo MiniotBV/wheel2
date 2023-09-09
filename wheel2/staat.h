@@ -17,8 +17,10 @@ enum staats{
 
   S_BEGINNEN_SPELEN,
   S_NAAR_BEGIN_PLAAT,
-  S_BEGIN_PLAAT,
-  S_SPELEN,
+  // S_BEGIN_PLAAT,
+  // S_SPELEN,
+  S_PLAAT_DIAMETER_METEN,
+  S_NAALD_EROP,
 
 
   S_PAUZE,
@@ -27,6 +29,7 @@ enum staats{
 
   S_VOLGEND_NUMMER,
   S_VORRIG_NUMMER,
+  S_NAAR_NUMMER,
 
   S_DOOR_SPOELEN,
   S_TERUG_SPOELEN,
@@ -65,8 +68,10 @@ void printStaat(int s){
   if( s == S_BEGINNEN_SPELEN      ){ Serial.print("BEGINNEN_SPELEN");     return;}
   if( s == S_PLAAT_AANWEZIG       ){ Serial.print("PLAAT_AANWEZIG");      return;}
   if( s == S_NAAR_BEGIN_PLAAT     ){ Serial.print("NAAR_BEGIN_PLAAT");    return;}
-  if( s == S_BEGIN_PLAAT          ){ Serial.print("BEGIN_PLAAT");         return;}
-  if( s == S_SPELEN               ){ Serial.print("SPELEN");              return;}
+  if( s == S_PLAAT_DIAMETER_METEN ){ Serial.print("PLAAT_DIAMETER_METEN");    return;}
+  // if( s == S_BEGIN_PLAAT          ){ Serial.print("BEGIN_PLAAT");         return;}
+  // if( s == S_SPELEN               ){ Serial.print("SPELEN");              return;}
+  if( s == S_NAALD_EROP           ){ Serial.print("NAALD_EROP");          return;}
 
 
   if( s == S_PAUZE                ){ Serial.print("PAUZE");               return;}
@@ -75,6 +80,7 @@ void printStaat(int s){
 
   if( s == S_VOLGEND_NUMMER       ){ Serial.print("VOLGEND_NUMMER");      return;}
   if( s == S_VORRIG_NUMMER        ){ Serial.print("VORRIG_NUMMER");       return;}
+  if( s == S_NAAR_NUMMER          ){ Serial.print("NAAR_NUMMER");         return;}
 
   if( s == S_DOOR_SPOELEN         ){ Serial.print("DOOR_SPOELEN");        return;}
   if( s == S_TERUG_SPOELEN        ){ Serial.print("TERUG_SPOELEN");       return;}
@@ -118,16 +124,23 @@ unsigned int staatsVeranderingInterval(){
 
 
 
-void naarVorrigNummer(){
-  // return 0
+void stoppen(){
+  setStaat(S_STOPPEN);
+  plateauStoppen();
 }
 
 
-void naarVolgendNummer(){
-  // return 0
+
+void spelen(){
+  setStaat(S_BEGINNEN_SPELEN);
+  plateauDraaien();
 }
 
 
+
+void naaldErop(){
+  setStaat(S_NAALD_EROP);
+}
 
 
 
@@ -140,22 +153,16 @@ Interval staatInt(10000, MICROS);
 
 void staatFunc(){
   if(staatInt.loop()){
-    if(staat == S_BEGIN_PLAAT){
-      if(naaldErrop()){
-        Serial.print("nummers gevonden: ");
-        Serial.println(hoeveelNummers);
-        setStaat(S_SPELEN);
-      }
-    }
 
-    else if(staat == S_STOPPEN){
-      if(naaldErraf()){
+
+    if(staat == S_STOPPEN){
+      if(isNaaldEraf()){
         setStaat(S_NAAR_HOK);
       }
     }
 
     else if(staat == S_PAUZE){
-      if(naaldErraf()){
+      if(isNaaldEraf()){
         // setStaat(S_NAAR_HOK);
       }
     }
@@ -172,11 +179,11 @@ void staatFunc(){
 
 
 void pauze(){
-  if(staat == S_SPELEN){
+  if(staat == S_NAALD_EROP){
     setStaat(S_PAUZE);
   }
   else if(staat == S_PAUZE){
-    setStaat(S_BEGINNEN_SPELEN);
+    setStaat(S_NAALD_EROP);
   }
 }
 

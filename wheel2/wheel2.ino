@@ -13,6 +13,13 @@
 
 #include "armMotor.h"
 
+#include "compVaartSensor.h"
+
+COMPVAART TLE5012(64, plateauA, 4096);
+// VAART strobo(8, 0, 180*2);
+
+#include "plateau.h"
+
 #include "staat.h"
 
 Interval ledInt(200, MILLIS);
@@ -28,20 +35,13 @@ Interval ledInt(200, MILLIS);
 
 
 
-
-float targetRpm = 33.333;
-
 #include "vaartSensor.h"
-#include "compVaartSensor.h"
 
-COMPVAART TLE5012(64, plateauA, 4096);
-// VAART strobo(8, 0, 180*2);
+
 
 #include "knoppen.h"
 
 #include "display.h"
-
-#include "plateau.h"
 
 #include "serieel.h"
 
@@ -93,6 +93,8 @@ void core1_entry(){
     knoppenUpdate();
   }
 }
+
+
 
 
 void loop() {
