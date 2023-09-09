@@ -12,6 +12,9 @@ class ArmMotor
   float gewicht = HOK_GEWICHT;
   float kracht = 0;
 
+  // float snelheidOp = 0.004;
+  // float snelheidAf = 0.01;
+
   float snelheidOp = 1000;//ms;
   float snelheidAf = 500;//ms;
 
@@ -99,7 +102,6 @@ class ArmMotor
         }
       }
 
-
       
 
       if(armMotorAan == true){//moet de arm motor aan?
@@ -126,7 +128,10 @@ class ArmMotor
 
 
       kracht = armGewicht2pwm(gewicht);
+
       pwmWriteF(armMotor, kracht);
+
+
 
 
 
