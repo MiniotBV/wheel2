@@ -373,11 +373,6 @@ void staatDingen(){
 
 
 
-
-
-
-
-
   else if(staat == S_SCHOONMAAK){
     if(karPos < SCHOONMAAK_PLEK){
       karPos += KAR_SNELHEID;

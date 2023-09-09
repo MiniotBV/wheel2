@@ -9,7 +9,6 @@ Interval serieelInt(10000, MICROS);
 
 void serieelFunc(){
   if(serieelInt.loop()){
-
     if(golven){
       Serial.print(TLE5012.vaart);
       Serial.print(", ");
@@ -24,7 +23,7 @@ void serieelFunc(){
       // Serial.print(strobo.glad);
       
       Serial.print(", ");
-      Serial.print(TLE5012.getDiv, 3);
+      Serial.print(TLE5012.div, 3);
       Serial.print(", ");
       Serial.print(TLE5012.dav, 3);
 
@@ -50,11 +49,14 @@ void serieelFunc(){
       // Serial.print(", ");
       // Serial.print(uitBuff * 30);
       
-      // Serial.print(", ");
-      // Serial.print(armHoekSlow);//1696);
+      Serial.print(", ");
+      Serial.print(armHoekSlow);//1696);
       
-      // Serial.print(", ");
-      // Serial.print(armHoek);//1696);
+      Serial.print(", ");
+      Serial.print(armHoekRuw);//1696);
+
+      Serial.print(", ");
+      Serial.print(armHoek);//1696);
       // Serial.print(", ");
       // Serial.print(karPos);
       

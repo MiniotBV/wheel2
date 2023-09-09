@@ -118,7 +118,7 @@ class COMPVAART{
       // div = buf / divSamps;
 
       
-
+      getDiv();
 
       shiftSamples((interval * dir) * compSamples[teller]);
       
@@ -127,7 +127,7 @@ class COMPVAART{
 
       if(compensatieMeten){
         if(isOngeveer(div, 1, 0.3)){
-          compSamples[teller] += ( getDiv() - 1 ) / 3;
+          compSamples[rondTrip(teller - 10,  pulsenPerRev)] += ( div - 1 ) / 3;
         }
       }
       

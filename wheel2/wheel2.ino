@@ -64,7 +64,7 @@ Interval ledInt(200, MILLIS);
 
 #include "versterker.h"
 
-#include "karStappenMotor.h"
+#include "kar.h"
 
 #include "plaatLees.h"
 
@@ -188,15 +188,19 @@ void loop() {
 
 
 
-// bool interruptBezig = false;
+bool encoderBezig = false;
+bool toonBezig = false;
 
 
 void gpio_callback(uint gpio, uint32_t events) {
   // if(interruptBezig){return}
   // interruptBezig = true;
-
-  if(gpio == plateauA){// || gpio == plateauB){
-    TLE5012.interrupt();
+  if(!encoderBezig){
+    if( gpio == plateauA){// || gpio == plateauB){
+      encoderBezig = true;
+      TLE5012.interrupt();
+      encoderBezig = false;
+    }
   }
   
   if(gpio == plateauIndex){
