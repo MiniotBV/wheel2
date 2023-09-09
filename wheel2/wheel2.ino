@@ -44,7 +44,7 @@ void enableInterupts(bool aan){
 
 
 #include "compVaartSensor.h"
-COMPVAART strobo(4, 720);
+COMPVAART strobo(32, 720);
 
 
 

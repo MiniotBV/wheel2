@@ -35,12 +35,14 @@ int hoeveelNummers = 0;
 bool karMotorEnable = true;
 float karMotorPos = 0;
 
-float nieuwePos;
-float karPos = KAR_HOK;
-float egteKarPos = karPos;
-float karPosFilter = karPos;
-float karPosFilterSlow = karPos;
-float karPosMinimaal = karPos;;
+// float nieuwePos;
+// float karPos = KAR_HOK;
+// float egteKarPos = karPos;
+// float karPosFilter = karPos;
+// float karPosFilterSlow = karPos;
+// float karPosMinimaal = karPos;
+
+// float karPosMidden;
 
 float targetNummerPos = 0;
 float sensorPos;

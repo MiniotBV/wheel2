@@ -1,9 +1,17 @@
 
 bool plateauLogica = true;
+bool plateauComp = true;
 
+// float plateauP = 0.005;//plateau33P;    //pid
+// float plateauI = 0.03;//plateau33I;
+// float plateauD = 0;
 
-float plateauP = 0.005;//plateau33P;    //pid
-float plateauI = 0.03;//plateau33I;
+// float plateauP = 1;//plateau33P;    //pid
+// float plateauI = 0.1;//plateau33I;
+// float plateauD = -3;
+
+float plateauP = 0.5;//plateau33P;    //pid
+float plateauI = 0.02;//plateau33I;
 float plateauD = 0;
 
 
@@ -74,7 +82,7 @@ void plateauDraaien(){
   plateauAan = true;
   setPlateauRpm(rpm33);
 
-  basis = 0.75;
+  basis = 75;
   
   // strobo.clearCompSamples();
   // draaienInterval.reset();
@@ -119,20 +127,28 @@ void plateauInit(){
 
 
 
-
+float vorrigeVaart = 0;
+float pp, pd;
 
 
 float pid(float rpmIn){
   // updatePIDwaarde();  
 
-  double uit = (targetRpm - rpmIn) * plateauP;
-  uit = limieteerF(uit, -1, 1);
-  basis += uit * plateauI;            //breng basis voltage naar gemiddelde voor de juiste snelheid
-  basis = limieteerF(basis, 0, 1);
+  float divTijd = rpmIn - vorrigeVaart;
+  float divTarget = targetRpm - rpmIn;
+  vorrigeVaart = rpmIn;
 
-  basis = limieteerF(basis, 0, 0.6 + (rpmIn / 30) );
+  if(plateauComp){
+
+    pp = divTarget * plateauP;
+    
+    basis += divTarget * plateauI;            //breng basis voltage naar gemiddelde voor de juiste snelheid
+
+    pd = divTijd * plateauD;
+  }
   
-  return  uit + basis;
+
+  return  pp + basis + pd;
 }
 
 
@@ -160,6 +176,7 @@ void plateauStaatDingen(){
     ){
       Serial.println("plateau was perongeluk nog aant draaien");
       plateauStoppen();
+      return;
     }
     
 
@@ -168,10 +185,12 @@ void plateauStaatDingen(){
       if(glad > targetRpm * 4 ){ //te snel 200%
         Serial.println("^");
         stoppen();
+        return;
       }
-      else if(glad  <  targetRpm * 0.65   &&   draaienInterval.sinds() > 1500){ //te langzaam 70%
+      else if(glad  <  targetRpm * 0.65   &&   draaienInterval.sinds() > 1000){ //te langzaam 70%
         Serial.println("T");
         stoppen();
+        return;
       }
     }
 
@@ -182,12 +201,14 @@ void plateauStaatDingen(){
       if(glad  >  targetRpm * 0.95){ //                       op snelheid (95% van de snelheid)
         Serial.println("O");
         opsnelheid = true;
+        return;
       }
 
       if(glad  <  targetRpm * 0.1   &&     draaienInterval.sinds() > 1000){//   <5% target snelheid na een kort tijd
         
         Serial.println("kon niet opgang komen");
         stoppen();//--------------------------------------------
+        return;
       }
     }
   
@@ -206,6 +227,7 @@ void plateauStaatDingen(){
       uitdraaien = false;
       draaienInterval.reset();
       Serial.println("U");
+      return;
     }
   }
   
@@ -241,11 +263,11 @@ void plateauFunc(){
 
 
       uitBuff = pid(vaart);//                  bereken motor kracht
-      uitBuff += strobo.plateauComp / 100;
+      uitBuff += strobo.plateauComp;
 
-      uitBuff = limieteerF(uitBuff, -1, 1);
+      uitBuff = limieteerF(uitBuff, -100, 100);
       
-      pwmFase(uitBuff, motorN, motorP, false);
+      pwmFase(uitBuff / 100.0, motorN, motorP, false);
       
     }else{
       

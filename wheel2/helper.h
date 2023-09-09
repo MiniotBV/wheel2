@@ -1,6 +1,6 @@
 
 
-
+#define TAU 2*PI
 
 
 #define rpm33 33.333
@@ -42,6 +42,33 @@ float trackOffset = 0;
 
 bool plaatAanwezig = false;
 float plaatAanwezigGefilterd = 0;
+
+
+
+float nieuwePos;
+float karPos = KAR_HOK;
+float egteKarPos = karPos;
+float karPosFilter = karPos;
+float karPosFilterSlow = karPos;
+float karPosMinimaal = karPos;
+
+float karPosMidden;
+
+
+
+
+float targetRpm = 0;
+float centerCompTargetRpm;
+bool plateauAan = false;
+
+bool opsnelheid;
+bool uitdraaien;
+
+
+
+
+
+
 
 
 
