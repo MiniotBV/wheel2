@@ -1,6 +1,4 @@
-//  ====================================
-//    Arm motor class
-//  ====================================
+
 class ArmMotor
 {
   public:
@@ -18,18 +16,12 @@ class ArmMotor
   float snelheidOp = 1000;//ms;
   float snelheidAf = 500;//ms;
 
-  float krachtLaag = 0.28;  //7de proto
-  float krachtHoog = 0.58;
+  // float krachtHok = 0.04;
+  float krachtLaag = 0.08;
+  float krachtHoog = 0.22;
 
-  //op de plaat
-  // float netUitHokGewicht = -0.8;
-  // float netOpDePlaatGewicht = 0.5;
-  float netUitHokGewicht = -1.5;
-  float netOpDePlaatGewicht = 0;
-  //van de plaat af
-  // float netVanDePlaatGewicht = 0;
-  // float netInHokGewicht = -1;
-  float netVanDePlaatGewicht = 0;
+
+  float netOpDePlaatGewicht = 0.25;
   float netInHokGewicht = -1.5;
 
 
@@ -115,7 +107,7 @@ class ArmMotor
         if(gewicht > netOpDePlaatGewicht){//is de arm al op de plaat?
           gewicht = targetGewicht;//zet dan de arm meteen op target gewicht
         }else{
-          gewicht = mapF(aanInterval.sinds(), 0, snelheidOp, netUitHokGewicht, netOpDePlaatGewicht);
+          gewicht = mapF(aanInterval.sinds(), 0, snelheidOp, netInHokGewicht, netOpDePlaatGewicht);
           // gewicht = mapF(aanInterval.sinds(), 0, snelheidOp, pwm2armGewicht(0), netOpDePlaatGewicht);
         }
       
@@ -126,7 +118,7 @@ class ArmMotor
         if(gewicht < netInHokGewicht){ //is de arm al van de plaat?
           gewicht = HOK_GEWICHT; // zet de arm dan meteen uit
         }else{
-          gewicht = mapF(uitInterval.sinds(), 0, snelheidAf, netVanDePlaatGewicht, netInHokGewicht);
+          gewicht = mapF(uitInterval.sinds(), 0, snelheidAf, netOpDePlaatGewicht, netInHokGewicht);
         }
       }
 
