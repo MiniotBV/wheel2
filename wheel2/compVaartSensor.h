@@ -96,8 +96,8 @@ class COMPVAART
 
 
     int onbalansFase = 23;//25;//50;//50;
-		float onbalansCompGewicht = 1.1;//1.3;//2;
-    float onbalansFilterBreedte = 65;//50;//100;
+		float onbalansCompGewicht = 1.2;//1.1;//1.3;//2;
+    float onbalansFilterBreedte = 80;//65;//50;//100;
 
 
     // int onbalansFase = 20;//50;//50;
@@ -322,6 +322,10 @@ class COMPVAART
       if(wow < 0.1 && wowEersteWeerLaag == true){
         wowEersteWeerLaag = false;
         Serial.println("loopt weer gelijk na: " + String(tellerSindsReset / float(pulsenPerRev)) + " omwentelingen");
+        Serial.println("onbalansFase: " + String(onbalansFase));
+        Serial.println("onbalansCompGewicht: " + String(onbalansCompGewicht));
+        Serial.println("onbalansFilterBreedte: " + String(onbalansFilterBreedte));
+        Serial.println();
         tellerSindsReset = 0;
       }
 
