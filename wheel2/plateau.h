@@ -198,7 +198,7 @@ void plateauStaatDingen(){
 			// 	stoppen();
 			// 	return;
 			// }
-      if(vaart  <  targetRpm * 0.65  &&   draaienInterval.sinds() > 1000){ //te langzaam 70%
+      if(vaart  <  targetRpm * 0.65  &&   draaienInterval.sinds() > 1500){ //te langzaam 70%
 				plateauPrint("tegengehouden");
 				stoppen();
 				return;
@@ -215,7 +215,7 @@ void plateauStaatDingen(){
 				return;
 			}
 
-			if(vaart  <  targetRpm * 0.1   &&     draaienInterval.sinds() > 500){//   <5% target snelheid na een kort tijd
+			if(vaart  <  targetRpm * 0.1   &&     draaienInterval.sinds() > 750){//   <5% target snelheid na een kort tijd
 				
 				plateauPrint("kon niet opgang komen");
 				stoppen();//--------------------------------------------
