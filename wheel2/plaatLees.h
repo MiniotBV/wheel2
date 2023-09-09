@@ -7,6 +7,12 @@ float plaatLeesRuw;
 float plaatLeesRuwPrev;
 float plaatLeesRuwDiv;
 
+float plaatLeesAbsDiv;
+float plaatLeesWaarde;
+
+float plaatLeesMax;
+float plaatLeesMin;
+
 float plaatLeesGefilterd;
 float plaatLeesGefilterdOud;
 
@@ -14,7 +20,6 @@ float plaatLeesDiv;
 float plaatLeesDivOud;
 
 float plaatLeesDivDiv;
-float plaatLeesDivDivOud;
 
 float plaatLeesPre;
 float plaatLeesOmhoog;
@@ -34,6 +39,12 @@ bool knip;
 
 
 
+float plaatLeesStroom = 10;
+float plaatLedStroomP = 0.001;
+float plaatSensorTarget = 1500;
+
+
+
 
 
 int volt2pwm(float volt){
@@ -45,6 +56,10 @@ int volt2pwm(float volt){
 void plaatLeesLedSetMilliAmp(float amp){
   amp /= 1000.0;
   pwmWrite(plaatLeesLed, volt2pwm(1 + (100 * amp)));  //100ohm + 1volt led drop
+}
+
+void plaatLeesLeduit(){
+  pwmWrite(plaatLeesLed, 0);  //100ohm + 1volt led drop
 }
 
 
@@ -66,25 +81,11 @@ void plaatLeesInit(){
 #define plaatDetectieTreshold 100
 
 void plaatDetectie(){
-  if(knip){
-    plaatAanwezig = plaatLeesRuwDiv < -plaatDetectieTreshold;
-  }else{
-    plaatAanwezig = plaatLeesRuwDiv > plaatDetectieTreshold;
-  }
+  
+  plaatAanwezig = plaatLeesAbsDiv > plaatDetectieTreshold;//als er genoeg amplitude is is er een plaat
 
   plaatAanwezigGefilterd += (plaatAanwezig - plaatAanwezigGefilterd) / 10;
-
-  knip = !knip;
-
-  if(knip){
-    plaatLeesLedSetMilliAmp(10);
-  }else{
-    plaatLeesLedSetMilliAmp(0);
-  }
 }
-
-
-
 
 
 
@@ -118,11 +119,7 @@ bool trackOnderTresh = true;
 
 void scannenVoorTracks(){
   
-  // plaatLeesLedSetMilliAmp(10);
-
-  // trackTresshold = 50;
-  
-  if(sensorPos < PLAAT_EINDE + 2){
+  if(sensorPos < PLAAT_EINDE + 2  ||  staat != S_NAAR_BEGIN_PLAAT){
     return;
   }
 
@@ -132,6 +129,26 @@ void scannenVoorTracks(){
     trackOnderTresh = true;
 
     nieuwNummer(sensorPos - trackOffset);
+  }
+
+
+  if(plaatLeesGolven){
+
+    Serial.print(plaatLeesWaarde);
+
+    Serial.print(", ");
+    Serial.print(plaatLeesAbsDiv);
+
+    Serial.print(", ");
+    Serial.print(plaatLeesMax);
+    Serial.print(", ");
+    Serial.print(plaatLeesMin);
+
+    Serial.print(", ");
+    Serial.print(plaatLeesStroom * 100);
+
+
+    Serial.println();
   }
   
 }
@@ -155,17 +172,21 @@ void scannenVoorTracks(){
 
 
 
-Interval plaatLeesInt(5000, MICROS);
+Interval plaatLeesInt(10000, MICROS);
 
 void plaatLeesFunc(){
   if(plaatLeesInt.loop()){
     
-    if(staat == S_HOK){
+    if(staat == S_HOK){ // als de kar in hok is, plaat scanner uitzetten
       hoeveelNummers = 0;
       nummers[hoeveelNummers] = 1;
-      plaatLeesLedSetMilliAmp(0);
+      plaatLeesLeduit();
       return;
     }
+
+    // if(sensorPos < PLAAT_EINDE){
+    //   return;      
+    // }
 
 
 
@@ -173,8 +194,26 @@ void plaatLeesFunc(){
     plaatLeesRuw = analogRead(plaatLees);
     plaatLeesRuwDiv = plaatLeesRuw - plaatLeesRuwPrev;
 
+
+    plaatLeesAbsDiv = abs(plaatLeesRuwDiv);
+
+    plaatLeesWaarde = abs(plaatLeesAbsDiv - plaatSensorTarget);
+
+
+    plaatDetectie();
+    
+
     if(knip){
-      plaatLeesGefilterd += (plaatLeesRuw - plaatLeesGefilterd) / 5;
+
+      float ledStroomP = (plaatSensorTarget - plaatLeesAbsDiv) * plaatLedStroomP;
+      plaatLeesStroom += limieteerF(ledStroomP,  -1, 1);
+
+      plaatLeesStroom = limieteerF(plaatLeesStroom, 5, 20);
+
+      plaatLeesMax = plaatLeesRuw;
+      
+      plaatLeesGefilterd += (plaatLeesAbsDiv - plaatLeesGefilterd) / 5;
+      // plaatLeesGefilterd += (plaatLeesRuw - plaatLeesGefilterd) / 5;
 
       plaatLeesDiv = plaatLeesGefilterd - plaatLeesGefilterdOud;
       plaatLeesGefilterdOud = plaatLeesGefilterd;
@@ -188,52 +227,28 @@ void plaatLeesFunc(){
 
       if(plaatLeesPre > 0) plaatLeesOmhoog += plaatLeesPre; else plaatLeesOmhoog = 0;
       if(plaatLeesPre < 0) plaatLeesOmlaag += plaatLeesPre; else plaatLeesOmlaag = 0;
+
+
+
+
+      scannenVoorTracks();//--------------------------------                   TRACKS LEZEN
+    
+    
+    }else{
+      plaatLeesMin = plaatLeesRuw;
     }
-
-    plaatDetectie();
-
-
-
-
-    if(plaatLeesGolven){
-      Serial.print(plaatLeesRuw);
-      // Serial.print(", ");
-      // Serial.print(plaatLeesRuwDiv);
-
-      // Serial.print(", ");
-      // Serial.print(plaatAanwezig*1000);
-
-      Serial.print(", ");
-      Serial.print(plaatLeesGefilterd);
-
-      Serial.print(", ");
-      Serial.print(plaatLeesDiv);
-
-      Serial.print(", ");
-      Serial.print(plaatLeesDivDiv);
-
-
-
-      Serial.print(", ");
-      Serial.print(plaatLeesPre);
-      Serial.print(", ");
-      Serial.print(plaatLeesOmhoog);
-      Serial.print(", ");
-      Serial.print(plaatLeesOmlaag);
-
-      Serial.println();
-    }
-
-
-
 
     
 
 
-    if(staat == S_NAAR_BEGIN_PLAAT){//--------------------------------                   TRACKS LEZEN
-      scannenVoorTracks();
-      return;
+    knip = !knip;
+
+    if(knip){
+      plaatLeesLedSetMilliAmp(plaatLeesStroom);
+    }else{
+      plaatLeesLeduit();
     }
+
     
   }
 }

@@ -157,6 +157,8 @@ void serieelFunc(){
         karGolven = !karGolven;
         Serial.println("karGolven: " + String(karGolven));
       }
+
+      
       else if(letter == '>'){
         naarVolgendNummer();
       }
@@ -202,6 +204,12 @@ void serieelFunc(){
         Serial.println("armTargetGewicht: " + String(armTargetGewicht));
       }
 
+
+
+      else if(letter == 's'){    //plaatLeesStroom
+        plaatLeesStroom = Serial.parseFloat();
+        Serial.println("plaatLeesStroom: " + String(plaatLeesStroom));
+      }
 
 
 

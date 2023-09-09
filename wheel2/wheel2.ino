@@ -85,14 +85,12 @@ Interval ledInt(200, MILLIS);
 
 
 void setup() {
-  analogReadResolution(12);
+  analogReadResolution(12);// moet sinds nieuwe core versie, anders leest hij in 10bit
 
   Serial.begin(115200);
 
   opslagInit();
-
   eepromUitlezen();
-
 
 
   versterkerInit();
@@ -105,20 +103,21 @@ void setup() {
 
   plaatLeesInit();
 
-
-
   plateauInit();
+
+
   
   multicore_launch_core1(loop2);
   
   pinMode(slaapStand, OUTPUT);
   digitalWrite(slaapStand, 1); // hou de batterij aan
 
-  // setPwm(ledWit);
-  pinMode(ledWit, OUTPUT);
-  digitalWrite(ledWit, 1);
 
-  enableInterupts(true);
+  enableInterupts(true);//zet interrupts aan
+
+
+  pinMode(ledWit, OUTPUT);
+  digitalWrite(ledWit, 1);//zet led aan
 }
 
 
@@ -172,8 +171,6 @@ void loop() {
   volumeFunc();
 
   plateauFunc();
-
-  // pwmWriteF(ledWit, plaatAanwezigGefilterd);
 }
 
 
