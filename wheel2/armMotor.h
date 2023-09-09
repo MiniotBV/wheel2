@@ -1,6 +1,7 @@
 int armTargetKracht = 1600;
 int armKracht = 0;
-int armSnelheid = 2;
+int armSnelheidOp = 2;
+int armSnelheidAf = 4;
 unsigned int armLoop = 0;
 
 
@@ -36,7 +37,7 @@ void armFunc(){
       }
 
       if(armKracht < armTargetKracht){//is de arm al op het target gewicht?
-        armKracht += armSnelheid;
+        armKracht += armSnelheidOp;
       }
 
       if(armKracht > netOpDePlaatKracht){//is de arm al op de plaat?
@@ -53,7 +54,7 @@ void armFunc(){
       }
 
       if(armKracht > 0){ //is de arm nog niet helemaal uit
-        armKracht -= armSnelheid; // zet hem dan wat minder hard
+        armKracht -= armSnelheidAf; // zet hem dan wat minder hard
       }
       
       if(armKracht < netInHokKracht){ //is de arm al van de plaat?

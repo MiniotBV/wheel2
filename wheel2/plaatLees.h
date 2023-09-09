@@ -2,8 +2,8 @@
 
 
 
-float nummers[20] = {0.2, 0.3, 0.6, 0.68, 0.85};
-int hoeveelNummers = 5;
+// float nummers[20] = {0.2, 0.3, 0.6, 0.68, 0.85}; //staat nu in staat.h
+// int hoeveelNummers = 5;
 
 
 float plaatLeesRuw;
@@ -11,6 +11,7 @@ float plaatLeesRuwOud;
 float plaatLeesDiv;
 float plaatLeesGefilterd;
 float plaatLeesGefilterdBodem;
+float plaatLeesDivTrack;
 
 
 
@@ -58,7 +59,7 @@ void plaatLeesInit(){
 
 
 
-#define plaatKnipperInterval 100
+#define plaatKnipperInterval 50
 
 void plaatDetectie(){
   knip =  ( millis()/plaatKnipperInterval ) % 2;
@@ -69,7 +70,7 @@ void plaatDetectie(){
   }
 
 
-  if(  plaatLeesRuw  >  plaatLeesGefilterd     ^   laatsteKnipperRichting ){ //is er een knipper zichtbaar
+  if(  plaatLeesRuw  >  plaatLeesGefilterd + 20     ^   laatsteKnipperRichting ){ //is er een knipper zichtbaar
     laatsteKnipperRichting = !laatsteKnipperRichting;
 
     laatsteKnipperMeetLengte = millis() - laatsteKnipperMeet;   //bewaar de tijd van de flank
@@ -79,8 +80,8 @@ void plaatDetectie(){
 
   
   plaatAanwezig = 
-        (millis() - laatsteKnipperMeet) < plaatKnipperInterval* 1.1    
-  &&    isOngeveer(laatsteKnipperMeetLengte,  plaatKnipperInterval,  plaatKnipperInterval*0.1);
+        (millis() - laatsteKnipperMeet) < plaatKnipperInterval* 1.2    
+  &&    isOngeveer(laatsteKnipperMeetLengte,  plaatKnipperInterval,  plaatKnipperInterval*0.2);
 }
 
 
@@ -111,10 +112,19 @@ void plaatLeesFunc(){
     
     plaatLeesRuw = analogRead(plaatLees);
     
-    plaatLeesDiv = plaatLeesRuwOud - plaatLeesRuw;
+    plaatLeesDiv = plaatLeesRuw - plaatLeesRuwOud;
+
+    if(plaatLeesDiv > 0){//                     vermeer het effect van omhooggaande flanken, om nummer te vinden
+      plaatLeesDivTrack += plaatLeesDiv;
+    }else{
+      plaatLeesDivTrack = 0;
+    }
+
+    // plaatLeesDivTrack = plaatLeesRuwOud - plaatLeesRuw;
+
     plaatLeesRuwOud = plaatLeesRuw;
 
-    plaatLeesGefilterd += (plaatLeesRuw - plaatLeesGefilterd) / 10;
+    plaatLeesGefilterd += (plaatLeesRuw - plaatLeesGefilterd) / 5;
 
 
     float sensorPos = karPos - SENSOR_NAALT_OFFSET;
@@ -129,6 +139,8 @@ void plaatLeesFunc(){
     else if(staat == S_NAAR_BEGIN_PLAAT){//--------------------------------                   TRACKS LEZEN
 
       plaatLeesLedSetMilliAmp(20);
+
+      trackTresshold = plaatLeesGefilterdBodem + ((AMAX - plaatLeesGefilterdBodem) / 3);
       
       if(sensorPos > KAR_EINDE_PLAAT){
         
@@ -157,15 +169,16 @@ void plaatLeesFunc(){
       
 
       if(knip){
-        plaatLeesGefilterdBodem += (plaatLeesRuw - plaatLeesGefilterdBodem) / 20;
+        plaatLeesGefilterdBodem += (plaatLeesRuw - plaatLeesGefilterdBodem) / 5;
       }
       
 
       plaatDetectie();
 
       if(staat == S_PLAAT_AANWEZIG){
-        if(staatsVeranderingInterval() > 300){
+        if(staatsVeranderingInterval() > 500){
           if(plaatAanwezig){
+            armHoekCalibreer();
             setStaat(S_NAAR_BEGIN_PLAAT);
           }else{
             setStaat(S_STOPPEN);

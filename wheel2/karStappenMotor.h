@@ -20,7 +20,7 @@ float mmPerStap = 1.5 / ( 48 / 12 );
 float stap2mm = ( 2 / PI ) * mmPerStap;  // 0.238732414637843
 float mm2stap = 1 / stap2mm;             // 4.188790204786391
 
-float karP = 0.00025;
+float karP = 0.0001;//0.00025;
 
 int stapperFaseA = 0;
 int stapperFaseB = 0;
@@ -52,7 +52,11 @@ void karInit(){
 }
 
 
-
+void armHoekCalibreer(){
+  armHoekOffset = armHoekSlow;
+  Serial.print("ofset: ");
+  Serial.println(armHoekOffset);
+}
 
 
 
@@ -94,7 +98,7 @@ void karMotorFunc(){
         setStaat(S_HOK);
       }else{
         if(armHoek < -100){
-          karPos -= 0.001;
+          karPos -= KAR_SNELHEID/10;
         }else{
           karPos -= KAR_SNELHEID;
         }
@@ -103,7 +107,7 @@ void karMotorFunc(){
 
     else if(staat == S_HOK){
       if(karPos < KAR_HOK){
-        karPos += 0.002;
+        karPos += KAR_SNELHEID;
       }
     }
 
@@ -127,8 +131,8 @@ void karMotorFunc(){
 
 
     else if(staat == S_SPELEN){
-      karPos += limieteerF( -karP * armHoek , -KAR_SNELHEID, KAR_SNELHEID);
-      karPos = limieteerF( karPos, 0, KAR_BUITEN);
+      karPos += limieteerF( -karP * armHoek , -KAR_SNELHEID / 2, KAR_SNELHEID / 2);
+      karPos = limieteerF( karPos, 0, KAR_BUITEN + 2);
       if(karPos <= KAR_EINDE_PLAAT){
         setStaat(S_STOPPEN);
       }
@@ -168,6 +172,13 @@ void karMotorFunc(){
 
   }
 }
+
+
+
+
+
+
+
 
 
 

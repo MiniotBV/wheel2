@@ -82,7 +82,7 @@ void displayUpdate(){
     nummersTeller = 0;
     int naald = karPos2trackPos(karPos) * (displayLengte-1);
     int sensor = karPos2trackPos(karPos - SENSOR_NAALT_OFFSET) * (displayLengte-1);
-    int sensorMaxBerijk = (displayLengte-1) - (karPos2trackPos(SENSOR_NAALT_OFFSET) * (displayLengte-1));
+    int sensorMaxBerijk = karPos2trackPos(KAR_BUITEN - SENSOR_NAALT_OFFSET) * (displayLengte-1)  +  3;
 
 
 
@@ -100,7 +100,7 @@ void displayUpdate(){
         displayData[i] = 0;
       }
 
-      else if(volgendeNummerDisplay == i){
+      else if(volgendeNummerDisplay <= i     &&    nummersTeller < hoeveelNummers){
         nummersTeller++;
         displayData[i] = 0;
       }
@@ -109,7 +109,7 @@ void displayUpdate(){
         if(nummersTeller == 0){
           displayData[i] = 0;
         }else{
-          displayData[i] = 0.01;
+          displayData[i] = 0.1;
         }
         
         // displayData[i] = 0;

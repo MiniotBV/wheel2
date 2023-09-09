@@ -1,3 +1,7 @@
+float nummers[20] = {0.2, 0.3, 0.6, 0.68, 0.85}; //staat nu in staat.h
+int hoeveelNummers = 5;
+
+
 enum staats{
   S_BEGIN,
   S_NAAR_HOK,
@@ -114,6 +118,20 @@ unsigned int staatsVeranderingInterval(){
 
 
 
+void naarVorrigNummer(){
+  // return 0
+}
+
+
+void naarVolgendNummer(){
+  // return 0
+}
+
+
+
+
+
+
 
 
 
@@ -124,6 +142,8 @@ void staatFunc(){
   if(staatInt.loop()){
     if(staat == S_BEGIN_PLAAT){
       if(naaldErrop()){
+        Serial.print("nummers gevonden: ");
+        Serial.println(hoeveelNummers);
         setStaat(S_SPELEN);
       }
     }

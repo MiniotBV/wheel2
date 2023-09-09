@@ -1,4 +1,6 @@
 
+
+
 bool golven = false;
 
 
@@ -17,9 +19,9 @@ void serieelFunc(){
       Serial.print(", ");
       Serial.print(plaatLeesGefilterdBodem);
       Serial.print(", ");
-      Serial.print(targetRpm);
+      Serial.print(trackTresshold);
       Serial.print(", ");
-      Serial.print(analogRead(displayPOTMETERanaloog));
+      Serial.print(plaatLeesDivTrack);
       // Serial.print(", ");
       // Serial.print(strobo.getVaart());
       // Serial.print(", ");
@@ -68,9 +70,7 @@ void serieelFunc(){
         Serial.println(karTargetPos);
       }
       else if(letter == 'O'){    //set armhoekOfset
-        armHoekOffset = armHoekSlow;
-        Serial.print("ofset: ");
-        Serial.println(armHoekOffset);
+        armHoekCalibreer();
       }
       else if(letter == 'p'){    //set P
         plateauP = Serial.parseFloat();
@@ -120,7 +120,7 @@ void serieelFunc(){
         
         Serial.print("knoppen= ");
         for(int i = 0; i < 8; i++){
-          Serial.print(knoppen[i]);
+          Serial.print(knopIn[i]);
           Serial.print(' ');
         }
         Serial.println();
