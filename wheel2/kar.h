@@ -1,10 +1,10 @@
 //motor heeft 48 stappen
-//tandwiel heeft 8 tanden
+//tandwiel heeft 10 tanden
 //tandheugel heeft 1.5mm tand pitch 
 //48 stappen / 12 tanden = 4 stappen per tand
 //1.5mm / 4 stappen per tand = 0.375mm per stap
 //PI = 2 stappen
-float mmPerStap = 1.5 / ( 48 / 8 );// / 12 );
+float mmPerStap = 1.5 / ( 48 / 10 );//8 );// / 12 );
 float stap2mm = ( 2 / PI ) * mmPerStap;  // 0.238732414637843
 float mm2stap = 1 / stap2mm;   
 
@@ -70,7 +70,8 @@ Interval naaldNaarVorenBewogen(1, MILLIS);
 
 
 
-#define KAR_MAX_SNELHEID 0.02
+// #define KAR_MAX_SNELHEID 0.02
+#define KAR_MAX_SNELHEID 0.0002
 #define KAR_VERSNELLING  0.0001
 
 double karSnelHeid = 0;
@@ -605,32 +606,31 @@ bool karMotorUitvoeren(){
   staatDingen();
 
 
-  // karPos += limieteerF(armHoekDiv * -karD, -0.05, 0.05);//------------ Om oscilatie te voorkomen  
-
-  // karDcomp = 0;
   karDcomp *= 0.999;
   karDcomp += limieteerF(armHoekDiv * -karD, -KAR_MAX_SNELHEID, KAR_MAX_SNELHEID);//------------ Om oscilatie te voorkomen
-  // karDcomp = limieteerF(karDcomp, -3, 3);
-
-  //  karMotorPos = (karPos + karOffset + limieteerF(armHoekDiv * -karD, -1, 1) )  *  mm2stap;
+  
+  
   egteKarPos  = karPos + karDcomp;
   karMotorPos = (egteKarPos + karOffset)  *  mm2stap;
-  // karMotorPos = (karPos + karOffset + karPcomp)  *  mm2stap;
-  // karMotorPos = (karPos + karOffset)  *  mm2stap;
 
 
   if(karMotorEnable){
-  // if(staat != S_HOK){
-
-    pwmFase( sin(-karMotorPos),  stapperAP, stapperAN, true);
-    pwmFase( cos(-karMotorPos),  stapperBP, stapperBN, true);
+    if(antiCoggAan){
+      pwmStapperAntiCogging(karMotorPos,   stapperAP, stapperAN,  stapperBP, stapperBN,  true);      
+    }else{
+      pwmStapper(karMotorPos,   stapperAP, stapperAN,  stapperBP, stapperBN,  true);
+    }
+   
+    
   
   }else{
-
-    pwmFase( 0,  stapperAP, stapperAN, true);
-    pwmFase( 0,  stapperBP, stapperBN, true);
+    pwmDisableStapper(stapperAP, stapperAN,  stapperBP, stapperBN);
   }
 
+
+
+
+  
 
 
   if(staat == S_SPELEN  &&  isNaaldErop()){

@@ -114,6 +114,10 @@ void setup() {
 
   pinMode(ledWit, OUTPUT);
   digitalWrite(ledWit, 1);//zet led aan
+
+
+
+  berekenAntiCogging();
 }
 
 
@@ -167,6 +171,9 @@ void loop() {
   volumeFunc();
 
   plateauFunc();
+
+
+  // digitalWrite(ledWit, abs(sin(karMotorPos)) < 0.05   ||  abs(cos(karMotorPos)) < 0.05);
 }
 
 

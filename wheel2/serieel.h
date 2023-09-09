@@ -21,8 +21,6 @@ void serieelFunc(){
       Serial.print(", ");
       Serial.print(strobo.glad - targetRpm, 3);
 
-      // Serial.print(", ");
-      // Serial.print(calibratieToon.vaart);
 
 
       Serial.print(", ");
@@ -31,57 +29,16 @@ void serieelFunc(){
       Serial.print(", ");
       Serial.print(strobo.preComp, 4);
 
-      // Serial.print(", ");
-      // Serial.print(strobo.mean, 4);
 
-      Serial.print(", ");
-      Serial.print(strobo.plateauComp, 4);
-
-      Serial.print(", ");
-      Serial.print(uitBuff, 4);
 
       // Serial.print(", ");
-      // Serial.print(basis, 4);
+      // Serial.print(strobo.plateauComp, 4);
 
       // Serial.print(", ");
-      // Serial.print(karInterval);
-      
-      
-      
-      // Serial.print(", ");
-      // Serial.print(plaatLeesRuw);
-
-      // Serial.print(", ");
-      // Serial.print(plaatLeesGefilterd);
-
-      // Serial.print(", ");
-      // Serial.print(plaatLeesDiv);
-
-      // Serial.print(", ");
-      // Serial.print(plaatLeesDivDiv);
-
-      // // Serial.print(", ");
-      // // Serial.print(plaatLeesTrack);
-
-      // Serial.print(", ");
-      // Serial.print(plaatLeesPre);
-      // Serial.print(", ");
-      // Serial.print(plaatLeesOmhoog);
-      // Serial.print(", ");
-      // Serial.print(plaatLeesOmlaag);
-      
-      // Serial.print(", ");
-      // Serial.print(trackTresshold);
-      // Serial.print(", ");
-      // Serial.print(plaatLeesDivTrack);
+      // Serial.print(uitBuff, 4);
 
       
 
-      
-      // Serial.print(", ");
-      // Serial.print(armHoekSlow);//1696);
-      // Serial.print(", ");
-      // Serial.print(armHoekOffset);//1696);
       Serial.print(", ");
       Serial.print(armHoekRuw);//1696);
       Serial.print(", ");
@@ -91,13 +48,19 @@ void serieelFunc(){
 
 
 
-      // Serial.print(", ");
-      // Serial.print(karDcomp, 4);
 
       Serial.print(", ");
       Serial.print(karPos, 4);  
       Serial.print(", ");
       Serial.print(egteKarPos, 4);  
+
+
+      Serial.print(", ");
+      Serial.print(nieuweHoek, 4);  
+      Serial.print(", ");
+      Serial.print(karSin, 4);  
+      Serial.print(", ");
+      Serial.print(karCos, 4); 
       
 
       // Serial.print(", ");
@@ -159,6 +122,38 @@ void serieelFunc(){
       else if(letter == 'Y'){    //kar golven
         karGolven = !karGolven;
         Serial.println("karGolven: " + String(karGolven));
+      }
+
+
+
+      else if(letter == '#'){
+        antiCoggNul = Serial.parseFloat();
+        Serial.println("# antiCoggNul: " + String(antiCoggNul));
+        berekenAntiCogging();
+      }
+      else if(letter == '$'){
+        antiCoggmacht = Serial.parseFloat();
+        Serial.println("$ antiCoggmacht: " + String(antiCoggmacht));
+        berekenAntiCogging();
+      }
+      else if(letter == '%'){
+        antiCoggVerschuiving = Serial.parseFloat();
+        Serial.println("% antiCoggVerschuiving: " + String(antiCoggVerschuiving));
+        berekenAntiCogging();
+      }
+      else if(letter == '^'){
+        antiCoggAan = !antiCoggAan;
+        Serial.println("^ antiCoggAan: " + String(antiCoggAan));
+      }
+      else if(letter == '&'){
+        antiCoggType = !antiCoggType;
+        Serial.println("& antiCoggType: " + String(antiCoggType));
+      }
+
+
+      else if(letter == '*'){
+        strobo.sampleNum = Serial.parseInt();
+        Serial.println("strobo.sampleNum: " + String(strobo.sampleNum));
       }
 
       
@@ -389,6 +384,7 @@ void serieelFunc(){
         Serial.println();
 
 
+
         eepromPrint();
         Serial.println();
         
@@ -400,6 +396,12 @@ void serieelFunc(){
         
         printKnoppen();
         orientatie.print();
+        Serial.println();      
+
+        Serial.println("# antiCoggNul: " + String(antiCoggNul));
+        Serial.println("$ antiCoggmacht: " + String(antiCoggmacht));
+        Serial.println("% antiCoggVerschuiving: " + String(antiCoggVerschuiving));     
+        Serial.println();
 
         Serial.println("-------------------------------------------------\n\n\n");  
       }
@@ -407,6 +409,36 @@ void serieelFunc(){
     }
   }
 }
+
+
+
+
+
+
+
+
+
+
+//             bytes   cycles                
+// LD (HL),d8      2   12
+// INC L           1   4
+//                 3   16
+
+// LD (HL),d8      2   12
+// INC HL          1   8
+//                 3   20
+
+// LD (HL+),A      1   8
+// LD A,d8         2   8
+//                 3   16                
+
+// LD A, [DE]      1   8
+// LD (HL+),A      1   8
+//                 2   16
+
+// LD SP,d16       3   12
+// LD (a16),SP     3   20
+//                 6   32
 
 
 

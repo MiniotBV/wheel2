@@ -1,4 +1,8 @@
 
+
+
+
+
 #define rpm33 33.333
 #define rpm45 45
 #define rpm78 78
@@ -108,7 +112,9 @@ bool isTussen(float waarde, float min, float max){
 
 
 
-
+int sign(float v) {
+  return (v < 0) ? -1 : ((v > 0) ? 1 : 0);
+}
 
 
 

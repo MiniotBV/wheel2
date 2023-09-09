@@ -155,51 +155,51 @@ void scannenVoorTracks(){
 Interval plaatLeesInt(10000, MICROS);
 
 void plaatLeesFunc(){
-  if(plaatLeesInt.loop()){
+  if(!plaatLeesInt.loop()){return;}
     
-    if(staat == S_HOK){ // als de kar in hok is, plaat scanner uitzetten
-      hoeveelNummers = 0;
-      nummers[hoeveelNummers] = 1;
-      plaatLeesLeduit();
-      return;
-    }
-
-
-
-    plaatLeesRuwPrev = plaatLeesRuw;
-    plaatLeesRuw = analogRead(plaatLees);
-    plaatLeesRuwDiv = plaatLeesRuw - plaatLeesRuwPrev;
-
-
-    plaatLeesAbsDiv = abs(plaatLeesRuwDiv);
-
-    plaatLeesWaarde = abs(plaatLeesAbsDiv - plaatSensorTarget);
-
-
-    plaatDetectie();
-    
-
-    if(knip){
-      plaatLeesLeduit();
-
-      float ledStroomP = (plaatSensorTarget - plaatLeesAbsDiv) * plaatLedStroomP;
-      plaatLeesStroom += limieteerF(ledStroomP,  -1, 1);
-
-      plaatLeesStroom = limieteerF(plaatLeesStroom, 5, 30);
-
-      plaatLeesMax = plaatLeesRuw;
-
-      scannenVoorTracks();//--------------------------------                   TRACKS LEZEN
-    
-    
-    }else{
-      plaatLeesLedSetMilliAmp(plaatLeesStroom);
-      plaatLeesMin = plaatLeesRuw;
-    }
-
-    
-    knip = !knip; //toggle led
+  if(staat == S_HOK){ // als de kar in hok is, plaat scanner uitzetten
+    hoeveelNummers = 0;
+    nummers[hoeveelNummers] = 1;
+    plaatLeesLeduit();
+    return;
   }
+
+
+
+  plaatLeesRuwPrev = plaatLeesRuw;
+  plaatLeesRuw = analogRead(plaatLees);
+  plaatLeesRuwDiv = plaatLeesRuw - plaatLeesRuwPrev;
+
+
+  plaatLeesAbsDiv = abs(plaatLeesRuwDiv);
+
+  plaatLeesWaarde = abs(plaatLeesAbsDiv - plaatSensorTarget);
+
+
+  plaatDetectie();
+  
+
+  if(knip){
+    plaatLeesLeduit();
+
+    float ledStroomP = (plaatSensorTarget - plaatLeesAbsDiv) * plaatLedStroomP;
+    plaatLeesStroom += limieteerF(ledStroomP,  -1, 1);
+
+    plaatLeesStroom = limieteerF(plaatLeesStroom, 5, 30);
+
+    plaatLeesMax = plaatLeesRuw;
+
+    scannenVoorTracks();//--------------------------------                   TRACKS LEZEN
+  
+  
+  }else{
+    plaatLeesLedSetMilliAmp(plaatLeesStroom);
+    plaatLeesMin = plaatLeesRuw;
+  }
+
+  
+  knip = !knip; //toggle led
+
 }
 
 

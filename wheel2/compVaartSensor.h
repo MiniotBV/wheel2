@@ -170,6 +170,8 @@ class COMPVAART{
           (staat == S_HOMEN_VOOR_SPELEN ||
           staat == S_NAAR_BEGIN_PLAAT || 
           staat == S_SPELEN)
+
+          // true
      
       ){ 
         if(isOngeveer(glad, targetRpm, 10)){
