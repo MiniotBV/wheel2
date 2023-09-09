@@ -381,8 +381,8 @@ void serieelFunc(){
 
 
       
-      Serial.print(", ");
-			Serial.print(strobo.procesInterval);
+      // Serial.print(", ");
+			// Serial.print(strobo.procesInterval);
       
 
 
@@ -421,8 +421,8 @@ void serieelFunc(){
 			// Serial.print(", ");
 			// Serial.print(armHoekRuw);//1696);
       
-			Serial.print(", ");
-			Serial.print(karDcomp, 4);//1696);
+			// Serial.print(", ");
+			// Serial.print(karDcomp, 4);//1696);
       Serial.print(", ");
 			Serial.print(armHoekCall, 4);//1696);
       

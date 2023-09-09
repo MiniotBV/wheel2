@@ -17,8 +17,8 @@ class ArmMotor
   float snelheidAf = 500;//ms;
 
   // float krachtHok = 0.04;
-  float krachtLaag = 0.08;
-  float krachtHoog = 0.22;
+  float krachtLaag = 0.13;//0.08;
+  float krachtHoog = 0.30;//0.22;
 
 
   float netOpDePlaatGewicht = 0.5;//0.25;

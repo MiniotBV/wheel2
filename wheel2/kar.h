@@ -336,7 +336,7 @@ void staatDingen(){
       
 			karOffset -= KAR_HOME - egteKarPos;
 			karPos = KAR_HOME;
-      karDcomp = 0;
+      // karDcomp = 0;
 
 			karNoodStop();
 			strobo.clearCompSamples();// dit is een mooi moment om te stoppen

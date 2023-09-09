@@ -182,7 +182,7 @@ void loop() {
 
   bluetoothFunc();
 
-
+  digitalWrite(ledWit, millis() < 1000);//zet led aan
 	// digitalWrite(ledWit, isNaaldEropVoorZoLang(1000));
 	// digitalWrite(ledWit, isPlaatAanwezig());
 }
