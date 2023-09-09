@@ -138,7 +138,6 @@ void knoppenUpdate(){
         knopAlleInterval.reset();
         knopInterval[knop] = millis();
         
-                
         knopLog( knop, " in ");
         
         if( staat == S_SCHOONMAAK ){//   SCHOONMAAK STAND STOPPEN

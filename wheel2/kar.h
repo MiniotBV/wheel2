@@ -268,12 +268,20 @@ void staatDingen(){
 
 
   if(staat == S_NAAR_HOK  ||  staat == S_HOMEN_VOOR_SPELEN){
-    if(staatVeranderd.sinds() < 100){//calibreren
+    if(staatVeranderd.sinds() < 2000){//calibreren
       armHoekCalibreer();
       return;
     }
 
-    if(beweegKarNaarPos(-150,  KAR_MAX_SNELHEID)){
+    bool aangekomen = false;
+
+    // if(armHoek < -200){
+    //   aangekomen = beweegKarNaarPos(-150,  KAR_MAX_SNELHEID/10);
+    // }else{
+      aangekomen = beweegKarNaarPos(-150,  KAR_MAX_SNELHEID);
+    // }
+
+    if(aangekomen){
       karOffset -= KAR_HOME - karPos;
       karPos = KAR_HOME;
       setStaat(S_HOMEN_GEFAALD);
@@ -315,7 +323,7 @@ void staatDingen(){
 
 
   if(staat == S_HOMEN_GEFAALD){
-    if(beweegKarNaarPos(KAR_HOK, KAR_MAX_SNELHEID)){
+    if(beweegKarNaarPos(KAR_HOK+10, KAR_MAX_SNELHEID)){
       setStaat(S_NAAR_HOK);
     } 
     return;
