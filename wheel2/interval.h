@@ -9,6 +9,7 @@ class Interval{
 		unsigned long vorrigeTijd = 0;
 		unsigned long vorrigeVorrigeTijd = 0;
 		int eenheid = MILLIS;
+    bool eenKeerLatch = true;
 
 		Interval(int i, int tijdMode){
 			interval = i;
@@ -41,7 +42,17 @@ class Interval{
 
 		void reset(){
 			vorrigeTijd = tijd(); 
+      eenKeerLatch = true;
 		}
+
+
+    bool eenKeer(){
+      if(eenKeerLatch   &&   tijd() - vorrigeTijd  > interval){
+        eenKeerLatch = false;
+        return true;
+      }
+      return false;
+    }
 		
 
 		int sinds(){

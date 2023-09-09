@@ -392,6 +392,7 @@ void volumeFunc(){
 Interval bluetoothInt(20, MILLIS);
 bool bluetoothInitNogDoen = true;
 bool bluetoothDebug = false;
+bool draadlozeVersie = false;
 
 
 String bluetoothBuffer = "";
@@ -417,6 +418,8 @@ void bluetoothInit(){
   Serial2.setPollingMode(true);
   Serial2.setFIFOSize(128);
   Serial2.begin(9600);
+
+  bluetoothScrijf("AT+");
 }
 
 
@@ -430,12 +433,15 @@ void bluetoothInit(){
 
 
 void bluetoothOntcijfering(){
+  if(bluetoothDebug){
+    Serial.println("BT IN:" + bluetoothBuffer);
+  }
+
+
   if(bluetoothBuffer.startsWith("income_opid:")){
     bluetoothBuffer.replace("income_opid:", "");
     bluetoothBuffer.trim();
 
-    // Serial.println("knop: " + bluetoothBuffer);
-    
     if(bluetoothBuffer.startsWith(BT_KNOP_IN)){
       bluetoothBuffer.remove(0, 1); // gooi de in uit getal weg
       Serial.println("BT KNOP_IN: " + bluetoothBuffer);
@@ -475,16 +481,25 @@ void bluetoothOntcijfering(){
     else {
       Serial.println("BT KNOP_ONBEKENT: " + bluetoothBuffer);
     }
-  }else if(bluetoothDebug){
-    Serial.println("BT IN:" + bluetoothBuffer);
+  
   }
+  
+  if(bluetoothBuffer.startsWith("OK+")){
+    if(millis() < 2000){
+      draadlozeVersie = true; // ff checken of er wel een bluetooth module is aangesloten
+    }
+    
+    
+  }
+  
+  
 }
 
 
 
 
 
-
+Interval bluetoothCheckVoorOpstart(2000, MILLIS);
 
 
 
@@ -496,6 +511,10 @@ void bluetoothFunc(){
     bluetoothInitNogDoen = false;
     bluetoothInit();
     return;    
+  }
+
+  if(bluetoothCheckVoorOpstart.eenKeer()){
+    bluetoothScrijf("AT+");
   }
   
   if(bluetoothInt.loop()){

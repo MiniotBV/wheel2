@@ -188,7 +188,7 @@ void knopLogica(int knop){
 
 
     if(staat == S_HOK   &&   knop == KNOP_DOORSPOEL){ //-----bluetooth knop
-			Serial2.print("AT+DELVMLINK");
+			bluetoothScrijf("AT+DELVMLINK");
 		}
 
 

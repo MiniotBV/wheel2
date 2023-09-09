@@ -190,7 +190,7 @@ void plateauStaatDingen(){
 			// 	stoppen();
 			// 	return;
 			// }
-      if(vaart  <  targetRpm * 0.65){//   &&   draaienInterval.sinds() > 1000){ //te langzaam 70%
+      if(vaart  <  targetRpm * 0.65  &&   draaienInterval.sinds() > 1000){ //te langzaam 70%
 				plateauPrint("tegengehouden");
 				stoppen();
 				return;

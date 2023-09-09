@@ -292,7 +292,9 @@ void checkenVoorCommando(int info){
   if(checkZinCommando("CW", "waardes", info)){ checkenVoorCommando(WAARDE_INFO);return;}
 
 	if(checkZinCommando("?", "help", info)){
-		Serial.println("\n\n\nhelp -- versie: " + String(versie) + " ----------------------------\n");   
+		Serial.println("\nhelp -- versie: " + String(versie) + " ----------------------------");
+    Serial.println();
+
 		Serial.println("plateau P: " + String(plateauP, 5));
 		Serial.println("plateau I: " + String(plateauI, 5));
 		Serial.println("plateau D: " + String(plateauD, 5));
@@ -305,6 +307,8 @@ void checkenVoorCommando(int info){
 		
 		Serial.println("staat: " + printStaat(staat));
 		Serial.println("volume: " + String(volume));
+    Serial.println("draadlozeVersie: " + String(draadlozeVersie));
+
 		Serial.println();
 		
 		// Serial.println("kracht: " + String(kracht));
@@ -330,7 +334,7 @@ void checkenVoorCommando(int info){
 		// Serial.println();
 
 
-		Serial.println("-----------------------------------------------\n\n");
+		Serial.println("-----------------------------------------------");
 		return;
 	}
 
