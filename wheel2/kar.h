@@ -174,7 +174,7 @@ void armHoekCalibreer(){
 
 void gaNaarNummer(float pos){
 	targetNummerPos = pos;
-	Serial.print("naarpos: " + String(targetNummerPos));
+	Serial.println("naarpos: " + String(targetNummerPos));
 	setStaat(S_NAAR_NUMMER);
 }
 
@@ -182,11 +182,6 @@ void gaNaarNummer(float pos){
 
 
 void naarVorrigNummer(){
-	if(hoeveelNummers < 2){// als er 1 nummer is is dat ook te weinig want dat is het eind van de muziek
-		gaNaarNummer(plaatBegin);
-		return;
-	}
-
 	float pos = karPosFilter;
 
 	if(staat == S_NAAR_NUMMER){//als er al word door gespoeld doe dan een extra nummer verder
@@ -216,11 +211,6 @@ void naarVorrigNummer(){
 
 
 void naarVolgendNummer(){
-	if(hoeveelNummers < 2){ // als er 1 nummer is is dat ook te weinig
-		stoppen();
-		return;
-	}
-
 	float pos = karPosFilter;
 	
 	if(staat == S_NAAR_NUMMER){//als er al word door gespoeld doe dan een extra nummer verder
@@ -229,7 +219,12 @@ void naarVolgendNummer(){
 
 	int nummer = hoeveelNummers - 1;
 
-	while(pos - 2 <= nummers[nummer]){
+  if(nummer <= 0){ // nummer 0 is het begin van nummers (dus niet en egt nummer)
+    stoppenOfHerhalen();//stoppen();
+    return;
+  }
+
+	while(pos - 2 <= nummers[nummer]){ // 2mm lopen voordat hij hetzelfde nummer gaat herhalen
 		nummer--;
 		if(nummer <= 0){ // nummer 0 is het begin van nummers (dus niet en egt nummer)
 			stoppenOfHerhalen();//stoppen();
@@ -601,6 +596,18 @@ bool karMotorUitvoeren(){
 	armHoekSlow += (armHoekCall - armHoekSlow) / 100;
 
 	armHoek = armHoekCall - armHoekOffset;
+
+
+  if(  !(   staat == S_HOK  ||  staat == S_NAAR_HOK  ||  staat == S_HOMEN_VOOR_SPELEN  ||  staat == S_HOMEN_VOOR_SCHOONMAAK   ) ){
+    if(armHoekCall > 0.95){
+      setError(E_ARMHOEK_LIMIET_POS);
+      staat = S_HOK;
+    }
+    if(armHoekCall < 0.05){
+      setError(E_ARMHOEK_LIMIET_NEG);
+      staat = S_HOK;
+    }
+  }
 
 
 	sensorPos = karPos - SENSOR_OFFSET;

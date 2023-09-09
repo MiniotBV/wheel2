@@ -23,6 +23,7 @@ float uitBuff;
 
 
 
+
 enum rpmStaats{
   AUTO,
   R33,
@@ -61,13 +62,24 @@ void updatePlateauRpm(){
 
 
 
+bool plateauDebug = true;
+
+void plateauPrint(String bericht){
+  if(plateauDebug){
+    Serial.println("plateau: " + bericht);
+  }
+}
+
+
+
+
+
 void setPlateauRpm(float rpm){
   if(rpm == targetRpm){return;}//als er nisk veranderd is, hoeft er niks gerestet te worden
   autoRpm = rpm;
 
   updatePlateauRpm();
   
-  Serial.println("setPlateauRpm() reset");
   strobo.clearCompSamples();
   draaienInterval.reset();
   // opsnelheid = false;
@@ -82,12 +94,12 @@ void plateauDraaien(){
   plateauAan = true;
   setPlateauRpm(rpm33);
 
-  basis = 20;//40;//60;//75;
+  basis = 50;//40;//60;//75;
   
   // strobo.clearCompSamples();
   // draaienInterval.reset();
   
-  // Serial.println("plateauStart()");
+  plateauPrint("aan");
 }
 
 
@@ -101,6 +113,8 @@ void plateauStoppen(){
   draaienInterval.reset();
   uitdraaien = true;
   opsnelheid = false;
+
+  plateauPrint("uit");
 }
 
 
@@ -148,15 +162,16 @@ float pid(float rpmIn){
 
   if(plateauComp){
 
-    pp = divTarget * plateauP;
-
-    if(abs(divTarget) < 3){
+    if(opsnelheid){//abs(divTarget) < 3){
+      pp = divTarget * plateauP;
       basis += divTarget * plateauI;            //breng basis voltage naar gemiddelde voor de juiste snelheid
+      
     }else{
+      pp = divTarget * plateauP * 0.5;
       basis += divTarget * plateauI * 0.25;       //om langzaam opte starten
     }
-    
 
+    // pp = divTarget * plateauP;
 
     pd = divTijd * plateauD;
   }
@@ -164,8 +179,6 @@ float pid(float rpmIn){
 
   return  pp + basis + pd;
 }
-
-
 
 
 
@@ -188,7 +201,7 @@ void plateauStaatDingen(){
       staat == S_ERROR  ||
       staat == S_HOK
     ){
-      Serial.println("plateau was perongeluk nog aant draaien");
+      plateauPrint("was nog aant draaien ofzo?");
       plateauStoppen();
       return;
     }
@@ -197,12 +210,12 @@ void plateauStaatDingen(){
     if( opsnelheid == true){ //         tegen gehouden
       
       if(glad > targetRpm * 4 ){ //te snel 200%
-        Serial.println("^");
+        plateauPrint("tesnel");
         stoppen();
         return;
       }
       else if(glad  <  targetRpm * 0.65   &&   draaienInterval.sinds() > 1000){ //te langzaam 70%
-        Serial.println("T");
+        plateauPrint("tegengehouden");
         stoppen();
         return;
       }
@@ -213,14 +226,14 @@ void plateauStaatDingen(){
     if(  opsnelheid == false    ){ //                                                 tegen gehouden
       
       if(glad  >  targetRpm * 0.95){ //                       op snelheid (95% van de snelheid)
-        Serial.println("O");
+        plateauPrint("opsnelheid");
         opsnelheid = true;
         return;
       }
 
       if(glad  <  targetRpm * 0.1   &&     draaienInterval.sinds() > 1000){//   <5% target snelheid na een kort tijd
         
-        Serial.println("kon niet opgang komen");
+        plateauPrint("kon niet opgang komen");
         stoppen();//--------------------------------------------
         return;
       }
@@ -231,7 +244,7 @@ void plateauStaatDingen(){
   }else{
     if(draaienInterval.sinds() > 1000   &&   uitdraaien == false){//                              aangeslingerd
       if(glad  >  rpm33 * 0.50   &&   staat == S_HOK){                                                       //50% van de 33.3 snelheid
-        Serial.println("A");
+        plateauPrint("aangeslingerd");
         spelen();
         return;
       }
@@ -240,7 +253,7 @@ void plateauStaatDingen(){
     if(uitdraaien == true && glad < rpm33 * 0.05){ //     <5% van de 33.3 snelheid                                                    uitgedraaid
       uitdraaien = false;
       draaienInterval.reset();
-      Serial.println("U");
+      plateauPrint("uitgedraaid");
       return;
     }
   }
