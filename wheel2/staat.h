@@ -2,14 +2,11 @@
 
 float autoRpm;
 
-bool plateauAan = false;
 
-bool opsnelheid;
-bool uitdraaien;
 
 float basis = 0;
 
-Interval draaienInterval(10, MILLIS);
+
 
 
 enum rpmStaats{
@@ -54,7 +51,11 @@ void setPlateauRpm(float rpm){
   autoRpm = rpm;
 
   updatePlateauRpm();
-  updatePlateauPID();
+  // updatePlateauPID();
+
+  strobo.clearCompSamples();
+  draaienInterval.reset();
+  // opsnelheid = false;
 }
 
 
@@ -66,9 +67,10 @@ void plateauDraaien(){
   plateauAan = true;
   setPlateauRpm(rpm33);
 
-  basis = 0.0;
+  basis = 0.5;
   
-  draaienInterval.reset();
+  // strobo.clearCompSamples();
+  // draaienInterval.reset();
   
   Serial.println("plateauStart()");
 }

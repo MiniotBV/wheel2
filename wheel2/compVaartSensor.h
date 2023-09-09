@@ -1,4 +1,11 @@
 float targetRpm = 0;
+bool plateauAan = false;
+
+bool opsnelheid;
+bool uitdraaien;
+
+Interval draaienInterval(10, MILLIS);
+
 
 #define sampleMax 65500               //samples
 
@@ -68,8 +75,8 @@ class COMPVAART{
     int teller = 0;
 
     int faseVerschuiving = 180;//90;  50 voor singletjes
-    float plateauCompensatie[2000];
-    bool compMeten = false;
+    float plateauCompensatie[1000];
+    bool compMeten = true;
     float preComp = 0;
     float plateauComp = 0;
     float compFilter = 1.01;//2;
@@ -93,7 +100,7 @@ class COMPVAART{
       pulsenPerRev = ppr;
       
       clearSamples();
-      clearPlateauSamples();
+      clearCompSamples();
     }
 
 
@@ -101,7 +108,7 @@ class COMPVAART{
 
     void update(){
       if( micros() - vaartInterval > sampleMax ){
-        if(glitchTeller > 6){
+        if(glitchTeller > 3){
           shiftSamples(sampleMax * dir);
           vaart = 0;
           glad += (vaart - glad) / 10;
@@ -163,7 +170,7 @@ class COMPVAART{
       // getDiv();
 
       glad += (vaart - glad) / 10;
-      gladglad += (glad - gladglad) / 500;
+      gladglad += (glad - gladglad) / 10;
 
 
 
@@ -173,11 +180,9 @@ class COMPVAART{
       
       // plateauCompensatie[teller] += ( glad - targetRpm ) / 4;
       
-      if(compMeten){
+      if(compMeten && opsnelheid && plateauAan && draaienInterval.sinds() > 1000){
         if(isOngeveer(glad, targetRpm, 10)){
-          plateauCompensatie[teller] += ( glad - targetRpm ) * compVermenigvuldiging;
-
-          
+          plateauCompensatie[teller] += ( glad - targetRpm ) * compVermenigvuldiging; 
         }
       }
 
@@ -218,9 +223,18 @@ class COMPVAART{
 
 
 
-    void clearPlateauSamples(){
-      for(int i = 0; i < pulsenPerRev + 1000; i++){
-        plateauCompensatie[i] = 0.0;
+    void clearCompSamples(){
+      for(int i = 0; i < pulsenPerRev; i++){
+        plateauCompensatie[i] = 0;
+      }
+
+      for(int harm = 1; harm < harmonisen + 1; harm++){
+        sinTotaal[harm] = 0;
+        cosTotaal[harm] = 0;
+        for(int i = 0; i < pulsenPerRev; i++){
+          sinWaardes[harm][i] = 0;
+          sinWaardes[harm][i] = 0;
+        }        
       }
     }
 

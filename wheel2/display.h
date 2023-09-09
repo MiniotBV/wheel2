@@ -38,8 +38,8 @@ void displayInit(){
 
 
 int egtePos2displayPos(float pos){
-  return mapF(pos, PLAAT_EINDE,  GROOTSTE_PLAAT_BEGIN, 0, displayLengte-1);
-  // return mapF(pos, PLAAT_EINDE + SENSOR_OFFSET,  GROOTSTE_PLAAT_BEGIN, 0, displayLengte-1);
+  return mapF(pos, PLAAT_EINDE,  ELPEE_PLAAT_BEGIN, 0, displayLengte-1);
+  // return mapF(pos, PLAAT_EINDE + SENSOR_OFFSET,  ELPEE_PLAAT_BEGIN, 0, displayLengte-1);
 }
 
 
@@ -97,7 +97,8 @@ void displayUpdate(){
     int naald = egtePos2displayPos(karPos);
     int target = egtePos2displayPos(targetNummerPos);
     int sensor = egtePos2displayPos(sensorPos);
-    int sensorMaxBerijk = egtePos2displayPos(GROOTSTE_PLAAT_BEGIN - SENSOR_OFFSET)  +  3;
+    int sensorMaxBerijk = egtePos2displayPos(ELPEE_PLAAT_BEGIN - SENSOR_OFFSET)  +  3;
+    int plaatGroote = egtePos2displayPos(plaatBegin);
 
     int volumeMargin = displayLengte/5;//16;
 
@@ -212,13 +213,6 @@ void displayUpdate(){
       for(int i = 0; i < displayLengte; i++){
         displayData[i] = 0;          
 
-        // int volumePunt = mapF(volume, 0, 63, (displayLengte-1) - volumeMargin,   volumeMargin);
-
-        // if(i < (displayLengte-1) - volumeMargin    &&    i > volumePunt){
-        //   displayData[i] = 0.1;
-        // }
-
-
         int volumePunt = mapF(volume, 0, 63, 0, dispHalf);//40
 
         if(i < dispHalf + volumePunt    &&    i > dispHalf - volumePunt){
@@ -234,20 +228,20 @@ void displayUpdate(){
 
         int volgendeNummerDisplay  =  egtePos2displayPos(nummers[nummersTeller]);
 
-        if( ( staat == S_NAAR_BEGIN_PLAAT  ||  staat == S_PLAAT_DIAMETER_METEN )    &&  i > sensor){
+        if( i > plaatGroote){
           displayData[i] = 0;
-        }
 
-        else if(i > sensorMaxBerijk){
+        }else if( staat == S_NAAR_BEGIN_PLAAT   &&  i > sensor  &&  plaatBegin == 1000){
           displayData[i] = 0;
-        }
-
-        else if(volgendeNummerDisplay <= i     &&    nummersTeller < hoeveelNummers){
+        
+        }else if(i > sensorMaxBerijk){
+          displayData[i] = 0;
+        
+        }else if(volgendeNummerDisplay <= i     &&    nummersTeller < hoeveelNummers){
           nummersTeller++;
           displayData[i] = 0;
-        }
         
-        else{
+        }else{
           if(nummersTeller == 0){
             displayData[i] = 0;
           }else{
@@ -260,10 +254,11 @@ void displayUpdate(){
           
           
           if(naald-1 == i || naald+1 == i){
-            // displayData[i] = 0;
-            if(millis()%1000 > 300){
+            // if(millis()%1000 > 300){
               displayData[i] = 0.9;
-            }
+            // }else{
+            //   displayData[i] = 0;
+            // }
           }
           
           else if( i == target  &&  naald != i){

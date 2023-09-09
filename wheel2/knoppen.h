@@ -152,22 +152,7 @@ void knoppenUpdate(){
           // ledBlink();  //led blink
         }
         
-        if(knop == KNOP_TERUGSPOEL){
-          if(staat == S_HOK){
-            if(rpmStaat == AUTO){
-              rpmStaat = R33;
-            }
-            else if(rpmStaat == R33){
-              rpmStaat = R45;
-            }
-            else{
-              rpmStaat = AUTO;
-            }
 
-            updatePlateauRpm();
-            rpmDisplayActie.reset();
-          }
-        }
       }
       
       
@@ -207,6 +192,24 @@ void knoppenUpdate(){
           }else if(staat == S_HOK){
             spelen();
             // ledBlink();  //led blink
+          }
+        }
+
+
+        if(knop == KNOP_TERUGSPOEL){
+          if(staat == S_HOK){
+            if(rpmStaat == AUTO){
+              rpmStaat = R33;
+            }
+            else if(rpmStaat == R33){
+              rpmStaat = R45;
+            }
+            else{
+              rpmStaat = AUTO;
+            }
+
+            updatePlateauRpm();
+            rpmDisplayActie.reset();
           }
         }
 

@@ -233,11 +233,11 @@ void serieelFunc(){
       else if(letter == 'Q'){    //
         strobo.compMeten = !strobo.compMeten;
         Serial.println("compMeten: " + String(strobo.compMeten));
-        // strobo.clearPlateauSamples();
+        // strobo.clearCompSamples();
       }
       else if(letter == 'q'){    //
         // strobo.compMeten = !strobo.compMeten;
-        strobo.clearPlateauSamples();
+        strobo.clearCompSamples();
         Serial.println("clearComp");
       }
 

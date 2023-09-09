@@ -20,12 +20,13 @@ float karPcomp = 0;
 
 
 
-// #define GROOTSTE_PLAAT_BEGIN 148
-#define GROOTSTE_PLAAT_BEGIN 147
+// #define ELPEE_PLAAT_BEGIN 148
+#define ELPEE_PLAAT_BEGIN 147
+#define SINGLETJE_PLAAT_BEGIN 85
 // #define PLAAT_EINDE 52.5
 #define PLAAT_EINDE 52.5
 
-#define KAR_HOME 43.5
+#define KAR_HOME 44.5
 #define KAR_HOK 45.5
 
 #define SCHOONMAAK_PLEK 100
@@ -353,45 +354,25 @@ void staatDingen(){
 
 
   if(staat == S_NAAR_BEGIN_PLAAT){
-    if(  beweegKarNaarPos(GROOTSTE_PLAAT_BEGIN,   KAR_MAX_SNELHEID)  ){
-      setStaat(S_PLAAT_DIAMETER_METEN);
-      Serial.print("nummers gevonden: ");
-      Serial.println(hoeveelNummers);
-    }
-    
-    return;
-  }
-
-
-
-
-  if(staat == S_PLAAT_DIAMETER_METEN){
-    if(staatVeranderd.sinds() < 500){ // even een halve seconden wachten om de plaat detectie te laten werken
-      plaatBegin = 0;
+    if(staatVeranderd.sinds() < 50){ // 10ms om wat shit te doen
+      plaatBegin = 1000;
       return;
     }
 
-    if(plaatAanwezig  ||  plaatBegin != 0){ // is er een plaat aanwezig
+    if(!plaatAanwezig  ||  plaatBegin != 1000){ // is er een plaat aanwezig
       
-      if(plaatBegin == 0){    // voer maar 1 keer uit
-        if(isOngeveer(karPos, GROOTSTE_PLAAT_BEGIN, 1)){
-          plaatBegin = GROOTSTE_PLAAT_BEGIN;
-          Serial.println("plaatDia: 12inch");
-          setPlateauRpm(rpm33);
-        
-        }else{
-          // anders moet er gekeken worden wat de maat is en welke rpm daar bijhoort
-          plaatBegin = karPos - SENSOR_OFFSET;
+      if(plaatBegin == 1000){    // voer maar 1 keer uit
+        plaatBegin = karPos - SENSOR_OFFSET;
 
-          if(isPlaatOngeveer7Inch()){//isOngeveer(inchDia, 7, 1)){
-            Serial.print("±7\" ");
-            setPlateauRpm(rpm45);
-          }else{
-            setPlateauRpm(rpm33);
-          }
-          Serial.println("plaatDia: " + String((plaatBegin / 25.4)*2) + "\"");
-          
+        if(isPlaatOngeveer7Inch()){//isOngeveer(inchDia, 7, 1)){
+          Serial.print("±7\" ");
+          setPlateauRpm(rpm45);
+          plaatBegin = SINGLETJE_PLAAT_BEGIN;
+        }else{
+          setPlateauRpm(rpm33);
         }
+        Serial.println("plaatDia: " + String((plaatBegin / 25.4)*2) + "\"");
+        return;
       }
       
       if(beweegKarNaarPos(plaatBegin, KAR_MAX_SNELHEID)){ 
@@ -401,14 +382,22 @@ void staatDingen(){
 
       return;
     }
+    
+    if(  beweegKarNaarPos(ELPEE_PLAAT_BEGIN,   KAR_MAX_SNELHEID)  ){
+      // setStaat(S_PLAAT_DIAMETER_METEN);
+      // Serial.print("nummers gevonden: " + String(hoeveelNummers));
+      plaatBegin = ELPEE_PLAAT_BEGIN;
+      Serial.println("plaatDia: 12inch");
+      setPlateauRpm(rpm33);
 
-    if( beweegKarNaarPos(SENSOR_OFFSET + PLAAT_EINDE, KAR_MAX_SNELHEID) ){ 
-      stoppen();
+      setStaat(S_NAALD_EROP);
       return;
     }
-
+    
     return;
   }
+
+
 
 
 
@@ -469,7 +458,7 @@ void staatDingen(){
       beweegKarNaarPos(targetNummerPos, KAR_MAX_SNELHEID);
       
       // karPos += limieteerF( (targetNummerPos - karPos) / 10 , -KAR_MAX_SNELHEID, KAR_MAX_SNELHEID);
-      // karPos = limieteerF( karPos, PLAAT_EINDE, GROOTSTE_PLAAT_BEGIN);
+      // karPos = limieteerF( karPos, PLAAT_EINDE, ELPEE_PLAAT_BEGIN);
       
     }
     return;

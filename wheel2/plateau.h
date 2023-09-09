@@ -1,6 +1,6 @@
 
 
-bool plateauLogica = false;
+bool plateauLogica = true;
 
 // float targetRpm = 0;//staat nu in compVaartSensor.h
 
@@ -90,21 +90,26 @@ float pid(float rpmIn){
 
 
 
+
+
+
+
+
 void plateauStaatDingen(){
 
   if(!plateauLogica){return;}  
   
-  float glad = strobo.gladglad;
+  float glad = strobo.glad;//gladglad;
 
   if(plateauAan){                   //staat de motor aan?
 
     if( opsnelheid == true){ //         tegen gehouden
       
-      if(glad > targetRpm * 2 ){ //te snel 200%
+      if(glad > targetRpm * 4 ){ //te snel 200%
         Serial.println("^");
         stoppen();
       }
-      else if(glad  <  targetRpm * 0.80   &&   draaienInterval.sinds() > 500){ //te langzaam 70%
+      else if(glad  <  targetRpm * 0.75   &&   draaienInterval.sinds() > 1000){ //te langzaam 70%
         Serial.println("T");
         stoppen();
       }
@@ -119,7 +124,7 @@ void plateauStaatDingen(){
         opsnelheid = true;
       }
 
-      if(glad  <  targetRpm * 0.1   &&     draaienInterval.sinds() > 1000){//   <5% target snelheid na een kort tijd
+      if(glad  <  targetRpm * 0.1   &&     draaienInterval.sinds() > 1500){//   <5% target snelheid na een kort tijd
         
         Serial.println("kon niet opgang komen");
         stoppen();//--------------------------------------------
@@ -153,6 +158,9 @@ void plateauStaatDingen(){
 
 
 
+
+
+
 Interval plateauInt(10000, MICROS);
 
 void plateauFunc(){
@@ -165,7 +173,7 @@ void plateauFunc(){
     float vaart = strobo.glad;
     
     // if(strobo.compMeten){
-      vaart += (1/plateauP) * (strobo.plateauComp/100);
+    vaart += (1/plateauP) * (strobo.plateauComp/100);
     // }
     
 
