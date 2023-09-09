@@ -41,6 +41,28 @@ float riemDiv;
 
 
 
+
+
+void pauze(){
+  if(staat == S_NAALD_EROP){
+    setStaat(S_PAUZE);
+    targetNummerPos = karPos;
+  }
+  else if(staat == S_PAUZE){
+    setStaat(S_NAALD_EROP);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
 void printKnoppen(){
   Serial.print("knoppen: ");
   for(int i = 0; i < 8; i++){

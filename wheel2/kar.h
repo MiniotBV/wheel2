@@ -45,12 +45,11 @@ float karOffset = 0; // om te kijken wat de homing afwijking is
 
 float armHoekRuw = analogRead(hoekSensor);
 float armHoek;
-float armHoekFilterWaarde = 1;
 float armHoekSlow = armHoekRuw;
 float armHoekOffset;
 
 
-
+Interval naaldNaarVorenBewogen(1, MILLIS);
 
 
 
@@ -221,24 +220,6 @@ void naarVolgendNummer(){
 
 
 
-
-
-
-
-
-
-
-
-
-void pauze(){
-  if(staat == S_NAALD_EROP){
-    setStaat(S_PAUZE);
-    targetNummerPos = karPos;
-  }
-  else if(staat == S_PAUZE){
-    setStaat(S_NAALD_EROP);
-  }
-}
 
 
 
@@ -434,9 +415,22 @@ void staatDingen(){
       beweegKarNaarPos(nieuwePos, KAR_MAX_SNELHEID);
       
       if(karPos <= PLAAT_EINDE){
+        Serial.println("kar heeft de limiet berijkt");
         stoppen();
         return;
       }
+
+      if(!isOngeveer(karPos, karPosFilter, 2.5)){
+        Serial.println("kar te ver terug gelopen / plaat te ver uit het midden");
+        stoppen();
+        return;
+      }
+
+      if(naaldNaarVorenBewogen.sinds() > 5000){
+        Serial.println("kar te lang niet bewogen");
+        stoppen();
+        return;
+      }      
     }
     return;
   }else{
@@ -554,7 +548,6 @@ void staatDingen(){
 
 
 
-Interval armHoekInt(100, MICROS);
 Interval karMotorInt(1000, MICROS);
 
 
@@ -595,12 +588,15 @@ bool karMotorUitvoeren(){
 
 
 
-  if(staat == S_NAALD_EROP){
-    karPosFilter += limieteerF( (karPos - karPosFilter) / 1000, -1, 0);
-    karPosFilterSlow += (karPosFilter - karPosFilterSlow) / 3000;
+  if(staat == S_NAALD_EROP  &&  isNaaldErop()){
+    float div = karPos - karPosFilter;
+    if(div < 0){
+      karPosFilter += div / 1000;
+      naaldNaarVorenBewogen.reset();        
+    }  
   }else{
     karPosFilter = karPos;
-    karPosFilterSlow = karPos;
+    naaldNaarVorenBewogen.reset();
   }
 
 

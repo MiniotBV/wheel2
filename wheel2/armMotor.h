@@ -77,6 +77,17 @@ void armInit(){
 
 
 
+armGewicht2pwm(float gewicht){
+  return gewicht  
+}
+
+pwm2armGewicht(float pwm){
+  return pwm
+}
+
+
+
+
 
 
 Interval armInt(10, MILLIS);
