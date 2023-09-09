@@ -108,7 +108,7 @@ int gecompenseerdeDoorspoel(){
 	if(orientatie.isStaand){
 		return KNOP_TERUGSPOEL;
 	}
-	return KNOP_DOORSPOEL;  
+	return KNOP_DOORSPOEL;
 }
 
 int gecompenseerdeTerugspoel(){
@@ -196,9 +196,9 @@ void knopLogica(int knop){
 		}
 
 
-    if(staat == S_HOK   &&   knop == KNOP_DOORSPOEL){ //-----bluetooth knop
-			bluetoothScrijf("AT+DELVMLINK");
-		}
+    // if(staat == S_HOK   &&   knop == KNOP_DOORSPOEL){ //-----bluetooth knop
+		// 	bluetoothScrijf("AT+DELVMLINK");
+		// }
 
 
 		return;
@@ -235,9 +235,9 @@ void knopLogica(int knop){
 			}
 		}
 
-    if(staat == S_HOK   &&   knop == KNOP_DOORSPOEL){ //-----bluetooth reset
-			bluetoothScrijf("AT+REST");
-		}
+    // if(staat == S_HOK   &&   knop == KNOP_DOORSPOEL){ //-----bluetooth reset
+		// 	bluetoothScrijf("AT+REST");
+		// }
 		return;
 	}
 	

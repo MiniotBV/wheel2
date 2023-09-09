@@ -157,13 +157,13 @@ class Orientatie //          QMA7981
 			// }
 
 
-      y += (armHoekCall - y)/100;
+      y += (armHoekCall - y)/20;
 
       if(isFout){
-				isFout = ! isOngeveer(armHoekCall, 0, 0.6);
+				isFout = ! isOngeveer(y, 0, 0.6);
 			}else{
         if(staat == S_HOK  && staatVeranderd.sinds() > 1000){
-          isFout = ! isOngeveer(armHoekCall, 0, 0.8);   
+          isFout = ! isOngeveer(y, 0, 0.8);   
         }  
 			}
 			
