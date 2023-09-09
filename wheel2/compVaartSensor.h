@@ -114,7 +114,7 @@ class COMPVAART
 		bool golven = false;    
     bool onbalansCompAan = true;
 		bool plaatUitMiddenComp = true;
-
+    bool clearCompSamplesWachtrij = false;
 
 
 
@@ -197,6 +197,13 @@ class COMPVAART
       tellerRuw += dir;
 			teller = rondTrip(teller + dir,  pulsenPerRev);
 
+
+      if(clearCompSamplesWachtrij  && teller == 0){
+        clearCompSamplesWachtrij = false;
+        clearCompSamples();
+      }
+
+
 			shiftSamples(interval);// * dir);
 
 
@@ -218,7 +225,7 @@ class COMPVAART
       spoorafstand = karPosMiddenGeschiedenis[teller] - karPosMidden;
       karPosMiddenGeschiedenis[teller] = karPosMidden;
 
-      if(spoorafstand > 0.01  ||  (staat == S_SPELEN  &&  arm.isNaaldEropVoorZoLang(2000))){
+      if(spoorafstand > 0.01  ||  !(staat == S_SPELEN  &&  arm.isNaaldEropVoorZoLang(2000))){
         naaldNaarVorenBewogen.reset();
       }
 
@@ -361,11 +368,21 @@ class COMPVAART
 
 
 
+
+
+
 		void clearCompSamples(){
 			clearOnbalansCompSamples();
 			clearCenterCompSamples();
+      // Serial.println("clearComp"); 
 		}
 
+
+
+
+    void clearCompSamplesOpTellerNull(){
+			clearCompSamplesWachtrij = true;
+		}
 
 
 

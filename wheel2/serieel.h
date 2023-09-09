@@ -161,7 +161,7 @@ void checkenVoorCommando(int info){
 	infoPrintln(info);
 
 	if(checkZinBool("g", "golven", info, golven)){return;}
-	if(checkZinBool("PLG", "plaatLeesGolven", info, lees.showGolven)){return;}
+	if(checkZinBool("PLG", "plaatLeesGolven", info, plaatLeesGolven)){return;}
 	if(checkZinBool("KG", "karGolven", info, karGolven)){return;}
 	if(checkZinBool("SG", "strobo.golven", info, strobo.golven)){return;}
 
@@ -193,7 +193,7 @@ void checkenVoorCommando(int info){
 
 	//-------------------------------------------------------KAR SENSORS / TRACK SHIT
 	infoPrintln(info);
-	if(checkZinFloat("PLS", "plaatLeesStroom", info, lees.stroom)){return;}
+	if(checkZinFloat("PLS", "plaatLeesStroom", info, plaatLeesStroom)){return;}
 	if(checkZinInt("VOL", "volume", info, volume)){ volumeOverRide = true; return;}
 
 	if(checkZinFloat("TO", "trackOffset", info, trackOffset)){return;}
@@ -235,7 +235,9 @@ void checkenVoorCommando(int info){
 	if(checkZinBool("SKC", "strobo.plaatUitMiddenComp", info, strobo.plaatUitMiddenComp)){return;}
 	if(checkZinBool("KC", "karUitMiddenCompAan", info, karUitMiddenCompAan)){return;}
 	
-	if(checkZin( "SCC", "strobo.clearCompSamples()", info)){   strobo.clearCompSamples(); Serial.println("clearComp");  return;}
+	if(checkZin( "SCZ", "strobo.clearCompSamplesOpTellerNull()", info)){   strobo.clearCompSamplesOpTellerNull(); return;}
+	if(checkZin( "SCC", "strobo.clearCompSamples()", info)){   strobo.clearCompSamples(); return;}
+
 
 	//------------------------------------------------------OPSLAG
 	infoPrintln(info);

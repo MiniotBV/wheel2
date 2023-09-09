@@ -95,7 +95,7 @@ void plateauDraaien(){
 	plateauAan = true;
 	setPlateauRpm(rpm33);
 
-	// basis = 50;//40;//60;//75;
+	basis = 50;//40;//60;//75;
 	
 	// strobo.clearCompSamples();
 	// draaienInterval.reset();
@@ -204,12 +204,13 @@ void plateauStaatDingen(){
 
 		if( opsnelheid == true){ //         tegen gehouden
 			
-			if(glad > targetRpm * 4 ){ //te snel 200%
-				plateauPrint("tesnel");
-				stoppen();
-				return;
-			}
-			else if(glad  <  targetRpm * 0.65   &&   draaienInterval.sinds() > 1000){ //te langzaam 70%
+			// if(glad > targetRpm * 4 ){ //te snel 200%
+			// 	plateauPrint("tesnel");
+			// 	stoppen();
+			// 	return;
+			// }
+			// else 
+      if(glad  <  targetRpm * 0.65   &&   draaienInterval.sinds() > 1000){ //te langzaam 70%
 				plateauPrint("tegengehouden");
 				stoppen();
 				return;
@@ -281,7 +282,6 @@ void plateauFunc(){
 			uitBuffPre = uitBuff;
 			
       uitBuff += strobo.onbalansComp;
-      // uitBuff /= strobo.onbalansComp;
 
 			uitBuff = limieteerF(uitBuff, -100, 100);
 			

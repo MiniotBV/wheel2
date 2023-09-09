@@ -65,7 +65,7 @@ bool get_bit(uint8_t byte, uint8_t n)
 
 
 
-/*
+
 Interval orientatieInt(10, MILLIS);
 Interval staatGoedInterval( 0, MILLIS);
 
@@ -166,7 +166,7 @@ class Orientatie //          QMA7981
 
 	}
 
-	void calibreerOrientatie(){
+	void calibreer(){
 		gefilterdOffset += gefilterd;
 		Serial.println("orientatie.gefilterdOffset: " + String(gefilterdOffset, 5)); 
 	}  
@@ -259,7 +259,7 @@ class Orientatie //          QMA7981
 
 
 Orientatie orientatie;
-*/
+
 
 
 

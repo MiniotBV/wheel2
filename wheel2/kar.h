@@ -58,8 +58,6 @@ float armHoekOffset;
 
 
 
-
-
 #define KAR_MAX_SNELHEID 0.02
 // #define KAR_MAX_SNELHEID 0.0002
 #define KAR_VERSNELLING  0.0001
@@ -560,9 +558,6 @@ void staatDingen(){
 
 
 
-  //  ================================================================
-  //      MOTOR EN SENSORS
-  //  ================================================================
 
 
 

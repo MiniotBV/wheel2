@@ -1,14 +1,10 @@
-//  =============================================
-//  Wheel2 RP2040 moederbord. year: 2022
-//  - use board: Raspberry Pi Pico/RP2040 by 
-//    Earle F. Philhower. Version 2.2 or higher
-//  - use USB stack: Pico SDK
-//  =============================================
-#define versie 88
-float trackSensorPos;
-#include "w2_All_includes.h"  //  All the include files and needed classes
+//  Wheel2 
+//    rp2040
 
-/*#include <stdio.h>
+#define versie 90
+
+
+#include <stdio.h>
 #include "pico/stdlib.h"
 #include "pico/multicore.h"
 #include "hardware/pwm.h"
@@ -29,7 +25,7 @@ float trackSensorPos;
 
 #include "armMotor.h"
 ArmMotor arm;
-*/
+
 
 
 
@@ -45,7 +41,7 @@ void enableInterupts(bool aan){
 
 
 
-/*
+
 #include "compVaartSensor.h"
 COMPVAART strobo(16, 720);
 
@@ -79,20 +75,29 @@ Interval ledInt(200, MILLIS);
 #include "opslag.h"
 
 #include "serieel.h"
- */
+ 
 
 
 
 void setup() {
-	analogReadResolution(12); // force to 12-bit
+	analogReadResolution(12);// moet sinds nieuwe core versie, anders leest hij in 10bit
+
 	Serial.begin(115200);
+
 	opslagInit();
 	eepromUitlezen();
+
+
 	versterkerInit();
+
 	displayInit();  
+
 	arm.armInit();
+
 	karInit();
-	lees.init();
+
+	plaatLeesInit();
+
 	plateauInit();
 
 
@@ -131,13 +136,13 @@ void core1Dingen(){
 
 
 
-void loop2()
-{
-	while(1)
-	{
+void loop2(){
+	while(1){
 		core1Dingen();
-		// core2 must sleep to write to flash
-		if(eepromShit) { sleep_ms(100); }
+
+		if(eepromShit){//sckakel core2 tijdelijk uit om te zorge dat er vijlig flash beschreven kan worde
+			sleep_ms(100);
+		}
 	}
 }
 
@@ -148,27 +153,32 @@ void loop2()
 
 void loop() {
 
-	if(eepromShit)	// avoid flash read/write conflicts
-	{
+	if(eepromShit){//dit moet omdat je core2 moet uitschakelen om in flash te schrijven, zodat je niet leest en schrijft tegelijkertijd
 		delay(20);
 		eepCommit();
-		Serial.println("opgeslagen!");
+		Serial.println("opgelagen!");
 	}
 
 
-	lees.loopFunc();
+	plaatLeesFunc();
+
 	karMotorFunc();
+
 	volumeFunc();
+
 	plateauFunc();
+
 
 	// digitalWrite(ledWit, isNaaldEropVoorZoLang(1000));
 	// digitalWrite(ledWit, isPlaatAanwezig());
 }
 
 
-//  =============================================
-//      STROBO INTERRUPT
-//  =============================================
+
+
+
+
+
 void gpio_callback(uint gpio, uint32_t events) {
 	strobo.interrupt();
 }
