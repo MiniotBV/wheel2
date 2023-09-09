@@ -52,9 +52,6 @@ void displayPrint(float tijd){
 	for(int i = 0; i < displayLengte; i++){
 		
 		int pix = i;
-		// if(!orientatie.isStaand){
-		// 	pix = (displayLengte - 1) - pix;//flip display   
-		// }
 		pix = (pix + 7) - ((pix % 8) * 2);//flip byte
 		
 		
@@ -65,9 +62,6 @@ void displayPrint(float tijd){
 		delayMicroseconds(2);
 		gpio_put(displayKLOK, 0);
 	}
-	
-	
-	// delayMicroseconds(1);
 
 }
 
@@ -118,7 +112,7 @@ void displayUpdate(){
 		//--------------------------------------------------------------------INTRO
 		if(millis()<4000){
 
-			int pos = (millis()/10) - displayLengte;
+			int pos = displayLengte - (millis()/10);
       int blokLengte = 10;
       int gatLengte = 3;
 
@@ -188,23 +182,10 @@ void displayUpdate(){
 					displayData[i] = 0;
 				}
 			}
-
-			// for(int i = 0; i < displayLengte; i++){
-			// 	if(i > pos  &&  i < pos + 300){
-					
-			// 		if((i - pos) % 20 < 16){
-			// 			displayData[i] = 0.1;
-			// 		}else{
-			// 			displayData[i] = 0;
-			// 		}
-			// 	}else{
-			// 		displayData[i] = 0;
-			// 	}
-			// }
 		}
 
 
-				//----------------------------------------------------------------ERROR WEERGEVEN
+    //----------------------------------------------------------------ERROR WEERGEVEN
 		else if(errorVeranderd.sinds() < 10000  &&  error != E_GEEN){ // 10seonden knipperen
 
 			if((millis()%1000) > 800){//                knipper

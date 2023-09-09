@@ -95,8 +95,8 @@ class COMPVAART
     int onbalansFilterCurveBreedte = 0;
 
 
-    int onbalansFase = 25;//50;//50;
-		float onbalansCompGewicht = 1.3;//2;
+    int onbalansFase = 23;//25;//50;//50;
+		float onbalansCompGewicht = 1.1;//1.3;//2;
     float onbalansFilterBreedte = 65;//50;//100;
 
 
@@ -119,7 +119,6 @@ class COMPVAART
 		bool onbalansCompAan = true;
 		bool plaatUitMiddenComp = true;
 		bool clearCompSamplesWachtrij = false;
-    bool compRaportPerOmwenteling = false;
 
     bool wowEersteWeerLaag;
     int tellerSindsReset;
@@ -175,6 +174,9 @@ class COMPVAART
 		void interrupt(){
 			tijd = micros();
 
+
+      procesTijd = micros();
+
 			//------------------------------------------------------RICHTING
 			dir = 1;
 			sens = (gpio_get(plateauA) <<1)  |  gpio_get(plateauB);
@@ -188,7 +190,6 @@ class COMPVAART
 			}
 
 			sensPrev = sens;
-
 
 			if(dirPrev != dir){
 				clearOnbalansCompSamples();
@@ -209,7 +210,6 @@ class COMPVAART
 
       shiftSamples(interval);// * dir);
 
-
 			getVaart();
 
 			vaart += (vaartRuw - vaart) / 10;
@@ -217,16 +217,19 @@ class COMPVAART
 
 
 
+
+
+
 			
       if(teller == 0){// als er een omwenteling is geweest
-
         if(clearCompSamplesWachtrij){//--------------------------------------------------------T = 0 COMP RESET
           clearCompSamplesWachtrij = false;
           tellerSindsReset = 0;
           clearOnbalansCompSamples();
         }
-
       }
+
+
 
 
 
@@ -318,7 +321,7 @@ class COMPVAART
 
       if(wow < 0.1 && wowEersteWeerLaag == true){
         wowEersteWeerLaag = false;
-        Serial.println("loopt weer geleik na: " + String(tellerSindsReset / float(pulsenPerRev)) + " omwentelingen");
+        Serial.println("loopt weer gelijk na: " + String(tellerSindsReset / float(pulsenPerRev)) + " omwentelingen");
         tellerSindsReset = 0;
       }
 
@@ -339,17 +342,11 @@ class COMPVAART
 			
 
 			//-----------------------------------------------------------------------------ONBALANS COMPENSATIE
-      procesTijd = micros();
-      
-
-
 			if( onbalansCompAan &&   //alle mementen waarom de compensatie niet mag werken, omdat er dan verschillen zijn met als de naald er egt op is
 					plateauAan 
 					&& draaienInterval.sinds() > 1000  //moet 1 seconden aan staan
 					&& opsnelheid                       // en opsnelheid zijn     
 					&& isOngeveer(vaart, targetRpm, 10)  //mag niet meer dan 10rpm van de target rpm afzijn
-
-          // && ((arm.isNaaldEropVoorZoLang(2000) && staat == S_SPELEN) )// ||  //)
 
           && ((arm.isNaaldEropVoorZoLang(2000) && staat == S_SPELEN)  ||  //)
           staat == S_HOMEN_VOOR_SPELEN ||    

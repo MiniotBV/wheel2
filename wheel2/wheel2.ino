@@ -1,7 +1,7 @@
 //  Wheel2 
 //  rp2040
 
-#define versie 121
+#define versie 122
 
 
 #include <stdio.h>
@@ -167,7 +167,7 @@ void loop() {
 	if(eepromShit){//dit moet omdat je core2 moet uitschakelen om in flash te schrijven, zodat je niet leest en schrijft tegelijkertijd
 		delay(20);
 		eepCommit();
-		Serial.println("opgelagen!");
+		Serial.println("opgeslagen!");
 	}
 
 

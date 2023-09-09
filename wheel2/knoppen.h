@@ -277,6 +277,7 @@ void knopLogica(int knop){
 
 
 		if(  staat == S_HOK  &&  knop == KNOP_TERUGSPOEL  ){//               NAALD TEST STAND
+    ledBlink();  //led blink
 			schoonmaakStand();
 		}
 		return;

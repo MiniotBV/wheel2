@@ -184,7 +184,6 @@ void checkenVoorCommando(int info){
 	if(checkZinBool(    "PLG",    "plaatLeesGolven",          info, plaatLeesGolven)){return;}
 	if(checkZinBool(    "KG",     "karGolven",                info, karGolven)){return;}
 	if(checkZinBool(    "SG",     "strobo.golven",            info, strobo.golven)){return;}
-  if(checkZinBool(    "SCR",    "strobo.compRaportPerOmwenteling", info, strobo.compRaportPerOmwenteling)){return;}
 
 
 	//-------------------------------------------------STAAT   
@@ -279,18 +278,18 @@ void checkenVoorCommando(int info){
   if(checkZinCommando("CW",     "waardes",                  info)){ checkenVoorCommando(WAARDE_INFO);return;}
 
 	if(checkZinCommando("?",      "help",                     info)){
-		Serial.println("\nhelp -- versie: " + String(versie) + " ----------------------------");
+		Serial.println("\nHELP ----- V" + String(versie) + " ----------------------------");
     Serial.println();
 
-		Serial.println("plateau P: " + String(plateauP, 5));
-		Serial.println("plateau I: " + String(plateauI, 5));
-		Serial.println("plateau D: " + String(plateauD, 5));
-		Serial.println();
+		// Serial.println("plateau P: " + String(plateauP, 5));
+		// Serial.println("plateau I: " + String(plateauI, 5));
+		// Serial.println("plateau D: " + String(plateauD, 5));
+		// Serial.println();
 
-		Serial.println("kar P: " + String(karP, 5));
-		Serial.println("kar I: " + String(karI, 5));
-		Serial.println("kar D: " + String(karD, 5));
-		Serial.println();
+		// Serial.println("kar P: " + String(karP, 5));
+		// Serial.println("kar I: " + String(karI, 5));
+		// Serial.println("kar D: " + String(karD, 5));
+		// Serial.println();
 		
 		Serial.println("staat: " + printStaat(staat));
 		Serial.println("volume: " + String(volume));
