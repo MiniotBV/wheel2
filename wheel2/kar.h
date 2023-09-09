@@ -437,13 +437,13 @@ void staatDingen(){
 			nieuwePos = limieteerF(nieuwePos, 0, plaatBegin);
 			beweegKarNaarPos(nieuwePos, KAR_MAX_SNELHEID);
 			
-			if(karPos <= PLAAT_EINDE){
+			if(egteKarPos <= PLAAT_EINDE){
 				Serial.println("kar heeft de limiet berijkt");
 				stoppenOfHerhalen();//stoppen();
 				return;
 			}
 
-			if(karPos < karPosFilter - 2.5){
+			if(egteKarPos < karPosFilter - 3){
 				Serial.println("waarschijnlijk uitloop groef");
 				stoppenOfHerhalen();//stoppen();
 				return;

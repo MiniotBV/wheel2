@@ -300,7 +300,7 @@ class COMPVAART
         Serial.println("loopt weer geleik na: " + String(tellerSindsReset / float(pulsenPerRev)) + " omwentelingen");
       }
 
-      if(wow > 1 &&  wowEersteWeerLaag == false){
+      if(wow > 0.3 &&  wowEersteWeerLaag == false){
         wowEersteWeerLaag = true;
       }
 
