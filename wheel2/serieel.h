@@ -390,18 +390,24 @@ void serieelFunc(){
 			// Serial.print(", ");
 			// Serial.print(strobo.vaartCenterComp - targetRpm, 3);
 
-      Serial.print(", ");
-			Serial.print(strobo.onbalansSinTotaal[1], 3);
-      Serial.print(", ");
-			Serial.print(strobo.onbalansCosTotaal[1], 3);
-      Serial.print(", ");
-			Serial.print(strobo.onbalansSinTotaal[2], 3);
-      Serial.print(", ");
-			Serial.print(strobo.onbalansCosTotaal[2], 3);
-      Serial.print(", ");
-			Serial.print(strobo.onbalansSinTotaal[3], 3);
-      Serial.print(", ");
-			Serial.print(strobo.onbalansCosTotaal[3], 3);
+
+      // for(int i = 1; i < strobo.harmonisen + 1; i++){
+      //   Serial.print(", ");
+      //   Serial.print(strobo.onbalansSinTotaal[i], 3);
+      //   Serial.print(", ");
+      //   Serial.print(strobo.onbalansCosTotaal[i], 3);
+      // }
+
+
+      for(int i = 1; i < strobo.harmonisen + 1; i++){
+        Serial.print(", ");
+        Serial.print(atan2(strobo.onbalansCosTotaal[i], strobo.onbalansSinTotaal[i]) * 114.6, 3);
+        Serial.print(", ");
+        Serial.print(sqrt( strobo.onbalansSinTotaal[i] * strobo.onbalansSinTotaal[i]   +  strobo.onbalansCosTotaal[i] * strobo.onbalansCosTotaal[i]), 3);
+      }
+
+
+
       
 
 

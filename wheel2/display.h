@@ -118,7 +118,7 @@ void displayUpdate(){
 		if(millis()<4000){
 
 			int pos = (millis()/10) - displayLengte;
-      int blokLengte = 15;
+      int blokLengte = 10;
       int gatLengte = 3;
 
       char versieDisplay[500];

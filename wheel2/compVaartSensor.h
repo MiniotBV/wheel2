@@ -71,7 +71,7 @@ class COMPVAART
 		//---------------------------------------uit Center Compensatie
 		float karPosMiddenPre;
 		float karUitCenterGolf[pprmax];
-		float karUitCenterMidden;
+		// float karUitCenterMidden;
 
 		float karSinWaardes[pprmax];
 		float karCosWaardes[pprmax];
@@ -102,7 +102,7 @@ class COMPVAART
 
 		volatile float onbalansComp = 0;
 		
-		float compVerval = 1.0;//0.6;//0.8;
+		// float compVerval = 1.0;//0.6;//0.8;
 		float onbalansCompGewicht = 1.9;//1.5;//2;//0.8;
 
 
