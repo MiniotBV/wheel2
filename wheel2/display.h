@@ -143,7 +143,7 @@ void displayUpdate(){
 
 
 
-    if(staat == S_FOUTE_ORIENTATIE){
+    else if(staat == S_FOUTE_ORIENTATIE){
       float verdeelPuntTeller = 0;
 
       for(int i = 0; i < displayLengte; i++){

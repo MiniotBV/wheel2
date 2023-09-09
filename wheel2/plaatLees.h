@@ -257,7 +257,7 @@ void plaatLeesFunc(){
         if(plaatAanwezig){
           armHoekCalibreer();
           setStaat(S_NAAR_BEGIN_PLAAT);
-          plateauDraaien();
+          // plateauDraaien();
         }else{
           stoppen();
         }

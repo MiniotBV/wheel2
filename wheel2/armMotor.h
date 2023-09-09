@@ -28,7 +28,16 @@ float armSnelheidAf = 0.001;
 // float netVanDePlaatKracht = 0.3;
 // float netInHokKracht = 0.20;
 
-float armKracht500mg = 0.33;  //vierde proto
+// float armKracht500mg = 0.33;  //vierde proto
+// float armKracht4000mg = 0.68;
+// //op de plaat
+// float netUitHokKracht = 0.25;
+// float netOpDePlaatKracht = 0.35;
+// //van de plaat af
+// float netVanDePlaatKracht = 0.30;
+// float netInHokKracht = 0.25;
+
+float armKracht500mg = 0.33;  //vijfde proto
 float armKracht4000mg = 0.68;
 //op de plaat
 float netUitHokKracht = 0.25;
@@ -46,10 +55,10 @@ bool armMotorAan = false;
 void armGewichtUpdate(){
   armGewicht = limieteerF(armGewicht,  MIN_ARMGEWICHT,   MAX_ARMGEWICHT);  
   armTargetKracht = mapF(armGewicht,   MIN_ARMGEWICHT,   MAX_ARMGEWICHT,    armKracht500mg, armKracht4000mg);
-  Serial.print("armTargetKracht: ");
-  Serial.println(armTargetKracht);
   
+  Serial.print("armTargetKracht: " + String(armTargetKracht));
 }
+
 
 void armInit(){
   setPwm(armMotor);
@@ -59,6 +68,11 @@ void armInit(){
 
 
 
+
+
+void berekenArmgewichtWaardes(){
+
+}
 
 
 
@@ -107,26 +121,29 @@ void armFunc(){
 }
 
 
+
+
 bool isNaaldErop(){
   return armKracht == armTargetKracht;
 }
+
+bool isNaaldEraf(){
+  return armKracht == 0;
+}
+
+
 
 bool naaldErop(){
   armMotorAan = true;
   return isNaaldErop();
 }
 
-
-
-
-bool isNaaldEraf(){
-  return armKracht == 0;
-}
-
 bool naaldEraf(){
   armMotorAan = false;
   return isNaaldEraf();
 }
+
+
 
 
 

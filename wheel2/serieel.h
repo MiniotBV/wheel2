@@ -140,67 +140,52 @@ void serieelFunc(){
       }
       else if(letter == 'k'){    //set karP
         karP = Serial.parseFloat();
-        Serial.print("p: ");
-        Serial.println(karP);
+        Serial.print("p: " + String(karP));
       }
       else if(letter == 'p'){    //set P
         plateauP = Serial.parseFloat();
-        Serial.print("p: ");
-        Serial.println(plateauP);
+        Serial.print("p: " + String(plateauP));
       }
       else if(letter == 'i'){    //set I
         plateauI = Serial.parseFloat();
-        Serial.print("i: ");
-        Serial.println(plateauI);
+        Serial.println("i: " + String(plateauI));
       }
       else if(letter == 'd'){    //set D
         plateauD = Serial.parseFloat();
-        Serial.print("d: ");
-        Serial.println(plateauD);
+        Serial.println("d: " + String(plateauD));
       }
       else if(letter == '='){    //set basisVaart
         float i = Serial.parseFloat();
         targetRpm = i;
-        Serial.print("targetRpm: ");
-        Serial.println(targetRpm);
+        Serial.println("targetRpm: " + String(targetRpm));
       }
-      // else if(letter == 'm'){    //armmotor uit
-      //   karMotorEnable = !karMotorEnable;
-      //   Serial.println(karMotorEnable?"aan":"uit");
-      // }
       else if(letter == 'N'){    //arm motor aan
         setStaat(S_SCHOONMAAK);
       }
       else if(letter == 'A'){    //arm motor target
         armGewicht = Serial.parseFloat();
         armGewichtUpdate();
-        Serial.print("armGewicht: ");
-        Serial.print(armGewicht);
-        Serial.print("  armTargetKracht: ");
-        Serial.println(armTargetKracht);
+        Serial.println("armGewicht: " + String(armGewicht) + " armTargetKracht: " + String(armTargetKracht));
       }
       else if(letter == 'v'){    //set volume
         int i = Serial.parseInt();
         volume = i;
         volumeOverRide = true;
-        Serial.print("volume: ");
-        Serial.println(i);
+        Serial.println("volume: " + String(i));
       }
       else if(letter == '?'){    //help
-        Serial.print("p: ");
-        Serial.println(plateauP);
-        Serial.print("i: ");
-        Serial.println(plateauI);
-        Serial.print("d: ");
-        Serial.println(plateauD);
+        Serial.println("help--------------");   
+        Serial.println("p: " + String(plateauP, 3));
+        Serial.println("i: " + String(plateauI, 3));
 
-        Serial.print("staat: ");
-        printStaat(staat);
+
+        Serial.println("staat: " + printStaat(staat));
+        Serial.println("volume: " + String(volume));
         
-        Serial.println();
         printKnoppen();
-
         orientatie.print();
+
+        Serial.println();
       }
 
       else if(letter == 'I'){    //golven uit

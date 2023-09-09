@@ -14,7 +14,7 @@ enum rpmStaats{
   AUTO,
   R33,
   R45,
-  // R78
+  R78
 };
 
 
@@ -52,6 +52,7 @@ void setPlateauRpm(float rpm){
   autoRpm = rpm;
 
   updatePlateauRpm();
+  updatePlateauPID();
 }
 
 
@@ -154,11 +155,8 @@ enum staats{
   // S_JOGGEN,
 
 
-  S_ERROR,
-
   S_FOUTE_ORIENTATIE,
-
-
+  S_ERROR,
 };
 
 
@@ -172,44 +170,44 @@ Interval staatVeranderd(1000, MILLIS);
 
 
 
-void printStaat(int s){
-  if( s == S_NAAR_HOK             ){ Serial.print("NAAR_HOK");            return;}
-  if( s == S_HOK                  ){ Serial.print("HOK");                 return;}
-  if( s == S_STOPPEN              ){ Serial.print("STOPPEN");             return;}
+String printStaat(int s){
+  if( s == S_NAAR_HOK             ){ return "NAAR_HOK";}
+  if( s == S_HOK                  ){ return "HOK";}
+  if( s == S_STOPPEN              ){ return "STOPPEN";}
 
-  if( s == S_SCHOONMAAK           ){ Serial.print("SCHOONMAAK");          return;}
+  if( s == S_SCHOONMAAK           ){ return "SCHOONMAAK";}
 
-  if( s == S_HOMEN_GEFAALD        ){ Serial.print("HOMEN_GEFAALD");       return;}
-
-
-  if( s == S_BEGINNEN_SPELEN      ){ Serial.print("BEGINNEN_SPELEN");     return;}
-  if( s == S_HOMEN_VOOR_SPELEN    ){ Serial.print("HOMEN_VOOR_SPELEN");     return;}
-  if( s == S_PLAAT_AANWEZIG       ){ Serial.print("PLAAT_AANWEZIG");      return;}
-  if( s == S_NAAR_BEGIN_PLAAT     ){ Serial.print("NAAR_BEGIN_PLAAT");    return;}
-  if( s == S_PLAAT_DIAMETER_METEN ){ Serial.print("PLAAT_DIAMETER_METEN");    return;}
-  // if( s == S_BEGIN_PLAAT          ){ Serial.print("BEGIN_PLAAT");         return;}
-  if( s == S_SPELEN               ){ Serial.print("SPELEN");              return;}
-  if( s == S_NAALD_EROP           ){ Serial.print("NAALD_EROP");          return;}
+  if( s == S_HOMEN_GEFAALD        ){ return "HOMEN_GEFAALD";}
 
 
-  if( s == S_PAUZE                ){ Serial.print("PAUZE");               return;}
+  if( s == S_BEGINNEN_SPELEN      ){ return "BEGINNEN_SPELEN";}
+  if( s == S_HOMEN_VOOR_SPELEN    ){ return "HOMEN_VOOR_SPELEN";}
+  if( s == S_PLAAT_AANWEZIG       ){ return "PLAAT_AANWEZIG";}
+  if( s == S_NAAR_BEGIN_PLAAT     ){ return "NAAR_BEGIN_PLAAT";}
+  if( s == S_PLAAT_DIAMETER_METEN ){ return "PLAAT_DIAMETER_METEN";}
+  // if( s == S_BEGIN_PLAAT          ){ return "BEGIN_PLAAT";}
+  if( s == S_SPELEN               ){ return "SPELEN";}
+  if( s == S_NAALD_EROP           ){ return "NAALD_EROP";}
 
 
-
-  // if( s == S_VOLGEND_NUMMER       ){ Serial.print("VOLGEND_NUMMER");      return;}
-  // if( s == S_VORRIG_NUMMER        ){ Serial.print("VORRIG_NUMMER");       return;}
-  if( s == S_NAAR_NUMMER          ){ Serial.print("NAAR_NUMMER");         return;}
-
-  if( s == S_DOOR_SPOELEN         ){ Serial.print("DOOR_SPOELEN");        return;}
-  if( s == S_TERUG_SPOELEN        ){ Serial.print("TERUG_SPOELEN");       return;}
+  if( s == S_PAUZE                ){ return "PAUZE";}
 
 
 
-  if( s == S_ERROR                ){ Serial.print("ERROR");               return;}
+  // if( s == S_VOLGEND_NUMMER       ){ return "VOLGEND_NUMMER";}
+  // if( s == S_VORRIG_NUMMER        ){ return "VORRIG_NUMMER";}
+  if( s == S_NAAR_NUMMER          ){ return "NAAR_NUMMER";}
 
+  if( s == S_DOOR_SPOELEN         ){ return "DOOR_SPOELEN";}
+  if( s == S_TERUG_SPOELEN        ){ return "TERUG_SPOELEN";}
+
+
+
+  if( s == S_ERROR                ){ return "ERROR";}
+  if( s == S_FOUTE_ORIENTATIE     ){ return "FOUTE_ORIENTATIE";}
   
   
-  Serial.print("??????");
+  return "??????";
 
 }
 
@@ -225,8 +223,8 @@ void printStaat(int s){
 void setStaat(enum staats s){
   staatVeranderd.reset();
   // karRemmen = false;
-
-  printStaat(staat); Serial.print(" > "); printStaat(s); Serial.println();
+  Serial.println(printStaat(staat) + " > " + printStaat(s));
+  // printStaat(staat); Serial.print(" > "); printStaat(s); Serial.println();
 
   staat = s; // set staat
 }
@@ -245,7 +243,7 @@ void stoppen(){
 
 void spelen(){
   setStaat(S_HOMEN_VOOR_SPELEN);
-  // plateauDraaien();
+  plateauDraaien();
 }
 
 

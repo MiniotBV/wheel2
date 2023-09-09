@@ -212,6 +212,13 @@ void naarVolgendNummer(){
 
 
 
+bool isPlaatOngeveer7Inch(){
+  float inchDia = (plaatBegin / 25.4)*2;
+  return inchDia < 8;
+}
+
+
+
 
 
 
@@ -261,7 +268,7 @@ void staatDingen(){
 
 
   if(staat == S_NAAR_HOK  ||  staat == S_HOMEN_VOOR_SPELEN){
-    if(staatVeranderd.sinds() < 1000){//calibreren
+    if(staatVeranderd.sinds() < 100){//calibreren
       armHoekCalibreer();
       return;
     }
@@ -368,14 +375,13 @@ void staatDingen(){
           // anders moet er gekeken worden wat de maat is en welke rpm daar bijhoort
           plaatBegin = karPos - SENSOR_OFFSET;
 
-          float inchDia = (plaatBegin / 25.4)*2;
-          if(inchDia < 8){//isOngeveer(inchDia, 7, 1)){
+          if(isPlaatOngeveer7Inch()){//isOngeveer(inchDia, 7, 1)){
             Serial.print("±7\" ");
             setPlateauRpm(rpm45);
           }else{
             setPlateauRpm(rpm33);
           }
-          Serial.println("plaatDia: " + String(inchDia) + "\"");
+          Serial.println("plaatDia: " + String((plaatBegin / 25.4)*2) + "\"");
           
         }
       }

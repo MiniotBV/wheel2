@@ -104,7 +104,7 @@ class COMPVAART{
           shiftSamples(sampleMax * dir);
           vaart = 0;
           glad += (vaart - glad) / 10;
-          gladglad += (glad - gladglad) / 100;
+          gladglad += (glad - gladglad) / 10;
         }else{
           glitchTeller++;
         }
@@ -194,7 +194,7 @@ class COMPVAART{
       getDiv();
 
       glad += (vaart - glad) / 10;
-      gladglad += (glad - gladglad) / 100;
+      gladglad += (glad - gladglad) / 10;
 
 
 
