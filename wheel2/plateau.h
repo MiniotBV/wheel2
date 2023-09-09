@@ -83,7 +83,7 @@ void plateauDraaien(){
 	plateauAan = true;
 	setPlateauRpm(rpm33);
 
-	basis = 50;//40;//60;//75;
+	basis = 30;//50;//40;//60;//75;
 	
 	// strobo.clearCompSamples();
 	// draaienInterval.reset();
@@ -146,8 +146,14 @@ float pid(float rpmIn){
 	if(onbalansComp){
 		pp = divTarget * plateauP;
     
-    basis += divTarget * plateauI;            //breng basis voltage naar gemiddelde voor de juiste snelheid	
-		basis = limieteerF(basis, 45, 80);
+
+
+    if(rpmIn > 15){
+      basis += divTarget * plateauI;            //breng basis voltage naar gemiddelde voor de juiste snelheid	
+    }else{
+      basis += divTarget * plateauI/20;            //breng basis voltage naar gemiddelde voor de juiste snelheid	
+    }
+    basis = limieteerF(basis, 40, 80);
 
 		pd = divTijd * plateauD;
 	}

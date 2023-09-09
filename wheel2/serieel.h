@@ -21,7 +21,10 @@ void debug(String bericht){
 }
 
 void printDebug(){
-  
+  if(debugBericht.length() != 0){
+    Serial.print(debugBericht);
+    debugBericht = "";
+  }
 }
 
 

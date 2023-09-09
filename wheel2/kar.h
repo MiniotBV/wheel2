@@ -415,8 +415,9 @@ void staatDingen(){
 		
 
 
-		if(  beweegKarNaarPos(ELPEE_PLAAT_BEGIN,   KAR_MAX_SNELHEID)  ){
+		if(  beweegKarNaarPos(ELPEE_PLAAT_BEGIN,   KAR_MAX_SNELHEID)  ){ // als aangelokomen eind van de kar berijk en altijd een plaat gezien
 			plaatBegin = ELPEE_PLAAT_BEGIN;
+      targetNummerPos = plaatBegin;
 			Serial.println("plaatDia: 12inch");
 			setPlateauRpm(rpm33);
       plaatLeesNaKijken();
@@ -499,7 +500,8 @@ void staatDingen(){
         if(strobo.wow < 0.15   ||  arm.isNaaldEropVoorZoLang(10000) ){// loop de plaat al geleleik of heeft het 10sec geduurd
           puristenMode = false;
           Serial.println("loopt gelijk genoeg");
-          naarBeginPlaat();
+          // naarBeginPlaat();
+          gaNaarNummer(targetNummerPos);
         }
       }    
 		}
