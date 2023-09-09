@@ -1,0 +1,146 @@
+body{
+	padding-left:50px;
+	padding-right:50px;
+	font-family: monaco;
+	font-size: 12px;
+	line-height:20px;
+	white-space: inherit;
+}
+
+pre{
+	font-family: monaco;
+	font-size: 12px;
+}
+
+
+*:focus {
+    outline: none;
+}
+
+
+
+
+
+input[type="text"], input[type="number"], textarea, button, select{
+	font-family: monaco;
+	font-size: 12px;
+	border:1px solid black;
+}
+
+input[type="text"]:focus, input[type="number"]:focus{
+	border:1px solid gray;
+}
+
+input[type="text"]:hover, input[type="number"]:hover{
+	/* color: gray; */
+	border:1px solid gray;
+}
+
+
+
+
+
+button{
+	background:white;
+	color:black;
+	border:1px solid black;
+}
+
+button:hover{
+	background:white;
+	color:gray;
+	border:1px solid gray;
+}
+
+button:active{
+	background:black;
+	color:white;
+	border:1px solid black;
+}
+
+
+
+
+
+
+
+table, th, td {
+	/* border: 1px solid black;
+	border-collapse: collapse; */
+	font-weight: normal;
+}
+th, td {
+	padding: 0px;
+}
+th {
+	text-align: left;
+}
+
+
+
+
+
+
+
+
+h2{
+	font-size: 20px;
+	font-weight: normal;
+}
+
+
+
+
+
+
+
+.titel{
+	font-size: 50px
+}
+
+
+.plotter-container {
+	width: 850px;
+	height: 450px;
+}
+
+.plotter-placeholder {
+	width: 100%;
+	height: 100%;
+}
+
+fieldset {
+		display: block;
+		-webkit-margin-start: 2px;
+		-webkit-margin-end: 2px;
+		-webkit-padding-before: 0.35em;
+		-webkit-padding-start: 0.75em;
+		-webkit-padding-end: 0.75em;
+		-webkit-padding-after: 0.625em;
+		min-width: -webkit-min-content;
+		border-width: 2px;
+		border-style: groove;
+		border-color: threedface;
+		border-image: initial;
+		padding: 10px;
+}
+
+.legend {
+		display: block;
+		-webkit-padding-start: 2px;
+		-webkit-padding-end: 2px;
+		border-width: initial;
+		border-style: none;
+		border-color: initial;
+		border-image: initial;
+		padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+}
+
+.legendLayer .background {
+    fill: rgba(255, 255, 255, 0.85);
+    stroke: rgba(0, 0, 0, 0.85);
+    stroke-width: 1;
+}

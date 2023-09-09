@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Wheel 2 serieel V2</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+
+    <link href="style.css" rel="stylesheet" type="text/css">
+    <link href="flot/jquery-ui.min.css" rel="stylesheet" type="text/css">
+	
+</head>
+<body>
+
+    <br><br><br>
+    <a style="font-size:40px">Wheel 2 serieel</a><a font-size='8px'>V2 &nbsp; okt-2022</a>
+    <br><br>
+
+
+    <div id="notSupported" style='color: red'>Web Serial werkt niet op deze browser, gebruik Chrome 78 of hoger, en enable 
+    #enable-experimental-web-platform-features flag in chrome://flags</div>
+    <br><br>
+
+
+    <!-- <h2>Verbinding</h2> -->
+    Baudrate: <input type="number" id="nbrBaudRate" value="115200">  
+    <button id="btnConnect" type="button" onclick='clickConnect()'>Verbind</button> 
+    <br>
+    <br>
+    <br>
+
+
+
+    <!-- <h2>Verzenden</h2> -->
+    <input type="text" id="txtSend" size="100" onkeydown="if(event.keyCode===13){SerialWrite(this.value); this.value = '';}"> 
+    <button id="btnSend" onclick="SerialWrite($('#txtSend')[0].value)">verzend</button><br>
+    regel einde: 
+    <input type="checkbox" onclick='sendCariageReturn = this.checked'>cariage return &nbsp;
+    <input type="checkbox" onclick='sendNewLine = this.checked' checked = "true">new line &nbsp;
+    &nbsp;&nbsp;&nbsp;
+    formaat: 
+    <input type="radio" name="sendFormaat" onclick='sendFormaat="acii"' checked="true">ascii &nbsp;
+    <input type="radio" name="sendFormaat" onclick='sendFormaat="dec"'>dec &nbsp;
+    <input type="radio" name="sendFormaat" onclick='sendFormaat="hex"'>hex &nbsp;
+    <input type="radio" name="sendFormaat" onclick='sendFormaat="bin"'>bin &nbsp;
+    <br>
+    <br>
+    <br>
+
+
+
+    <button onclick="SerialWrite('?')">? Rapport</button>
+    <button onclick="SerialWrite('cal')">⚙ calibratie</button>
+    <button onclick="SerialWrite('g')">~ Grafiek</button>
+    <button onclick="SerialWrite('RST')">↺ Herstart</button>
+    &nbsp;
+    <button onclick="SerialWrite('speel')">▶ speel</button>
+    <button onclick="SerialWrite('stoppen')">◼ stop</button>
+    <button onclick="SerialWrite('<<')">◀◀</button>
+    <button onclick="SerialWrite('pauze')">▶▮▮</button>
+    <button onclick="SerialWrite('>>')">▶▶</button>
+    &nbsp;
+    Volume: 
+    <input type="range" min="0" max="63" value="20" class="slider" oninput="SerialWrite('vol'+this.value)">
+    <br><br>
+
+    <!-- <button onclick="SerialWrite('pl')">plateau logica</button>
+    <button onclick="SerialWrite('pa')">plateau aan</button>
+    <button onclick="SerialWrite('ps')">plateau uit</button>
+    <br><br> -->
+
+    Calibreer:
+
+    <button onclick="SerialWrite('ahcal')">Arm hoek</button>
+    <button onclick="SerialWrite('oc')">Orientatie</button>
+
+    <button onclick="SerialWrite('AKL')">0.5gr Arm</button>
+    <button onclick="SerialWrite('AKH')">4.0gr Arm</button>
+    <button onclick="SerialWrite('AKHOK')">Hok Arm</button>
+    
+    <!-- <button onclick="SerialWrite('TO' + $('#trackOffset')[0].value)">Track offset</button>  -->
+    &nbsp; Track offset:
+    <input id="trackOffset" type="text" size="5" value="0.7" onkeydown="if(event.keyCode===13){SerialWrite('TO'+this.value)}">
+    (hoger = verder naar midden)
+    &nbsp;
+    <button onclick="SerialWrite('EO')">EEPROM Opslaan</button>
+    
+    <br><br><br>
+    
+    
+
+    
+
+
+
+    <!-- <h2>Ontvangen</h2> -->
+    <textarea id="txtOntvangen" cols="110" rows="22" readonly='true'></textarea><br>
+    <button onclick="$('#txtOntvangen')[0].textContent=  ''; serialBuffer = ''">clear</button> &nbsp;
+    
+    <input type="checkbox" id="cbxAutoScrol"       onclick='autoScroll = this.checked'              checked = "true">automatisch scrollen &nbsp;
+    <input type="checkbox" id="cbxHidePlotterData" onclick='verbergPlotterData = this.checked'      checked = "true">verberg plotter data &nbsp;
+    <input type="checkbox" id="cbxPrintOnNL"       onclick='ontvagAlleenBijNewLine = this.checked'  checked = "true">print bij '\n' &nbsp;
+    <input type="checkbox" id="cbxTimeStamp"       onclick='showTimeStamp = this.checked'           checked = "true">tijd toevoeging &nbsp;
+    <br>
+    <br>
+
+    <!-- <textarea id="txtAantekening" cols="100" rows="4"></textarea> -->
+
+    <!-- <br>
+    <br> -->
+    
+
+
+    <!-- <h2>Plotter</h2> -->
+    
+    <div class="plotter-container">
+        <div id="plotter" class="plotter-placeholder"></div>
+    </div>
+
+    
+    <br>
+
+
+    <button onclick="clearPlotter()">clear</button> 
+
+    <button id="btnPauze" onclick='if(this.textContent == "pauze"){this.textContent="hervat"; plotterPauze = true
+        }else{this.textContent="pauze"; plotterPauze = false}'>pauze</button> &nbsp;
+    
+    <input type="radio" name="plotterType" onclick='plotterFormaat="samples"; clearPlotter()' checked="true">Samples:
+    <input type="number" id="nbrPlotterSampleNummer" value="512" onkeydown="if(event.keyCode===13 && this.value){plotterSampleNummer = this.value}">samples
+    &nbsp;
+    <input type="radio" name="plotterType" onclick='plotterFormaat="tijd"; clearPlotter()'>Tijd: 
+    <input type="number" id="nbrPlotterTijdInterval" value="10.5" onkeydown="if(event.keyCode===13 && this.value){plotterTijdInterval = this.value}">sec
+    <br><br>
+    
+    <input type="checkbox" onclick='plot.getYAxes()[0].options.autoScale = this.checked ? "loose" : "off";  lijnToggle = true;'      checked = "true">autoschaal min:
+    <input type="number"  width='10' value="33.0"  onchange='plot.getYAxes()[0].options.min = this.value*1.0'> max: 
+    <input type="number"  value="33.6"   onchange='plot.getYAxes()[0].options.max = this.value*1.0'>  
+    <br>
+    <br>
+    
+
+        
+    <table style="width:950px" id='tblLijnen'>
+        <tr>
+            <th>Naam</th><th>Minimaal</th> <th>Maximaal</th><th>Amplitude</th><th>Gemmidelde</th><th>Huidige waarde</th>
+        </tr>
+    </table>
+    <br>
+    <br>
+
+
+
+
+    <a href="https://drive.google.com/drive/folders/1BKKGxrlx6HUjvCHgJyVHJfkWcCUIp_lk?usp=sharing" target="_blank">Laatste software</a>
+
+
+    <!-- <br><br>
+    <textarea id="txtAantekening" cols="100" rows="4"></textarea>
+    <br><br>
+    <button onclick="testGrafiek()">test grafiek</button> -->
+
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+
+    <script src="flot/jquery.js"></script>
+    <script src="flot/jquery-ui.min.js"></script>
+	<script src="flot/jquery.mousewheel.js"></script>
+	<script src="flot/jquery.canvaswrapper.js"></script>
+	<script src="flot/jquery.colorhelpers.js"></script>
+	<script src="flot/jquery.flot.js"></script>
+	<script src="flot/jquery.flot.saturated.js"></script>
+	<script src="flot/jquery.flot.browser.js"></script>
+	<script src="flot/jquery.flot.drawSeries.js"></script>
+    <script src="flot/jquery.flot.uiConstants.js"></script>
+    <script src="flot/jquery.flot.hover.js"></script>
+    <script src="flot/jquery.flot.resize.js"></script>
+
+
+    <script src="script.js"></script>
+</body>
+</html>
