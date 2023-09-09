@@ -118,25 +118,53 @@ class Orientatie //          QMA7981
 
 			// id = i2cRead(adress, 0x00);
       float xSensorRuw = read_accel_axis(1);
-      float ySensorRuw = read_accel_axis(3);
+      // float ySensorRuw = read_accel_axis(3);
       float zSensorRuw = read_accel_axis(5);
 
 			xRuw += (xSensorRuw - xRuw)/10;
-			yRuw += (ySensorRuw - yRuw)/10;
+			// yRuw += (ySensorRuw - yRuw)/10;
 			zRuw += (zSensorRuw - zRuw)/10;
 
       x += ( (xRuw - xOffset) - x) / 10;
-      y += ( (yRuw - yOffset) - y) / 10;
+      // y += ( (yRuw - yOffset) - y) / 10;
       z += ( (zRuw - zOffset) - z) / 10;
 
-      // x = xSensorRuw;
-      // y = ySensorRuw;
-      // z = zSensorRuw;
 
-			if(isFout){
-				isFout = ! isOngeveer(y, 0, 0.1);
+
+
+
+			// if(isFout){
+			// 	isFout = ! isOngeveer(y, 0, 0.1);
+			// }else{
+			// 	isFout = ! isOngeveer(y, 0, 0.15);        
+			// }
+			
+
+			// if( isFout && !isFoutOud ){
+			// 	isFoutOud = isFout;
+			// 	setStaat(S_FOUTE_ORIENTATIE);
+			// }
+
+			// if( !isFout ){
+			// 	if(isFout != isFoutOud)  {
+			// 		isFoutOud = isFout;
+			// 		staatGoedInterval.reset();
+			// 	}  
+
+			// 	if(staatGoedInterval.sinds() > 1000  &&  staat == S_FOUTE_ORIENTATIE){
+			// 		setStaat(S_HOK);
+			// 	}
+			// }
+
+
+      y += (armHoekCall - y)/100;
+
+      if(isFout){
+				isFout = ! isOngeveer(armHoekCall, 0, 0.6);
 			}else{
-				isFout = ! isOngeveer(y, 0, 0.15);        
+        if(staat == S_HOK  && staatVeranderd.sinds() > 1000){
+          isFout = ! isOngeveer(armHoekCall, 0, 0.8);   
+        }  
 			}
 			
 
@@ -151,12 +179,17 @@ class Orientatie //          QMA7981
 					staatGoedInterval.reset();
 				}  
 
-				if(staatGoedInterval.sinds() > 1000  &&  staat == S_FOUTE_ORIENTATIE){
+				if(staatGoedInterval.sinds() > 3000  &&  staat == S_FOUTE_ORIENTATIE){
 					setStaat(S_HOK);
 				}
 			}
 
+
+
+
 			
+
+
 			isStaand = !(  isOngeveer(x, 0, 0.4)   &&   isOngeveer(z, -1, 0.4)  );
 
 
@@ -165,6 +198,8 @@ class Orientatie //          QMA7981
 				isStaandOud = isStaand;
 				print();
 			}
+
+
 
 
       if(golven){

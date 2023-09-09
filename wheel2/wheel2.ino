@@ -4,7 +4,7 @@
 //board instaleren:
 //https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json
 
-#define versie 160
+#define versie 161
   
 
 #include <stdio.h>
@@ -59,10 +59,9 @@ Interval ledInt(200, MILLIS);
 
 
 
+#include "kar.h"
 
 #include "versterker.h"
-
-#include "kar.h"
 
 #include "plaatLees.h"
 

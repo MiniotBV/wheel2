@@ -91,7 +91,7 @@ void flipDisplayData(){
 void displayClear(){
   for(int i = 0; i < displayLengte; i++){
     displayData[i] = 0;
-  }    
+  }
 }
 
 
@@ -251,14 +251,12 @@ void displayUpdate(){
         displayTekenBlok(0, displayLengte/4, 0.1);
         displayTekenBlok(displayLengte - (displayLengte/4),   displayLengte, 0.1);
       }
-      
-      for(int i = 0; i < displayLengte; i++){
-        float floatI = float(i) / displayLengte;
 
-        if(isOngeveer(floatI, (-orientatie.y*3) + 0.5, 0.02)){ // belltje
-					displayData[i] = 0.9;
-				}
-      }
+      // int armHoekPunt = mapF(-armHoekCall, 1, -1, 0, displayLengte-1);
+      int armHoekPunt = mapF(-orientatie.y, 1, -1, 0, displayLengte-1);
+ 
+      displayTekenBlok(armHoekPunt-2, armHoekPunt+2, 0.9);
+
 
 		}
 
