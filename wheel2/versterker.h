@@ -87,9 +87,12 @@ class Orientatie //          QMA7981
   byte adress = 0b0010010;
 
   float x, y, z;
+  float gefilterd, gefilterdPrev;
+  float gefilterdOffset = 0.05;
   int id;
   unsigned long loop;
   bool eersteKeer = true;
+
 
   void print()
   {
@@ -98,18 +101,18 @@ class Orientatie //          QMA7981
     // Serial.print(id);
 
     Serial.print("x:");
-    Serial.print(x);
+    Serial.print(x,3);
     Serial.print(" y:");
-    Serial.print(y);
+    Serial.print(y,3);
     Serial.print(" z:");
-    Serial.print(z);
+    Serial.print(z,3);
     
     Serial.println( isStaand ? " staand" : " liggend");
   }
 
   void update()
   {
-    if(millis() - loop <= 20 || millis() < 200) return;
+    if(millis() - loop <= 10 || millis() < 200) return;
     /*if(state.isNotSPELEN() && millis() - loop > 1000) { */
     // if(millis() - loop <= 1000)return;
 
@@ -126,7 +129,10 @@ class Orientatie //          QMA7981
     y = read_accel_axis(3);
     z = read_accel_axis(5);
 
-    isFout = ! isOngeveer(y, 0, 0.2);
+    gefilterdPrev += ((y - gefilterdOffset) - gefilterdPrev) / 10;
+    gefilterd += (gefilterdPrev - gefilterd) / 10;
+
+    isFout = ! isOngeveer(gefilterd, 0, 0.1);
 
     if( isFout  != isFoutOud ){
       isFoutOud = isFout;

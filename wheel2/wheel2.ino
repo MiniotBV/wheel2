@@ -44,8 +44,8 @@ void enableInterupts(bool aan){
 
   gpio_set_irq_enabled_with_callback(plateauA,   GPIO_IRQ_EDGE_RISE + GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
     // gpio_set_irq_enabled_with_callback(plateauA,   GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
-  // gpio_set_irq_enabled_with_callback(plateauB,   GPIO_IRQ_EDGE_RISE + GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
-  // gpio_set_irq_enabled_with_callback(plateauIndex,   GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
+  gpio_set_irq_enabled_with_callback(plateauB,   GPIO_IRQ_EDGE_RISE + GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
+  gpio_set_irq_enabled_with_callback(plateauIndex,   GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
 
     
     // gpio_set_irq_enabled_with_callback(audioFreqPin,   GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
@@ -72,7 +72,7 @@ VAART calibratieToon(10, 1800); //1800
 // COMPVAART strobo(64, 8192); //elker 5ms is 11.4 samples en 22.75 per 10ms
 
 // COMPVAART strobo(8, 720);//360); //elker 5ms is 11.4 samples en 22.75 per 10ms
-COMPVAART strobo(2, 360); //elker 5ms is 11.4 samples en 22.75 per 10ms
+COMPVAART strobo(16, 720);//360); //elker 5ms is 11.4 samples en 22.75 per 10ms
 
 
 

@@ -151,17 +151,17 @@ void displayUpdate(){
 
         float floatI = float(i) / displayLengte;
 
-        if(isOngeveer(floatI + 0.5, orientatie.y*4, 0.1)){
+        if(isOngeveer(floatI, (orientatie.gefilterd*4) + 0.5, 0.1)){
           displayData[i] = 0.1;
         }
 
 
         
-        if(i == int(dispHalf + dispHalf*0.1)){
+        if(i == int(dispHalf + displayLengte * 0.1 * 2 )){
           displayData[i] = 0.9;
         }
 
-        if(i == int(dispHalf - dispHalf*0.1)){
+        if(i == int(dispHalf - displayLengte * 0.1 * 2 )){
           displayData[i] = 0.9;
         }
 
@@ -297,7 +297,7 @@ void displayUpdate(){
     
     digitalWrite(displayEN, 0);
 
-    while(micros() - displayDelay < 20){}
+    while(micros() - displayDelay < 200){}
     // delayMicroseconds(10);
     digitalWrite(displayEN, 1);
 
@@ -308,7 +308,7 @@ void displayUpdate(){
 
 
     digitalWrite(displayEN, 0);
-    delayMicroseconds(400);
+    delayMicroseconds(4000);
     digitalWrite(displayEN, 1);
 
     // displayPrint(1);

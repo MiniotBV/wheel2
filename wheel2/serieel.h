@@ -11,11 +11,11 @@ void serieelFunc(){
   if(serieelInt.loop()){
     if(golven){
       // strobo.getDiv();
-      Serial.print(strobo.vaart);
+      Serial.print(strobo.vaart,3);
       Serial.print(", ");
-      Serial.print(strobo.glad);
+      Serial.print(strobo.glad,3);
       Serial.print(", ");
-      Serial.print(strobo.gemiddelde);
+      Serial.print(strobo.gladglad,3);
 
       Serial.print(", ");
       Serial.print(calibratieToon.vaart);
@@ -27,18 +27,18 @@ void serieelFunc(){
       // Serial.print(strobo.vaartRuw);
       // Serial.print(", ");
       // Serial.print(strobo.gladNieuw);
-      Serial.print(", ");
-      Serial.print(strobo.plateauComp);
+      // Serial.print(", ");
+      // Serial.print(strobo.plateauComp);
       
 
       
       // Serial.print(", ");
       // Serial.print(calibratieToon.glad);
       
-      Serial.print(", ");
-      Serial.print(strobo.div, 3);
-      Serial.print(", ");
-      Serial.print(strobo.dav, 3);
+      // Serial.print(", ");
+      // Serial.print(strobo.div, 3);
+      // Serial.print(", ");
+      // Serial.print(strobo.dav, 3);
 
       
       
@@ -62,18 +62,18 @@ void serieelFunc(){
       // Serial.print(", ");
       // Serial.print(uitBuff * 30);
       
-      // Serial.print(", ");
-      // Serial.print(armHoekSlow);//1696);
+      Serial.print(", ");
+      Serial.print(armHoekSlow);//1696);
       
       Serial.print(", ");
       Serial.print(armHoekRuw);//1696);
 
-      // Serial.print(", ");
-      // Serial.print(armHoek);//1696);
-
       Serial.print(", ");
-      Serial.print((karPos - karPosPrev)*1000.0);//1696);
-      karPosPrev = karPos;
+      Serial.print(armHoek);//1696);
+
+      // Serial.print(", ");
+      // Serial.print((karPos - karPosPrev)*1000.0);//1696);
+      // karPosPrev = karPos;
 
       // Serial.print(", ");
       // Serial.print(karPos);
@@ -201,8 +201,8 @@ void serieelFunc(){
         
         Serial.println();
         printKnoppen();
-        
-      
+
+        orientatie.print();
       }
 
       else if(letter == 'I'){    //golven uit

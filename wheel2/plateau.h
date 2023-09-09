@@ -8,8 +8,8 @@ float basis = 0;
 float uitBuff;
 
 
-float plateauP = 0.01;    //pid
-float plateauI = 0.01;
+float plateauP = 0.1;    //pid
+float plateauI = 0.005;
 float plateauD = 0;
 
 
