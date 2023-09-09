@@ -277,7 +277,6 @@ void knopLogica(int knop){
 
 
 		if(  staat == S_HOK  &&  knop == KNOP_TERUGSPOEL  ){//               NAALD TEST STAND
-    ledBlink();  //led blink
 			schoonmaakStand();
 		}
 		return;
@@ -362,9 +361,7 @@ void knoppenUpdate(){
 			
       if(millis() < 1000){return;}//de band doet pas wat na 1seconden
 
-			if(!orientatie.isStaand){
-				riemDiv = -riemDiv; // flip
-			}
+
 			
 
 			if(staat == S_SCHOONMAAK){
@@ -372,7 +369,16 @@ void knoppenUpdate(){
 				arm.targetGewicht = limieteerF(arm.targetGewicht, MIN_GEWICHT, MAX_GEWICHT);
 			}
 
-			else if(staat == S_CALIBREER){
+
+
+
+      if(!orientatie.isStaand){
+				riemDiv = -riemDiv; // flip
+			}
+
+
+
+			if(staat == S_CALIBREER){
 				arm.kracht += riemDiv * 0.001;
 				arm.kracht = limieteerF(arm.kracht, 0, 1);
 				
