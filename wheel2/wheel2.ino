@@ -1,65 +1,132 @@
-// ==================================================
-//  Wheel2 - main board 
-//  processor: RP2040
-//  date: dec 2021 
-// ==================================================
-const float softwareVersion = 0.171f;
-#include "w2_global.h"
+#include <stdio.h>
+// #include "pico/stdlib.h"
+#include "hardware/pwm.h"
+#include "hardware/gpio.h"
 
-// ==================================================
-//    Setup
-// ==================================================
-void setup() 
-{
+#include "pins.h"
+#include "helper.h"
+
+#include "interval.h"
+
+INTERVAL ledInt(200, MILLIS);
+
+#include "pwm.h"
+
+
+#include "versterker.h"
+
+#include "armMotor.h"
+
+#include "karStappenMotor.h"
+
+
+#include "plaatLees.h"
+
+
+
+float targetRpm = 33.333;
+
+#include "vaartSensor.h"
+#include "compVaartSensor.h"
+
+COMPVAART TLE5012(64, plateauA, 4096);
+VAART strobo(8, 0, 180*2);
+
+#include "knoppen.h"
+
+#include "display.h"
+
+#include "plateau.h"
+
+#include "serieel.h"
+
+
+
+
+
+
+
+
+void setup() {
+
   Serial.begin(115200);
-  EEPROM.begin(4096);
-  amp.init();         // versterkerInit();
-  display.init();     // displayInit();  
-  arm.armInit();
-  car.init();         // karInit();
+
+  versterkerInit();
+
+  displayInit();  
+
+  armInit();
+
+  karInit();
+
   plaatLeesInit();
+
   setPwm(ledWit);
   setPwm(ledRood);
-  plateauInit();
-  delay(1);
-  TLE5012.recalCompSamples();
-  enableInterupts(true);
 
-  getKnopData();
-  if(knopIn[KNOP_RPM] == 0){ //als rpm knop niet is ingedrukt bij start up gaat alles normaal
-    uitEnkeleCoreModus();
+  plateauInit();
+
+
+  gpio_set_irq_enabled_with_callback(plateauA,   GPIO_IRQ_EDGE_FALL + GPIO_IRQ_EDGE_RISE,  true,   &gpio_callback);
+  gpio_set_irq_enabled_with_callback(plateauB,   GPIO_IRQ_EDGE_FALL + GPIO_IRQ_EDGE_RISE,  true,   &gpio_callback);
+  gpio_set_irq_enabled_with_callback(plateauIndex,   GPIO_IRQ_EDGE_FALL,  true,   &gpio_callback);
+
+  // gpio_set_irq_enabled_with_callback(plaatStrobo,   GPIO_IRQ_EDGE_FALL + GPIO_IRQ_EDGE_RISE,  true,   &gpio_callback);
+}
+
+
+
+
+
+
+
+bool ll = false;
+
+
+void loop() {
+
+  armFunc();
+
+  karMotorFunc();
+
+  serieelFunc();
+
+  volumeFunc();
+
+  plateauFunc();
+
+  displayUpdate();
+
+  knoppenUpdate();
+
+
+
+  pwmWrite(ledWit, pow( ((sin( (PI*millis()) / 500.0 )+1)/2), 3) * PMAX);
+  // pwmWrite(ledRood, pow( ((cos( (PI*millis()) / 500.0 )+1)/2), 3) * PMAX);
+}
+
+
+
+
+
+
+
+
+
+
+
+void gpio_callback(uint gpio, uint32_t events) {
+  if(gpio == plateauA || gpio == plateauB){
+    TLE5012.interrupt();
   }
   
+  if(gpio == plateauIndex){
+    call = TLE5012.teller;
+    TLE5012.teller = 0;
+  }  
 
-  stoppen();
+  if(gpio == plaatStrobo){
+    strobo.interrupt();
+  }
 }
 
-void core1Dingen()
-{
-  display.update();     //displayUpdate();
-  serieelFunc();
-  knoppenUpdate();
-  arm.update();
-}
-
-void loop2()
-{
-  while(1) { core1Dingen(); }
-}
-// ==================================================
-//    Main loop
-// ==================================================
-void loop()
-{
-
-  if(enkeleCoreModus) { core1Dingen(); }
-  plaatLeesFunc();
-  car.update();     // karMotorFunc();
-  amp.update();     // volumeFunc();
-  plateauFunc();
-  // staatFunc();
-  pwmWriteF(ledWit, pow( ((sin( (PI*millis()) / 500.0 )+1)/2), 3));
-  // pwmWriteF(ledWit, 0.5);
-  // pwmWrite(ledRood, pow( ((cos( (PI*millis()) / 500.0 )+1)/2), 3) * PMAX);
-  pwmWriteF(ledRood, car.plaatAanwezig ? 1 : 0);
-}
