@@ -51,6 +51,12 @@ void plaatLeesInit(){
 
 
 
+bool isPlaatAanwezig(){
+  return plaatAanwezigGefilterd > 0.5;
+}
+
+
+
 
 
 
@@ -66,10 +72,8 @@ void plaatDetectie(){
   plaatAanwezigGefilterd += (plaatAanwezig - plaatAanwezigGefilterd) / 10;
 
 
-  if(plaatAanwezigGefilterd < 0.5 &&       // is er nog een plaat aanwezig?
-    staat == S_SPELEN             &&
-    staat == S_PAUZE
-  ){
+  if(!isPlaatAanwezig() &&  (staat == S_SPELEN  ||  staat == S_PAUZE)){   // is er nog een plaat aanwezig?
+    Serial.println("plaat is verdrwedene??");
     stoppen();
     return;
   }
@@ -79,6 +83,16 @@ void plaatDetectie(){
 
 
 
+
+void zetNummersAlsEenSingletje(){
+  hoeveelNummers = 1;
+  nummers[1] = SINGLETJE_PLAAT_BEGIN;
+
+  if(nummers[0] > SINGLETJE_PLAAT_BEGIN - 12){
+    nummers[0] = 55;
+    Serial.println("moest einde plaat aanpassen");
+  }
+}
 
 
 

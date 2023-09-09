@@ -25,8 +25,6 @@ void printCommandoMetPadding(String vergelijking, String beschrijving, bool padd
 
 bool checkZin(String vergelijking, String beschrijving, bool infoPrinten){
   
-
-
   if(infoPrinten){
     printCommandoMetPadding(vergelijking, beschrijving, true);
     Serial.println();
@@ -46,7 +44,7 @@ bool checkZin(String vergelijking, String beschrijving, bool infoPrinten){
 
 
 
-bool checkZinI(String vergelijking, String beschrijving, bool infoPrinten, int& waarde){
+bool checkZinInt(String vergelijking, String beschrijving, bool infoPrinten, int& waarde){
   if(!checkZin(vergelijking, beschrijving, infoPrinten)) return false;
 
   if( zin.indexOf('?') == -1  &&  zin.length() != 0){ // als er een '?' geen waarde zoeken en als er geen 0 letters meer inzitten
@@ -63,7 +61,7 @@ bool checkZinI(String vergelijking, String beschrijving, bool infoPrinten, int& 
 
 
 
-bool checkZinF(String vergelijking, String beschrijving, bool infoPrinten,  float& waarde){
+bool checkZinFloat(String vergelijking, String beschrijving, bool infoPrinten,  float& waarde){
   if(!checkZin(vergelijking, beschrijving, infoPrinten)) return false;
 
   if( zin.indexOf('?') == -1  &&  zin.length() != 0){ // als er een '?' geen waarde zoeken en als er geen 0 letters meer inzitten
@@ -74,14 +72,14 @@ bool checkZinF(String vergelijking, String beschrijving, bool infoPrinten,  floa
     Serial.print(" opgevraagd: ");
   }
     
-  Serial.println(String(waarde));
+  Serial.println(String(waarde, 5));
   return true;
 }
 
 
 
 
-bool checkZinB(String vergelijking, String beschrijving, bool infoPrinten, bool& waarde){
+bool checkZinBool(String vergelijking, String beschrijving, bool infoPrinten, bool& waarde){
   if(!checkZin(vergelijking, beschrijving, infoPrinten)) return false;
 
   if(zin.indexOf('?') != -1){// als er een '?' is
@@ -105,16 +103,29 @@ bool checkZinB(String vergelijking, String beschrijving, bool infoPrinten, bool&
 
 
 
+void infoPrintln(bool info){
+  if(info){
+    Serial.println();
+  }
+}
+
+
+
+
 
 void checkenVoorCommando(bool info){
-  if(checkZinB("g", "golven", info, golven)){return;}
-  if(checkZinB("PLG", "plaatLeesGolven", info, plaatLeesGolven)){return;}
-  if(checkZinB("KG", "karGolven", info, karGolven)){return;}
-  if(checkZinB("SG", "strobo.golven", info, strobo.golven)){return;}
+
+  infoPrintln(info);
+
+  if(checkZinBool("g", "golven", info, golven)){return;}
+  if(checkZinBool("PLG", "plaatLeesGolven", info, plaatLeesGolven)){return;}
+  if(checkZinBool("KG", "karGolven", info, karGolven)){return;}
+  if(checkZinBool("SG", "strobo.golven", info, strobo.golven)){return;}
 
 
 
-  //-------------------------------------------------STAAT        
+  //-------------------------------------------------STAAT   
+  infoPrintln(info);     
   if(checkZin(">>", "naarVolgendNummer()", info)){ naarVolgendNummer(); return;}
   if(checkZin("<<", "naarVorrigNummer()", info)){ naarVorrigNummer(); return;}
   if(checkZin("hok", "S_HOK", info)){ setStaat(S_HOK); return;}
@@ -129,61 +140,65 @@ void checkenVoorCommando(bool info){
 
 
   //----------------------------------------------------ARM
+  infoPrintln(info);
   if(checkZin("NE", "naaldErop()", info)){  naaldErop(); return;}
   if(checkZin("NA", "naaldEraf()", info)){  naaldEraf(); return;}
-  if(checkZinF("ATG", "armTargetGewicht", info, armTargetGewicht)){return;}
+  if(checkZinFloat("ATG", "armTargetGewicht", info, armTargetGewicht)){return;}
   if(checkZin("AKL", "armKracht500mg calibreer", info)){    armKracht500mg = armKracht;   Serial.println("armKracht500mg: "  + String(armKracht500mg, 5));  return;}
   if(checkZin("AKH", "armKracht500mg calibreer", info)){  armKracht4000mg = armKracht; Serial.println("armKracht4000mg: " + String(armKracht4000mg, 5));   return;}
 
 
   //-------------------------------------------------------KAR SENSORS / TRACK SHIT
-  if(checkZinF("PLS", "plaatLeesStroom", info, plaatLeesStroom)){return;}
-  if(checkZinI("VOL", "volume", info, volume)){ volumeOverRide = true; return;}
+  infoPrintln(info);
+  if(checkZinFloat("PLS", "plaatLeesStroom", info, plaatLeesStroom)){return;}
+  if(checkZinInt("VOL", "volume", info, volume)){ volumeOverRide = true; return;}
 
-  if(checkZinF("TO", "trackOffset", info, trackOffset)){return;}
+  if(checkZinFloat("TO", "trackOffset", info, trackOffset)){return;}
 
   if(checkZin("AHCent", "armHoekCentreer()", info)){  armHoekCentreer(); return;}
   if(checkZin("AHCal", "armHoekCalibreer()", info)){ armHoekCalibreer(); return;}
 
 
   //--------------------------------------------------------KAR
-  if(checkZinF("KP", "karP", info, karP)){return;}
-  if(checkZinF("KI", "karI", info, karI)){return;}
-  if(checkZinF("KD", "karD", info, karD)){return;}
+  infoPrintln(info);
+  if(checkZinFloat("KP", "karP", info, karP)){return;}
+  if(checkZinFloat("KI", "karI", info, karI)){return;}
+  if(checkZinFloat("KD", "karD", info, karD)){return;}
 
-  if(checkZinF("CNul", "antiCoggNul", info, antiCoggNul)){return;}
-  if(checkZinF("CMacht", "antiCoggMacht", info, antiCoggMacht)){return;}
-  if(checkZinF("CVerschuiving", "antiCoggVerschuiving", info, antiCoggVerschuiving)){return;}
-  if(checkZinB("CAan", "antiCoggAan", info, antiCoggAan)){return;}
-  if(checkZinB("CType", "antiCoggType", info, antiCoggType)){return;}
+  // if(checkZinFloat("CNul", "antiCoggNul", info, antiCoggNul)){return;}
+  // if(checkZinFloat("CMacht", "antiCoggMacht", info, antiCoggMacht)){return;}
+  // if(checkZinFloat("CVerschuiving", "antiCoggVerschuiving", info, antiCoggVerschuiving)){return;}
+  // if(checkZinBool("CAan", "antiCoggAan", info, antiCoggAan)){return;}
+  // if(checkZinBool("CType", "antiCoggType", info, antiCoggType)){return;}
 
   //----------------------------------------------------PLATEAU
-  if(checkZinF("PP", "plateauP", info, plateauP)){return;}
-  if(checkZinF("PI", "plateauI", info, plateauI)){return;}
-  if(checkZinF("PD", "plateauD", info, plateauD)){return;}
+  infoPrintln(info);
+  if(checkZinFloat("PP", "plateauP", info, plateauP)){return;}
+  if(checkZinFloat("PI", "plateauI", info, plateauI)){return;}
+  if(checkZinFloat("PD", "plateauD", info, plateauD)){return;}
 
-  if(checkZinF("TR", "targetRpm", info, targetRpm)){return;}
+  if(checkZinFloat("TR", "targetRpm", info, targetRpm)){return;}
 
   if(checkZin("PA", "plateauDraaien()", info)){ plateauDraaien(); return;}
   if(checkZin("PS", "plateauStoppen()", info)){ plateauStoppen(); return;}
-  if(checkZinB("PL", "plateauLogica", info, plateauLogica)){return;}
-  if(checkZinB("PC", "plateauComp", info, plateauComp)){return;}
+  if(checkZinBool("PL", "plateauLogica", info, plateauLogica)){return;}
+  if(checkZinBool("PC", "plateauComp", info, plateauComp)){return;}
 
-  if(checkZinI("SSN", "strobo.sampleNum", info, strobo.sampleNum)){return;}
-  if(checkZinI("SMSN", "strobo.medianSampleNum", info, strobo.medianSampleNum)){return;}
 
-  if(checkZinB("SCM", "strobo.compMeten", info, strobo.compMeten)){return;}
+  //----------------------------------------------------------------------STROBO
+  infoPrintln(info);
+  if(checkZinInt("SSN", "strobo.sampleNum", info, strobo.sampleNum)){return;}
+  if(checkZinBool("SCM", "strobo.onbalansCompenseren", info, strobo.onbalansCompenseren)){return;}
   if(checkZin( "SCC", "strobo.clearCompSamples()", info)){   strobo.clearCompSamples(); Serial.println("clearComp");  return;}
-  if(checkZinI("SCFV", "strobo.faseVerschuiving", info, strobo.faseVerschuiving)){return;}
-  if(checkZinF("SCF", "strobo.compFilter", info, strobo.compFilter)){return;}
-  if(checkZinF("SCVermenigvuldiging", "strobo.compVermenigvuldiging", info, strobo.compVermenigvuldiging)){return;}
-  if(checkZinF("SCVerval", "", info, strobo.compVerval)){return;}
-  if(checkZinB("KC", "kar sinus comp", info, karUitMiddenCompAan)){return;}
-  if(checkZinB("SKC", "plaatUitMiddenComp", info, strobo.plaatUitMiddenComp)){return;}
-
+  if(checkZinInt("SCFV", "strobo.faseVerschuiving", info, strobo.faseVerschuiving)){return;}
+  if(checkZinFloat("SCV", "strobo.compVermenigvuldiging", info, strobo.compVermenigvuldiging)){return;}
+  if(checkZinFloat("SCD", "strobo.compVerval", info, strobo.compVerval)){return;}
+  if(checkZinBool("SKC", "strobo.plaatUitMiddenComp", info, strobo.plaatUitMiddenComp)){return;}
+  if(checkZinBool("KC", "karUitMiddenCompAan", info, karUitMiddenCompAan)){return;}
 
   //------------------------------------------------------OPSLAG
-  if(checkZinF("EV", "eepromVersie", info, eepromVersie)){return;}
+  infoPrintln(info);
+  if(checkZinFloat("EV", "eepromVersie", info, eepromVersie)){return;}
   if(checkZin("EO", "eepromOpslaan()", info)){   eepromOpslaan();  eepromShit = 1; return;}
   if(checkZin("EL", "eepromUitlezen()", info)){ eepromUitlezen();  return;}
   
@@ -192,6 +207,7 @@ void checkenVoorCommando(bool info){
 
 
   //------------------------------------------------------HELP
+  infoPrintln(info);
   if(checkZin("C?", "commandos", info)){ checkenVoorCommando(true);return;}
 
   if(checkZin("?", "help", info)){
@@ -233,10 +249,10 @@ void checkenVoorCommando(bool info){
     orientatie.print();
     Serial.println();      
 
-    Serial.println("antiCoggNul: " + String(antiCoggNul));
-    Serial.println("antiCoggMacht: " + String(antiCoggMacht));
-    Serial.println("antiCoggVerschuiving: " + String(antiCoggVerschuiving));     
-    Serial.println();
+    // Serial.println("antiCoggNul: " + String(antiCoggNul));
+    // Serial.println("antiCoggMacht: " + String(antiCoggMacht));
+    // Serial.println("antiCoggVerschuiving: " + String(antiCoggVerschuiving));     
+    // Serial.println();
 
     Serial.println("-------------------------------------------------\n\n\n");
 
@@ -290,6 +306,9 @@ void serieelFunc(){
       Serial.print(", ");
       Serial.print(centerCompTargetRpm - targetRpm, 4);
 
+            Serial.print(", ");
+      Serial.print(centerCompTargetRpm - targetRpm, 4);
+
 
 
       Serial.print(", ");
@@ -309,7 +328,11 @@ void serieelFunc(){
       Serial.print(", ");
       Serial.print(armHoekRuw);//1696);
       Serial.print(", ");
-      Serial.print(armHoek, 5);//1696);
+      Serial.print(armHoekCall, 5);//1696);
+      Serial.print(", ");
+      Serial.print(armHoekSlow, 5);//1696);
+      Serial.print(", ");
+      Serial.print(armHoekOffset, 5);//1696);
 
 
 
@@ -318,26 +341,24 @@ void serieelFunc(){
 
       // Serial.print(", ");
       // Serial.print(karPos, 4);  
-      Serial.print(", ");
-      Serial.print(egteKarPos, 4);
+      // Serial.print(", ");
+      // Serial.print(egteKarPos, 4);
 
-      Serial.print(", ");
-      Serial.print(karPosMidden, 4);
+      // Serial.print(", ");
+      // Serial.print(karPosMidden, 4);
+
+      // Serial.print(", ");
+      // Serial.print(karPosMidden + strobo.karFourier, 4);  
+
+      // Serial.print(", ");
+      // Serial.print(karPosMidden + strobo.karFourierFilt, 4);  
 
 
-      Serial.print(", ");
-      Serial.print(karPosMidden + strobo.karFourier, 4);  
-
-      Serial.print(", ");
-      Serial.print(karPosMidden + strobo.karFourierFilt, 4);  
 
 
       // Serial.print(", ");
       // Serial.print(nieuweHoek, 4);  
-      // Serial.print(", ");
-      // Serial.print(karSin, 4);  
-      // Serial.print(", ");
-      // Serial.print(karCos, 4); 
+
       
 
       // Serial.print(", ");

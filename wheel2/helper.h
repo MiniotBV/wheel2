@@ -155,6 +155,7 @@ bool isPlaatOngeveer7Inch();
 void updatePlateauPID();
 void plateauStoppen();
 void plateauDraaien();
+void zetNummersAlsEenSingletje();
 
 
 

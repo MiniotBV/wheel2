@@ -5,7 +5,7 @@ Interval draaienInterval(10, MILLIS);
 
 #define sampleMax 65500               //samples
 
-
+#define pprmax 1000
 
  
 
@@ -22,6 +22,7 @@ Interval compInt(0, MILLIS);
 
 class COMPVAART{
   public:
+    //-------------------------------------snelheid
     volatile unsigned int vaartInterval;
                       int sampleNum;
     volatile          int samples[100];
@@ -30,18 +31,20 @@ class COMPVAART{
     volatile unsigned int interval;
     float gemiddelde = sampleMax;
 
-    
+    //-----------------------------------richting
+    byte sens, sensPrev;
+    int dir;
+    int dirPrev;
+    int glitchTeller;
     int pulsenPerRev;
     int teller = 0;
-    // float radiaalTeller;
-    // int cosTeller = 0;
 
-    int glitchTeller;
-
-    float sinus[1000];
-    float cosin[1000];
-
-
+    
+    //---------------------------------versamplede sinus en cos
+    float sinus[pprmax];
+    float cosin[pprmax];
+    
+    
 
     //---------------------------------------filter
     float vaart;
@@ -50,23 +53,15 @@ class COMPVAART{
 
 
 
-        
-    //--------------------------------------median filter
-    int medianSampleNum = 11;
-    int medianTeller = 0;
-    float medianSamples[100];
-    float medianGesorteerd[100];    
-    float median;
 
 
-
-    //---------------------------------------kar fourier
+    //---------------------------------------uit Center Compensatie
     float karPosMiddenPre;
-    float karUitCenterGolf[1000];
+    float karUitCenterGolf[pprmax];
     float karUitCenterMidden;
 
-    float karSinWaardes[1000];
-    float karCosWaardes[1000];
+    float karSinWaardes[pprmax];
+    float karCosWaardes[pprmax];
     float karSin;
     float karCos;
     float karFourier;
@@ -77,30 +72,25 @@ class COMPVAART{
 
 
 
-    //-----------------------------------richting
-    byte sens, sensPrev;
-    int dir;
-    int dirPrev;
-
 
     //---------------------------------------------onbalans compensatie
-    int faseVerschuiving = 90;//75;//90;//100;//90;//180;//90;  50 voor singletjes
-    float plateauCompensatie[1000];
-    bool compMeten = true;
-    float preComp = 0;
+    bool onbalansCompenseren = true;
+    int faseVerschuiving = 70;//90;//75;//90;  50 in pulsen per rev
+    
+    float gemiddeldeSnelheidPre, gemiddeldeSnelheid;
+    
+    float plateauCompensatie[pprmax];
+
     volatile float plateauComp = 0;
-    float compFilter = 1.01;//2;
+    
     float compVerval = 1.0;//0.6;//0.8;
     float compVermenigvuldiging = 0.8;
 
-    float meanWaardehouder;
-    float vorrigeWaarde;
-    // float mean;
 
-    float sinTotaal[10];
-    float cosTotaal[10];
-    float sinWaardes[10][1000];
-    float cosWaardes[10][1000];
+    float  onbalansSinTotaal[5];
+    float  onbalansCosTotaal[5];
+    float onbalansSinWaardes[5][pprmax];
+    float onbalansCosWaardes[5][pprmax];
     int harmonisen = 2;
     volatile float plateauCompFourier = 0;
 
@@ -108,7 +98,7 @@ class COMPVAART{
 
 
     bool golven = false;    
-    bool plaatUitMiddenComp = false;
+    bool plaatUitMiddenComp = true;
 
 
 
@@ -169,7 +159,7 @@ class COMPVAART{
 
 
       if(dirPrev != dir){
-        clearSamples();
+        clearOnbalansCompSamples();
       }
       dirPrev = dir;
 
@@ -192,9 +182,6 @@ class COMPVAART{
 
       glad += (vaart - glad) / 10;
       gladglad += (glad - gladglad) / 10;
-
-
-      // getMedian();
 
 
       
@@ -235,13 +222,14 @@ class COMPVAART{
 
 
       //-----------------------------------------------------------------------------UIT BALANS COMPENSATIE
-      // plateauCompensatie[teller] += ( glad - targetRpm ) / 4;
+      // gemiddeldeSnelheidPre -= plateauCompensatie[teller];
+
       
-      if( compMeten &&   //alle mementen waarom de compensatie niet mag werken, omdat er dan verschillen zijn met als de naald er egt op is
+      if( onbalansCompenseren &&   //alle mementen waarom de compensatie niet mag werken, omdat er dan verschillen zijn met als de naald er egt op is
           plateauAan && 
-          draaienInterval.sinds() > 1000 &&
-          opsnelheid &&           
-          (staat == S_HOMEN_VOOR_SPELEN ||
+          draaienInterval.sinds() > 1000 && //moet 1 seconden aan staan
+          opsnelheid &&                      // en opsnelheid zijn     
+          (staat == S_HOMEN_VOOR_SPELEN ||    
           staat == S_NAAR_BEGIN_PLAAT || 
           staat == S_SPELEN)
 
@@ -258,40 +246,39 @@ class COMPVAART{
         }
       }
 
-      // float vorrigeWaarde = plateauCompensatie[rondTrip(teller - random(20),  pulsenPerRev)];
       // plateauCompensatie[teller] *= compVerval;
-      // plateauCompensatie[teller] = vorrigeWaarde + ((plateauCompensatie[teller] - vorrigeWaarde) / compFilter);
-
-      // plateauComp = -plateauCompensatie[rondTrip(teller + faseVerschuiving,  pulsenPerRev)];
 
 
-      preComp = plateauCompensatie[teller];
+
+      // gemiddeldeSnelheidPre += plateauCompensatie[teller];
+      // gemiddeldeSnelheid = gemiddeldeSnelheidPre / pulsenPerRev;
+
       float nieuweWaarde = plateauCompensatie[teller];
-      plateauCompFourier = 0;
-      
-      meanWaardehouder -= vorrigeWaarde;
-      meanWaardehouder += nieuweWaarde;
-      vorrigeWaarde = nieuweWaarde;
 
-      // mean = meanWaardehouder / (float)pulsenPerRev;
+      plateauCompFourier = 0;
 
       for(int harm = 1; harm < harmonisen + 1; harm++){
         int hoek = rondTrip(teller * harm,  pulsenPerRev);
 
-        sinTotaal[harm] -= sinWaardes[harm][teller];
-        sinWaardes[harm][teller] = sinus[hoek]  *  nieuweWaarde;
-        sinTotaal[harm] += sinWaardes[harm][teller];
+        onbalansSinTotaal[harm] -= onbalansSinWaardes[harm][teller];
+        onbalansSinWaardes[harm][teller] = sinus[hoek]  *  nieuweWaarde;
+        onbalansSinTotaal[harm] += onbalansSinWaardes[harm][teller];
         
-        cosTotaal[harm] -= cosWaardes[harm][teller];
-        cosWaardes[harm][teller] = cosin[hoek]  *  nieuweWaarde;
-        cosTotaal[harm] += cosWaardes[harm][teller];
+        onbalansCosTotaal[harm] -= onbalansCosWaardes[harm][teller];
+        onbalansCosWaardes[harm][teller] = cosin[hoek]  *  nieuweWaarde;
+        onbalansCosTotaal[harm] += onbalansCosWaardes[harm][teller];
 
         hoek = rondTrip(hoek + faseVerschuiving,  pulsenPerRev);
-        plateauCompFourier += ( ( sinus[hoek] * sinTotaal[harm] ) + ( cosin[hoek] * cosTotaal[harm] ) ) / pulsenPerRev;
+        plateauCompFourier += ( ( sinus[hoek] * onbalansSinTotaal[harm] ) + ( cosin[hoek] * onbalansCosTotaal[harm] ) ) / pulsenPerRev;
       }
 
 
-      plateauComp = -plateauCompFourier;//plateauCompensatie[rondTrip(teller + faseVerschuiving,  pulsenPerRev)];
+      if(onbalansCompenseren){
+        plateauComp = -plateauCompFourier;//plateauCompensatie[rondTrip(teller + faseVerschuiving,  pulsenPerRev)];
+      }else{
+        plateauComp = 0;
+      }
+      
 
 
 
@@ -329,15 +316,14 @@ class COMPVAART{
       }
 
       for(int harm = 1; harm < harmonisen + 1; harm++){
-        sinTotaal[harm] = 0;
-        cosTotaal[harm] = 0;
+        onbalansSinTotaal[harm] = 0;
+        onbalansCosTotaal[harm] = 0;
         for(int i = 0; i < pulsenPerRev; i++){
-          sinWaardes[harm][i] = 0;
-          sinWaardes[harm][i] = 0;
+          onbalansSinWaardes[harm][i] = 0;
+          onbalansCosWaardes[harm][i] = 0;
         }        
       }
 
-      meanWaardehouder = 0;
     }
 
 
@@ -362,37 +348,6 @@ class COMPVAART{
 
 
 
-
-
-
-
-    void getMedian(){
-      medianSamples[medianTeller++ % medianSampleNum] = vaart;
-
-      for(int i = 0; i < medianSampleNum; i++){
-        medianGesorteerd[i] = medianSamples[i];
-      }
-
-      
-      int swapTeller = 1;
-      while( swapTeller != 0 ){
-        swapTeller = 0;
-        
-        for(int i = 0; i < medianSampleNum - 1; i++){
-          
-          if(medianGesorteerd[i] > medianGesorteerd[i + 1]){
-            
-            float buff = medianGesorteerd[i];  // swap de 2 waardes
-            medianGesorteerd[i] = medianGesorteerd[i + 1];
-            medianGesorteerd[i + 1] = buff;           
-            
-            swapTeller++;
-          }                  
-        }
-      }
-
-      median = medianGesorteerd[medianSampleNum / 2];
-    }
 
 
 

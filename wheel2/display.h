@@ -111,32 +111,40 @@ void displayUpdate(){
 
 
         //----------------------------------------------------------------ERROR WEERGEVEN
-    if(errorVeranderd.sinds() < 5000  &&  (millis() / 500) % 2 ){
-      
-      int blokken = error;
+    if(errorVeranderd.sinds() < 5000  &&  error != E_GEEN){
 
-      float blokBreedte = 0.1 * displayLengte;
-      float totaleBreedte = blokBreedte * blokken;
-      float halveBreedte = totaleBreedte / 2;
-      float beginPos = dispHalf - halveBreedte;
-      float eindPos = dispHalf + halveBreedte;
+      if((millis()/300) % 2){//                knipper
+        for(int i = 0; i < displayLengte; i++){
+          displayData[i] = 0;
+        }
+      }else{
 
 
-      for(int i = 0; i < displayLengte; i++){
-        displayData[i] = 0;
+        int blokken = error;
 
-        if(i > beginPos  &&  i < eindPos){
-          displayData[i] = 0.1;
+        float blokBreedte = 0.1 * displayLengte;
+        float totaleBreedte = blokBreedte * blokken;
+        float halveBreedte = totaleBreedte / 2;
+        float beginPos = dispHalf - halveBreedte;
+        float eindPos = dispHalf + halveBreedte;
 
-          if( (int(beginPos) + i) % int(blokBreedte) < 2 ){
-            displayData[i] = 0;
+
+        for(int i = 0; i < displayLengte; i++){
+          displayData[i] = 0;
+
+          if(i > beginPos  &&  i < eindPos){
+            displayData[i] = 0.1;
+
+            if( (int(beginPos) + i) % int(blokBreedte) < 2 ){
+              displayData[i] = 0;
+            }
           }
         }
       }
     }
 
     //----------------------------------------------------------------SCHOONMAAK STAND
-    if(staat == S_SCHOONMAAK){
+    else if(staat == S_SCHOONMAAK){
       float verdeelPuntTeller = 0;
       int volumePunt = mapF(armTargetGewicht, 0, 4, (displayLengte-1) - volumeMargin,   volumeMargin);
 

@@ -321,6 +321,7 @@ void staatDingen(){
       karPos = KAR_HOME;
 
       karNoodStop();
+      strobo.clearCompSamples();// dit is een mooi moment om te stoppen
 
       if(staat == S_HOMEN_VOOR_SPELEN){
         setStaat(S_NAAR_BEGIN_PLAAT);
@@ -397,6 +398,7 @@ void staatDingen(){
         Serial.println("plaatDia: " + String(plaadDiaInch) + " : ±7\" ");
         setPlateauRpm(rpm45);
         plaatBegin = SINGLETJE_PLAAT_BEGIN;
+        zetNummersAlsEenSingletje();
         // return;
       
       

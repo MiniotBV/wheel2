@@ -10,7 +10,7 @@ bool plateauComp = true;
 // float plateauI = 0.1;//plateau33I;
 // float plateauD = -3;
 
-float plateauP = 0.5;//plateau33P;    //pid
+float plateauP = 1;//0.5;//plateau33P;    //pid
 float plateauI = 0.02;//plateau33I;
 float plateauD = 0;
 
@@ -101,8 +101,6 @@ void plateauStoppen(){
   draaienInterval.reset();
   uitdraaien = true;
   opsnelheid = false;
-
-  strobo.clearCompSamples();
 }
 
 
@@ -137,7 +135,15 @@ float pid(float rpmIn){
   // updatePIDwaarde();  
 
   float divTijd = rpmIn - vorrigeVaart;
-  float divTarget = targetRpm - rpmIn;
+  
+  float divTarget;
+  if(strobo.plaatUitMiddenComp){
+    divTarget = centerCompTargetRpm - rpmIn;
+  }else{
+    divTarget = targetRpm - rpmIn;
+  }
+
+
   vorrigeVaart = rpmIn;
 
   if(plateauComp){
@@ -256,7 +262,7 @@ void plateauFunc(){
     // float vaart = strobo.vaart;
     float vaart = strobo.glad;
     
-    // if(strobo.compMeten){
+    // if(strobo.onbalansCompenseren){
     // vaart += (1/plateauP) * (strobo.plateauComp/100);
     // }
     

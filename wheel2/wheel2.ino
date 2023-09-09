@@ -1,7 +1,7 @@
 //  ## Wheel2 ##
 //      rp2040
 
-#define versie 68
+#define versie 73
 
 
 #include <stdio.h>
@@ -43,7 +43,7 @@ void enableInterupts(bool aan){
 
 
 #include "compVaartSensor.h"
-COMPVAART strobo(32, 720);
+COMPVAART strobo(16, 720);
 
 
 
@@ -117,6 +117,9 @@ void setup() {
 
 
   berekenAntiCogging();
+
+
+
 }
 
 
@@ -172,7 +175,8 @@ void loop() {
   plateauFunc();
 
 
-  digitalWrite(ledWit, isNaaldEropVoorZoLang(1000));
+  // digitalWrite(ledWit, isNaaldEropVoorZoLang(1000));
+  digitalWrite(ledWit, isPlaatAanwezig());
 }
 
 
