@@ -117,25 +117,25 @@ void serieelFunc(){
       else if(letter == 'y'){    //plaat lees golven
         plaatLeesGolven = !plaatLeesGolven;
       }
-      else if(letter == '>'){    //set armhoekOfset
+      else if(letter == '>'){
         naarVolgendNummer();
       }
-      else if(letter == '<'){    //set armhoekOfset
+      else if(letter == '<'){
         naarVorrigNummer();
       }
-      else if(letter == 'H'){    //set armhoekOfset
+      else if(letter == 'H'){
         setStaat(S_NAAR_HOK);
       }
-      else if(letter == 'S'){    //set armhoekOfset
+      else if(letter == 'S'){
         stoppen();
       }
-      else if(letter == 'D'){    //set armhoekOfset
+      else if(letter == 'D'){
         spelen();
       }
-      else if(letter == 'P'){    //set armhoekOfset
+      else if(letter == 'P'){
         pauze();
       }
-      else if(letter == 'O'){    //set armhoekOfset
+      else if(letter == 'O'){
         armHoekCalibreer();
       }
       else if(letter == 'k'){    //set karP

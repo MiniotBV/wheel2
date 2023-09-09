@@ -1,6 +1,6 @@
 
 
-bool plateauLogica = true;
+bool plateauLogica = false;
 
 // float targetRpm = 0;//staat nu in compVaartSensor.h
 

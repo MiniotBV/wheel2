@@ -122,7 +122,8 @@ class COMPVAART{
       tijd = micros();
 
 
-      dir = -1;//dir = 1;
+      // dir = -1;
+      dir = 1;
 
       sens = (gpio_get(plateauA) <<1)  |  gpio_get(plateauB);
       
@@ -131,7 +132,8 @@ class COMPVAART{
           sens == 0b11 && sensPrev == 0b10 ||
           sens == 0b10 && sensPrev == 0b00
       ){
-        dir = 1;//dir = -1;
+        // dir = 1;
+        dir = -1;
       }
 
       sensPrev = sens;
@@ -405,7 +407,7 @@ class COMPVAART{
 
       
       gemiddelde = gemiddeldeInterval();
-      vaart =  huidigeVaart(gemiddelde);
+      vaart = huidigeVaart(gemiddelde);
 
 
       return vaart;//niet compensenre
@@ -465,8 +467,9 @@ class COMPVAART{
 
       // return (1000000 / gemiddeldeInterval())/4;  //  return totaal
       // return (((1000000.0 / gemiddelde)*60) / pulsenPerRev;  //  return totaal
-      return ((1000000.0 * 60) / inter) / pulsenPerRev;  //  return totaal
-      return (inter * pulsenPerRev) / (1000000.0 * 60);
+      float waarde = ((1000000.0 * 60) / inter) / pulsenPerRev;  //  return totaal
+      return limieteerF(waarde, -300, 300);
+      // return (inter * pulsenPerRev) / (1000000.0 * 60);
 
     }
 

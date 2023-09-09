@@ -9,9 +9,12 @@
 #define stapperBP                 5//~ PWM2 B
 
 // plateau encoder      
-#define plateauA                  6
+#define plateauA                  8
 #define plateauB                  7
-#define plateauIndex              8
+#define plateauIndex              6
+// #define plateauA                  6
+// #define plateauB                  7
+// #define plateauIndex              8
 
 // display
 

@@ -38,9 +38,9 @@ void uitEnkeleCoreModus(){
 
 
 void enableInterupts(bool aan){
-  pinMode(plateauA,     INPUT_PULLUP);
-  pinMode(plateauB,     INPUT_PULLUP);
-  pinMode(plateauIndex, INPUT_PULLUP);
+  // pinMode(plateauA,     INPUT_PULLUP);
+  // pinMode(plateauB,     INPUT_PULLUP);
+  // pinMode(plateauIndex, INPUT_PULLUP);
 
   gpio_set_irq_enabled_with_callback(plateauA,   GPIO_IRQ_EDGE_RISE + GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
     // gpio_set_irq_enabled_with_callback(plateauA,   GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
