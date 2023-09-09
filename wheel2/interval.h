@@ -5,7 +5,7 @@
 
 class Interval{
 	public:
-		unsigned int interval = 0;
+		unsigned long interval = 0;
 		unsigned long vorrigeTijd = 0;
 		unsigned long vorrigeVorrigeTijd = 0;
 		int eenheid = MILLIS;
@@ -55,7 +55,7 @@ class Interval{
     }
 		
 
-		int sinds(){
+		unsigned long  sinds(){
 			return tijd() - vorrigeTijd;
 		}
 
