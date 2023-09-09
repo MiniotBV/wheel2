@@ -175,7 +175,7 @@ class COMPVAART
 			tijd = micros();
 
 
-      procesTijd = micros();
+      procesTijd = micros();//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
 			//------------------------------------------------------RICHTING
 			dir = 1;
@@ -192,6 +192,7 @@ class COMPVAART
 			sensPrev = sens;
 
 			if(dirPrev != dir){
+        
 				clearOnbalansCompSamples();
 			}
 			dirPrev = dir;
@@ -215,6 +216,9 @@ class COMPVAART
 			vaart += (vaartRuw - vaart) / 10;
 
 
+
+
+      procesInterval = micros() - procesTijd;//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 
@@ -343,7 +347,7 @@ class COMPVAART
 
 
 
-      procesTijd = micros();
+      // procesTijd = micros();//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
 			//-----------------------------------------------------------------------------ONBALANS COMPENSATIE
 			if( onbalansCompAan &&   //alle mementen waarom de compensatie niet mag werken, omdat er dan verschillen zijn met als de naald er egt op is
@@ -382,7 +386,7 @@ class COMPVAART
 			
 
 
-			procesInterval = micros() - procesTijd;
+			// procesInterval = micros() - procesTijd;//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 
