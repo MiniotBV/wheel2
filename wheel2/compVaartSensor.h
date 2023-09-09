@@ -89,21 +89,13 @@ class COMPVAART{
     void interrupt(){
       tijd = micros();
 
-      // bool A = gpio_get(plateauA);
-      // bool B = gpio_get(plateauB);
 
       dir = 1;
-      if(!gpio_get(plateauB)){
-        dir = -1;
-      }
-      // if(digitalRead(plateauB)){
+      // if(!gpio_get(plateauB)){
       //   dir = -1;
       // }
 
-      // dir = 1;
-      // if(!A && B   ||  A && !B){
-      //   dir = -1;
-      // }  
+
       
       
       interval = tijd - vaartInterval;
@@ -111,27 +103,16 @@ class COMPVAART{
       
       if(interval > sampleMax){interval = sampleMax;}
       
-
+      shiftSamples((interval * dir) * compSamples[teller]);
       
-      // shiftSamples(interval);
 
       teller = rondTrip(teller + dir,  pulsenPerRev);
-      
-      // divAvrg[divTeller++ % divSamps] = getVaart() / strobo.getVaart();
-      // float buf = 0;
-      // for(int i = 0;  i < divSamps; i++){
-      //   buf += divAvrg[i];
-      // }
-      // div = buf / divSamps;
-
-      
-      
-
-      shiftSamples((interval * dir) * compSamples[teller]);
+    
       
       dav = compSamples[teller];
 
-      getDiv();
+      getVaart();
+      // getDiv();
 
       if(compensatieMeten){
         
