@@ -22,15 +22,20 @@ unsigned long knopInterval[8];
 
 Interval ledBlinkInterval(0, MILLIS);
 Interval knopAlleInterval(0, MILLIS);
-Interval specialeDisplayActie(0, MILLIS);
+Interval volumeDisplayActie(0, MILLIS);
+Interval rpmDisplayActie(0, MILLIS);
 
 
 int potVal = 0;
 int potValPrev = 0;
 
-float potVolume = 0;
-float potVolumePrev = 0;
-float potVolumeDiv;
+float riem = 0;
+float riemPrev = 0;
+float riemFilter;
+float riemFilterPrev;
+
+float riemFilterDiv;
+float riemDiv;
 
 
 
@@ -137,12 +142,31 @@ void knoppenUpdate(){
         
         knopAlleInterval.reset();
         knopInterval[knop] = millis();
+
+        ledBlink();  //led blink
         
         knopLog( knop, " in ");
         
         if( staat == S_SCHOONMAAK ){//   SCHOONMAAK STAND STOPPEN
           stoppen();
-          ledBlink();  //led blink
+          // ledBlink();  //led blink
+        }
+        
+        if(knop == KNOP_TERUGSPOEL){
+          if(staat == S_HOK){
+            if(rpmStaat == AUTO){
+              rpmStaat = R33;
+            }
+            else if(rpmStaat == R33){
+              rpmStaat = R45;
+            }
+            else{
+              rpmStaat = AUTO;
+            }
+
+            updatePlateauRpm();
+            rpmDisplayActie.reset();
+          }
         }
       }
       
@@ -159,7 +183,7 @@ void knoppenUpdate(){
           
           if( (staat == S_NAALD_EROP  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)){
             naarVolgendNummer();
-            ledBlink();  //led blink
+            // ledBlink();  //led blink
           }
         }
 
@@ -168,21 +192,7 @@ void knoppenUpdate(){
 
           if( (staat == S_NAALD_EROP  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)){
             naarVorrigNummer();
-            ledBlink();  //led blink
-          }
-          else if(staat == S_HOK){
-            if(rpmStaat == AUTO){
-              rpmStaat = R33;
-            }
-            else if(rpmStaat == R33){
-              rpmStaat = R45;
-            }
-            else{
-              rpmStaat = AUTO;
-            }
-
-            updatePlateauRpm();
-            specialeDisplayActie.reset();
+            // ledBlink();  //led blink
           }
         }
 
@@ -190,13 +200,13 @@ void knoppenUpdate(){
         if(knop == KNOP_PLAY){
           if(staat == S_PAUZE  ||  staat == S_NAALD_EROP){
             pauze();
-            ledBlink();  //led blink
+            // ledBlink();  //led blink
           
 
 
           }else if(staat == S_HOK){
             spelen();
-            ledBlink();  //led blink
+            // ledBlink();  //led blink
           }
         }
 
@@ -218,12 +228,12 @@ void knoppenUpdate(){
         
         if( (staat == S_NAALD_EROP  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)  &&   knop == KNOP_DOORSPOEL){ //      >> DOOR SPOELEN
           setStaat( S_DOOR_SPOELEN );
-          ledBlink();  //led blink
+          // ledBlink();  //led blink
         }
 
         if( (staat == S_NAALD_EROP  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)   &&   knop == KNOP_TERUGSPOEL){//      << TERUG SPOELEN
           setStaat( S_TERUG_SPOELEN );
-          ledBlink();  //led blink
+          // ledBlink();  //led blink
         }
 
         
@@ -233,10 +243,10 @@ void knoppenUpdate(){
         if(knop == KNOP_PLAY){
           if(staat == S_HOK){//         SPELEN
             spelen();//                       SPELEN
-            ledBlink();  //                  led blink
+            // ledBlink();  //                  led blink
           }else{                                 
             stoppen();
-            ledBlink();  //                  led blink
+            // ledBlink();  //                  led blink
           }
         }
       }
@@ -254,7 +264,7 @@ void knoppenUpdate(){
 
         if(  (  staat == S_DOOR_SPOELEN   ||   staat == S_TERUG_SPOELEN  )  &&  (  knop == KNOP_DOORSPOEL  ||  knop == KNOP_TERUGSPOEL  )  ){//WEER BEGINNEN NA SPOELEN
           setStaat(S_NAALD_EROP);
-          ledBlink();  //led blink
+          // ledBlink();  //led blink
           
         }
       }
@@ -271,7 +281,7 @@ void knoppenUpdate(){
 
         if(  staat == S_HOK  &&  knop == KNOP_TERUGSPOEL  ){//               NAALD TEST STAND
           setStaat( S_SCHOONMAAK );
-          ledBlink();  //led blink
+          // ledBlink();  //led blink
         }
       }
       
@@ -287,7 +297,7 @@ void knoppenUpdate(){
         
         if(  (  staat == S_DOOR_SPOELEN   ||   staat == S_TERUG_SPOELEN  )  &&  (  knop == KNOP_DOORSPOEL  ||  knop == KNOP_TERUGSPOEL  )  ){//WEER BEGINNEN NA SPOELEN
           setStaat(S_NAALD_EROP);
-          ledBlink();  //led blink
+          // ledBlink();  //led blink
         }
       }
       
@@ -325,59 +335,40 @@ void knoppenUpdate(){
       }
     }
 
-    potVolume    +=     float(potVal - potValPrev) / AMAX;
+    riem    +=     float(potVal - potValPrev) / AMAX;
     potValPrev = potVal;
     
-    // potVolumeFilter += (potVolume - potVolumeFilter)/10;
-
-    potVolumeDiv = potVolume - potVolumePrev;
+    riemFilter += (riem - riemFilter)/10;
+    riemFilterDiv = riemFilter - riemFilterPrev;
+    riemFilterPrev = riemFilter;
     
-    potVolumeDiv = -potVolumeDiv; //                             flip
+    riemDiv = riemFilterDiv;    
+    // riemDiv = riem - riemPrev;
+    riemDiv = -riemDiv; // flip
+
     
 
 
+    if( !isOngeveer(riemDiv, 0, 0.005) ){
+    riemDivPrev = riemDiv;
 
-    if(staat == S_SCHOONMAAK){
-      if( !isOngeveer(potVolumeDiv, 0, 0.005) ){
-        potVolumePrev = potVolume;
-        
-        armGewicht += potVolumeDiv * 4;
+      if(staat == S_SCHOONMAAK){
+        armGewicht += riemDiv * 4;
         armGewichtUpdate();
       }
-    }
 
-
-
-    else if(staat == S_PAUZE){
-      if( !isOngeveer(potVolumeDiv, 0, 0.005) ){
-        potVolumePrev = potVolume;
-        
-        targetNummerPos -= potVolumeDiv * 50;
+      else if(staat == S_PAUZE){
+        targetNummerPos -= riemDiv * 50;
         targetNummerPos = limieteerF(targetNummerPos, PLAAT_EINDE, plaatBegin);      
       }
     
-           
-
-    }
-    
-    
-    
-    else{
-      
-      if( !isOngeveer(potVolumeDiv, 0,   1.0 / 100) ){
-        potVolumePrev = potVolume;
+      else{
+        volumeDisplayActie.reset();
         
-        // Serial.print(":");
-        // Serial.println(potVolumeDiv);
-        specialeDisplayActie.reset();
-        
-        // volume = limieteerF(volume + (potVolumeDiv * stappenPerOmwenteling), 0, 63);
-        volume += round(potVolumeDiv * 100);
+        // volume = limieteerF(volume + (riemDiv * stappenPerOmwenteling), 0, 63);
+        volume += round(riemDiv * 100);
         volume = limieteerI(volume, 0, 63);        
       }
-
-
-
     }
     
 

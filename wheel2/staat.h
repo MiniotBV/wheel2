@@ -66,7 +66,7 @@ void plateauDraaien(){
   plateauAan = true;
   setPlateauRpm(rpm33);
 
-  basis = 0.1;
+  basis = 0.0;
   
   draaienInterval.reset();
   

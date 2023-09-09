@@ -21,8 +21,12 @@ float plateauRustP = 0.01;
 float plateauRustI = 0.04;
 
 
+// float plateauP = 0.005;//plateau33P;    //pid
+// float plateauI = 0.03;//plateau33I;
+
 float plateauP = 0.01;//plateau33P;    //pid
-float plateauI = 0.01;//plateau33I;
+float plateauI = 0.02;//plateau33I;
+
 // float plateauP = plateauRustP;    //pid
 // float plateauI = plateauRustI;
 float plateauD = 0;
@@ -159,7 +163,11 @@ void plateauFunc(){
     // float vaart = strobo.getVaart();
     // float vaart = strobo.vaart;
     float vaart = strobo.glad;
-    // vaart += strobo.plateauComp;
+    
+    if(strobo.compMeten){
+      vaart += (1/plateauP) * (strobo.plateauComp/100);
+    }
+    
 
     if(plateauAan){             //staat de motor aan?
 

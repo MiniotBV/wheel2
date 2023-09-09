@@ -7,6 +7,7 @@ class Interval{
   public:
     unsigned int interval = 0;
     unsigned long vorrigeTijd = 0;
+    unsigned long vorrigeVorrigeTijd = 0;
     int eenheid = MILLIS;
 
     Interval(int i, int tijdMode){
@@ -19,9 +20,11 @@ class Interval{
 
     bool loop(){
       if(tijd() - vorrigeTijd >= interval){
+          vorrigeVorrigeTijd = vorrigeTijd;
           vorrigeTijd += interval;
 
           if(tijd() - vorrigeTijd >= interval){
+            vorrigeVorrigeTijd = vorrigeTijd;
             vorrigeTijd = tijd();            
           }
 

@@ -273,12 +273,14 @@ void volumeFunc(){
 
     if( volume != volumeOud   ||   isNaaldEropOud != isNaaldErop()  || volumeOverRide){//  ||   jackIn != digitalRead(koptelefoonAangesloten)){
       
-      volumeOverRide = false;
+      
       int waarde = volume;
       
-      if(!isNaaldErop()){
+      if(!isNaaldErop() && !volumeOverRide){
         waarde = 0;
       }
+
+      volumeOverRide = false;
       
       volumeOud = volume;
       isNaaldEropOud = isNaaldErop();

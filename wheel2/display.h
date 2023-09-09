@@ -170,10 +170,45 @@ void displayUpdate(){
     }
 
 
+    
 
 
+    else if(rpmDisplayActie.sinds() < 2000){
 
-    else if(specialeDisplayActie.sinds() < 2000){
+      float blokken = 0;
+
+      if(rpmStaat == R33){
+        blokken = 3;//3.33;
+      }  
+      else if(rpmStaat == R45){
+        blokken = 4;//4.5;
+      }
+      else if(rpmStaat == AUTO){
+        blokken = 1;//4.5;
+      } 
+
+      float blokBreedte = 0.1 * displayLengte;
+      float totaleBreedte = blokBreedte * blokken;
+      float halveBreedte = totaleBreedte / 2;
+      float beginPos = dispHalf - halveBreedte;
+      float eindPos = dispHalf + halveBreedte;
+
+
+      for(int i = 0; i < displayLengte; i++){
+        displayData[i] = 0;
+
+        if(i > beginPos  &&  i < eindPos){
+          displayData[i] = 0.1;
+
+          if( (int(beginPos) + i) % int(blokBreedte) < 2 ){
+            displayData[i] = 0;
+          }
+        }
+      }
+    }
+
+
+    else if(volumeDisplayActie.sinds() < 2000){
       for(int i = 0; i < displayLengte; i++){
         displayData[i] = 0;          
 
@@ -189,37 +224,7 @@ void displayUpdate(){
         if(i < dispHalf + volumePunt    &&    i > dispHalf - volumePunt){
           displayData[i] = 0.1;
         }
-
-
-
-        // if( i == (displayLengte-1) - 2   &&   rpmStaat == AUTO){
-        //   displayData[i] = 0.9;              
-        // }
-
-        // if(i == (displayLengte-1) - 7){
-        //   if(isOngeveer(targetRpm, rpm33, 0.1)){
-        //     displayData[i] = 0.1;
-        //   }
-        //   if(rpmStaat == R33){
-        //     displayData[i] = 0.9;
-        //   }        
-        // }
-
-        // if(i == (displayLengte-1) - 12){
-        //   if(targetRpm == rpm45){
-        //     displayData[i] = 0.1;
-        //   }
-        //   if(rpmStaat == R45){
-        //     displayData[i] = 0.9;
-        //   }        
-        // }    
-
-
       }
-    
-    
-    
-    
     }
     
     
@@ -279,8 +284,40 @@ void displayUpdate(){
           displayData[i] = 0.9;
         }
 
+        // if(staat == S_NAALD_EROP  ||  staat == S_SPELEN){
+        //   if(i > plaatBegin){
+        //     displayData[i] = 0;
+        //   }
+        // }
 
         
+      }
+    }
+
+
+
+    if(ledBlinkInterval.sinds() < 50){
+      
+      int knopGroote = 2;//0.01 * displayLengte;
+      int knopGrooteHalf = knopGroote/2;
+      int knopUitMidden = 0.23 * displayLengte;
+
+      if(knopStaat[KNOP_PLAY] != LOSGELATEN){
+        for(int i = dispHalf - knopGrooteHalf; i < dispHalf + knopGrooteHalf; i++){
+          displayData[i] = 0.9;
+        }
+      }
+
+      if(knopStaat[KNOP_DOORSPOEL] != LOSGELATEN){
+        for(int i = dispHalf - knopUitMidden - knopGroote; i < dispHalf - knopUitMidden; i++){
+          displayData[i] = 0.9;
+        }
+      }
+
+      if(knopStaat[KNOP_TERUGSPOEL] != LOSGELATEN){
+        for(int i = dispHalf + knopUitMidden; i < dispHalf + knopUitMidden + knopGroote; i++){
+          displayData[i] = 0.9;
+        }
       }
     }
 

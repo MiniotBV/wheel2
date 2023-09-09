@@ -7,6 +7,10 @@
 //PI = 2 stappen
 // #include "plaatLees.h"
 
+
+float karInterval;
+
+
 bool plaatAanwezig = false;
 
 float karP = 0.1; //0.00005;//0.00025;
@@ -19,7 +23,7 @@ float karPcomp = 0;
 // #define GROOTSTE_PLAAT_BEGIN 148
 #define GROOTSTE_PLAAT_BEGIN 147
 // #define PLAAT_EINDE 52.5
-#define PLAAT_EINDE 55
+#define PLAAT_EINDE 52.5
 
 #define KAR_HOME 43.5
 #define KAR_HOK 45.5
@@ -57,12 +61,8 @@ float armHoekOffset = 1920;
 
 
 
-void karInit(){
-  setPwm(stapperAP);
-  setPwm(stapperAN);
-  setPwm(stapperBP);
-  setPwm(stapperBN);
-}
+
+
 
 
 
@@ -288,7 +288,7 @@ void staatDingen(){
       return;
     }
 
-    if(armHoek < -800){//-1000){
+    if(armHoek < -800){//-1000)
       Serial.print("div; ");
       Serial.println(  (karOffset + karPos)  );
       karOffset -= KAR_HOME - karPos;
@@ -524,56 +524,54 @@ Interval armHoekInt(100, MICROS);
 Interval karMotorInt(1000, MICROS);
 
 
+
+bool karMotorUitvoeren(){
+  
+  karInterval = (micros() - karMotorInt.vorrigeVorrigeTijd) / 1000000.0;
+
+  // armHoekRuw += (analogRead(hoekSensor) - armHoekRuw) / armHoekFilterWaarde;
+  armHoekRuw = analogRead(hoekSensor);
+  armHoekSlow += (armHoekRuw - armHoekSlow) / armHoekSlowFilterWaarde;
+
+  armHoek = armHoekRuw - armHoekOffset;
+
+
+  sensorPos = karPos - SENSOR_OFFSET;
+
+  
+
+  staatDingen();
+
+
+
+  karMotorPos = (karPos + karOffset + karPcomp)  *  mm2stap;
+  
+
+
+
+  if(karMotorEnable){
+  // if(staat != S_HOK){
+
+    pwmFase( sin(karMotorPos),  stapperAP, stapperAN, true);
+    pwmFase( cos(karMotorPos),  stapperBP, stapperBN, true);
+  
+  }else{
+
+    pwmFase( 0,  stapperAP, stapperAN, true);
+    pwmFase( 0,  stapperBP, stapperBN, true);
+  }
+
+  karMotorEnable = true;  
+
+  return 1;
+}
+
+
+
 void karMotorFunc(){
-  // if(armHoekInt.loop()){
-
-  //   // armHoek = analogRead(hoekSensor);
-  //   armHoekRuw += (analogRead(hoekSensor) - armHoekRuw) / armHoekFilterWaarde;
-  //   armHoekSlow += (armHoekRuw - armHoekSlow) / armHoekSlowFilterWaarde;
-
-  //   armHoek = armHoekRuw - armHoekOffset;
-  // }
-
-
-
-    
       
   if(karMotorInt.loop()){
-
-    // armHoekRuw += (analogRead(hoekSensor) - armHoekRuw) / armHoekFilterWaarde;
-    armHoekRuw = analogRead(hoekSensor);
-    armHoekSlow += (armHoekRuw - armHoekSlow) / armHoekSlowFilterWaarde;
-
-    armHoek = armHoekRuw - armHoekOffset;
-
-
-    sensorPos = karPos - SENSOR_OFFSET;
-
-    
-
-    staatDingen();
-
-
-
-    karMotorPos = (karPos + karOffset + karPcomp)  *  mm2stap;
-    
-
-
-
-    if(karMotorEnable){
-    // if(staat != S_HOK){
-
-      pwmFase( sin(karMotorPos),  stapperAP, stapperAN, true);
-      pwmFase( cos(karMotorPos),  stapperBP, stapperBN, true);
-    
-    }else{
-
-      pwmFase( 0,  stapperAP, stapperAN, true);
-      pwmFase( 0,  stapperBP, stapperBN, true);
-    }
-
-    karMotorEnable = true;
-
+    karMotorUitvoeren();
   }
 }
 
@@ -581,8 +579,16 @@ void karMotorFunc(){
 
 
 
+void karInit(){
+  setPwm(stapperAP);
+  setPwm(stapperAN);
+  setPwm(stapperBP);
+  setPwm(stapperBN);
 
-
+  // struct repeating_timer timer;
+  // add_repeating_timer_us(1, karMotorUitvoeren, NULL, &timer);
+  // add_repeating_timer_us(1000, karMotorUitvoeren, NULL, &karTimer);
+}
 
 
 

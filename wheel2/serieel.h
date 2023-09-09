@@ -19,18 +19,22 @@ void serieelFunc(){
       Serial.print(", ");
       Serial.print(strobo.gladglad,3);
 
-      Serial.print(", ");
-      Serial.print(calibratieToon.vaart);
+      // Serial.print(", ");
+      // Serial.print(calibratieToon.vaart);
 
 
       Serial.print(", ");
       Serial.print(strobo.teller);
 
       Serial.print(", ");
-      Serial.print(strobo.plateauComp);
+      Serial.print(strobo.plateauComp, 4);
 
 
+      Serial.print(", ");
+      Serial.print(basis, 4);
 
+      Serial.print(", ");
+      Serial.print(karInterval);
       
       
       
@@ -64,12 +68,12 @@ void serieelFunc(){
       
 
       
-      Serial.print(", ");
-      Serial.print(armHoekSlow);//1696);
-      Serial.print(", ");
-      Serial.print(armHoekRuw);//1696);
-      Serial.print(", ");
-      Serial.print(armHoek);//1696);
+      // Serial.print(", ");
+      // Serial.print(armHoekSlow);//1696);
+      // Serial.print(", ");
+      // Serial.print(armHoekRuw);//1696);
+      // Serial.print(", ");
+      // Serial.print(armHoek);//1696);
 
 
 
@@ -138,13 +142,26 @@ void serieelFunc(){
       else if(letter == 'O'){
         armHoekCalibreer();
       }
+      
+      else if(letter == 'F'){
+        naaldErop();
+      }
+      else if(letter == 'f'){
+        naaldEraf();
+      }
+      else if(letter == 'A'){    //arm motor target
+        armGewicht = Serial.parseFloat();
+        armGewichtUpdate();
+        Serial.println("armGewicht: " + String(armGewicht) + " armTargetKracht: " + String(armTargetKracht));
+      }
+
       else if(letter == 'k'){    //set karP
         karP = Serial.parseFloat();
-        Serial.print("p: " + String(karP));
+        Serial.println("karP: " + String(karP));
       }
       else if(letter == 'p'){    //set P
         plateauP = Serial.parseFloat();
-        Serial.print("p: " + String(plateauP));
+        Serial.println("p: " + String(plateauP));
       }
       else if(letter == 'i'){    //set I
         plateauI = Serial.parseFloat();
@@ -162,11 +179,7 @@ void serieelFunc(){
       else if(letter == 'N'){    //arm motor aan
         setStaat(S_SCHOONMAAK);
       }
-      else if(letter == 'A'){    //arm motor target
-        armGewicht = Serial.parseFloat();
-        armGewichtUpdate();
-        Serial.println("armGewicht: " + String(armGewicht) + " armTargetKracht: " + String(armTargetKracht));
-      }
+
       else if(letter == 'v'){    //set volume
         int i = Serial.parseInt();
         volume = i;
@@ -188,32 +201,33 @@ void serieelFunc(){
         Serial.println();
       }
 
-      else if(letter == 'I'){    //golven uit
+      else if(letter == 'I'){   
         toggleAudioFreqMeting();
       }
-      else if(letter == 'C'){    //golven uit
+      else if(letter == 'C'){    
         strobo.clearCompSamples();
       }
-      else if(letter == 'r'){    //golven uit
+      else if(letter == 'r'){    //
         strobo.recalCompSamples();
       }
-      else if(letter == 's'){    //golven uit
+      else if(letter == 's'){    //
         strobo.saveCompSamples();
       }
-      else if(letter == 'c'){    //golven uit
+      else if(letter == 'c'){    //
         strobo.toggleCompensatieModus();
       }
-      else if(letter == '~'){    //golven uit
+      else if(letter == '~'){    //
         strobo.printCompSamples();
       }
 
 
-      else if(letter == 'Q'){    //golven uit
-        strobo.plateauCompMeten = !strobo.plateauCompMeten;
+      else if(letter == 'Q'){    //
+        strobo.compMeten = !strobo.compMeten;
+        Serial.println("compMeten: " + String(strobo.compMeten));
         // strobo.clearPlateauSamples();
       }
-      else if(letter == 'q'){    //golven uit
-        // strobo.plateauCompMeten = !strobo.plateauCompMeten;
+      else if(letter == 'q'){    //
+        // strobo.compMeten = !strobo.compMeten;
         strobo.clearPlateauSamples();
       }
     

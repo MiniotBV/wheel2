@@ -132,9 +132,9 @@ void setup() {
 
   plateauInit();
 
-  delay(1);
+  // delay(1);
 
-  strobo.recalCompSamples();
+  // strobo.recalCompSamples();
   
   enableInterupts(true);
 
@@ -144,7 +144,8 @@ void setup() {
     uitEnkeleCoreModus();
   }
   
-
+  pinMode(slaapStand, OUTPUT);
+  digitalWrite(slaapStand, 1); // hou de batterij aan
   // stoppen();
 
 }
@@ -218,7 +219,7 @@ void loop() {
 
   // staatFunc(); // zit in karFunc()
 
-  pwmWriteF(ledWit, pow( ((sin( (PI*millis()) / 500.0 )+1)/2), 3) + plaatAanwezig);
+  // pwmWriteF(ledWit, pow( ((sin( (PI*millis()) / 500.0 )+1)/2), 3) + plaatAanwezig);
     // pwmWriteF(ledWit, pow( ((sin( (PI*millis()) / 500.0 )+1)/2), 3));
   // pwmWriteF(ledWit, 0.5);
 }

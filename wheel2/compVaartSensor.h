@@ -75,7 +75,7 @@ class COMPVAART{
 
 
     float plateauCompensatie[9000];
-    bool plateauCompMeten = false;
+    bool compMeten = false;
     float plateauComp = 0;
 
 
@@ -192,33 +192,33 @@ class COMPVAART{
       
       dav = compSamples[teller];
 
-      // getVaart();
-      getDiv();
+      getVaart();
+      // getDiv();
 
       glad += (vaart - glad) / 10;
-      gladglad += (glad - gladglad) / 10;
+      gladglad += (glad - gladglad) / 500;
 
 
 
 
-      if(divCompMeten){
+      // if(divCompMeten){
         
-        if(isOngeveer(div, 1, 0.3)){
+      //   if(isOngeveer(div, 1, 0.3)){
 
-          compSamples[teller] += (div - compSamples[teller]) * 2;
-          // compSamples[rondTrip(teller - 10,  pulsenPerRev)] += ( div - 1 ) / 3;
-        }
-      }
+      //     compSamples[teller] += (div - compSamples[teller]) * 2;
+      //     // compSamples[rondTrip(teller - 10,  pulsenPerRev)] += ( div - 1 ) / 3;
+      //   }
+      // }
 
 
 
-      if(plateauCompMeten){
-        plateauCompensatie[teller] += ( glad - targetRpm ) / 20 ;//* 0.2;// *0.8;
+      if(compMeten){
+        plateauCompensatie[teller] += ( gladglad - targetRpm ) ;/// 10 ;//* 0.2;// *0.8;
         // plateauCompensatie[teller] += ( gladglad - targetRpm )*0.5 ;//* 0.2;// *0.8;
         // plateauCompensatie[teller] -= (plateauCompensatie[teller] - plateauCompensatie[rondTrip(teller + 400,  pulsenPerRev)])*0.9;
       }
 
-      plateauComp = plateauCompensatie[rondTrip(teller + random(200),  pulsenPerRev)];
+      plateauComp = plateauCompensatie[rondTrip(teller + (pulsenPerRev/4),  pulsenPerRev)];
       // plateauComp = plateauCompensatie[rondTrip(teller + 580,  pulsenPerRev)];
       
     }
@@ -258,15 +258,6 @@ class COMPVAART{
 
 
 
-    // void recalCompSamples(){
-    //   for(int i = 0;   i < pulsenPerRev;   i+=2){
-    //     compSamples[i] = eepLeesFloat(i);
-    //     compSamples[i+1] = compSamples[i];
-    //   }
-
-    //   Serial.println("gerecalt");
-    // }
-
 
 
     void recalCompSamples(){
@@ -299,22 +290,6 @@ class COMPVAART{
 
 
 
-
-    // void saveCompSamples(){
-    //   eepromPauze = true;
-    //   delay(20);
-    //   // enableInterupts(false);
-
-    //   for(int i = 0;   i < pulsenPerRev;   i+=2){
-    //     eepSchrijfFloat(i,   (compSamples[i] + compSamples[i+1])/2);
-    //   }
-
-    //   // bool error = EEPROM.commit();
-    //   // Serial.println(error ? "opgeslagen: "   :   "faaal: ");
-
-    //   eepromPauze = false;
-    //   // enableInterupts(true);
-    // }
 
 
 
