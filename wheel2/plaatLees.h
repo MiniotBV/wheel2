@@ -17,6 +17,9 @@ float plaatLeesBuffer[2000][2];
 int plaatLeesBufferTeller = 0;
 int plaatLeesBufferLengte = 0;
 
+float nummersRuw[100];
+int nummersRuwPlateauRotatie[100];
+
 bool knip;
 
 
@@ -114,7 +117,7 @@ void zetNummersAlsEenSingletje(){
 
 
 
-void nieuwNummer(float pos){
+void nieuwNummer(float pos,  int rotatie){
 	if(hoeveelNummers == 0){
 		// Serial.println("einde plaat: " + String(pos));
 	}else{
@@ -124,6 +127,10 @@ void nieuwNummer(float pos){
 	}
 
 	nummers[hoeveelNummers] = pos;
+  
+  nummersRuw[hoeveelNummers] = pos;
+  nummersRuwPlateauRotatie[hoeveelNummers] = rotatie;
+  
 	hoeveelNummers++;  
 }
 
@@ -147,13 +154,14 @@ void scannenVoorTracks(){
 
   plaatLeesBuffer[plaatLeesBufferTeller][0] = sensorPos; //   opslaan voor na check
   plaatLeesBuffer[plaatLeesBufferTeller][1] = waarde;
+  plaatLeesBuffer[plaatLeesBufferTeller][2] = strobo.teller;
   plaatLeesBufferTeller++;
 
   if(waarde < trackTresshold / 2 &&   trackOnderTresh){  trackOnderTresh = false; }
 
 	if(waarde > trackTresshold     &&  !trackOnderTresh){
 		trackOnderTresh = true;
-		nieuwNummer(sensorPos);
+		nieuwNummer(sensorPos, strobo.teller);
   }
 
 
@@ -197,10 +205,24 @@ void plaatLeesNaKijken(){
 
     if(waarde > nieuweTreshold     &&  !trackOnderTresh){
       trackOnderTresh = true;
-      nieuwNummer(plaatLeesBuffer[i][0]);
+      nieuwNummer(plaatLeesBuffer[i][0], plaatLeesBuffer[i][2]);
     }
   }
 
+}
+
+
+
+
+
+void plaatLeesUitCenterComp(){
+  if( arm.isNaaldEropVoorZoLang(2000)  &&  staat == S_SPELEN ){
+    for(int i = 0; i < hoeveelNummers; i++){
+
+      float uitMidden = strobo.berekenKarFourier(nummersRuwPlateauRotatie[i]);
+      nummers[i] = nummersRuw[i] + uitMidden;
+    }
+  }
 }
 
 
@@ -220,6 +242,8 @@ void plaatLeesFunc(){
 		plaatLeesLeduit();
 		return;
 	}
+
+  
 
 
 
@@ -258,6 +282,10 @@ void plaatLeesFunc(){
 
 
 	knip = !knip; //toggle led
+
+
+
+  plaatLeesUitCenterComp();
 
 
 

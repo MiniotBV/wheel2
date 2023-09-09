@@ -271,9 +271,10 @@ class COMPVAART
         karCosFilt += ( karCos - karCosFilt ) / 2000;
 			}
 
-			karFourier  = ( ( ( sinus[teller] * karSin )  +  ( cosin[teller] * karCos ) ) / pulsenPerRev ) * 2;
+			// karFourier  = ( ( ( sinus[teller] * karSin )  +  ( cosin[teller] * karCos ) ) / pulsenPerRev ) * 2;
+			// karFourierFilt  = ( ( ( sinus[teller] * karSinFilt )  +  ( cosin[teller] * karCosFilt ) )  / pulsenPerRev  ) * 2;
 
-			karFourierFilt  = ( ( ( sinus[teller] * karSinFilt )  +  ( cosin[teller] * karCosFilt ) )  / pulsenPerRev  ) * 2;
+      karFourierFilt = berekenKarFourier(teller);
 			
 
 
@@ -459,6 +460,9 @@ class COMPVAART
 
 
 
+    float berekenKarFourier(int rotatie){
+      return ( ( ( sinus[rotatie] * karSinFilt )  +  ( cosin[rotatie] * karCosFilt ) )  / pulsenPerRev  ) * 2;
+    }
 
 
 
