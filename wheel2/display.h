@@ -76,6 +76,7 @@ void displayPrint(float tijd){
 
 void commitDisplay(){
 	gpio_put(displayLATCH, 0);
+  delayMicroseconds(2);
 	gpio_put(displayLATCH, 1);
 }
 
@@ -575,5 +576,22 @@ void displayUpdate(){
 //   cancelled = cancel_repeating_timer(&timer);
 //   Serial.print("cancelled..."); Serial.println(cancelled);
 //   sleep_ms(2000);
+
+
+
+
+
+
+
+
+// void setPwm(int pin){
+// 	gpio_set_function(pin, GPIO_FUNC_PWM);
+// 	pwm_set_enabled(  pwm_gpio_to_slice_num(pin),  true);
+// 	pwm_set_wrap(  pwm_gpio_to_slice_num(pin),   PMAX + 1);
+// }
+
+// void pwmWrite(int pin, int level){
+// 	pwm_set_chan_level(  pwm_gpio_to_slice_num(pin),  pwm_gpio_to_channel(pin), level);
+// }
 
 

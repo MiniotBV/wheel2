@@ -13,6 +13,7 @@
 #include "pico/time.h"
 
 
+
 #include "pins.h"
 #include "helper.h"
 
@@ -82,7 +83,7 @@ Interval ledInt(200, MILLIS);
 void setup() {
 	analogReadResolution(12);// moet sinds nieuwe core versie, anders leest hij in 10bit
 
-	Serial.begin();
+	Serial.begin();  
 
   Wire1.setSCL(SCL);
 	Wire1.setSDA(SDA);
@@ -95,7 +96,7 @@ void setup() {
 
 	versterkerInit();
 
-	displayInit();  
+	
 
 	arm.armInit();
 
@@ -144,6 +145,9 @@ void core1Dingen(){
 
 
 void loop2(){
+
+  displayInit();
+
 	while(1){
 		core1Dingen();
 

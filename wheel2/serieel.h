@@ -174,7 +174,8 @@ void infoPrintln(int info){
 void checkenVoorCommando(int info){
 
 	infoPrintln(info);
-  if(checkZinCommando("RST",    "herstart",       info)){ rp2040.restart(); return;}
+  if(checkZinCommando("RST",    "herstart",       info)){ rp2040.reboot(); return;}
+  // if(checkZinCommando("BOOT",   "boot sel",       info)){ rp2040.reset_to_usb_boot(); return;}
 
   if(checkZinCommando("AT+",    "bluetooth commando",       info)){ bluetoothScrijf(zinRuw); return;}
   if(checkZinBool(    "BT",     "bluetoot uart",            info, bluetoothDebug)){return;}
@@ -313,6 +314,8 @@ void checkenVoorCommando(int info){
 		Serial.println("strobo.onbalansFase: " + String(strobo.onbalansFase));
     Serial.println("strobo.onbalansCompGewicht: " + String(strobo.onbalansCompGewicht));
     Serial.println("strobo.onbalansFilterBreedte: " + String(strobo.onbalansFilterBreedte));
+    Serial.println("strobo.onbalansFilterCurveBreedte: " + String(strobo.onbalansFilterCurveBreedte));
+    
 
   
 		// Serial.println("strobo.sampleNum: " + String(strobo.sampleNum));
