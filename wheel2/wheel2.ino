@@ -29,8 +29,8 @@ void uitEnkeleCoreModus(){
 
 
 void enableInterupts(bool aan){
-    gpio_set_irq_enabled_with_callback(plateauA,   GPIO_IRQ_EDGE_RISE + GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
-    // gpio_set_irq_enabled_with_callback(plateauA,   GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
+    // gpio_set_irq_enabled_with_callback(plateauA,   GPIO_IRQ_EDGE_RISE + GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
+    gpio_set_irq_enabled_with_callback(plateauA,   GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
   // gpio_set_irq_enabled_with_callback(plateauB,   GPIO_IRQ_EDGE_FALL + GPIO_IRQ_EDGE_RISE,  true,   &gpio_callback);
     gpio_set_irq_enabled_with_callback(plateauIndex,   GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
 
@@ -48,7 +48,8 @@ VAART strobo(14, 1800); //1800
 
 #include "compVaartSensor.h"
 // COMPVAART TLE5012(16, 4096); //elker 5ms is 11.4 samples en 22.75 per 10ms
-COMPVAART TLE5012(64, 8192); //elker 5ms is 11.4 samples en 22.75 per 10ms
+COMPVAART TLE5012(32, 4096); //elker 5ms is 11.4 samples en 22.75 per 10ms
+// COMPVAART TLE5012(64, 8192); //elker 5ms is 11.4 samples en 22.75 per 10ms
 
 
 
@@ -123,6 +124,8 @@ void setup() {
   
 
   stoppen();
+
+  armHoekCalibreer();
 }
 
 
@@ -197,9 +200,9 @@ void gpio_callback(uint gpio, uint32_t events) {
   // interruptBezig = true;
   if(!encoderBezig){
     if( gpio == plateauA){// || gpio == plateauB){
-      encoderBezig = true;
+      // encoderBezig = true;
       TLE5012.interrupt();
-      encoderBezig = false;
+      // encoderBezig = false;
     }
   }
   

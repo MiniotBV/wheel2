@@ -9,7 +9,7 @@
 
 bool plaatAanwezig = false;
 
-#define karP  0.0001 //0.00005;//0.00025;
+float karP = 0.0001; //0.00005;//0.00025;
 
 
 #define KAR_SNELHEID 0.02
@@ -38,6 +38,7 @@ bool karMotorEnable = false;
 float karMotorPos = 0;
 float karOffset = 0;
 float karPos = 0;
+float karPosPrev = 0;
 float karTargetPos = 0;
 float sensorPos;
 
@@ -47,8 +48,8 @@ float plaatAanwezigSindsKarPos = 0;
 float armHoekRuw = analogRead(hoekSensor);
 float armHoek;
 float armHoekFilterWaarde = 1;
-float armHoekSlow = armHoek;
-float armHoekSlowFilterWaarde = 1000;
+float armHoekSlow = armHoekRuw;
+float armHoekSlowFilterWaarde = 2000;
 float armHoekOffset = 1920;
 
 
@@ -66,8 +67,8 @@ void karInit(){
 
 void armHoekCalibreer(){
   armHoekOffset = armHoekSlow;
-  // Serial.print("armHoekofset: ");
-  // Serial.println(armHoekOffset);
+  Serial.print("armHoekofset: ");
+  Serial.println(armHoekOffset);
 }
 
 
@@ -197,7 +198,7 @@ void staatDingen(){
       return;
     }
 
-    if(armHoek < -400){
+    if(armHoek < -1000){
       Serial.print("div; ");
       Serial.println(  (karOffset + karPos)  );
       karOffset -= KAR_HOME - karPos;
@@ -303,8 +304,10 @@ void staatDingen(){
 
   else if(staat == S_NAALD_EROP){
     if(isNaaldErop()){
-      karPos += limieteerF( -karP * armHoek , -KAR_SNELHEID / 2, KAR_SNELHEID / 2);
-      karPos = limieteerF( karPos, PLAAT_EINDE, PLAAT_BEGIN + 2);
+      if(abs(armHoek) > 10){
+        karPos += limieteerF( -karP * armHoek , -KAR_SNELHEID / 2, KAR_SNELHEID / 2);
+        karPos = limieteerF( karPos, PLAAT_EINDE, PLAAT_BEGIN + 2);
+      }
       
       if(karPos <= PLAAT_EINDE){
         stoppen();
@@ -422,20 +425,27 @@ Interval karMotorInt(1000, MICROS);
 
 
 void karMotorFunc(){
-  if(armHoekInt.loop()){
+  // if(armHoekInt.loop()){
 
-    // armHoek = analogRead(hoekSensor);
-    armHoekRuw += (analogRead(hoekSensor) - armHoekRuw) / armHoekFilterWaarde;
-    armHoekSlow += (armHoekRuw - armHoekSlow) / armHoekSlowFilterWaarde;
+  //   // armHoek = analogRead(hoekSensor);
+  //   armHoekRuw += (analogRead(hoekSensor) - armHoekRuw) / armHoekFilterWaarde;
+  //   armHoekSlow += (armHoekRuw - armHoekSlow) / armHoekSlowFilterWaarde;
 
-    armHoek = armHoekRuw - armHoekOffset;
-  }
+  //   armHoek = armHoekRuw - armHoekOffset;
+  // }
 
 
 
     
       
   if(karMotorInt.loop()){
+
+    armHoekRuw += (analogRead(hoekSensor) - armHoekRuw) / armHoekFilterWaarde;
+    armHoekSlow += (armHoekRuw - armHoekSlow) / armHoekSlowFilterWaarde;
+
+    armHoek = armHoekRuw - armHoekOffset;
+
+
 
     staatDingen();
 

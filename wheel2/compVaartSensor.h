@@ -38,7 +38,7 @@ Interval compInt(0, MILLIS);
 class COMPVAART{
   public:
     volatile unsigned int vaartInterval;
-    volatile unsigned int sampleNum;
+    volatile          int sampleNum;
     volatile          int samples[200];
     volatile unsigned int sampleTeller = 0;
     volatile unsigned long tijd;
@@ -93,6 +93,14 @@ class COMPVAART{
       // bool B = gpio_get(plateauB);
 
       dir = 1;
+      if(!gpio_get(plateauB)){
+        dir = -1;
+      }
+      // if(digitalRead(plateauB)){
+      //   dir = -1;
+      // }
+
+      // dir = 1;
       // if(!A && B   ||  A && !B){
       //   dir = -1;
       // }  
@@ -107,7 +115,6 @@ class COMPVAART{
       
       // shiftSamples(interval);
 
-      // teller = limieteerI(teller + dir,   0,   pulsenPerRev);  
       teller = rondTrip(teller + dir,  pulsenPerRev);
       
       // divAvrg[divTeller++ % divSamps] = getVaart() / strobo.getVaart();
@@ -118,14 +125,16 @@ class COMPVAART{
       // div = buf / divSamps;
 
       
-      getDiv();
+      
 
       shiftSamples((interval * dir) * compSamples[teller]);
       
       dav = compSamples[teller];
 
+      getDiv();
 
       if(compensatieMeten){
+        
         if(isOngeveer(div, 1, 0.3)){
           compSamples[rondTrip(teller - 10,  pulsenPerRev)] += ( div - 1 ) / 3;
         }
@@ -273,7 +282,7 @@ class COMPVAART{
 
         if(glitchTeller > 6){
           glitchTeller = 0;
-          clearSamples();        
+          // clearSamples();        
         }
       
       }else{
@@ -322,13 +331,13 @@ class COMPVAART{
 
 
 
-    double gemiddeldeInterval(){
-      double totaal = 0;
+    float gemiddeldeInterval(){
+      int totaal = 0;
       
       for(byte i = 0;   i < sampleNum;   i++){
         totaal += samples[i];
       }
-      return totaal / sampleNum;      
+      return totaal / float(sampleNum);      
     }
 
 

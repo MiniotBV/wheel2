@@ -10,6 +10,7 @@ Interval serieelInt(10000, MICROS);
 void serieelFunc(){
   if(serieelInt.loop()){
     if(golven){
+      // TLE5012.getDiv();
       Serial.print(TLE5012.vaart);
       Serial.print(", ");
       Serial.print(TLE5012.glad);
@@ -17,8 +18,10 @@ void serieelFunc(){
       // Serial.print(TLE5012.vaartRuw);
       // Serial.print(", ");
       // Serial.print(TLE5012.gladNieuw);
-      Serial.print(", ");
-      Serial.print(strobo.vaart);
+      
+      // Serial.print(", ");
+      // Serial.print(strobo.vaart);
+      
       // Serial.print(", ");
       // Serial.print(strobo.glad);
       
@@ -52,11 +55,16 @@ void serieelFunc(){
       Serial.print(", ");
       Serial.print(armHoekSlow);//1696);
       
-      Serial.print(", ");
-      Serial.print(armHoekRuw);//1696);
+      // Serial.print(", ");
+      // Serial.print(armHoekRuw);//1696);
 
       Serial.print(", ");
       Serial.print(armHoek);//1696);
+
+      Serial.print(", ");
+      Serial.print((karPos - karPosPrev)*1000.0);//1696);
+      karPosPrev = karPos;
+
       // Serial.print(", ");
       // Serial.print(karPos);
       
@@ -105,6 +113,11 @@ void serieelFunc(){
       }
       else if(letter == 'O'){    //set armhoekOfset
         armHoekCalibreer();
+      }
+      else if(letter == 'k'){    //set karP
+        karP = Serial.parseFloat();
+        Serial.print("p: ");
+        Serial.println(karP);
       }
       else if(letter == 'p'){    //set P
         plateauP = Serial.parseFloat();
