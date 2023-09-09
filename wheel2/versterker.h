@@ -3,7 +3,7 @@
 
 
 
-/*
+
 char i2cRead(byte adress, byte reg)
 {
 	int err = 0;
@@ -49,7 +49,7 @@ bool get_bit(uint8_t byte, uint8_t n)
 {
 		return (byte >> n) & 1U;
 }
-*/
+
 
 
 

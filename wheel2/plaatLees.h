@@ -15,7 +15,6 @@ float plaatLeesMin;
 
 bool knip;
 
-float sensorPos;
 
 
 

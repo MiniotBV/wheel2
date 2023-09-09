@@ -161,7 +161,7 @@ void checkenVoorCommando(int info){
 	infoPrintln(info);
 
 	if(checkZinBool("g", "golven", info, golven)){return;}
-	if(checkZinBool("PLG", "plaatLeesGolven", info, plaatLeesGolven)){return;}
+	if(checkZinBool("PLG", "plaatLeesGolven", info, lees.showGolven)){return;}
 	if(checkZinBool("KG", "karGolven", info, karGolven)){return;}
 	if(checkZinBool("SG", "strobo.golven", info, strobo.golven)){return;}
 
@@ -193,7 +193,7 @@ void checkenVoorCommando(int info){
 
 	//-------------------------------------------------------KAR SENSORS / TRACK SHIT
 	infoPrintln(info);
-	if(checkZinFloat("PLS", "plaatLeesStroom", info, plaatLeesStroom)){return;}
+	if(checkZinFloat("PLS", "plaatLeesStroom", info, lees.stroom)){return;}
 	if(checkZinInt("VOL", "volume", info, volume)){ volumeOverRide = true; return;}
 
 	if(checkZinFloat("TO", "trackOffset", info, trackOffset)){return;}

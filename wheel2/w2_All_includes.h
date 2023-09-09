@@ -8,7 +8,7 @@
 #include "hardware/gpio.h"
 #include "pico/time.h"
 #include "pins.h"
-#include "helper.h"
+#include "helper 2.h"
 #include "rpm.h"
 WheelRpm rpm;
 #include "pwm.h"
@@ -25,9 +25,9 @@ Interval ledInt(200, MILLIS);
 #include "w2_i2c.h"
 #include "orientatie.h"
 Orientatie orientatie;
-#include "versterker.h"
-#include "plaatLees.h"
-//PlaatLees lees;
+#include "versterker 2.h"
+#include "plaatLees 2.h"
+PlaatLees lees;
 #include "kar.h"
 #include "knoppen.h"
 #include "display.h"

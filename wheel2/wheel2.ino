@@ -92,7 +92,7 @@ void setup() {
 	displayInit();  
 	arm.armInit();
 	karInit();
-	plaatLeesInit();
+	lees.init();
 	plateauInit();
 
 
@@ -156,7 +156,7 @@ void loop() {
 	}
 
 
-	plaatLeesFunc();	//lees.loopFunc();
+	lees.loopFunc();
 	karMotorFunc();
 	volumeFunc();
 	plateauFunc();
