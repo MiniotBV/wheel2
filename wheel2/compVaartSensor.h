@@ -250,8 +250,9 @@ class COMPVAART
 			spoorafstand = karPosMiddenGeschiedenis[teller] - karPosMidden;
 			karPosMiddenGeschiedenis[teller] = karPosMidden;
 
-      if(spoorafstand > 0.01  ||  !(staat == S_SPELEN  &&  arm.isNaaldEropVoorZoLang(2000))){
+      if(spoorafstand > 0.01  ||  !(arm.isNaaldEropVoorZoLang(2000))){
         naaldNaarVorenBewogen.reset();
+      }else{
       }
 
 

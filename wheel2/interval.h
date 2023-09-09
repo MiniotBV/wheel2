@@ -1,3 +1,4 @@
+#include "hardware/timer.h"
 #define MILLIS 0
 #define MICROS 1
 
@@ -5,9 +6,9 @@
 
 class Interval{
 	public:
-		unsigned long interval = 0;
-		unsigned long vorrigeTijd = 0;
-		unsigned long vorrigeVorrigeTijd = 0;
+		uint32_t interval = 0;
+		uint32_t vorrigeTijd = 0;
+		uint32_t vorrigeVorrigeTijd = 0;
 		int eenheid = MILLIS;
     bool eenKeerLatch = true;
 
@@ -35,7 +36,7 @@ class Interval{
 		}
 
 
-		void offset(int ofst){
+		void offset(uint32_t ofst){
 			vorrigeTijd += ofst;
 		}
 
@@ -55,7 +56,7 @@ class Interval{
     }
 		
 
-		unsigned long  sinds(){
+		uint32_t  sinds(){
 			return tijd() - vorrigeTijd;
 		}
 
@@ -64,12 +65,15 @@ class Interval{
 		}
 
 
-		unsigned long tijd(){
+		uint32_t tijd(){
 			if(eenheid == MILLIS){
 				return millis();
 			}
 			if(eenheid == MICROS){
-				return micros();
+				return micros(); //
+        // time_us_32()
+        // time_us_64();
+        
 			}
 
 			return 0;
