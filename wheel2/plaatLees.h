@@ -204,7 +204,7 @@ void plaatLeesFunc(){
       plaatDetectie();
 
       if(staat == S_PLAAT_AANWEZIG){
-        if(staatVeranderd.sinds() > 500){
+        if(staatVeranderd.sinds() > 1000){
           if(plaatAanwezig){
             armHoekCalibreer();
             setStaat(S_NAAR_BEGIN_PLAAT);

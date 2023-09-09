@@ -34,7 +34,7 @@ float mm2stap = 1 / stap2mm;             // 4.188790204786391
 int stapperFaseA = 0;
 int stapperFaseB = 0;
 
-bool karMotorEnable = false;
+bool karMotorEnable = true;
 float karMotorPos = 0;
 float karOffset = 0;
 float karPos = 0;
@@ -49,7 +49,7 @@ float armHoekRuw = analogRead(hoekSensor);
 float armHoek;
 float armHoekFilterWaarde = 1;
 float armHoekSlow = armHoekRuw;
-float armHoekSlowFilterWaarde = 2000;
+float armHoekSlowFilterWaarde = 100;
 float armHoekOffset = 1920;
 
 
@@ -67,8 +67,8 @@ void karInit(){
 
 void armHoekCalibreer(){
   armHoekOffset = armHoekSlow;
-  Serial.print("armHoekofset: ");
-  Serial.println(armHoekOffset);
+  // Serial.print("armHoekofset: ");
+  // Serial.println(armHoekOffset);
 }
 
 
@@ -180,12 +180,12 @@ void pauze(){
 void staatDingen(){
   
   if(staat == S_STOPPEN){
-    if(millis() < 3000){//pas 1 seconden na opstart naar home gaan om de armhoek sensor te calibreren
-      armHoekCalibreer();
-      return;
-    }
+    // if(millis() < 3000){//pas 1 seconden na opstart naar home gaan om de armhoek sensor te calibreren
+    //   armHoekCalibreer();
+    //   return;
+    // }
     if(isNaaldEraf()){
-      karMotorEnable = true;
+      // karMotorEnable = true;
       setStaat(S_NAAR_HOK);
     }
   }
@@ -193,8 +193,13 @@ void staatDingen(){
 
 
   else if(staat == S_NAAR_HOK  ||  staat == S_HOMEN_VOOR_SPELEN){
-    if(staatVeranderd.sinds() < 300){//even wachten en teruch rijden
+    if(staatVeranderd.sinds() < 500){//even wachten en teruch rijden
       karPos += KAR_SNELHEID/5;
+      return;
+    }
+
+    if(staatVeranderd.sinds() < 1000){//calibreren
+      armHoekCalibreer();
       return;
     }
 
@@ -226,7 +231,9 @@ void staatDingen(){
   else if(staat == S_HOK){
     if(karPos < KAR_HOK){
       karPos += KAR_SNELHEID;
+      return;
     }
+    karMotorEnable = false;
   }
 
 
@@ -345,6 +352,10 @@ void staatDingen(){
 
   else if(staat == S_PAUZE){
     if(isNaaldEraf()){
+      if(staatVeranderd.sinds() > 3000){
+        armHoekCalibreer();
+      }
+      
       if(karPos == karTargetPos){
         // naaldErop();
       }else{
@@ -458,6 +469,7 @@ void karMotorFunc(){
 
 
     if(karMotorEnable){
+    // if(staat != S_HOK){
 
       pwmFase( sin(karMotorPos),  stapperAP, stapperAN, true);
       pwmFase( cos(karMotorPos),  stapperBP, stapperBN, true);
@@ -467,6 +479,8 @@ void karMotorFunc(){
       pwmFase( 0,  stapperAP, stapperAN, true);
       pwmFase( 0,  stapperBP, stapperBN, true);
     }
+
+    karMotorEnable = true;
 
   }
 }

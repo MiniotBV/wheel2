@@ -41,7 +41,7 @@ class VAART{
 
       shiftSamples(interval);
 
-
+      // getVaart();
       
 
       // filter[0] = huidigeVaart(interval);
@@ -56,7 +56,7 @@ class VAART{
       
 
 
-      teller = teller > 4096 ? 0 : teller + 1;  
+      // teller = teller > 4096 ? 0 : teller + 1;  
     }
 
 

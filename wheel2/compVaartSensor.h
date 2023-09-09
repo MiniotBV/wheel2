@@ -45,22 +45,23 @@ class COMPVAART{
     volatile unsigned int interval;
     float gemiddelde = sampleMax;
 
-    int filterOrde = 4;
-    float filterWaarde = 1/20.0;
-    float filter[12];
+    // int filterOrde = 4;
+    // float filterWaarde = 1/20.0;
+    // float filter[12];
     
     float vaart;
-    float vaartRuw;
-    float gladNieuw;
+    // float vaartRuw;
+    // float gladNieuw;
     float glad;
     float div;
     float dav;
 
-    float divAvrg[64];
-    int divTeller;
-    int divSamps = 10;
+    // float divAvrg[64];
+    // int divTeller;
+    // int divSamps = 10;
 
     int glitchTeller;
+    int terugdraaiTeller = 0;
 
     int dir;
 
@@ -71,6 +72,18 @@ class COMPVAART{
     // float compSamples[4096];
     float compSamples[8192];
     bool compensatieMeten = false;
+
+
+    float plateauCompensatie[8192];
+    bool plateauCompensatieMeten = false;
+    float plateauComp = 0;
+
+
+
+
+
+
+
 
 
     COMPVAART(int samps, float ppr){
@@ -91,9 +104,15 @@ class COMPVAART{
 
 
       dir = 1;
-      // if(!gpio_get(plateauB)){
-      //   dir = -1;
-      // }
+      if(!gpio_get(plateauB)){
+        terugdraaiTeller++;
+        if(terugdraaiTeller > 6){
+          dir = -1;
+          return;
+        }     
+      }else{
+        terugdraaiTeller = 0;
+      }
 
 
       
@@ -111,14 +130,28 @@ class COMPVAART{
       
       dav = compSamples[teller];
 
-      getVaart();
-      // getDiv();
+      // getVaart();
+      getDiv();
 
       if(compensatieMeten){
         
         if(isOngeveer(div, 1, 0.3)){
           compSamples[rondTrip(teller - 10,  pulsenPerRev)] += ( div - 1 ) / 3;
         }
+      }
+      
+      plateauComp = plateauCompensatie[rondTrip(teller-32,  pulsenPerRev)];
+
+      if(plateauCompensatieMeten){
+        plateauCompensatie[teller] += ( vaart - targetRpm ) *0.8;
+
+        // float waarde = ( vaart - targetRpm ) *0.1;
+        // for(int i = 0; i < 32; i++){
+        //   plateauCompensatie[rondTrip(teller + i,  pulsenPerRev)] += waarde;
+        // }        
+      }else{
+        plateauCompensatie[teller] = 0;
+        plateauComp = 0;
       }
       
     }
@@ -263,7 +296,7 @@ class COMPVAART{
 
         if(glitchTeller > 6){
           glitchTeller = 0;
-          // clearSamples();        
+          clearSamples();        
         }
       
       }else{

@@ -18,15 +18,17 @@ void serieelFunc(){
       // Serial.print(TLE5012.vaartRuw);
       // Serial.print(", ");
       // Serial.print(TLE5012.gladNieuw);
+      Serial.print(", ");
+      Serial.print(TLE5012.plateauComp);
       
-      // Serial.print(", ");
-      // Serial.print(strobo.vaart);
+      Serial.print(", ");
+      Serial.print(strobo.vaart);
       
       // Serial.print(", ");
       // Serial.print(strobo.glad);
       
-      // Serial.print(", ");
-      // Serial.print(TLE5012.div, 3);
+      Serial.print(", ");
+      Serial.print(TLE5012.div, 3);
       // Serial.print(", ");
       // Serial.print(TLE5012.dav, 3);
 
@@ -55,8 +57,8 @@ void serieelFunc(){
       Serial.print(", ");
       Serial.print(armHoekSlow);//1696);
       
-      // Serial.print(", ");
-      // Serial.print(armHoekRuw);//1696);
+      Serial.print(", ");
+      Serial.print(armHoekRuw);//1696);
 
       Serial.print(", ");
       Serial.print(armHoek);//1696);
@@ -140,10 +142,10 @@ void serieelFunc(){
         Serial.print("targetRpm: ");
         Serial.println(targetRpm);
       }
-      else if(letter == 'm'){    //armmotor uit
-        karMotorEnable = !karMotorEnable;
-        Serial.println(karMotorEnable?"aan":"uit");
-      }
+      // else if(letter == 'm'){    //armmotor uit
+      //   karMotorEnable = !karMotorEnable;
+      //   Serial.println(karMotorEnable?"aan":"uit");
+      // }
       else if(letter == 'N'){    //arm motor aan
         setStaat(S_SCHOONMAAK);
       }
@@ -186,6 +188,11 @@ void serieelFunc(){
       }
       else if(letter == '~'){    //golven uit
         TLE5012.printCompSamples();
+      }
+
+
+      else if(letter == 'Q'){    //golven uit
+        TLE5012.plateauCompensatieMeten = !TLE5012.plateauCompensatieMeten;
       }
     
     }

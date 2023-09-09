@@ -138,17 +138,37 @@ void knoppenUpdate(){
         knopAlleInterval.reset();
         
         // Serial.print(knopNaam( knop));Serial.println(" los ");
-
-        if( (staat == S_NAALD_EROP  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)   &&   knop == KNOP_DOORSPOEL){
-          naarVolgendNummer();
-          ledBlink();  //led blink
+        
+        if(knop == KNOP_DOORSPOEL){
+          
+          if( (staat == S_NAALD_EROP  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)){
+            naarVolgendNummer();
+            ledBlink();  //led blink
+          }
         }
 
-        if( (staat == S_NAALD_EROP  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)   &&   knop == KNOP_TERUGSPOEL){
-          naarVorrigNummer();
-          ledBlink();  //led blink
-        }
 
+        if(knop == KNOP_TERUGSPOEL){
+
+          if( (staat == S_NAALD_EROP  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)){
+            naarVorrigNummer();
+            ledBlink();  //led blink
+          }
+          else if(staat == S_HOK){
+            if(rpmStaat == AUTO){
+              rpmStaat = R33;
+            }
+            else if(rpmStaat == R33){
+              rpmStaat = R45;
+            }
+            else{
+              rpmStaat = AUTO;
+            }
+
+            updatePlateauRpm();
+            specialeDisplayActie.reset();
+          }
+        }
 
         
         if(knop == KNOP_PLAY){
@@ -165,20 +185,7 @@ void knoppenUpdate(){
         }
 
 
-        if(knop == KNOP_RPM){
-          if(rpmStaat == AUTO){
-            rpmStaat = R33;
-          }
-          else if(rpmStaat == R33){
-            rpmStaat = R45;
-          }
-          else{
-            rpmStaat = AUTO;
-          }
 
-          updatePlateauRpm();
-          specialeDisplayActie.reset();
-        }
       }
       
       
@@ -308,7 +315,8 @@ void knoppenUpdate(){
     // potVolumeFilter += (potVolume - potVolumeFilter)/10;
 
     potVolumeDiv = potVolume - potVolumePrev;
-
+    
+    potVolumeDiv = -potVolumeDiv; //                             flip
     
 
 
@@ -318,7 +326,7 @@ void knoppenUpdate(){
         potVolumePrev = potVolume;
         
         armGewicht += potVolumeDiv * 4;
-        armGewichtUpdate();           
+        armGewichtUpdate();
       }
     }
 

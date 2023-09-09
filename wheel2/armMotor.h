@@ -1,42 +1,55 @@
-#define MAX_ARMGEWICHT 4//gr
 #define MIN_ARMGEWICHT 0.5//gr
-
+#define MAX_ARMGEWICHT 4//gr
 
 float armGewicht = 2.5;
-
-float armKracht500mg = 0.22;
-float armKracht4000mg = 0.56;
-
-float armTargetKracht = 0.4;
+float armTargetKracht;
 
 float armKracht = 0;
 float armSnelheidOp = 0.00025;
 float armSnelheidAf = 0.001;
 
 
+
+// float armKracht500mg = 0.22; //tweede proto
+// float armKracht4000mg = 0.56;
+// //op de plaat
+// float netUitHokKracht = 0.15;
+// float netOpDePlaatKracht = 0.2;
+// //van de plaat af
+// float netVanDePlaatKracht = 0.2;
+// float netInHokKracht = 0.15;
+
+float armKracht500mg = 0.33;  //derde proto
+float armKracht4000mg = 0.64;
 //op de plaat
-float netUitHokKracht = 0.15;
-float netOpDePlaatKracht = 0.2;
-
-
+float netUitHokKracht = 0.25;
+float netOpDePlaatKracht = 0.3;
 //van de plaat af
-float netVanDePlaatKracht = 0.2;
-float netInHokKracht = 0.15;
+float netVanDePlaatKracht = 0.3;
+float netInHokKracht = 0.20;
+
+
 
 
 bool armMotorAan = false;
 
 
-void armInit(){
-  setPwm(armMotor);
-}
-
-
-
 void armGewichtUpdate(){
   armGewicht = limieteerF(armGewicht,  MIN_ARMGEWICHT,   MAX_ARMGEWICHT);  
   armTargetKracht = mapF(armGewicht,   MIN_ARMGEWICHT,   MAX_ARMGEWICHT,    armKracht500mg, armKracht4000mg);
+  Serial.print("armTargetKracht: ");
+  Serial.println(armTargetKracht);
+  
 }
+
+void armInit(){
+  setPwm(armMotor);
+  armGewichtUpdate();
+}
+
+
+
+
 
 
 

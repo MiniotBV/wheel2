@@ -8,9 +8,11 @@ float basis = 0;
 float uitBuff;
 
 
-float plateauP = 0.05;    //pid
+float plateauP = 0.01;    //pid
 float plateauI = 0.01;
 float plateauD = 0;
+
+#define compBufLen 256
 
 
 
@@ -66,6 +68,7 @@ void plateauFunc(){
 
     // float vaart = TLE5012.getVaart();
     float vaart = TLE5012.vaart;
+    vaart += TLE5012.plateauComp;
 
     if(plateauAan){             //staat de motor aan?
 
