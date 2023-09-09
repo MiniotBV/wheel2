@@ -18,13 +18,13 @@
 #define SINGLETJE_PLAAT_BEGIN 85
 
 // #define PLAAT_EINDE 52.5
-#define PLAAT_EINDE 52.5
+#define PLAAT_EINDE 54
 
 // #define KAR_HOME 44//44.5 //met ouwe sparing
 // #define KAR_HOK 45.5
 
 #define KAR_HOME 42
-#define KAR_HOK 43.5
+#define KAR_HOK 44//43.5
 
 #define SCHOONMAAK_PLEK 100
 

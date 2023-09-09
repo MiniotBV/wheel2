@@ -13,12 +13,12 @@ float armSnelheidAf = 0.01;
 
 
 
-float armKracht500mg = 0.43;  //6de proto
-float armKracht4000mg = 0.76;
+float armKracht500mg = 0.33;  //7de proto
+float armKracht4000mg = 0.66;
 
 //op de plaat
 float netUitHokGewicht = -0.8;
-float netOpDePlaatGewicht = 0.2;
+float netOpDePlaatGewicht = 0.5;
 //van de plaat af
 float netVanDePlaatGewicht = 0;
 float netInHokGewicht = -1;

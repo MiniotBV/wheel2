@@ -12,12 +12,13 @@ float mm2stap = 1 / stap2mm;
 float karInterval;
 
 
-float karP = 0.0001;//0.0005; //0.00005;//0.00025;
+float karP = 0.002;//0.001;//0.0005; //0.00005;//0.00025;
 float karI = 0;//0.005; //0.00005;//0.00025;
-float karD = -0.0004;//-0.003;
+float karD = 0.001;//0.0006;//-0.003;
 
 float karBasis;
 float karPcomp = 0;
+float karDcomp = 0;
 
 
 
@@ -280,7 +281,7 @@ void staatDingen(){
       return;
     }
 
-    if(armHoek < -800){//-1000)
+    if(armHoek < -500){//-800){//-1000)
       Serial.print("div; ");
       Serial.println(  (karOffset + karPos)  );
       karOffset -= KAR_HOME - karPos;
@@ -354,6 +355,7 @@ void staatDingen(){
       
 
       if(plaadDiaInch < 6){//kleiner dan 6" dan stoppen
+        Serial.println("geen plaat? plaatDia: " + String(plaadDiaInch));
         stoppen();
         return;
       }
@@ -432,18 +434,24 @@ void staatDingen(){
     
     if(naaldErop()){
       
-      float acu = 0;
-      acu += limieteerF(armHoek * -karP, -0.5, 0.5);
-      acu += limieteerF(armHoekDiv * karD, -0.3, 0.3);
-      // karBasis += armHoek * -karI;
-      // acu += limieteerF(karBasis, -0.1, 0.1);
+      // float acu = 0;
+      // acu += limieteerF(armHoek * -karP, -0.5, 0.5);
+      // acu += limieteerF(armHoekDiv * -karD, -0.3, 0.3);
+      // // karBasis += armHoek * -karI;
+      // // acu += limieteerF(karBasis, -0.1, 0.1);
 
-      karPos += acu;
+      // karPos += acu;
+
+
+      // karPcomp = 0;
+      // karPcomp += limieteerF(armHoek * karP, -0.5, 0.5);
+      // karPcomp += limieteerF(armHoekDiv * karD, -0.3, 0.3);
+      // karPos += limieteerF(armHoek * karI, -0.1, 0.1);
       
-      // nieuwePos = karPos + limieteerF(armHoek * -karP, -3, 3);
+      nieuwePos = karPos + limieteerF(armHoek * -karP, -3, 3);
       // nieuwePos += limieteerF(armHoekDiv * karD, -0.3, 0.3);
-      // nieuwePos = limieteerF(nieuwePos, 0, plaatBegin);
-      // beweegKarNaarPos(nieuwePos, KAR_MAX_SNELHEID);
+      nieuwePos = limieteerF(nieuwePos, 0, plaatBegin);
+      beweegKarNaarPos(nieuwePos, KAR_MAX_SNELHEID);
       
       if(karPos <= PLAAT_EINDE){
         Serial.println("kar heeft de limiet berijkt");
@@ -589,9 +597,17 @@ bool karMotorUitvoeren(){
   staatDingen();
 
 
+  // karPos += limieteerF(armHoekDiv * -karD, -0.05, 0.05);//------------ Om oscilatie te voorkomen  
 
+  karDcomp *= 0.99;
+  karDcomp += armHoekDiv * -karD;//------------ Om oscilatie te voorkomen
+  karDcomp = limieteerF(karDcomp, -1, 1);
+
+  //  karMotorPos = (karPos + karOffset + limieteerF(armHoekDiv * -karD, -1, 1) )  *  mm2stap;
+
+  karMotorPos = (karPos + karOffset + karDcomp)  *  mm2stap;
   // karMotorPos = (karPos + karOffset + karPcomp)  *  mm2stap;
-  karMotorPos = (karPos + karOffset)  *  mm2stap;
+  // karMotorPos = (karPos + karOffset)  *  mm2stap;
 
 
   if(karMotorEnable){

@@ -373,7 +373,9 @@ void knoppenUpdate(){
     riemFilter += (riem - riemFilter)/3;
 
 
-    
+    if(orientatie.isStaand){
+
+    }
 
 
     if( !isOngeveer(riemFilter, riemFilterPrev, 0.01) ){
@@ -382,7 +384,11 @@ void knoppenUpdate(){
       
       riemDiv = riemFilterDiv;    
       // riemDiv = riem - riemPrev;
-      riemDiv = -riemDiv; // flip
+
+      if(!orientatie.isStaand){
+        riemDiv = -riemDiv; // flip
+      }
+      
 
       if(staat == S_SCHOONMAAK){
         armGewicht += riemDiv * 4;

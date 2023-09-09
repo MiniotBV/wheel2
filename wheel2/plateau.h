@@ -167,7 +167,18 @@ void plateauStaatDingen(){
   
   float glad = strobo.glad;//gladglad;
 
+
+
   if(plateauAan){                   //staat de motor aan?
+
+    if(staat == S_FOUTE_ORIENTATIE  ||
+    staat == S_ERROR  ||
+    staat == S_HOK
+    ){
+      Serial.println("plateau was perongeluk nog aant draaien");
+      plateauStoppen();
+    }
+    
 
     if( opsnelheid == true){ //         tegen gehouden
       

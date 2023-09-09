@@ -269,19 +269,19 @@ void volumeFunc(){
   if(versterkerInt.loop()){
     
 
-    if( volume != volumeOud   ||   isNaaldEropOud != isNaaldErop()  || volumeOverRide){//  ||   jackIn != digitalRead(koptelefoonAangesloten)){
+    if( volume != volumeOud   ||   isNaaldEropOud !=    (isNaaldErop() && staat == S_SPELEN)    || volumeOverRide){//  ||   jackIn != digitalRead(koptelefoonAangesloten)){
       
       
       int waarde = volume;
       
-      if(!isNaaldErop() && !volumeOverRide){
+      if(!(isNaaldErop() && staat == S_SPELEN)   &&    !volumeOverRide){
         waarde = 0;
       }
 
       volumeOverRide = false;
       
       volumeOud = volume;
-      isNaaldEropOud = isNaaldErop();
+      isNaaldEropOud = (isNaaldErop() && staat == S_SPELEN);
       
       
       int err = 0;

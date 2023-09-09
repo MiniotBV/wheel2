@@ -84,9 +84,11 @@ void serieelFunc(){
       // Serial.print(", ");
       // Serial.print(armHoekSlow);//1696);
       Serial.print(", ");
+      Serial.print(armHoekOffset);//1696);
+      Serial.print(", ");
       Serial.print(armHoekRuw);//1696);
-      // Serial.print(", ");
-      // Serial.print(armHoek);//1696);
+      Serial.print(", ");
+      Serial.print(armHoek);//1696);
 
 
 
