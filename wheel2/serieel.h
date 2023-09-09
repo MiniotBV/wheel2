@@ -309,6 +309,7 @@ void checkenVoorCommando(int info){
 		Serial.println("staat: " + printStaat(staat));
 		Serial.println("volume: " + String(volume));
     Serial.println("draadlozeVersie: " + String(draadlozeVersie?"ja":"nee"));
+    Serial.println("temperatuur rp2040: " + String( analogReadTemp() , 2));
 
 		Serial.println();
 		
@@ -436,8 +437,8 @@ void serieelFunc(){
 			// Serial.print(", ");
 			// Serial.print(armHoekRuw);//1696);
       
-			// Serial.print(", ");
-			// Serial.print(armHoekCall, 4);//1696);
+			Serial.print(", ");
+			Serial.print(armHoekCall, 4);//1696);
       
 			// Serial.print(", ");
 			// Serial.print(armHoekSlow, 5);//1696);

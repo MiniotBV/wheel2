@@ -148,11 +148,13 @@ float pid(float rpmIn){
     
 
 
-    if(rpmIn > 15){
-      basis += divTarget * plateauI;            //breng basis voltage naar gemiddelde voor de juiste snelheid	
-    }else{
-      basis += divTarget * plateauI/20;            //breng basis voltage naar gemiddelde voor de juiste snelheid	
-    }
+    // if(rpmIn > 15){
+    //   basis += divTarget * plateauI;            //breng basis voltage naar gemiddelde voor de juiste snelheid	
+    // }else{
+    //   basis += divTarget * plateauI/20;            //breng basis voltage naar gemiddelde voor de juiste snelheid	
+    // }
+
+    basis += divTarget * plateauI;            //breng basis voltage naar gemiddelde voor de juiste snelheid	
     basis = limieteerF(basis, 40, 80);
 
 		pd = divTijd * plateauD;
