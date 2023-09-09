@@ -95,14 +95,12 @@ class COMPVAART
 
 		float onbalansFilterCurve[pprmax];
     float onbalansFilterCurveBreedte = 100;
+    int onbalansFase = 50;
+		float onbalansCompGewicht = 2;
     
-    int onbalansFase = 0;
-		
 		float onbalansCompensatie[pprmax];
-
 		volatile float onbalansComp = 0;
 		
-		float onbalansCompGewicht = 1.9;
 
 
 
@@ -356,7 +354,6 @@ class COMPVAART
           // staat == S_HOMEN_VOOR_SPELEN ||    
 					// staat == S_NAAR_BEGIN_PLAAT)
 			){ 
-        // onbalansCompensatie[teller] +=  vaartCenterComp - targetRpm;
         float snelheidsError = vaartCenterComp - targetRpm;
         for(int i = 0; i < pulsenPerRev; i++){
           onbalansCompensatie[rondTrip(teller + i, pulsenPerRev)] += onbalansFilterCurve[i] * snelheidsError;

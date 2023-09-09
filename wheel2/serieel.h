@@ -396,8 +396,8 @@ void serieelFunc(){
 
 
 
-			Serial.print(", ");
-			Serial.print(strobo.teller / float(strobo.pulsenPerRev));
+			// Serial.print(", ");
+			// Serial.print(strobo.teller / float(strobo.pulsenPerRev));
 
 			// Serial.print(", ");
 			// Serial.print(strobo.preComp, 4);
@@ -415,8 +415,10 @@ void serieelFunc(){
 
 			// Serial.print(", ");
 			// Serial.print(armHoekRuw);//1696);
-			Serial.print(", ");
-			Serial.print(armHoekCall, 4);//1696);
+      
+			// Serial.print(", ");
+			// Serial.print(armHoekCall, 4);//1696);
+      
 			// Serial.print(", ");
 			// Serial.print(armHoekSlow, 5);//1696);
 			// Serial.print(", ");
