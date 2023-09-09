@@ -172,7 +172,8 @@ float pid(float rpmIn){
 
 void plateauStaatDingen(){
 
-	if(!plateauLogica){return;}  
+	if(!plateauLogica){return;}
+  if(staat == S_PLAAT_SCHOONMAAK){return;} 
 	
 	float vaart = strobo.vaart;//gladglad;
 
@@ -259,10 +260,15 @@ Interval plateauInt(5000, MICROS);
 void plateauFunc(){
 
 	if(plateauInt.loop()){
-    gpio_put(plateauEN, !gpio_get(plateauEN));
 
 		strobo.update();
-		float vaart = strobo.vaartCenterComp;//strobo.vaart;
+
+    // if(staat == S_PLAAT_SCHOONMAAK){ // als de plaat schoonmaak stand aanstaad kan de motor gewoon een voltage krijgen
+    //   pwmFase(0.6, motorN, motorP, false);
+    //   return;
+    // }
+
+		float vaart = strobo.vaartCenterComp;
 
 		if(plateauAan){             //staat de motor aan?
 

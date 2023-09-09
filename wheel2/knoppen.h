@@ -153,9 +153,8 @@ void knopLogica(int knop){
     }
 
 		
-		if( staat == S_SCHOONMAAK ){//   SCHOONMAAK STAND STOPPEN
+		if( staat == S_NAALD_SCHOONMAAK || staat == S_PLAAT_SCHOONMAAK ){//   SCHOONMAAK STAND STOPPEN
 			stoppen();
-			// ledBlink();  //led blink
 		}
 		return;
 	}
@@ -281,6 +280,7 @@ void knopLogica(int knop){
 
 		if(  staat == S_HOK  &&  knop == KNOP_TERUGSPOEL  ){//               NAALD TEST STAND
 			schoonmaakStand();
+      ledBlink();
 		}
 		return;
 	}
@@ -367,7 +367,7 @@ void knoppenUpdate(){
 
 			
 
-			if(staat == S_SCHOONMAAK){
+			if(staat == S_NAALD_SCHOONMAAK  &&  arm.armMotorAan){
 				arm.targetGewicht += riemDiv * 0.0333;
 				arm.targetGewicht = limieteerF(arm.targetGewicht,   MIN_GEWICHT,   MAX_GEWICHT);
 			}

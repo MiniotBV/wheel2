@@ -207,7 +207,7 @@ void checkenVoorCommando(int info){
 	if(checkZinCommando("stop",   "stoppen()",                info)){ stoppen(); return;}
 	if(checkZinCommando("speel",  "spelen()",                 info)){ spelen(); return;}
 	if(checkZinCommando("pauze",  "pauze()",                  info)){pauze(); return;}
-	if(checkZinCommando("naald",  "S_SCHOONMAAK",             info)){ setStaat(S_SCHOONMAAK); return;}
+	if(checkZinCommando("naald",  "S_NAALD_SCHOONMAAK",             info)){ setStaat(S_NAALD_SCHOONMAAK); return;}
 	if(checkZinCommando("cal",    "S_CALIBREER",              info)){ setStaat(S_CALIBREER); return;}
 	if(checkZinBool(    "rep",    "herhaalDeHelePlaat",       info, herhaalDeHelePlaat)){return;}
 

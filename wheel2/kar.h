@@ -345,7 +345,7 @@ void staatDingen(){
 				setStaat(S_NAAR_BEGIN_PLAAT);
 
 			}else if(staat == S_HOMEN_VOOR_SCHOONMAAK){
-				setStaat(S_SCHOONMAAK);
+				setStaat(S_NAALD_SCHOONMAAK);
 
 			}else{
 				setStaat(S_PARKEREN);
@@ -600,15 +600,29 @@ void staatDingen(){
 
 
 
-	if(staat == S_SCHOONMAAK){
+	if(staat == S_NAALD_SCHOONMAAK){
 		if(beweegKarNaarPos(SCHOONMAAK_PLEK, KAR_MAX_SNELHEID)){
 			arm.naaldErop();
 		}
 
 		if(sensorPos > PLAAT_EINDE + 2  &&  sensorPos < PLAAT_EINDE + 12  && plaatAanwezig){  // ligt er een plaat op? dan stoppen
-      debug("kan niet in schoonmaak, er is een plaat of iets vergelijkbaars");
-			stoppen();
+      // debug("kan niet in naald schoonmaak, er is een plaat of iets vergelijkbaars");
+      setStaat(S_PLAAT_SCHOONMAAK);
+      plateauDraaien();
+      setPlateauRpm(rpm33);
+
 		}
+		return;
+	}
+
+
+  if(staat == S_PLAAT_SCHOONMAAK){
+    decelereerKar();
+
+    if(!plaatAanwezig){
+      debug("plaat erafgehaald");
+			stoppen();
+    }
 		return;
 	}
 

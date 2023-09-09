@@ -198,7 +198,7 @@ void displayUpdate(){
 
 
 		//----------------------------------------------------------------SCHOONMAAK STAND
-		else if(staat == S_SCHOONMAAK  ||  staat == S_HOMEN_VOOR_SCHOONMAAK){
+		else if(staat == S_NAALD_SCHOONMAAK && arm.armMotorAan){//}  ||  staat == S_HOMEN_VOOR_SCHOONMAAK){
 			
 			int volumePunt = mapF(arm.targetGewicht, 0, 4, 0, displayLengte) / 2.0;
       float verdeelPuntTeller = 0.5;//arm.targetGewicht / 2;
