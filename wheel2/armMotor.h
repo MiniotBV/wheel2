@@ -79,18 +79,15 @@ void armInit(){
 
 
 
-void berekenArmgewichtWaardes(){
-
-}
-
-
-
-
-
 Interval armInt(10, MILLIS);
 
 void armFunc(){
   if(armInt.loop()){
+
+    if(staat == S_CALIBREER){
+      return;
+    }
+
 
     if(armMotorAan == true){//moet de arm motor aan?
 
@@ -107,7 +104,6 @@ void armFunc(){
       }
     }
     
-
 
     if(armMotorAan == false){// moet de arm motor uit?
       

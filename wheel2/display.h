@@ -143,6 +143,31 @@ void displayUpdate(){
       }
     }
 
+   
+   //----------------------------------------------------------------CALIBREER STAND
+    else if(staat == S_CALIBREER){
+      float verdeelPuntTeller = 0;
+
+      for(int i = 0; i < displayLengte; i++){
+        displayData[i] = 0;
+
+        int volumePunt = mapF(armTargetKracht, 0, 1, (displayLengte-1) - volumeMargin,   volumeMargin);
+
+        if(i < (displayLengte-1) - volumeMargin    &&    i > volumePunt){
+          displayData[i] = 0.1;
+        }
+
+        if(i == volumeMargin   ||   i == (displayLengte-1) - volumeMargin){ //eind van de schaal punt
+          displayData[i] = 0.1;
+        }
+
+        if(i == volumePunt){
+          displayData[i] = 0.9;
+        }
+
+      }
+    }
+
 
 
 

@@ -18,7 +18,7 @@ enum staats{
   S_UITROLLEN_VOOR_SPELEN,
 
   S_SCHOONMAAK,
-  S_CALIBRATIE,
+  S_CALIBREER,
   S_HOMEN_GEFAALD,
   S_FOUTE_ORIENTATIE,
   S_ERROR,
@@ -52,6 +52,7 @@ String printStaat(int s){
   if( s == S_UITROLLEN_VOOR_SPELEN){ return "UITROLLEN_VOOR_SPELEN";}
 
   if( s == S_SCHOONMAAK           ){ return "SCHOONMAAK";}
+  if( s == S_CALIBREER            ){ return "CALIBREER";}
   if( s == S_HOMEN_GEFAALD        ){ return "HOMEN_GEFAALD";}
   if( s == S_ERROR                ){ return "ERROR";}
   if( s == S_FOUTE_ORIENTATIE     ){ return "FOUTE_ORIENTATIE";}

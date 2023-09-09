@@ -170,6 +170,10 @@ void serieelFunc(){
       else if(letter == 'f'){
         naaldEraf();
       }
+      else if(letter == 'a'){    //arm motor target
+        armTargetKracht = Serial.parseFloat();
+        Serial.println("armTargetKracht: " + String(armTargetKracht));
+      }
       else if(letter == 'A'){    //arm motor target
         armGewicht = Serial.parseFloat();
         armGewichtUpdate();
@@ -208,43 +212,36 @@ void serieelFunc(){
         Serial.println("volume: " + String(i));
       }
       else if(letter == '?'){    //help
-        Serial.println("help--------------");   
+        Serial.println("help----------------------------");   
         Serial.println("p: " + String(plateauP, 3));
         Serial.println("i: " + String(plateauI, 3));
         Serial.println("d: " + String(plateauD, 3));
-
+        Serial.println();
+        
         Serial.println("staat: " + printStaat(staat));
         Serial.println("volume: " + String(volume));
-
+        Serial.println();
+        
+        Serial.println("armTargetKracht: " + String(armTargetKracht));
+        Serial.println();
+        
         Serial.println("V faseVerschuiving: " + String(strobo.faseVerschuiving));
         Serial.println("C compFilter: " + String(strobo.compFilter));
         Serial.println("c compVermenigvuldiging: " + String(strobo.compVermenigvuldiging));
         Serial.println("I compverval: " + String(strobo.compVerval));
+        Serial.println();
         
         printKnoppen();
         orientatie.print();
 
-        Serial.println();
+        Serial.println("-----------------------------");  
       }
 
-      // else if(letter == 'I'){   
-      //   toggleAudioFreqMeting();
-      // }
-      // else if(letter == 'C'){    
-      //   strobo.clearCompSamples();
-      // }
-      // else if(letter == 'r'){    //
-      //   strobo.recalCompSamples();
-      // }
-      // else if(letter == 's'){    //
-      //   strobo.saveCompSamples();
-      // }
-      // else if(letter == 'c'){    //
-      //   strobo.toggleCompensatieModus();
-      // }
-      // else if(letter == '~'){    //
-      //   strobo.printCompSamples();
-      // }
+
+
+      else if(letter == '~'){    //
+        setStaat(S_CALIBREER);
+      }
 
 
       else if(letter == 'Q'){    //

@@ -22,6 +22,9 @@ bool eepromShit = false;
 
 #include "interval.h"
 
+
+#include "staat.h"
+
 #include "armMotor.h"
 
 
@@ -55,7 +58,6 @@ void toggleAudioFreqMeting(){
 
 
 
-#include "staat.h"
 
 
 #include "vaartSensor.h"

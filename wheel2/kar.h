@@ -502,7 +502,18 @@ void staatDingen(){
 
 
   if(staat == S_SCHOONMAAK){
-    if(beweegKarNaarPos( SCHOONMAAK_PLEK,   KAR_MAX_SNELHEID)){  naaldErop(); }
+    if(beweegKarNaarPos( SCHOONMAAK_PLEK,   KAR_MAX_SNELHEID)){
+      naaldErop();
+    }
+    return;
+  }
+
+
+  if(staat == S_CALIBREER){
+    if(beweegKarNaarPos( SCHOONMAAK_PLEK,   KAR_MAX_SNELHEID)){
+      // naaldErop(); 
+      pwmWriteF(armMotor, armTargetKracht);
+    }
     return;
   }
 
@@ -591,13 +602,6 @@ bool karMotorUitvoeren(){
     karPosFilter = karPos;
     karPosFilterSlow = karPos;
   }
-
-
-  // karPosFilter += (karPos - karPosFilter) / 3000;
-  // karPosFilter = limieteerF(karPosFilter, karPos-1, karPos+1);
-
-  // karPosFilterSlow += (karPosFilter - karPosFilterSlow) / 3000;
-  // karPosFilterSlow = limieteerF(karPosFilterSlow, karPos-1, karPos+1);
 
 
 

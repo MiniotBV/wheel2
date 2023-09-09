@@ -363,6 +363,11 @@ void knoppenUpdate(){
         armGewichtUpdate();
       }
 
+      else if(staat == S_CALIBREER){
+        armTargetKracht += riemDiv * 0.5;
+        armTargetKracht = limieteerF(armTargetKracht, 0, 1);
+      }
+
       else if(staat == S_PAUZE){
         targetNummerPos -= riemDiv * 50;
         targetNummerPos = limieteerF(targetNummerPos, PLAAT_EINDE, plaatBegin);      
