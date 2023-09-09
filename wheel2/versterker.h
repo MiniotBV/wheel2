@@ -284,7 +284,7 @@ Orientatie orientatie;
 
 
 bool jackIn = false;
-int volume = 30;
+int volume = 22;
 int volumeOud;
 bool isNaaldEropOud = false;
 bool volumeOverRide = false;

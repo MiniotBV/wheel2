@@ -566,7 +566,10 @@ void staatDingen(){
 
 
 	if(staat == S_CALIBREER){
-		if(beweegKarNaarPos( SCHOONMAAK_PLEK, KAR_MAX_SNELHEID)){}
+    if(staatVeranderd.sinds() < 100){
+      targetNummerPos = SCHOONMAAK_PLEK;
+    }
+		if(beweegKarNaarPos( targetNummerPos, KAR_MAX_SNELHEID)){}
 		return;
 	}
 
