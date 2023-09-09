@@ -235,32 +235,21 @@ void checkenVoorCommando(bool info){
     Serial.println();
 
 
-
     eepromPrint();
     Serial.println();
     
-    // Serial.println("V faseVerschuiving: " + String(strobo.faseVerschuiving));
-    // Serial.println("C compFilter: " + String(strobo.compFilter));
-    // Serial.println("c compVermenigvuldiging: " + String(strobo.compVermenigvuldiging));
-    // Serial.println("I compverval: " + String(strobo.compVerval));
-    // Serial.println();
     
     printKnoppen();
     orientatie.print();
-    Serial.println();      
+    Serial.println();
 
-    // Serial.println("antiCoggNul: " + String(antiCoggNul));
-    // Serial.println("antiCoggMacht: " + String(antiCoggMacht));
-    // Serial.println("antiCoggVerschuiving: " + String(antiCoggVerschuiving));     
-    // Serial.println();
 
     Serial.println("-------------------------------------------------\n\n\n");
-
     return;
   }
 
 
-  Serial.println("fout command: \"" + zin + "\"");
+  Serial.println("fout commando: \"" + zin + "\"");
 }
 
 
@@ -304,7 +293,7 @@ void serieelFunc(){
       // Serial.print(strobo.gladglad - targetRpm, 3);
 
       Serial.print(", ");
-      Serial.print(centerCompTargetRpm - targetRpm, 4);
+      Serial.print(centerCompTargetRpm - targetRpm, 3);
 
 
 
@@ -318,54 +307,46 @@ void serieelFunc(){
       // Serial.print(strobo.plateauComp, 4);
 
       Serial.print(", ");
-      Serial.print(uitBuff, 4);
-
-      
-
-      Serial.print(", ");
-      Serial.print(armHoekRuw);//1696);
-      Serial.print(", ");
-      Serial.print(armHoekCall, 5);//1696);
-      Serial.print(", ");
-      Serial.print(armHoekSlow, 5);//1696);
-      Serial.print(", ");
-      Serial.print(armHoekOffset, 5);//1696);
-
-
-
-
-
-
-      // Serial.print(", ");
-      // Serial.print(karPos, 4);  
-      // Serial.print(", ");
-      // Serial.print(egteKarPos, 4);
-
-      // Serial.print(", ");
-      // Serial.print(karPosMidden, 4);
-
-      // Serial.print(", ");
-      // Serial.print(karPosMidden + strobo.karFourier, 4);  
-
-      // Serial.print(", ");
-      // Serial.print(karPosMidden + strobo.karFourierFilt, 4);  
-
-
-
-
-      // Serial.print(", ");
-      // Serial.print(nieuweHoek, 4);  
+      Serial.print(uitBuff, 2);
 
       
 
       // Serial.print(", ");
-      // Serial.print(nieuwePos, 4);
+      // Serial.print(armHoekRuw);//1696);
+      Serial.print(", ");
+      Serial.print(armHoekCall, 4);//1696);
+      // Serial.print(", ");
+      // Serial.print(armHoekSlow, 5);//1696);
+      // Serial.print(", ");
+      // Serial.print(armHoekOffset, 5);//1696);
+
+
+
+
+
+
+      Serial.print(", ");
+      Serial.print(karPos, 3);  
+      Serial.print(", ");
+      Serial.print(egteKarPos, 3);
 
       // Serial.print(", ");
-      // Serial.print(plaatAanwezigGefilterd, 3);
+      // Serial.print(karPosMidden, 3);
+
+      // // Serial.print(", ");
+      // // Serial.print(karPosMidden + strobo.karFourier, 3);  
+
+      // Serial.print(", ");
+      // Serial.print(karPosMidden + strobo.karFourierFilt, 3);  
+
+
+
+
+      // Serial.print(", ");
+      // Serial.print(karPosMinimaal, 3);
       
       // Serial.print(", ");
-      // Serial.print(afstandOmTeStoppen );
+      // Serial.print(karPosFilter, 3);
       
       // Serial.print(", ");
       // Serial.print(armKracht);
@@ -381,18 +362,14 @@ void serieelFunc(){
       // Serial.print(orientatie.z);
 
 
-      // Serial.print(", ");
-      // Serial.print(potVal);
+      Serial.print(", ");
+      Serial.print(strobo.karSinFilt * strobo.karSinFilt  +  strobo.karCosFilt * strobo.karCosFilt);
 
 
 
 
 
       Serial.println();
-
-
-
-
     }
 
 

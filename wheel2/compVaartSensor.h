@@ -216,8 +216,14 @@ class COMPVAART{
 
       karFourierFilt  = ( ( ( sinus[teller] * karSinFilt )  +  ( cosin[teller] * karCosFilt ) )  / pulsenPerRev  ) * 2;
 
-
       centerCompTargetRpm = targetRpm *  (( karPosMidden - karFourierFilt ) / karPosMidden );
+
+      float sinBuff = karSinFilt / pulsenPerRev;
+      float cosBuff = karCosFilt / pulsenPerRev;
+      if( sinBuff * sinBuff  +  cosBuff * cosBuff  >  3 * 3){ // een uit het midden hijd van 6mm (3mm radius) triggerd error
+        setError(E_TE_GROTE_UITSLAG);
+        stoppen();
+      }
 
 
 

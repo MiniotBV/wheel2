@@ -144,6 +144,8 @@ enum errors{
 
   E_ARMHOEK_LIMIET_POS = 6,//
   E_ARMHOEK_LIMIET_NEG = 7,//
+
+  E_TE_GROTE_UITSLAG = 8,
   
 };
 
@@ -161,6 +163,7 @@ String printError(enum errors s){
   if( s == E_KON_NIET_HOMEN         ){ return "E_KON_NIET_HOMEN";}
   if( s == E_ARMHOEK_LIMIET_POS     ){ return "E_ARMHOEK_LIMIET_POS";}
   if( s == E_ARMHOEK_LIMIET_NEG     ){ return "E_ARMHOEK_LIMIET_NEG";}
+  if( s == E_TE_GROTE_UITSLAG       ){ return "E_TE_GROTE_UITSLAG";}
 
   return "??????";
 }

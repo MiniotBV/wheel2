@@ -32,7 +32,6 @@ float riemPrev = 0;
 float riemFilter;
 float riemFilterPrev;
 
-float riemFilterDiv;
 float riemDiv;
 
 
@@ -381,10 +380,9 @@ void knoppenUpdate(){
 
 
     if( !isOngeveer(riemFilter, riemFilterPrev, 0.02) ){
-      riemFilterDiv = riemFilter - riemFilterPrev;
+      riemDiv = riemFilter - riemFilterPrev;
       riemFilterPrev = riemFilter;
       
-      riemDiv = riemFilterDiv / 1.5;
 
       if(!orientatie.isStaand){
         riemDiv = -riemDiv; // flip
@@ -392,9 +390,8 @@ void knoppenUpdate(){
       
 
       if(staat == S_SCHOONMAAK){
-        armTargetGewicht += riemDiv * 1;//4;
+        armTargetGewicht += riemDiv / 1.5;
         armTargetGewicht = limieteerF(armTargetGewicht, MIN_ARMGEWICHT, MAX_ARMGEWICHT);
-        // armGewichtUpdate();
       }
 
       else if(staat == S_CALIBREER){
@@ -404,7 +401,7 @@ void knoppenUpdate(){
       }
 
       else if(staat == S_PAUZE){
-        targetNummerPos -= riemDiv * 50;
+        targetNummerPos -= riemDiv * 20;
         targetNummerPos = limieteerF(targetNummerPos, PLAAT_EINDE, plaatBegin);      
       }
     
@@ -413,8 +410,7 @@ void knoppenUpdate(){
           volumeDisplayActie.reset();
         }
         
-        // volume = limieteerF(volume + (riemDiv * stappenPerOmwenteling), 0, 63);
-        volume += round(riemDiv * 100);
+        volume += round(riemDiv * 66);
         volume = limieteerI(volume, 0, 63);        
       }
     }

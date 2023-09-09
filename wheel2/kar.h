@@ -448,7 +448,7 @@ void staatDingen(){
 				return;
 			}
 
-			if(karPos > karPosFilter + 2.5){
+			if(egteKarPos > karPosFilter + 2.5){
 				setError(E_NAALD_TERUG_GELOPEN);     
 				stoppen();
 				return;
@@ -468,12 +468,9 @@ void staatDingen(){
 	if(staat == S_NAAR_NUMMER){
 		if(naaldEraf()){
 			if(beweegKarNaarPos(targetNummerPos, KAR_MAX_SNELHEID)){
-			// if(karPos == targetNummerPos){
-				setStaat(S_SPELEN);
+        setStaat(S_SPELEN);
 				return;
 			}
-			
-			// karPos += limieteerF( targetNummerPos - karPos , -KAR_MAX_SNELHEID, KAR_MAX_SNELHEID);
 		}
 		return;
 	}
@@ -598,7 +595,7 @@ bool karMotorUitvoeren(){
 	armHoek = armHoekCall - armHoekOffset;
 
 
-  if(  !(   staat == S_HOK  ||  staat == S_NAAR_HOK  ||  staat == S_HOMEN_VOOR_SPELEN  ||  staat == S_HOMEN_VOOR_SCHOONMAAK   ) ){
+  if(  !(   staat == S_HOK  ||  staat == S_NAAR_HOK  ||  staat == S_HOMEN_VOOR_SPELEN  ||  staat == S_HOMEN_VOOR_SCHOONMAAK  ||  staat == S_FOUTE_ORIENTATIE   ) ){
     if(armHoekCall > 0.95){
       setError(E_ARMHOEK_LIMIET_POS);
       staat = S_HOK;
