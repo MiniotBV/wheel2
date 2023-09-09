@@ -174,6 +174,7 @@ void infoPrintln(int info){
 void checkenVoorCommando(int info){
 
 	infoPrintln(info);
+  if(checkZinCommando("RST",    "herstart",       info)){ rp2040.restart(); return;}
 
   if(checkZinCommando("AT+",    "bluetooth commando",       info)){ bluetoothScrijf(zinRuw); return;}
   if(checkZinBool(    "BT",     "bluetoot uart",            info, bluetoothDebug)){return;}
