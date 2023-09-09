@@ -92,8 +92,8 @@ void serieelFunc(){
       Serial.print(", ");
       Serial.print(karPos, 4);
 
-      // Serial.print(", ");
-      // Serial.print(karPosFilter, 4);
+      Serial.print(", ");
+      Serial.print(karPosFilter, 4);
 
       // Serial.print(", ");
       // Serial.print(karPosFilterSlow, 4);

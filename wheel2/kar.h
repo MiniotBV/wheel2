@@ -568,9 +568,6 @@ bool karMotorUitvoeren(){
 
   // karMotorPos = (karPos + karOffset + karPcomp)  *  mm2stap;
   karMotorPos = (karPos + karOffset)  *  mm2stap;
-  
-  karPosFilter += (karPos - karPosFilter) / 3000;
-  karPosFilterSlow += (karPosFilter - karPosFilterSlow) / 3000;
 
 
   if(karMotorEnable){
@@ -585,6 +582,25 @@ bool karMotorUitvoeren(){
     pwmFase( 0,  stapperBP, stapperBN, true);
   }
 
+
+
+  if(staat == S_NAALD_EROP){
+    karPosFilter += limieteerF( (karPos - karPosFilter) / 1000, -1, 0);
+    karPosFilterSlow += (karPosFilter - karPosFilterSlow) / 3000;
+  }else{
+    karPosFilter = karPos;
+    karPosFilterSlow = karPos;
+  }
+
+
+  // karPosFilter += (karPos - karPosFilter) / 3000;
+  // karPosFilter = limieteerF(karPosFilter, karPos-1, karPos+1);
+
+  // karPosFilterSlow += (karPosFilter - karPosFilterSlow) / 3000;
+  // karPosFilterSlow = limieteerF(karPosFilterSlow, karPos-1, karPos+1);
+
+
+
   karMotorEnable = true;  
 
   return 1;
@@ -592,14 +608,13 @@ bool karMotorUitvoeren(){
 
 
 
-void karMotorFunc(){
-      
+
+
+void karMotorFunc(){  
   if(karMotorInt.loop()){
     karMotorUitvoeren();
   }
 }
-
-
 
 
 

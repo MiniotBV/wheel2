@@ -96,7 +96,7 @@ void displayUpdate(){
   // if(true){
 
     nummersTeller = 0;
-    int naald = egtePos2displayPos(karPos);
+    int naald = egtePos2displayPos(karPosFilter);//int naald = egtePos2displayPos(karPos);
     int target = egtePos2displayPos(targetNummerPos);
     int sensor = egtePos2displayPos(sensorPos);
     int sensorMaxBerijk = egtePos2displayPos(ELPEE_PLAAT_BEGIN - SENSOR_OFFSET)  +  3;

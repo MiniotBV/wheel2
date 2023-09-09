@@ -15,8 +15,10 @@ enum staats{
   S_NAAR_NUMMER,
   S_DOOR_SPOELEN,
   S_TERUG_SPOELEN,
+  S_UITROLLEN_VOOR_SPELEN,
 
   S_SCHOONMAAK,
+  S_CALIBRATIE,
   S_HOMEN_GEFAALD,
   S_FOUTE_ORIENTATIE,
   S_ERROR,
@@ -43,23 +45,18 @@ String printStaat(int s){
   if( s == S_NAAR_BEGIN_PLAAT     ){ return "NAAR_BEGIN_PLAAT";}
   if( s == S_NAALD_EROP           ){ return "NAALD_EROP";}
 
-
   if( s == S_PAUZE                ){ return "PAUZE";}
-
   if( s == S_NAAR_NUMMER          ){ return "NAAR_NUMMER";}
-
   if( s == S_DOOR_SPOELEN         ){ return "DOOR_SPOELEN";}
   if( s == S_TERUG_SPOELEN        ){ return "TERUG_SPOELEN";}
-
+  if( s == S_UITROLLEN_VOOR_SPELEN){ return "UITROLLEN_VOOR_SPELEN";}
 
   if( s == S_SCHOONMAAK           ){ return "SCHOONMAAK";}
   if( s == S_HOMEN_GEFAALD        ){ return "HOMEN_GEFAALD";}
   if( s == S_ERROR                ){ return "ERROR";}
   if( s == S_FOUTE_ORIENTATIE     ){ return "FOUTE_ORIENTATIE";}
   
-  
   return "??????";
-
 }
 
 

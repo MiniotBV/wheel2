@@ -8,7 +8,6 @@
 #define KNOP_BLINK 100 //hoelang blinkt de stick led
 
 
-
 #define INGEDRUKT             1
 #define LANG_INGEDRUKT        2
 #define SUPER_LANG_INGEDRUKT  3
@@ -16,7 +15,6 @@
 
 
 int           knopIn[8];
-int           knopOud[8];
 int           knopStaat[8];
 unsigned long knopInterval[8];
 
@@ -50,15 +48,6 @@ void printKnoppen(){
     Serial.print(' ');
   }
   Serial.println();
-
-  // Serial.print("staat:   ");
-  // for(int i = 0; i < 8; i++){
-  //   Serial.print(knopStaat[i]);
-  //   Serial.print(' ');
-  // }
-  // Serial.println();
-
-
 }
 
 
@@ -80,12 +69,6 @@ const char* knopNaam(int knop){
   if(knop == KNOP_TERUGSPOEL){
     return "terugspoel";
   }
-  // if(knop == KNOP_BT){
-  //   return "bt";
-  // }
-  // if(knop == KNOP_RPM){
-  //   return "rpm";
-  // }
 
   return "?";
 }
@@ -122,6 +105,9 @@ void getKnopData(){
 
 
 
+
+
+
 int gecompenseerdeDoorspoel(){
   if(orientatie.isStaand){
     return KNOP_TERUGSPOEL;
@@ -147,6 +133,183 @@ bool isKnopTerugspoel(int knop){
 
 
 
+void knopLogica(int knop){
+  if( knopStaat[knop] == LOSGELATEN   &&    knopIn[knop] == INGEDRUKT ){//             KORT INGEDRUKT
+    knopStaat[knop] = INGEDRUKT;
+    
+    knopAlleInterval.reset();
+    knopInterval[knop] = millis();
+
+    ledBlink();  //led blink
+    
+    knopLog( knop, " in ");
+    
+    if( staat == S_SCHOONMAAK ){//   SCHOONMAAK STAND STOPPEN
+      stoppen();
+      // ledBlink();  //led blink
+    }
+    return;
+  }
+  
+  
+
+  if( knopStaat[knop] == INGEDRUKT    &&    knopIn[knop] == LOSGELATEN ){//               KORT LOSGELATEN
+    knopStaat[knop] = LOSGELATEN;
+    knopAlleInterval.reset();
+    
+    knopLog( knop, " los ");
+    
+    if(isKnopDoorspoel(knop)){
+      
+      if( (staat == S_NAALD_EROP  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)){
+        naarVolgendNummer();
+      }
+    }
+
+
+    if(isKnopTerugspoel(knop)){
+
+      if( (staat == S_NAALD_EROP  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)){
+        naarVorrigNummer();
+      }
+    }
+
+    
+    if(knop == KNOP_PLAY){
+      if(staat == S_PAUZE  ||  staat == S_NAALD_EROP){
+        pauze();
+      
+
+
+      }else if(staat == S_HOK){
+        spelen();
+      }
+    }
+
+
+    if(knop == KNOP_TERUGSPOEL){
+      if(staat == S_HOK){
+        if(rpmStaat == AUTO){
+          rpmStaat = R33;
+        }
+        else if(rpmStaat == R33){
+          rpmStaat = R45;
+        }
+        else{
+          rpmStaat = AUTO;
+        }
+
+        updatePlateauRpm();
+        rpmDisplayActie.reset();
+      }
+    }
+
+
+    return;
+  }
+  
+  
+  
+  
+  if( knopStaat[knop] == INGEDRUKT    &&    millis() - knopInterval[knop]  >  KNOP_LANG ){//               LANG INGEDRUKT
+    knopStaat[knop] = LANG_INGEDRUKT;
+    knopAlleInterval.reset();
+
+    knopLog( knop," lang ");
+
+
+    
+    
+    if( (staat == S_NAALD_EROP  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)  &&   isKnopDoorspoel(knop)){ //      >> DOOR SPOELEN
+      setStaat( S_DOOR_SPOELEN );
+    }
+
+    if( (staat == S_NAALD_EROP  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)   &&   isKnopTerugspoel(knop)){//      << TERUG SPOELEN
+      setStaat( S_TERUG_SPOELEN );
+    }
+
+    
+
+
+
+    if(knop == KNOP_PLAY){
+      if(staat == S_HOK){//         SPELEN
+        spelen();//                       SPELEN
+      }else{                                 
+        stoppen();
+      }
+    }
+    return;
+  }
+  
+  
+  
+  
+  if( knopStaat[knop] == LANG_INGEDRUKT  &&    knopIn[knop] == LOSGELATEN ){//                          LANG LOSGELATEN
+    knopStaat[knop] = LOSGELATEN;
+    knopAlleInterval.reset();
+    
+    knopLog(  knop," lang los ");
+
+
+
+    if(  (  staat == S_DOOR_SPOELEN   ||   staat == S_TERUG_SPOELEN  )  &&  (  knop == KNOP_DOORSPOEL  ||  knop == KNOP_TERUGSPOEL  )  ){//WEER BEGINNEN NA SPOELEN
+      setStaat(S_NAALD_EROP);
+      // ledBlink();  //led blink
+      
+    }
+    return;
+  }
+  
+  
+  
+  
+  if( knopStaat[knop] == LANG_INGEDRUKT    &&    millis() - knopInterval[knop]  >  KNOP_SUPER_LANG ){//              SUPER LANG INGEDRUKT
+    knopStaat[knop] = SUPER_LANG_INGEDRUKT;
+    knopAlleInterval.reset();   //led blink
+    
+    knopLog(  knop, " super lang ");
+
+
+    if(  staat == S_HOK  &&  knop == KNOP_TERUGSPOEL  ){//               NAALD TEST STAND
+      setStaat( S_SCHOONMAAK );
+    }
+    return;
+  }
+  
+  
+  
+  
+  if( knopStaat[knop] == SUPER_LANG_INGEDRUKT  &&    knopIn[knop] == LOSGELATEN ){//                    SUPER LANG LOSGELATEN
+    knopStaat[knop] = LOSGELATEN;
+    knopAlleInterval.reset();  //led blink
+    
+    knopLog(  knop, " super lang los ");
+    
+    
+    if(  (  staat == S_DOOR_SPOELEN   ||   staat == S_TERUG_SPOELEN  )  &&  (  knop == KNOP_DOORSPOEL  ||  knop == KNOP_TERUGSPOEL  )  ){//WEER BEGINNEN NA SPOELEN
+      setStaat(S_NAALD_EROP);
+    }
+    return;
+  }
+  
+  
+  
+  
+  if( knopIn[knop] == LOSGELATEN ){ //nog ff checken of de knop is losgelaten zodat en lange druk geen loop maakt
+    knopStaat[knop] = LOSGELATEN;
+
+    return;
+  }
+}
+
+
+
+
+
+
+
+
 
 
 
@@ -160,183 +323,8 @@ void knoppenUpdate(){
 
 
     for(int knop = 5; knop < 8; knop++){
-
-      
-      if(       knopStaat[knop] == LOSGELATEN   &&    knopIn[knop] == INGEDRUKT ){//             KORT INGEDRUKT
-        knopStaat[knop] = INGEDRUKT;
-        
-        knopAlleInterval.reset();
-        knopInterval[knop] = millis();
-
-        ledBlink();  //led blink
-        
-        knopLog( knop, " in ");
-        
-        if( staat == S_SCHOONMAAK ){//   SCHOONMAAK STAND STOPPEN
-          stoppen();
-          // ledBlink();  //led blink
-        }
-        
-
-      }
-      
-      
-
-      
-      else if( knopStaat[knop] == INGEDRUKT    &&    knopIn[knop] == LOSGELATEN ){//               KORT LOSGELATEN
-        knopStaat[knop] = LOSGELATEN;
-        knopAlleInterval.reset();
-        
-        knopLog( knop, " los ");
-        
-        if(isKnopDoorspoel(knop)){
-          
-          if( (staat == S_NAALD_EROP  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)){
-            naarVolgendNummer();
-          }
-        }
-
-
-        if(isKnopTerugspoel(knop)){
-
-          if( (staat == S_NAALD_EROP  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)){
-            naarVorrigNummer();
-          }
-        }
-
-        
-        if(knop == KNOP_PLAY){
-          if(staat == S_PAUZE  ||  staat == S_NAALD_EROP){
-            pauze();
-          
-
-
-          }else if(staat == S_HOK){
-            spelen();
-          }
-        }
-
-
-        if(knop == KNOP_TERUGSPOEL){
-          if(staat == S_HOK){
-            if(rpmStaat == AUTO){
-              rpmStaat = R33;
-            }
-            else if(rpmStaat == R33){
-              rpmStaat = R45;
-            }
-            else{
-              rpmStaat = AUTO;
-            }
-
-            updatePlateauRpm();
-            rpmDisplayActie.reset();
-          }
-        }
-
-
-
-      }
-      
-      
-      
-      
-      else if( knopStaat[knop] == INGEDRUKT    &&    millis() - knopInterval[knop]  >  KNOP_LANG ){//               LANG INGEDRUKT
-        knopStaat[knop] = LANG_INGEDRUKT;
-        knopAlleInterval.reset();
-
-        knopLog( knop," lang ");
-
-
-        
-        
-        if( (staat == S_NAALD_EROP  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)  &&   isKnopDoorspoel(knop)){ //      >> DOOR SPOELEN
-          setStaat( S_DOOR_SPOELEN );
-        }
-
-        if( (staat == S_NAALD_EROP  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)   &&   isKnopTerugspoel(knop)){//      << TERUG SPOELEN
-          setStaat( S_TERUG_SPOELEN );
-        }
-
-        
-
-
-
-        if(knop == KNOP_PLAY){
-          if(staat == S_HOK){//         SPELEN
-            spelen();//                       SPELEN
-          }else{                                 
-            stoppen();
-          }
-        }
-      }
-      
-      
-      
-      
-      else if( knopStaat[knop] == LANG_INGEDRUKT  &&    knopIn[knop] == LOSGELATEN ){//                          LANG LOSGELATEN
-        knopStaat[knop] = LOSGELATEN;
-        knopAlleInterval.reset();
-        
-        knopLog(  knop," lang los ");
-
-
-
-        if(  (  staat == S_DOOR_SPOELEN   ||   staat == S_TERUG_SPOELEN  )  &&  (  knop == KNOP_DOORSPOEL  ||  knop == KNOP_TERUGSPOEL  )  ){//WEER BEGINNEN NA SPOELEN
-          setStaat(S_NAALD_EROP);
-          // ledBlink();  //led blink
-          
-        }
-      }
-      
-      
-      
-      
-      else if( knopStaat[knop] == LANG_INGEDRUKT    &&    millis() - knopInterval[knop]  >  KNOP_SUPER_LANG ){//              SUPER LANG INGEDRUKT
-        knopStaat[knop] = SUPER_LANG_INGEDRUKT;
-        knopAlleInterval.reset();   //led blink
-        
-        knopLog(  knop, " super lang ");
-
-
-        if(  staat == S_HOK  &&  knop == KNOP_TERUGSPOEL  ){//               NAALD TEST STAND
-          setStaat( S_SCHOONMAAK );
-        }
-      }
-      
-      
-      
-      
-      else if( knopStaat[knop] == SUPER_LANG_INGEDRUKT  &&    knopIn[knop] == LOSGELATEN ){//                    SUPER LANG LOSGELATEN
-        knopStaat[knop] = LOSGELATEN;
-        knopAlleInterval.reset();  //led blink
-        
-        knopLog(  knop, " super lang los ");
-        
-        
-        if(  (  staat == S_DOOR_SPOELEN   ||   staat == S_TERUG_SPOELEN  )  &&  (  knop == KNOP_DOORSPOEL  ||  knop == KNOP_TERUGSPOEL  )  ){//WEER BEGINNEN NA SPOELEN
-          setStaat(S_NAALD_EROP);
-        }
-      }
-      
-      
-      
-      
-      else if( knopIn[knop] == LOSGELATEN ){ //nog ff checken of de knop is losgelaten zodat en lange druk geen loop maakt
-        knopStaat[knop] = LOSGELATEN;
-
-      
-      }
-    
+      knopLogica(knop);
     }
-
-
-
-
-
-
-
-
 
 
 
