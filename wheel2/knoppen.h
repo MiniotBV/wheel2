@@ -339,18 +339,18 @@ void knoppenUpdate(){
     potValPrev = potVal;
     
     riemFilter += (riem - riemFilter)/10;
-    riemFilterDiv = riemFilter - riemFilterPrev;
-    riemFilterPrev = riemFilter;
-    
-    riemDiv = riemFilterDiv;    
-    // riemDiv = riem - riemPrev;
-    riemDiv = -riemDiv; // flip
+
 
     
 
 
-    if( !isOngeveer(riemDiv, 0, 0.005) ){
-    riemDivPrev = riemDiv;
+    if( !isOngeveer(riemFilter, riemFilterPrev, 0.01) ){
+      riemFilterDiv = riemFilter - riemFilterPrev;
+      riemFilterPrev = riemFilter;
+      
+      riemDiv = riemFilterDiv;    
+      // riemDiv = riem - riemPrev;
+      riemDiv = -riemDiv; // flip
 
       if(staat == S_SCHOONMAAK){
         armGewicht += riemDiv * 4;

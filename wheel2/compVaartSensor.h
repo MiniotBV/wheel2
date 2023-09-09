@@ -213,12 +213,12 @@ class COMPVAART{
 
 
       if(compMeten){
-        plateauCompensatie[teller] += ( gladglad - targetRpm ) ;/// 10 ;//* 0.2;// *0.8;
+        plateauCompensatie[teller] += ( glad - targetRpm ) / 4 ;/// 10 ;//* 0.2;// *0.8;
         // plateauCompensatie[teller] += ( gladglad - targetRpm )*0.5 ;//* 0.2;// *0.8;
         // plateauCompensatie[teller] -= (plateauCompensatie[teller] - plateauCompensatie[rondTrip(teller + 400,  pulsenPerRev)])*0.9;
       }
 
-      plateauComp = plateauCompensatie[rondTrip(teller + (pulsenPerRev/4),  pulsenPerRev)];
+      plateauComp = plateauCompensatie[rondTrip(teller + 130,  pulsenPerRev)]; //(pulsenPerRev/4)
       // plateauComp = plateauCompensatie[rondTrip(teller + 580,  pulsenPerRev)];
       
     }
