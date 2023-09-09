@@ -4,6 +4,8 @@
 #include "hardware/pwm.h"
 #include "hardware/gpio.h"
 
+#include <EEPROM.h>
+
 #include "pwm.h"
 
 #include "pins.h"
@@ -13,7 +15,16 @@
 
 #include "armMotor.h"
 
-bool eepromPauze = false;
+// bool eepromPauze = false;
+
+bool enkeleCoreModus = true;
+
+void uitEnkeleCoreModus(){
+  enkeleCoreModus = false;
+  multicore_launch_core1(loop2);
+}
+
+
 
 void enableInterupts(bool aan){
     gpio_set_irq_enabled_with_callback(plateauA,   GPIO_IRQ_EDGE_RISE + GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
@@ -28,7 +39,7 @@ void enableInterupts(bool aan){
 }
 
 #include "vaartSensor.h"
-VAART strobo(7, (60 / rpm33) * 1000); //1800
+VAART strobo(3, (60 / rpm33) * 1000); //1800
 // VAART strobo(7*2, (60 / rpm33) * 1000 * 2); //1800
 
 #include "compVaartSensor.h"
@@ -76,7 +87,7 @@ void setup() {
   Serial.begin(115200);
 
   EEPROM.begin(4096);
-  // TLE5012.recalCompSamples();
+  
 
   versterkerInit();
 
@@ -94,10 +105,16 @@ void setup() {
   plateauInit();
 
   delay(1);
+
+  TLE5012.recalCompSamples();
   
   enableInterupts(true);
 
-  multicore_launch_core1(loop2);
+  getKnopData();
+  if(knopIn[KNOP_RPM] == 0){ //als rpm knop niet is ingedrukt bij start up gaat alles normaal
+    uitEnkeleCoreModus();
+  }
+  
 
   stoppen();
 }
@@ -109,29 +126,37 @@ void setup() {
 
 
 
+
+void core1Dingen(){
+  displayUpdate();
+  
+  serieelFunc();
+
+  knoppenUpdate();
+
+  armFunc();
+}
+
+
+
+
 void loop2(){
-  
-
   while(1){
-    if(eepromPauze){
-      delay(1);
-    }
-
-    displayUpdate();
-  
-    serieelFunc();
-  
-    knoppenUpdate();
-
-    armFunc();
-    
+    core1Dingen();
   }
 }
 
 
 
 
+
+
 void loop() {
+
+  if(enkeleCoreModus){
+    core1Dingen();    
+  }
+
 
   plaatLeesFunc();
 
@@ -143,8 +168,8 @@ void loop() {
 
   // staatFunc();
 
-  // pwmWrite(ledWit, pow( ((sin( (PI*millis()) / 500.0 )+1)/2), 3) * PMAX);
-  pwmWriteF(ledWit, 0.5);
+  pwmWriteF(ledWit, pow( ((sin( (PI*millis()) / 500.0 )+1)/2), 3));
+  // pwmWriteF(ledWit, 0.5);
   // pwmWrite(ledRood, pow( ((cos( (PI*millis()) / 500.0 )+1)/2), 3) * PMAX);
 
   pwmWriteF(ledRood, plaatAanwezig ? 1 : 0);

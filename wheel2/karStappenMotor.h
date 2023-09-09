@@ -9,6 +9,9 @@
 
 bool plaatAanwezig = false;
 
+#define karP  0.0001 //0.00005;//0.00025;
+
+
 #define KAR_SNELHEID 0.02
 
 #define PLAAT_BEGIN 148
@@ -26,7 +29,7 @@ float mmPerStap = 1.5 / ( 48 / 8 );
 float stap2mm = ( 2 / PI ) * mmPerStap;  // 0.238732414637843
 float mm2stap = 1 / stap2mm;             // 4.188790204786391
 
-float karP = 0.00005;//0.00025;
+
 
 int stapperFaseA = 0;
 int stapperFaseB = 0;
@@ -173,7 +176,6 @@ void pauze(){
 
 
 
-
 void staatDingen(){
   
   if(staat == S_STOPPEN){
@@ -186,7 +188,7 @@ void staatDingen(){
 
 
   else if(staat == S_NAAR_HOK  ||  staat == S_HOMEN_VOOR_SPELEN){
-    if(staatVeranderd.sinds() < 200){//even wachten en teruch rijden
+    if(staatVeranderd.sinds() < 300){//even wachten en teruch rijden
       karPos += KAR_SNELHEID/5;
       return;
     }

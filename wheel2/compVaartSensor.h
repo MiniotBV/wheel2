@@ -2,7 +2,7 @@ float targetRpm = 0;
 
 #define sampleMax 65500               //samples
 
-#include <EEPROM.h>
+
 
  
 
@@ -32,7 +32,7 @@ float eepLeesFloat(int addr){
 
 
 
-
+Interval compInt(0, MILLIS);
 
 
 class COMPVAART{
@@ -43,9 +43,15 @@ class COMPVAART{
     volatile unsigned int sampleTeller = 0;
     volatile unsigned long tijd;
     volatile unsigned int interval;
-    float vaart;
     float gemiddelde = sampleMax;
 
+    int filterOrde = 4;
+    float filterWaarde = 1/20.0;
+    float filter[12];
+    
+    float vaart;
+    float vaartRuw;
+    float gladNieuw;
     float glad;
     float div;
     float dav;
@@ -57,7 +63,7 @@ class COMPVAART{
     float pulsenPerRev;
     int teller = 0;
 
-
+    
     // float compSamples[4096];
     float compSamples[8192];
     bool compensatieMeten = false;
@@ -74,13 +80,16 @@ class COMPVAART{
 
 
 
-
+	
 
     void interrupt(){
       tijd = micros();
 
+      // bool A = gpio_get(plateauA);
+      // bool B = gpio_get(plateauB);
+
       dir = 1;
-      // if(gpio_get(plateauB)){
+      // if(!A && B   ||  A && !B){
       //   dir = -1;
       // }  
       
@@ -100,20 +109,43 @@ class COMPVAART{
       if(teller < 0){teller = pulsenPerRev - 1;}
 
 
-      div = getVaart() / strobo.getVaart();
+      vaartRuw = huidigeVaart(interval);    
+      vaart = getVaart();
+
+
+      filter[0] = vaartRuw;
+            
+      for(int i = 1;   i < filterOrde + 1;   i++){
+        filter[i] +=  ( filter[i-1] - filter[i]) * filterWaarde;
+      }
+
+      
+      
+
+
+      // div = getVaart() / strobo.getVaart();
+      div = vaart / strobo.glad;
       
       if(compensatieMeten){
-        shiftSamples((interval * dir));
+        
 
-        if(isOngeveer(div, 1, 0.5)){
-          compSamples[teller] += ( div - compSamples[teller] ) / 10;
+        if(isOngeveer(div, 1, 0.3)){
+          // if(compInt.sinds() < 20000){//als er pas net compensatie modus is;
+          //   compSamples[teller] += ( div - compSamples[teller] ) / 2;
+          // }else{
+          //   compSamples[teller] += ( div - compSamples[teller] ) / 100;
+          // }
+          compSamples[teller] += (div-1) / 10;
         }
-
-      }else{
-        shiftSamples((interval * dir) * compSamples[teller]);
+        
+        // shiftSamples((interval * dir));
+        // shiftSamples((interval * dir) * compSamples[teller]);
       }
       
-      
+
+      gladNieuw = filter[filterOrde] / compSamples[teller];
+
+      shiftSamples((interval * dir) * compSamples[teller]);
       
       dav = compSamples[teller];
       
@@ -121,19 +153,22 @@ class COMPVAART{
     }
 
 
-
-
-
-
-    void toggleCompensatieModus(){
-      compensatieMeten = !compensatieMeten;
+    void setCompensatieModus(bool c){
+      compensatieMeten = c;
+      compInt.reset();
 
       if(compensatieMeten){
-        clearCompSamples();
+        // clearCompSamples();
         Serial.println("meten aan");
       }else{
         Serial.println("meten uit");
       }
+    }
+
+
+    void toggleCompensatieModus(){
+      setCompensatieModus(!compensatieMeten);
+
     }
 
 
@@ -152,17 +187,25 @@ class COMPVAART{
 
 
     void recalCompSamples(){
-      for(int i = 0;   i < pulsenPerRev;   i+=4){
+      int i = 0;
+      for(int i = 0;   i < pulsenPerRev;   i += 4){
         // compSamples[i*2] = eepLeesFloat(i*2);
         // compSamples[(i*2)+1] = compSamples[i*2];
         
-        compSamples[i*4] = eepLeesFloat(i/2);
-        compSamples[(i*4)+1] = compSamples[i*4];
-        compSamples[(i*4)+2] = compSamples[i*4];
-        compSamples[(i*4)+3] = compSamples[i*4];
+        compSamples[i] = eepLeesFloat(i/2);
+        compSamples[i+1] = compSamples[i];
+        compSamples[i+2] = compSamples[i];
+        compSamples[i+3] = compSamples[i];
       }
 
-      Serial.println("gerecalt");
+      if(compSamples[10] < 2){
+        Serial.println("recalt");
+      }else{
+        Serial.println("faal recalt");
+        clearCompSamples();        
+      }
+
+      
     }
 
 
@@ -187,24 +230,22 @@ class COMPVAART{
 
 
     void saveCompSamples(){
-      eepromPauze = true;
-      delay(20);
-      // enableInterupts(false);
 
       for(int i = 0;   i < pulsenPerRev;   i+=4){
-        float inpol = ( compSamples[(i*4)+0] + 
-                        compSamples[(i*4)+1] + 
-                        compSamples[(i*4)+2] + 
-                        compSamples[(i*4)+3]   )/4;
+        float inpol = ( compSamples[i+0] + 
+                        compSamples[i+1] + 
+                        compSamples[i+2] + 
+                        compSamples[i+3]   )/4;
                         
         eepSchrijfFloat(i/2,   inpol);
       }
 
-      // bool error = EEPROM.commit();
-      // Serial.println(error ? "opgeslagen: "   :   "faaal: ");
-
-      eepromPauze = false;
-      // enableInterupts(true);
+      bool geenError = EEPROM.commit();
+      if(geenError){
+        Serial.println("opgeslagen");
+      }else{
+        Serial.println("faaal save");
+      }
     }
 
 
@@ -229,7 +270,7 @@ class COMPVAART{
 
 
     void printCompSamples(){
-      for(int i = 0;   i < pulsenPerRev;   i++){
+      for(int i = 0;   i < pulsenPerRev;   i+=4){
         Serial.println(compSamples[i], 3);
         delay(1);
       }
@@ -256,7 +297,7 @@ class COMPVAART{
 
       
       gemiddelde = gemiddeldeInterval();
-      vaart =  huidigeVaart();
+      vaart =  huidigeVaart(gemiddelde);
 
 
       return vaart;//niet compensenre
@@ -300,13 +341,11 @@ class COMPVAART{
 
 
 
-    float huidigeVaart(){//                                                           RPM BEREKENEN
-      if(gemiddelde >= sampleMax){
-        return 0;          
-      }
+    float huidigeVaart(float inter){//                                                           RPM BEREKENEN
+
       // return (1000000 / gemiddeldeInterval())/4;  //  return totaal
       // return (((1000000.0 / gemiddelde)*60) / pulsenPerRev;  //  return totaal
-      return (((1000000.0 * 60) / gemiddelde)) / pulsenPerRev;  //  return totaal
+      return (((1000000.0 * 60) / inter)) / pulsenPerRev;  //  return totaal
 
     }
 

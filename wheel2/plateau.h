@@ -9,7 +9,7 @@ float uitBuff;
 
 
 float plateauP = 0.05;    //pid
-float plateauI = 0.05;
+float plateauI = 0.01;
 float plateauD = 0;
 
 

@@ -12,10 +12,16 @@ void serieelFunc(){
 
     if(golven){
       Serial.print(TLE5012.vaart);
-      // Serial.print(", ");
-      // Serial.print(TLE5012.glad);
+      Serial.print(", ");
+      Serial.print(TLE5012.glad);
+      Serial.print(", ");
+      Serial.print(TLE5012.vaartRuw);
+      Serial.print(", ");
+      Serial.print(TLE5012.gladNieuw);
       Serial.print(", ");
       Serial.print(strobo.vaart);
+      Serial.print(", ");
+      Serial.print(strobo.glad);
       
       Serial.print(", ");
       Serial.print(TLE5012.div, 3);
@@ -25,8 +31,9 @@ void serieelFunc(){
       
       
       
-      Serial.print(", ");
-      Serial.print(plaatLeesRuw);
+      // Serial.print(", ");
+      // Serial.print(plaatLeesRuw);
+
       // Serial.print(", ");
       // Serial.print(plaatLeesGefilterd);
       // Serial.print(", ");
@@ -37,16 +44,20 @@ void serieelFunc(){
       // Serial.print(plaatLeesDivTrack);
       // Serial.print(", ");
       // Serial.print(potVal);
-      Serial.print(", ");
-      Serial.print(potVolume);
-      Serial.print(", ");
-      Serial.print(uitBuff * 30);
-      Serial.print(", ");
-      // Serial.print(armHoekSlow);//1696);
       // Serial.print(", ");
-      Serial.print(armHoek);//1696);
-      Serial.print(", ");
-      Serial.print(karPos);
+      // Serial.print(potVolume);
+      
+      // Serial.print(", ");
+      // Serial.print(uitBuff * 30);
+      
+      // Serial.print(", ");
+      // Serial.print(armHoekSlow);//1696);
+      
+      // Serial.print(", ");
+      // Serial.print(armHoek);//1696);
+      // Serial.print(", ");
+      // Serial.print(karPos);
+      
       // Serial.print(", ");
       // Serial.print(armKracht);
 
@@ -145,6 +156,9 @@ void serieelFunc(){
         printKnoppen();
         
       
+      }
+      else if(letter == '-'){    //golven uit
+        TLE5012.clearCompSamples();
       }
       else if(letter == 'r'){    //golven uit
         TLE5012.recalCompSamples();

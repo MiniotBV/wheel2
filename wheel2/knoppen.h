@@ -83,7 +83,18 @@ const char* knopNaam(int knop){
 
 
 
+void getKnopData(){
+    gpio_put(displayLATCH, 0);
+    gpio_put(displayLATCH, 1);
 
+    for(int i = 0; i < 8; i++){
+    
+      knopIn[i] = digitalRead(displayUIT);
+
+      gpio_put(displayKLOK, 1);
+      gpio_put(displayKLOK, 0);
+    }
+}
 
 
 
@@ -99,39 +110,7 @@ Interval knoppenInt(10000, MICROS);
 void knoppenUpdate(){
   if(knoppenInt.loop()){
 
-    gpio_put(displayLATCH, 0);
-    gpio_put(displayLATCH, 1);
-
-    for(int i = 0; i < 8; i++){
-    
-      knopIn[i] = digitalRead(displayUIT);
-
-      digitalWrite(displayKLOK, 1);
-      // delayMicroseconds(1);
-      digitalWrite(displayKLOK, 0);
-      // delayMicroseconds(1);
-    }
-
-    
-
-    // bool zelfde = false;
-
-    // for(int i = 0; i < 8; i++){
-      
-    //   if(knopOud[i] != knopIn[i]){
-    //     zelfde = true;
-    //   }
-    //   knopOud[i] = knopIn[i];
-
-    // }
-
-    // if(zelfde){
-    //   printKnoppen();
-    // }
-
-
-
-
+    getKnopData();
 
 
     for(int knop = 0; knop < 8; knop++){
@@ -308,6 +287,11 @@ void knoppenUpdate(){
 
 
 
+
+
+
+
+
     potVal = analogRead(displayPOTMETERanaloog);
 
     if(!isOngeveer(potVal, potValPrev, AMAX/2)){
@@ -359,7 +343,7 @@ void knoppenUpdate(){
         potVolumePrev = potVolume;
         
         // Serial.print(":");
-        Serial.println(potVolumeDiv);
+        // Serial.println(potVolumeDiv);
         specialeDisplayActie.reset();
         
         // volume = limieteerF(volume + (potVolumeDiv * stappenPerOmwenteling), 0, 63);

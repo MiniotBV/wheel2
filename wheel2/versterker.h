@@ -45,8 +45,8 @@ void volumeFunc(){
       if(err){
         Serial.println("geen koptelefoon versterker");
       }else{
-        Serial.print("volume: ");
-        Serial.println(volume);
+        // Serial.print("volume: ");
+        // Serial.println(volume);
       }
       
     }
