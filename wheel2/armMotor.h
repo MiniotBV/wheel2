@@ -12,8 +12,8 @@ class ArmMotor
   float gewicht = HOK_GEWICHT;
   float kracht = 0;
 
-  float snelheidOp = 0.004;
-  float snelheidAf = 0.01;
+  float snelheidOp = 1000;//ms;
+  float snelheidAf = 500;//ms;
 
   float krachtLaag = 0.28;  //7de proto
   float krachtHoog = 0.58;
@@ -104,47 +104,29 @@ class ArmMotor
 
       if(armMotorAan == true){//moet de arm motor aan?
 
-        // uitInterval.reset();
-
-        if(gewicht < netUitHokGewicht){//als de arm net aan staat jump meteen naar nognetInHokGewicht
-          gewicht = netUitHokGewicht;
-        }
-
-        if(gewicht < targetGewicht){//is de arm al op het target gewicht?
-
-          gewicht += snelheidOp;
-        }
-
+        uitInterval.reset();
+        
         if(gewicht > netOpDePlaatGewicht){//is de arm al op de plaat?
           gewicht = targetGewicht;//zet dan de arm meteen op target gewicht
+        }else{
+          gewicht = mapF(aanInterval.sinds(), 0, snelheidOp, netUitHokGewicht, netOpDePlaatGewicht);
         }
-      }
       
+      }else{// moet de arm motor uit?
 
-      if(armMotorAan == false){// moet de arm motor uit?
+        aanInterval.reset();
 
-        // aanInterval.reset();
-        
-        if(gewicht > netVanDePlaatGewicht){ //als de arm net is uitgezet
-          gewicht = netVanDePlaatGewicht; // zet haal dan meteen het meeste gewicht van de arm
-        }
-
-        if(gewicht > HOK_GEWICHT){ //is de arm nog niet helemaal uit
-          gewicht -= snelheidAf; // zet hem dan wat minder hard
-        }
-        
         if(gewicht < netInHokGewicht){ //is de arm al van de plaat?
           gewicht = HOK_GEWICHT; // zet de arm dan meteen uit
+        }else{
+          gewicht = mapF(uitInterval.sinds(), 0, snelheidAf, netVanDePlaatGewicht, netInHokGewicht);
         }
       }
 
 
 
       kracht = armGewicht2pwm(gewicht);
-
       pwmWriteF(armMotor, kracht);
-
-
 
 
 

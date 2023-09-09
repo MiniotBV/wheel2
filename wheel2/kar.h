@@ -666,8 +666,7 @@ bool karMotorUitvoeren()
 
 
 	if(karMotorEnable){
-    // pwmStapper(-karMotorPos,   stapperAP, stapperAN,  stapperBP, stapperBN,  true);	
-    pwmStapper(karMotorPos,   stapperAP, stapperAN,  stapperBP, stapperBN,  true);	
+    pwmStapper(-karMotorPos,   stapperAP, stapperAN,  stapperBP, stapperBN,  true);	
 	}else{
 		pwmDisableStapper(stapperAP, stapperAN,  stapperBP, stapperBN);
 	}
