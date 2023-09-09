@@ -109,7 +109,7 @@ class Orientatie //          QMA7981
 
   void update()
   {
-    if(millis() - loop <= 100 || millis() < 200) return;
+    if(millis() - loop <= 20 || millis() < 200) return;
     /*if(state.isNotSPELEN() && millis() - loop > 1000) { */
     // if(millis() - loop <= 1000)return;
 

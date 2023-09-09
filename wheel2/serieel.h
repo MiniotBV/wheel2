@@ -15,9 +15,13 @@ void serieelFunc(){
       Serial.print(", ");
       Serial.print(TLE5012.glad);
       Serial.print(", ");
-      Serial.print(TLE5012.gladglad);
+      Serial.print(TLE5012.gemiddelde);
+
       Serial.print(", ");
-      Serial.print(TLE5012.teller);
+      Serial.print(strobo.vaart);
+
+      // Serial.print(", ");
+      // Serial.print(TLE5012.teller);
 
       // Serial.print(", ");
       // Serial.print(TLE5012.vaartRuw);
@@ -26,8 +30,7 @@ void serieelFunc(){
       Serial.print(", ");
       Serial.print(TLE5012.plateauComp);
       
-      Serial.print(", ");
-      Serial.print(strobo.vaart);
+
       
       // Serial.print(", ");
       // Serial.print(strobo.glad);
@@ -79,12 +82,12 @@ void serieelFunc(){
       // Serial.print(armKracht);
 
 
-      Serial.print(", ");
-      Serial.print(orientatie.x);
-      Serial.print(", ");
-      Serial.print(orientatie.y);
-      Serial.print(", ");
-      Serial.print(orientatie.z);
+      // Serial.print(", ");
+      // Serial.print(orientatie.x);
+      // Serial.print(", ");
+      // Serial.print(orientatie.y);
+      // Serial.print(", ");
+      // Serial.print(orientatie.z);
 
 
 

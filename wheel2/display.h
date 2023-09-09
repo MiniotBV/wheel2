@@ -22,7 +22,9 @@ void displayInit(){
   pinMode(displayKLOK    , OUTPUT);
   pinMode(displayLATCH   , OUTPUT);
 
-  setPwm(displayEN);
+  // setPwm(displayEN);
+
+  pinMode(displayEN, OUTPUT);
 
   // pwmWriteF(displayEN, 0.99);
   // pwmWriteF(displayEN, 0.5);
@@ -49,7 +51,11 @@ void displayPrint(float tijd){
     
     
     // gpio_put(displayIN, displayData[i] >  tijd ? 1 : 0);
-    int pix = (i + 7) - ((i % 8) * 2);
+
+    int pix = (displayLengte - 1) - i;//flip display   
+    pix = (pix + 7) - ((pix % 8) * 2);//flip byte
+    
+    
     gpio_put(displayIN, displayData[pix] >  tijd ? 1 : 0);//flip byte
 
     // gpio_put(displayIN, (i%16) != 0);//flip byte
@@ -144,7 +150,7 @@ void displayUpdate(){
 
         float floatI = float(i) / displayLengte;
 
-        if(isOngeveer(floatI - 0.5, -orientatie.y*4, 0.1)){
+        if(isOngeveer(floatI + 0.5, orientatie.y*4, 0.1)){
           displayData[i] = 0.1;
         }
 
@@ -275,18 +281,31 @@ void displayUpdate(){
 
 
     displayPrint(0);
-    displayDelay = micros();
+    
     commitDisplay();
+
+    displayDelay = micros();
+    digitalWrite(displayEN, 0);
+
+    while(micros() - displayDelay < 20){}
+    // delayMicroseconds(10);
+    digitalWrite(displayEN, 1);
 
 
     displayPrint(0.5);
-    while(micros() - displayDelay < 75){}
+    // while(micros() - displayDelay < 75){}
     commitDisplay();
 
 
-    displayPrint(1);
-    while(micros() - displayDelay < 400){}
-    commitDisplay();
+    digitalWrite(displayEN, 0);
+    delayMicroseconds(400);
+    digitalWrite(displayEN, 1);
+
+    // displayPrint(1);
+    // // while(micros() - displayDelay < 400){}
+    // commitDisplay();
+
+
 
     
     

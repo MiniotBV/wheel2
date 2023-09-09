@@ -45,26 +45,25 @@ class COMPVAART{
     volatile unsigned int interval;
     float gemiddelde = sampleMax;
 
-    // int filterOrde = 4;
-    // float filterWaarde = 1/20.0;
-    // float filter[12];
+
     
     float vaart;
-    // float vaartRuw;
-    // float gladNieuw;
+
     float glad;
     float gladglad;
     float div;
     float dav;
 
-    // float divAvrg[64];
-    // int divTeller;
-    // int divSamps = 10;
+    byte sens, sensPrev;
+
+
 
     int glitchTeller;
     int terugdraaiTeller = 0;
 
     int dir;
+    int dirPrev;
+    int andereDirTeller;
 
     int pulsenPerRev;
     int teller = 0;
@@ -106,6 +105,21 @@ class COMPVAART{
 
 
       dir = 1;
+
+      sens = (gpio_get(plateauA) <<1)  |  gpio_get(plateauB);
+      
+      if( sens == 0b00 && sensPrev == 0b01 ||
+          sens == 0b01 && sensPrev == 0b11 ||
+          sens == 0b11 && sensPrev == 0b10 ||
+          sens == 0b10 && sensPrev == 0b00
+      ){
+        dir = -1;
+      }
+
+      sensPrev = sens;
+
+
+
       // if(!gpio_get(plateauB)){
       //   terugdraaiTeller++;
       //   if(terugdraaiTeller > 6){
@@ -117,6 +131,24 @@ class COMPVAART{
       // }
 
 
+
+
+
+      if(dirPrev != dir  &&  andereDirTeller < 4){
+        andereDirTeller++;
+        return;
+      }
+
+      andereDirTeller = 0;
+
+      dirPrev = dir;
+
+
+
+
+
+
+
       
       
       interval = tijd - vaartInterval;
@@ -124,7 +156,7 @@ class COMPVAART{
       
       if(interval > sampleMax){interval = sampleMax;}
       
-      shiftSamples((interval * dir) * compSamples[teller]);
+      shiftSamples(interval * compSamples[teller] * dir);
       
 
       teller = rondTrip(teller + dir,  pulsenPerRev);
