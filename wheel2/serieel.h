@@ -1,3 +1,4 @@
+#include <utility>
 
 bool golven = false;
 bool karPIDveranderen = true;
@@ -269,6 +270,10 @@ void checkenVoorCommando(int info){
   if(checkZinInt("SHVB", "strobo.harmVerschuiving[2]", info, strobo.harmVerschuiving[2])){return;}
   if(checkZinInt("SHVC", "strobo.harmVerschuiving[3]", info, strobo.harmVerschuiving[3])){return;}
 
+  if(checkZinFloat("SHEA", "strobo.harmEffect[1]", info, strobo.harmEffect[1])){return;}
+  if(checkZinFloat("SHEB", "strobo.harmEffect[2]", info, strobo.harmEffect[2])){return;}
+  if(checkZinFloat("SHEC", "strobo.harmEffect[3]", info, strobo.harmEffect[3])){return;}
+
   if(checkZinInt("SOFH", "strobo.onbalansHarm", info, strobo.onbalansHarm)){return;}
 	if(checkZinInt("SOF", "strobo.onbalansFase", info, strobo.onbalansFase)){return;}
 	if(checkZinFloat("SOG", "strobo.onbalansCompGewicht", info, strobo.onbalansCompGewicht)){return;}
@@ -338,6 +343,11 @@ void checkenVoorCommando(int info){
     Serial.println("strobo.harmVerschuiving[1]" + String(strobo.harmVerschuiving[1]));
     Serial.println("strobo.harmVerschuiving[2]" + String(strobo.harmVerschuiving[2]));
     Serial.println("strobo.harmVerschuiving[3]" + String(strobo.harmVerschuiving[3]));
+
+    Serial.println("strobo.harmEffect[1]" + String(strobo.harmEffect[1]));
+    Serial.println("strobo.harmEffect[2]" + String(strobo.harmEffect[2]));
+    Serial.println("strobo.harmEffect[3]" + String(strobo.harmEffect[3]));
+  
 		Serial.println("strobo.sampleNum: " + String(strobo.sampleNum));
 		// Serial.println();
 
@@ -356,15 +366,6 @@ void checkenVoorCommando(int info){
 
 
 
-
-
-
-
-
-
-
-
-
 Interval serieelInt(10000, MICROS);
 // Interval serieelInt(5000, MICROS);
 
@@ -376,7 +377,7 @@ void serieelFunc(){
 			
 			Serial.print(strobo.vaartRuw - targetRpm, 3);
       Serial.print(", ");
-			Serial.print(strobo.vaart - targetRpm, 3);
+			Serial.print(strobo.vaart - centerCompTargetRpm, 3);
 
       Serial.print(", ");
 			Serial.print(strobo.vaart, 3);

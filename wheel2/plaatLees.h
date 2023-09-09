@@ -161,6 +161,32 @@ void scannenVoorTracks(){
 		trackOnderTresh = true;
 		nieuwNummer(sensorPos);
   }
+
+
+
+  if(plaatLeesGolven){
+    Serial.print(plaatLeesWaarde);
+
+    Serial.print(", ");
+    Serial.print(plaatLeesAbsDiv);
+
+        Serial.print(", ");
+    Serial.print(plaatLeesDiv);
+
+    // Serial.print(", ");
+    // Serial.print(plaatLeesMax);
+    // Serial.print(", ");
+    // Serial.print(plaatLeesMin);
+
+    Serial.print(", ");
+    Serial.print(plaatLeesStroom * 100);
+
+    Serial.print(", ");
+    Serial.print(plaatLeesWaardeJohan);
+
+    Serial.println();
+  }
+
 	
 }
 
@@ -190,7 +216,7 @@ void plaatLeesNaKijken(){
   //------------------------------------------vind alle nummers;
   clearNummers();
 
-  float nieuweTreshold = grootstePiek / 2;
+  float nieuweTreshold = grootstePiek / 3;
 
   for(int i = 0; i < plaatLeesBufferLengte; i++){
     float waarde = plaatLeesBuffer[i][1];
@@ -268,28 +294,7 @@ void plaatLeesFunc(){
 		scannenVoorTracks();//--------------------------------                   TRACKS LEZEN
 
 
-    if(plaatLeesGolven){
-      Serial.print(plaatLeesWaarde);
 
-      Serial.print(", ");
-      Serial.print(plaatLeesAbsDiv);
-
-          Serial.print(", ");
-      Serial.print(plaatLeesDiv);
-
-      // Serial.print(", ");
-      // Serial.print(plaatLeesMax);
-      // Serial.print(", ");
-      // Serial.print(plaatLeesMin);
-
-      Serial.print(", ");
-      Serial.print(plaatLeesStroom * 100);
-
-      Serial.print(", ");
-      Serial.print(plaatLeesWaardeJohan);
-
-      Serial.println();
-    }
 	
 	}else{
 		plaatLeesLedSetMilliAmp(plaatLeesStroom);

@@ -96,6 +96,7 @@ class COMPVAART
 		int onbalansHarm = 120;
     int harmonisen = 3;
     int harmVerschuiving[10] = {0, 60, 120, 140};
+    float harmEffect[10] = {0, 1, 1, 1};
 		
 		
 		float onbalansCompensatie[pprmax];
@@ -106,10 +107,10 @@ class COMPVAART
 		float onbalansCompGewicht = 1.9;//1.5;//2;//0.8;
 
 
-		float  onbalansSinTotaal[10];
-		float  onbalansCosTotaal[10];
-		float onbalansSinWaardes[10][pprmax];
-		float onbalansCosWaardes[10][pprmax];
+		float  onbalansSinTotaal[6];
+		float  onbalansCosTotaal[6];
+		float onbalansSinWaardes[6][pprmax];
+		float onbalansCosWaardes[6][pprmax];
 		
 		volatile float onbalansCompFourier = 0;
 
@@ -364,7 +365,7 @@ class COMPVAART
 
 				// hoek = rondTrip(hoek + onbalansFase - (onbalansHarm / harm),  pulsenPerRev); // hoek ofset om de compensati wat voorspellender te maken
         hoek = rondTrip(hoek + harmVerschuiving[harm],  pulsenPerRev); // hoek ofset om de compensati wat voorspellender te maken
-        onbalansCompFourier += ( ( sinus[hoek] * onbalansSinTotaal[harm] ) + ( cosin[hoek] * onbalansCosTotaal[harm] ) ) / pulsenPerRev;
+        onbalansCompFourier += ( ( ( sinus[hoek] * onbalansSinTotaal[harm] ) + ( cosin[hoek] * onbalansCosTotaal[harm] ) ) / pulsenPerRev ) * harmEffect[harm];
 			}
 
 

@@ -145,6 +145,7 @@ void knopLogica(int knop){
     if(knop == KNOP_PLAY){
       if( staat == S_HOK ){
         spelen();
+        knopStaat[knop] = LANG_INGEDRUKT; // zodat de lange druk hem niet kan stoppen
       }
     }
 
