@@ -35,10 +35,10 @@ void serieelFunc(){
       // Serial.print(", ");
       // Serial.print(calibratieToon.glad);
       
-      // Serial.print(", ");
-      // Serial.print(strobo.div, 3);
-      // Serial.print(", ");
-      // Serial.print(strobo.dav, 3);
+      Serial.print(", ");
+      Serial.print(strobo.div, 3);
+      Serial.print(", ");
+      Serial.print(strobo.dav, 3);
 
       
       
@@ -62,18 +62,18 @@ void serieelFunc(){
       // Serial.print(", ");
       // Serial.print(uitBuff * 30);
       
-      Serial.print(", ");
-      Serial.print(armHoekSlow);//1696);
+      // Serial.print(", ");
+      // Serial.print(armHoekSlow);//1696);
       
       Serial.print(", ");
       Serial.print(armHoekRuw);//1696);
 
-      Serial.print(", ");
-      Serial.print(armHoek);//1696);
-
       // Serial.print(", ");
-      // Serial.print((karPos - karPosPrev)*1000.0);//1696);
-      // karPosPrev = karPos;
+      // Serial.print(armHoek);//1696);
+
+      Serial.print(", ");
+      Serial.print((karPos - karPosPrev)*1000.0);//1696);
+      karPosPrev = karPos;
 
       // Serial.print(", ");
       // Serial.print(karPos);

@@ -120,20 +120,20 @@ class COMPVAART{
     void interrupt(){
       tijd = micros();
 
+      dir = 1;
+      // dir = -1;//dir = 1;
 
-      dir = -1;//dir = 1;
-
-      sens = (gpio_get(plateauA) <<1)  |  gpio_get(plateauB);
+      // sens = (gpio_get(plateauA) <<1)  |  gpio_get(plateauB);
       
-      if( sens == 0b00 && sensPrev == 0b01 ||
-          sens == 0b01 && sensPrev == 0b11 ||
-          sens == 0b11 && sensPrev == 0b10 ||
-          sens == 0b10 && sensPrev == 0b00
-      ){
-        dir = 1;//dir = -1;
-      }
+      // if( sens == 0b00 && sensPrev == 0b01 ||
+      //     sens == 0b01 && sensPrev == 0b11 ||
+      //     sens == 0b11 && sensPrev == 0b10 ||
+      //     sens == 0b10 && sensPrev == 0b00
+      // ){
+      //   dir = 1;//dir = -1;
+      // }
 
-      sensPrev = sens;
+      // sensPrev = sens;
 
 
 
@@ -192,7 +192,7 @@ class COMPVAART{
       // getVaart();
       getDiv();
 
-      glad += (vaart - glad) / 10;
+      glad += (vaart - glad) / 100;
       gladglad += (glad - gladglad) / 1000;
 
 
