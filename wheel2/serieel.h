@@ -259,7 +259,7 @@ void checkenVoorCommando(int info){
 
 
 	if(checkZinFloat(   "SOG",    "strobo.onbalansCompGewicht", info, strobo.onbalansCompGewicht)){return;}
-  if(checkZinFloat(   "SOFB",  "strobo.onbalansFilterBreedte",  info, strobo.onbalansFilterBreedte)){strobo.maakOnbalansFilterCurve(); return;}
+  if(checkZinFloat(   "SOFB",  "strobo.onbalansFilterBreedte",  info, strobo.onbalansFilterBreedte)){strobo.maakOnbalansPolygon(); return;}
   if(checkZinInt(     "SOF",    "strobo.onbalansFase",      info, strobo.onbalansFase)){return;}
 
 	if(checkZinCommando("SCZ",    "strobo.clearCompSamplesOpTellerNull()", info)){   strobo.clearCompSamplesOpTellerNull(); return;}
@@ -397,8 +397,8 @@ void serieelFunc(){
 
 
       
-      // Serial.print(", ");
-			// Serial.print(strobo.procesInterval);
+      Serial.print(", ");
+			Serial.print(strobo.procesInterval);
       
 
 
