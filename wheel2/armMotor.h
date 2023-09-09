@@ -4,22 +4,19 @@
 class ArmMotor
 {
   public:
-  #define MIN_ARMGEWICHT 0.5  // in gram
-  #define MAX_ARMGEWICHT 4    // in gram
-  #define HOK_ARMGEWICHT -10
+  #define MIN_GEWICHT 0.5  // in gram
+  #define MAX_GEWICHT 4    // in gram
+  #define HOK_GEWICHT -10
 
   float targetGewicht = 2.3;
-  float armGewicht = HOK_ARMGEWICHT;
-  float armKracht = 0;
+  float gewicht = HOK_GEWICHT;
+  float kracht = 0;
 
   float snelheidOp = 0.004;
   float snelheidAf = 0.01;
 
-  // float armKracht500mg = 0.33;  //7de proto
-  // float armKracht4000mg = 0.66;
-
-  float kracht500mg = 0.28;  //7de proto
-  float kracht4000mg = 0.58;
+  float krachtLaag = 0.28;  //7de proto
+  float krachtHoog = 0.58;
 
   //op de plaat
   float netUitHokGewicht = -0.8;
@@ -37,22 +34,22 @@ class ArmMotor
   void armInit() { setPwm(armMotor); }
 
   float armGewicht2pwm(float gewicht){
-    float pwm = mapF(gewicht,   MIN_ARMGEWICHT,   MAX_ARMGEWICHT,    kracht500mg, kracht4000mg);
+    float pwm = mapF(gewicht,   MIN_GEWICHT,   MAX_GEWICHT,    krachtLaag, krachtHoog);
     return limieteerF(pwm, 0, 1);  
   }
 
   float pwm2armGewicht(float pwm){
-    float gewicht = mapF(pwm,  kracht500mg, kracht4000mg,  MIN_ARMGEWICHT,   MAX_ARMGEWICHT);
+    float gewicht = mapF(pwm,  krachtLaag, krachtHoog,  MIN_GEWICHT,   MAX_GEWICHT);
     return gewicht;
   }
 
   bool isNaaldErop(){
-    // return armGewicht == armTargetGewicht  &&  naaldEropInterval.sinds() > 250;
-    return armGewicht == targetGewicht;
+    // return gewicht == armTargetGewicht  &&  naaldEropInterval.sinds() > 250;
+    return gewicht == targetGewicht;
   }
 
   bool isNaaldEraf(){
-	return armGewicht == HOK_ARMGEWICHT;
+	return gewicht == HOK_GEWICHT;
   }
 
   int isNaaldEropSinds(){
@@ -78,7 +75,7 @@ class ArmMotor
 
 
   bool naaldNoodStop(){
-    armGewicht = HOK_ARMGEWICHT; // zet de arm dan meteen uit
+    gewicht = HOK_GEWICHT; // zet de arm dan meteen uit
     armMotorAan = false;
     return true;  
   }
@@ -88,8 +85,8 @@ class ArmMotor
     if(armInt.loop()){
 
       if(staat == S_CALIBREER){
-        armGewicht = pwm2armGewicht(armKracht);
-        pwmWriteF(armMotor, armKracht);
+        gewicht = pwm2armGewicht(kracht);
+        pwmWriteF(armMotor, kracht);
         return;
       }
 
@@ -105,46 +102,46 @@ class ArmMotor
 
       if(armMotorAan == true){//moet de arm motor aan?
 
-        if(armGewicht < netUitHokGewicht){//als de arm net aan staat jump meteen naar nognetInHokGewicht
-          armGewicht = netUitHokGewicht;
+        if(gewicht < netUitHokGewicht){//als de arm net aan staat jump meteen naar nognetInHokGewicht
+          gewicht = netUitHokGewicht;
         }
 
-        if(armGewicht < targetGewicht){//is de arm al op het target gewicht?
-          armGewicht += snelheidOp;
+        if(gewicht < targetGewicht){//is de arm al op het target gewicht?
+          gewicht += snelheidOp;
         }
 
-        if(armGewicht > netOpDePlaatGewicht){//is de arm al op de plaat?
-          armGewicht = targetGewicht;//zet dan de arm meteen op target gewicht
+        if(gewicht > netOpDePlaatGewicht){//is de arm al op de plaat?
+          gewicht = targetGewicht;//zet dan de arm meteen op target gewicht
         }
       }
       
 
       if(armMotorAan == false){// moet de arm motor uit?
         
-        if(armGewicht > netVanDePlaatGewicht){ //als de arm net is uitgezet
-          armGewicht = netVanDePlaatGewicht; // zet haal dan meteen het meeste gewicht van de arm
+        if(gewicht > netVanDePlaatGewicht){ //als de arm net is uitgezet
+          gewicht = netVanDePlaatGewicht; // zet haal dan meteen het meeste gewicht van de arm
         }
 
-        if(armGewicht > HOK_ARMGEWICHT){ //is de arm nog niet helemaal uit
-          armGewicht -= snelheidAf; // zet hem dan wat minder hard
+        if(gewicht > HOK_GEWICHT){ //is de arm nog niet helemaal uit
+          gewicht -= snelheidAf; // zet hem dan wat minder hard
         }
         
-        if(armGewicht < netInHokGewicht){ //is de arm al van de plaat?
-          armGewicht = HOK_ARMGEWICHT; // zet de arm dan meteen uit
+        if(gewicht < netInHokGewicht){ //is de arm al van de plaat?
+          gewicht = HOK_GEWICHT; // zet de arm dan meteen uit
         }
       }
 
 
 
-      armKracht = armGewicht2pwm(armGewicht);
+      kracht = armGewicht2pwm(gewicht);
 
-      pwmWriteF(armMotor, armKracht);
-
-
+      pwmWriteF(armMotor, kracht);
 
 
 
-      if(armGewicht != targetGewicht){
+
+
+      if(gewicht != targetGewicht){
         naaldEropInterval.reset();
       }
     }

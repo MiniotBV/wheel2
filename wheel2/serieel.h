@@ -187,8 +187,8 @@ void checkenVoorCommando(int info){
 	if(checkZin("NE", "naaldErop()", info)){  arm.naaldErop(); return;}
 	if(checkZin("NA", "naaldEraf()", info)){  arm.naaldEraf(); return;}
 	if(checkZinFloat("ATG", "arm.targetGewicht", info, arm.targetGewicht)){return;}
-	if(checkZin("AKL", "armKracht500mg calibreer", info)){    arm.kracht500mg = arm.armKracht;   Serial.println("armKracht500mg: "  + String(arm.kracht500mg, 5));  return;}
-	if(checkZin("AKH", "armKracht500mg calibreer", info)){  arm.kracht4000mg = arm.armKracht; Serial.println("armKracht4000mg: " + String(arm.kracht4000mg, 5));   return;}
+	if(checkZin("AKL", "armKracht500mg calibreer", info)){    arm.krachtLaag = arm.kracht;   Serial.println("armKracht500mg: "  + String(arm.krachtLaag, 5));  return;}
+	if(checkZin("AKH", "armKracht500mg calibreer", info)){  arm.krachtHoog = arm.kracht; Serial.println("armKracht4000mg: " + String(arm.krachtHoog, 5));   return;}
 
 
 	//-------------------------------------------------------KAR SENSORS / TRACK SHIT
@@ -208,11 +208,6 @@ void checkenVoorCommando(int info){
 	if(checkZinFloat("KI", "karI", info, karI)){return;}
 	if(checkZinFloat("KD", "karD", info, karD)){return;}
 
-	// if(checkZinFloat("CNul", "antiCoggNul", info, antiCoggNul)){return;}
-	// if(checkZinFloat("CMacht", "antiCoggMacht", info, antiCoggMacht)){return;}
-	// if(checkZinFloat("CVerschuiving", "antiCoggVerschuiving", info, antiCoggVerschuiving)){return;}
-	// if(checkZinBool("CAan", "antiCoggAan", info, antiCoggAan)){return;}
-	// if(checkZinBool("CType", "antiCoggType", info, antiCoggType)){return;}
 
 	//----------------------------------------------------PLATEAU
 	infoPrintln(info);
@@ -232,8 +227,10 @@ void checkenVoorCommando(int info){
 	infoPrintln(info);
 	if(checkZinInt("SSN", "strobo.sampleNum", info, strobo.sampleNum)){return;}
 	if(checkZinBool("SOC", "strobo.onbalansCompAan", info, strobo.onbalansCompAan)){return;}
+    if(checkZinInt("SOFH", "strobo.onbalansHarm", info, strobo.onbalansHarm)){return;}
 	if(checkZinInt("SOF", "strobo.onbalansFase", info, strobo.onbalansFase)){return;}
 	if(checkZinFloat("SOG", "strobo.onbalansCompGewicht", info, strobo.onbalansCompGewicht)){return;}
+  if(checkZinInt("SOH", "strobo.harmonisen", info, strobo.harmonisen)){return;}
 	// if(checkZinFloat("SCD", "strobo.compVerval", info, strobo.compVerval)){return;}
 	if(checkZinBool("SKC", "strobo.plaatUitMiddenComp", info, strobo.plaatUitMiddenComp)){return;}
 	if(checkZinBool("KC", "karUitMiddenCompAan", info, karUitMiddenCompAan)){return;}
@@ -272,8 +269,8 @@ void checkenVoorCommando(int info){
 		Serial.println("volume: " + String(volume));
 		Serial.println();
 		
-		// Serial.println("armKracht: " + String(armKracht));
-		// Serial.println("armGewicht: " + String(armGewicht));
+		// Serial.println("kracht: " + String(kracht));
+		// Serial.println("gewicht: " + String(gewicht));
 		// Serial.println("isNaaldErop(): " + String(isNaaldErop()));
 		// Serial.println();
 
@@ -370,8 +367,8 @@ void serieelFunc(){
 			Serial.print(armHoekCall, 4);//1696);
 			// Serial.print(", ");
 			// Serial.print(armHoekSlow, 5);//1696);
-			// Serial.print(", ");
-			// Serial.print(armHoekOffset, 5);//1696);
+			Serial.print(", ");
+			Serial.print(armHoekOffset, 5);//1696);
 
 
 
@@ -386,11 +383,15 @@ void serieelFunc(){
 			// Serial.print(", ");
 			// Serial.print(karPosMidden, 3);
 
-			Serial.print(", ");
-			Serial.print(karPosMidden + strobo.karFourier, 3);  
+			// Serial.print(", ");
+			// Serial.print(karPosMidden + strobo.karFourier, 3);  
 
 			Serial.print(", ");
 			Serial.print(karPosMidden + strobo.karFourierFilt, 3);  
+
+
+      Serial.print(", ");
+			Serial.print(trackTussenRuimte, 3);
 
 
 
@@ -401,11 +402,6 @@ void serieelFunc(){
 			// Serial.print(", ");
 			// Serial.print(karPosFilter, 3);
 			
-			// Serial.print(", ");
-			// Serial.print(armKracht);
-			// Serial.print(", ");
-			// Serial.print(armGewicht);
-
 
 			// Serial.print(", ");
 			// Serial.print(orientatie.x);

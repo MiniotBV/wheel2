@@ -213,7 +213,7 @@ void displayUpdate(){
 	 //----------------------------------------------------------------CALIBREER STAND
 		else if(staat == S_CALIBREER){
 			
-			int volumePunt = mapF(arm.armKracht, 0, 1, displayLengte - 1,   0);
+			int volumePunt = mapF(arm.kracht, 0, 1, displayLengte - 1,   0);
 
 			for(int i = 0; i < displayLengte; i++){
 				displayData[i] = 0;

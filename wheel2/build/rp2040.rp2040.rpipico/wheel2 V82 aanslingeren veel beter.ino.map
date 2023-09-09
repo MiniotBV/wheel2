@@ -8763,9 +8763,9 @@ LOAD /Users/piet/Library/Arduino15/packages/rp2040/tools/pqt-gcc/1.3.3-a-ed6d983
  .data.antiCoggVerschuiving
                 0x0000000020001434        0x4 /var/folders/p9/kg3_hx913yq43str4c6v6pch0000gn/T/arduino-sketch-173EE71244C8E9F9DA21F16E1A18670B/sketch/wheel2 V82 aanslingeren veel beter.ino.cpp.o
                 0x0000000020001434                antiCoggVerschuiving
- .data.armGewicht
+ .data.gewicht
                 0x0000000020001438        0x4 /var/folders/p9/kg3_hx913yq43str4c6v6pch0000gn/T/arduino-sketch-173EE71244C8E9F9DA21F16E1A18670B/sketch/wheel2 V82 aanslingeren veel beter.ino.cpp.o
-                0x0000000020001438                armGewicht
+                0x0000000020001438                gewicht
  .data.armHoekMax
                 0x000000002000143c        0x4 /var/folders/p9/kg3_hx913yq43str4c6v6pch0000gn/T/arduino-sketch-173EE71244C8E9F9DA21F16E1A18670B/sketch/wheel2 V82 aanslingeren veel beter.ino.cpp.o
                 0x000000002000143c                armHoekMax
@@ -9096,9 +9096,9 @@ LOAD /Users/piet/Library/Arduino15/packages/rp2040/tools/pqt-gcc/1.3.3-a-ed6d983
                 0x0000000020008614                armHoekSlow
  .bss.armInt    0x0000000020008618       0x10 /var/folders/p9/kg3_hx913yq43str4c6v6pch0000gn/T/arduino-sketch-173EE71244C8E9F9DA21F16E1A18670B/sketch/wheel2 V82 aanslingeren veel beter.ino.cpp.o
                 0x0000000020008618                armInt
- .bss.armKracht
+ .bss.kracht
                 0x0000000020008628        0x4 /var/folders/p9/kg3_hx913yq43str4c6v6pch0000gn/T/arduino-sketch-173EE71244C8E9F9DA21F16E1A18670B/sketch/wheel2 V82 aanslingeren veel beter.ino.cpp.o
-                0x0000000020008628                armKracht
+                0x0000000020008628                kracht
  .bss.autoRpm   0x000000002000862c        0x4 /var/folders/p9/kg3_hx913yq43str4c6v6pch0000gn/T/arduino-sketch-173EE71244C8E9F9DA21F16E1A18670B/sketch/wheel2 V82 aanslingeren veel beter.ino.cpp.o
                 0x000000002000862c                autoRpm
  .bss.basis     0x0000000020008630        0x4 /var/folders/p9/kg3_hx913yq43str4c6v6pch0000gn/T/arduino-sketch-173EE71244C8E9F9DA21F16E1A18670B/sketch/wheel2 V82 aanslingeren veel beter.ino.cpp.o
@@ -13882,7 +13882,7 @@ antiCoggNul                                       /var/folders/p9/kg3_hx913yq43s
 antiCoggSampels                                   /var/folders/p9/kg3_hx913yq43str4c6v6pch0000gn/T/arduino-sketch-173EE71244C8E9F9DA21F16E1A18670B/sketch/wheel2 V82 aanslingeren veel beter.ino.cpp.o
 antiCoggType                                      /var/folders/p9/kg3_hx913yq43str4c6v6pch0000gn/T/arduino-sketch-173EE71244C8E9F9DA21F16E1A18670B/sketch/wheel2 V82 aanslingeren veel beter.ino.cpp.o
 antiCoggVerschuiving                              /var/folders/p9/kg3_hx913yq43str4c6v6pch0000gn/T/arduino-sketch-173EE71244C8E9F9DA21F16E1A18670B/sketch/wheel2 V82 aanslingeren veel beter.ino.cpp.o
-armGewicht                                        /var/folders/p9/kg3_hx913yq43str4c6v6pch0000gn/T/arduino-sketch-173EE71244C8E9F9DA21F16E1A18670B/sketch/wheel2 V82 aanslingeren veel beter.ino.cpp.o
+gewicht                                        /var/folders/p9/kg3_hx913yq43str4c6v6pch0000gn/T/arduino-sketch-173EE71244C8E9F9DA21F16E1A18670B/sketch/wheel2 V82 aanslingeren veel beter.ino.cpp.o
 armHoek                                           /var/folders/p9/kg3_hx913yq43str4c6v6pch0000gn/T/arduino-sketch-173EE71244C8E9F9DA21F16E1A18670B/sketch/wheel2 V82 aanslingeren veel beter.ino.cpp.o
 armHoekCall                                       /var/folders/p9/kg3_hx913yq43str4c6v6pch0000gn/T/arduino-sketch-173EE71244C8E9F9DA21F16E1A18670B/sketch/wheel2 V82 aanslingeren veel beter.ino.cpp.o
 armHoekDiv                                        /var/folders/p9/kg3_hx913yq43str4c6v6pch0000gn/T/arduino-sketch-173EE71244C8E9F9DA21F16E1A18670B/sketch/wheel2 V82 aanslingeren veel beter.ino.cpp.o
@@ -13895,7 +13895,7 @@ armHoekPrev                                       /var/folders/p9/kg3_hx913yq43s
 armHoekRuw                                        /var/folders/p9/kg3_hx913yq43str4c6v6pch0000gn/T/arduino-sketch-173EE71244C8E9F9DA21F16E1A18670B/sketch/wheel2 V82 aanslingeren veel beter.ino.cpp.o
 armHoekSlow                                       /var/folders/p9/kg3_hx913yq43str4c6v6pch0000gn/T/arduino-sketch-173EE71244C8E9F9DA21F16E1A18670B/sketch/wheel2 V82 aanslingeren veel beter.ino.cpp.o
 armInt                                            /var/folders/p9/kg3_hx913yq43str4c6v6pch0000gn/T/arduino-sketch-173EE71244C8E9F9DA21F16E1A18670B/sketch/wheel2 V82 aanslingeren veel beter.ino.cpp.o
-armKracht                                         /var/folders/p9/kg3_hx913yq43str4c6v6pch0000gn/T/arduino-sketch-173EE71244C8E9F9DA21F16E1A18670B/sketch/wheel2 V82 aanslingeren veel beter.ino.cpp.o
+kracht                                         /var/folders/p9/kg3_hx913yq43str4c6v6pch0000gn/T/arduino-sketch-173EE71244C8E9F9DA21F16E1A18670B/sketch/wheel2 V82 aanslingeren veel beter.ino.cpp.o
 armKracht4000mg                                   /var/folders/p9/kg3_hx913yq43str4c6v6pch0000gn/T/arduino-sketch-173EE71244C8E9F9DA21F16E1A18670B/sketch/wheel2 V82 aanslingeren veel beter.ino.cpp.o
 armKracht500mg                                    /var/folders/p9/kg3_hx913yq43str4c6v6pch0000gn/T/arduino-sketch-173EE71244C8E9F9DA21F16E1A18670B/sketch/wheel2 V82 aanslingeren veel beter.ino.cpp.o
 armMotorAan                                       /var/folders/p9/kg3_hx913yq43str4c6v6pch0000gn/T/arduino-sketch-173EE71244C8E9F9DA21F16E1A18670B/sketch/wheel2 V82 aanslingeren veel beter.ino.cpp.o

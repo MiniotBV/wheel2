@@ -320,10 +320,8 @@ void volumeFunc(){
 
 	if(versterkerInt.loop()){
 		
-		if( volume != volumeOud   ||   isNaaldEropOud !=    isNaaldLangGenoegOpDePlaat()    || volumeOverRide){//  ||   jackIn != digitalRead(koptelefoonAangesloten)){
+		if( volume != volumeOud   ||   isNaaldEropOud !=    isNaaldLangGenoegOpDePlaat()    ||   volumeOverRide){//  ||   jackIn != digitalRead(koptelefoonAangesloten)){
 			
-			
- 
 			
 			if(!(arm.isNaaldErop() && staat == S_SPELEN)   &&    !volumeOverRide){
 				// waarde = 0;
@@ -354,7 +352,9 @@ void volumeFunc(){
 
 			if(err){
 				Serial.println("geen koptelefoon versterker");
-			}
+			}else{
+        // Serial.println("volume: " + String(volume) + " geschreven");
+      }
 			
 		}
 	}

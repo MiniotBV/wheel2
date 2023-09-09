@@ -349,7 +349,7 @@ void knoppenUpdate(){
 			}
 		}
 
-		riem    +=     float(potVal - potValPrev) / AMAX;
+		riem    +=     (float(potVal - potValPrev) * 80 ) / AMAX;
 		potValPrev = potVal;
 		
 		riemFilter += (riem - riemFilter)/3;
@@ -357,7 +357,7 @@ void knoppenUpdate(){
 
 
 
-		if( !isOngeveer(riemFilter, riemFilterPrev, 0.02) ){
+		if( !isOngeveer(riemFilter, riemFilterPrev, 1) ){
 			riemDiv = riemFilter - riemFilterPrev;
 			riemFilterPrev = riemFilter;
 			
@@ -368,18 +368,18 @@ void knoppenUpdate(){
 			
 
 			if(staat == S_SCHOONMAAK){
-				arm.targetGewicht += riemDiv / 1.5;
-				arm.targetGewicht = limieteerF(arm.targetGewicht, MIN_ARMGEWICHT, MAX_ARMGEWICHT);
+				arm.targetGewicht += riemDiv * 0.0333;
+				arm.targetGewicht = limieteerF(arm.targetGewicht, MIN_GEWICHT, MAX_GEWICHT);
 			}
 
 			else if(staat == S_CALIBREER){
-				arm.armKracht += riemDiv * 0.5;
-				arm.armKracht = limieteerF(arm.armKracht, 0, 1);
+				arm.kracht += riemDiv * 0.01;
+				arm.kracht = limieteerF(arm.kracht, 0, 1);
 				
 			}
 
 			else if(staat == S_PAUZE){
-				targetNummerPos -= riemDiv * 20;
+				targetNummerPos -= riemDiv * 0.25;
 				targetNummerPos = limieteerF(targetNummerPos, PLAAT_EINDE, plaatBegin);      
 			}
 		
@@ -388,7 +388,7 @@ void knoppenUpdate(){
 					volumeDisplayActie.reset();
 				}
 				
-				volume += round(riemDiv * 66);
+				volume += round(riemDiv);
 				volume = limieteerI(volume, 0, 63);        
 			}
 		}

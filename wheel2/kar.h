@@ -19,9 +19,9 @@ bool karUitMiddenCompAan = true;
 float karUitMiddenCompFilter;
 
 
-float karP = 4;//0.001;//0.0005; //0.00005;//0.00025;
+float karP = 2;//4;//0.001;//0.0005; //0.00005;//0.00025;
 float karI = 0;//0.005; //0.00005;//0.00025;
-float karD = 2;//1.5;//1.5;//0.0006;//-0.003;
+float karD = 1;//2;//1.5;//1.5;//0.0006;//-0.003;
 
 float karDcomp = 0;
 
@@ -38,8 +38,8 @@ float karOffset = 0; // om te kijken wat de homing afwijking is
 
 
 //armhoek sensor
-float armHoekMin = 1700;
-float armHoekMax = 3340;
+float armHoekMin = 1200;
+float armHoekMax = 3300;
 float armHoekMinCall = AMAX;
 float armHoekMaxCall = 0;
 float armHoekCall;
@@ -260,6 +260,14 @@ void naarVolgendNummer(){
 
 
 void staatDingen(){
+
+  if(staat == S_HOK){
+		armHoekCentreer();
+		karMotorEnable = false;
+		herhaalDeHelePlaat = false;
+		return;
+	}
+
 	
 	if(staat == S_STOPPEN){
 		if(arm.naaldEraf() && decelereerKar()){
@@ -271,10 +279,8 @@ void staatDingen(){
 
 
 	if(staat == S_NAAR_HOK  ||  staat == S_HOMEN_VOOR_SPELEN  ||  staat == S_HOMEN_VOOR_SCHOONMAAK){
-		if(staatVeranderd.sinds() < 1000){//calibreren
-			armHoekCentreer();
-			return;
-		}
+		
+    if(staatVeranderd.sinds() < 100){return;}// ff uittrillen na aanzetten stappermotor
 
 		bool aangekomen = beweegKarNaarPos(-150,  KAR_MAX_SNELHEID);
 
@@ -286,7 +292,7 @@ void staatDingen(){
 			return;
 		}
 
-		if(armHoek < -0.25){//-800){//-1000)
+		if(armHoek > 0.5){//-800){//-1000)
 			Serial.println("home verschill: " + String(karOffset + karPos));
 			karOffset -= KAR_HOME - karPos;
 			karPos = KAR_HOME;
@@ -321,12 +327,7 @@ void staatDingen(){
 
 
 
-	if(staat == S_HOK){
-		armHoekCentreer();
-		karMotorEnable = false;
-		herhaalDeHelePlaat = false;
-		return;
-	}
+
 
 
 
@@ -434,7 +435,7 @@ void staatDingen(){
 
 		
 		if(arm.naaldErop()){
-			nieuwePos = karPos + limieteerF(armHoek * -karP, -3, 3);
+			nieuwePos = karPos + limieteerF(armHoek * karP, -3, 3);
 			nieuwePos = limieteerF(nieuwePos, 0, plaatBegin);
 			beweegKarNaarPos(nieuwePos, KAR_MAX_SNELHEID);
 			
@@ -456,11 +457,13 @@ void staatDingen(){
 				return;
 			}
 
-			// if(naaldNaarVorenBewogen.sinds() > 6000){
-			// 	setError(E_NAALD_NIET_BEWOGEN); //kar te lang niet bewogen
-			// 	stoppen();
-			// 	return;
-			// }      
+			if(naaldNaarVorenBewogen.sinds() > 6000){
+				setError(E_NAALD_NIET_BEWOGEN); //kar te lang niet bewogen
+        naaldNaarVorenBewogen.reset(); // ff de timer reseten zodat hij niet straks weer triggerd
+        gaNaarNummer(karPos - 0.25); // beweeg de kar 0.5mm naar binne om over de skip te skippen
+				// stoppen();
+				return;
+			}      
 		}
 		return;
 	}
@@ -530,6 +533,7 @@ void staatDingen(){
 		}
 
 		if(sensorPos > PLAAT_EINDE + 2  &&  sensorPos < PLAAT_EINDE + 12  && plaatAanwezig){  // ligt er een plaat op? dan stoppen
+      Serial.println("kan niet in schoonmaak, er is een plaat of iets vergelijkbaars");
 			stoppen();
 		}
 		return;
@@ -574,7 +578,7 @@ bool karMotorUitvoeren()
       if(armHoekRuw > armHoekMaxCall){armHoekMaxCall = armHoekRuw;}
   }
 	
-	armHoekCall = mapF(armHoekRuw, armHoekMin, armHoekMax, 0, 1);
+	armHoekCall = mapF(armHoekRuw, armHoekMin, armHoekMax, 1, -1);
 	
 	armHoekDiv = armHoekCall - armHoekPrev;
 	armHoekPrev = armHoekCall;
@@ -593,11 +597,11 @@ bool karMotorUitvoeren()
       staat == S_TERUG_SPOELEN || 
       staat == S_UITROLLEN_NA_SPOELEN )
   {
-		if(armHoekCall > 0.95){
+		if(armHoekCall > 0.9){
 			setError(E_ARMHOEK_LIMIET_POS);
 			staat = S_HOK;
 		}
-		if(armHoekCall < 0.05){
+		if(armHoekCall < -0.9){
 			setError(E_ARMHOEK_LIMIET_NEG);
 			staat = S_HOK;
 		}
@@ -612,7 +616,7 @@ bool karMotorUitvoeren()
 
 
 	karDcomp *= 0.999;
-	karDcomp += limieteerF(armHoekDiv * -karD, -KAR_MAX_SNELHEID, KAR_MAX_SNELHEID);//------------ Om oscilatie te voorkomen
+	karDcomp += limieteerF(armHoekDiv * karD, -KAR_MAX_SNELHEID, KAR_MAX_SNELHEID);//------------ Om oscilatie te voorkomen
 	
 	
 	egteKarPos  = karPos + karDcomp;
@@ -627,13 +631,7 @@ bool karMotorUitvoeren()
 
 
 	if(karMotorEnable){
-		if(antiCoggAan){
-			pwmStapperAntiCogging(-karMotorPos,   stapperAP, stapperAN,  stapperBP, stapperBN,  true);      
-		}else{
-			pwmStapper(-karMotorPos,   stapperAP, stapperAN,  stapperBP, stapperBN,  true);
-		}
-	 
-		
+    pwmStapper(-karMotorPos,   stapperAP, stapperAN,  stapperBP, stapperBN,  true);
 	
 	}else{
 		pwmDisableStapper(stapperAP, stapperAN,  stapperBP, stapperBN);

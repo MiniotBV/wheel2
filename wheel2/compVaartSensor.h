@@ -76,12 +76,15 @@ class COMPVAART
 		float karCosFilt;
 		float karFourierFilt;
 
+    float karPosMiddenGeschiedenis[pprmax];
+
 
 
 
 		//---------------------------------------------onbalans compensatie
 
-		int onbalansFase = 100;//70;//90;//75;//90;  50 in pulsen per rev
+		int onbalansFase = 180;//90;//100;//70;//90;//75;//90;  50 in pulsen per rev
+    int onbalansHarm = -120;
 		
 		float gemiddeldeSnelheidPre, gemiddeldeSnelheid;
 		
@@ -93,10 +96,10 @@ class COMPVAART
 		float onbalansCompGewicht = 1.5;//2;//0.8;
 
 
-		float  onbalansSinTotaal[5];
-		float  onbalansCosTotaal[5];
-		float onbalansSinWaardes[5][pprmax];
-		float onbalansCosWaardes[5][pprmax];
+		float  onbalansSinTotaal[10];
+		float  onbalansCosTotaal[10];
+		float onbalansSinWaardes[10][pprmax];
+		float onbalansCosWaardes[10][pprmax];
 		int harmonisen = 3;
 		volatile float onbalansCompFourier = 0;
 
@@ -212,6 +215,11 @@ class COMPVAART
 
 			karPosMidden = karPosMiddenPre / pulsenPerRev;
 
+      trackTussenRuimte = karPosMiddenGeschiedenis[teller] - karPosMidden;
+      karPosMiddenGeschiedenis[teller] = karPosMidden;
+
+
+
 			float karPosUitMidden = egteKarPos - karPosMidden;
 
 			if(arm.isNaaldEropVoorZoLang(1000) && staat == S_SPELEN){ // naald moet er ff opzitten in spelen staat voor ie gaat rekenene
@@ -233,14 +241,11 @@ class COMPVAART
 			
 
 
-			int leadTeller = rondTrip(teller - (8+9), pulsenPerRev);
+			int leadTeller = rondTrip(teller - (8+9), pulsenPerRev); // fase verschuiving: 8 van de 16samples avg filter, en 9 van het gewonde filter er achteraan
 			float uitMiddenSnelheidsComp = ( ( ( sinus[leadTeller] * karSinFilt )  +  ( cosin[leadTeller] * karCosFilt ) )  / pulsenPerRev  ) * 2;
 
 			centerCompTargetRpm = targetRpm *  (( karPosMidden - uitMiddenSnelheidsComp ) / karPosMidden );
 
-      // targetrpm * midden / (midden + afwijking)
-
-      // centerCompTargetRpm = targetRpm +  uitMiddenSnelheidsComp; //<<<< dit is soort van wat ik bruikt
 
 			
 
@@ -248,6 +253,7 @@ class COMPVAART
 			float cosBuff = karCosFilt / pulsenPerRev;
 			if( sinBuff * sinBuff  +  cosBuff * cosBuff  >  3 * 3){ // een uit het midden hijd van 6mm (3mm radius) triggerd error
 				setError(E_TE_GROTE_UITSLAG);
+        clearCompSamples();
 				stoppen();
 			}
 
@@ -296,17 +302,18 @@ class COMPVAART
 			onbalansCompFourier = 0;
 
 			for(int harm = 1; harm < harmonisen + 1; harm++){
-				int hoek = rondTrip(teller * harm,  pulsenPerRev);
+				int hoek = rondTrip(teller * harm,  pulsenPerRev); // hoek vermenigvuldigd met de uidige harmonici
 
-				onbalansSinTotaal[harm] -= onbalansSinWaardes[harm][teller];
-				onbalansSinWaardes[harm][teller] = sinus[hoek]  *  nieuweWaarde;
-				onbalansSinTotaal[harm] += onbalansSinWaardes[harm][teller];
+				onbalansSinTotaal[harm] -= onbalansSinWaardes[harm][teller]; // haal de ouwe waarde uit het totaal
+				onbalansSinWaardes[harm][teller] = sinus[hoek]  *  nieuweWaarde; // bereken de nieuwe waarde
+				onbalansSinTotaal[harm] += onbalansSinWaardes[harm][teller]; // voeg de nieuwe to aan het totaal
 				
 				onbalansCosTotaal[harm] -= onbalansCosWaardes[harm][teller];
 				onbalansCosWaardes[harm][teller] = cosin[hoek]  *  nieuweWaarde;
 				onbalansCosTotaal[harm] += onbalansCosWaardes[harm][teller];
 
-				hoek = rondTrip(hoek + onbalansFase,  pulsenPerRev);
+				hoek = rondTrip(hoek + onbalansFase + (onbalansHarm / harm),  pulsenPerRev); // hoek ofset om de compensati wat voorspellender te maken
+        // hoek = rondTrip(hoek +8+ (onbalansFase / harm),  pulsenPerRev); // hoek ofset om de compensati wat voorspellender te maken (vaste 8 voor 16sample avg filter)
 				onbalansCompFourier += ( ( sinus[hoek] * onbalansSinTotaal[harm] ) + ( cosin[hoek] * onbalansCosTotaal[harm] ) ) / pulsenPerRev;
 			}
 

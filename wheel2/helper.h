@@ -59,6 +59,7 @@ float karPosFilterSlow = karPos;
 float karPosMinimaal = karPos;
 
 float karPosMidden;
+float trackTussenRuimte;
 
 
 

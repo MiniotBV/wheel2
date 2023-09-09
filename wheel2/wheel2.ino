@@ -112,13 +112,7 @@ void setup() {
 
 
 	pinMode(ledWit, OUTPUT);
-	digitalWrite(ledWit, 1);//zet led aan
-
-
-
-	berekenAntiCogging();
-
-
+	// digitalWrite(ledWit, 1);//zet led aan
 
 }
 
