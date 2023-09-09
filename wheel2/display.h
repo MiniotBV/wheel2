@@ -117,12 +117,68 @@ void displayUpdate(){
 		//--------------------------------------------------------------------INTRO
 		if(millis()<4000){
 
-			int pos = (millis()/5) - 300;
+			int pos = (millis()/10) - displayLengte;
+      int blokLengte = 15;
+      int gatLengte = 3;
 
-			for(int i = 0; i < displayLengte; i++){
-				if(i > pos  &&  i < pos + 200){
+      char versieDisplay[500];
+      int versieDisplayTeller = 0;
+
+      int decimalen = 3;
+      int versieDecimaal[decimalen] = {(versie) % 10,  (versie/10) % 10, (versie/100) % 10};
+
+      for(int i = 0; i < decimalen; i++){
+        int dec = versieDecimaal[i];
+
+        if(dec == 0){
+          for(int j = 0; j < gatLengte*2; j++){
+            if(j < gatLengte){
+              versieDisplay[versieDisplayTeller++] = 0;
+            }else{
+              versieDisplay[versieDisplayTeller++] = 1;
+            }
+          }        
+        } 
+        
+        while(dec > 0){
+          if(dec > 5){
+            dec -= 5;
+            for(int j = 0; j < gatLengte + blokLengte*2; j++){
+              if(j < gatLengte){
+                versieDisplay[versieDisplayTeller++] = 0;
+              }else{
+                versieDisplay[versieDisplayTeller++] = 1;
+              }
+            }
+          }
+
+          if(dec > 0){
+            dec -= 1;
+            for(int j = 0; j < gatLengte + blokLengte; j++){
+              if(j < gatLengte){
+                versieDisplay[versieDisplayTeller++] = 0;
+              }else{
+                versieDisplay[versieDisplayTeller++] = 1;
+              }
+            }
+          }
+           
+        }
+
+
+        if(dec == 0){
+          for(int j = 0; j < blokLengte; j++){
+            versieDisplay[versieDisplayTeller++] = 0;
+          }            
+        } 
+
+      }
+
+
+      for(int i = 0; i < displayLengte; i++){
+				if(i > pos){
 					
-					if((i - pos) % 20 < 16){
+					if(versieDisplay[i - pos] == 1){
 						displayData[i] = 0.1;
 					}else{
 						displayData[i] = 0;
@@ -131,6 +187,19 @@ void displayUpdate(){
 					displayData[i] = 0;
 				}
 			}
+
+			// for(int i = 0; i < displayLengte; i++){
+			// 	if(i > pos  &&  i < pos + 300){
+					
+			// 		if((i - pos) % 20 < 16){
+			// 			displayData[i] = 0.1;
+			// 		}else{
+			// 			displayData[i] = 0;
+			// 		}
+			// 	}else{
+			// 		displayData[i] = 0;
+			// 	}
+			// }
 		}
 
 

@@ -612,11 +612,13 @@ bool karMotorUitvoeren()
 	if( (staat == S_NAAR_BEGIN_PLAAT   &&   staatVeranderd.sinds() > 500)    || staat == S_UITROLLEN_VOOR_SPELEN || staat == S_SPELEN || staat == S_PAUZE || staat == S_NAAR_NUMMER || staat == S_DOOR_SPOELEN || staat == S_TERUG_SPOELEN || staat == S_UITROLLEN_NA_SPOELEN ){
 		if(armHoekCall > 0.9){
 			setError(E_ARMHOEK_LIMIET_POS);
-			staat = S_HOK;
+      arm.naaldEraf();
+      setStaat(S_HOK);
 		}
 		if(armHoekCall < -0.9){
 			setError(E_ARMHOEK_LIMIET_NEG);
-			staat = S_HOK;
+      arm.naaldEraf();
+			setStaat(S_HOK);
 		}
 	}
 
