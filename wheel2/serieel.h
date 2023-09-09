@@ -235,23 +235,17 @@ void checkenVoorCommando(int info){
 
 	//----------------------------------------------------------------------STROBO
 	infoPrintln(info);
+  
+
 	// if(checkZinInt("SSN", "strobo.sampleNum", info, strobo.sampleNum)){return;}
 	if(checkZinBool(    "SOC",    "strobo.onbalansCompAan",   info, strobo.onbalansCompAan)){return;}
   if(checkZinBool(    "SKC",    "strobo.plaatUitMiddenComp",info, strobo.plaatUitMiddenComp)){return;}
 	if(checkZinBool(    "KC",     "karUitMiddenCompAan",      info, karUitMiddenCompAan)){return;}
 
 
-  if(checkZinInt(     "SHVA",   "strobo.harmVerschuiving[1]", info, strobo.harmVerschuiving[1])){return;}
-  if(checkZinInt(     "SHVB",   "strobo.harmVerschuiving[2]", info, strobo.harmVerschuiving[2])){return;}
-  if(checkZinInt(     "SHVC",   "strobo.harmVerschuiving[3]", info, strobo.harmVerschuiving[3])){return;}
-  if(checkZinFloat(   "SHEA",   "strobo.harmEffect[1]",     info, strobo.harmEffect[1])){return;}
-  if(checkZinFloat(   "SHEB",   "strobo.harmEffect[2]",     info, strobo.harmEffect[2])){return;}
-  if(checkZinFloat(   "SHEC",   "strobo.harmEffect[3]",     info, strobo.harmEffect[3])){return;}
-
-  // if(checkZinInt("SOFH", "strobo.onbalansHarm", info, strobo.onbalansHarm)){return;}
-	// if(checkZinInt("SOF", "strobo.onbalansFase", info, strobo.onbalansFase)){return;}
+  if(checkZinInt(     "SOF",    "strobo.onbalansFase",      info, strobo.onbalansFase)){return;}
 	if(checkZinFloat(   "SOG",    "strobo.onbalansCompGewicht", info, strobo.onbalansCompGewicht)){return;}
-  if(checkZinInt(     "SOH",    "strobo.harmonisen",        info, strobo.harmonisen)){return;}
+  if(checkZinFloat(   "SOFCB",  "strobo.onbalansFilterCurveBreedte",  info, strobo.onbalansFilterCurveBreedte)){strobo.maakOnbalansFilterCurve(); return;}
 
 	if(checkZinCommando("SCZ",    "strobo.clearCompSamplesOpTellerNull()", info)){   strobo.clearCompSamplesOpTellerNull(); return;}
 	if(checkZinCommando("SCC",    "strobo.clearCompSamples()", info)){   strobo.clearCompSamples(); return;}
@@ -317,15 +311,7 @@ void checkenVoorCommando(int info){
 		// Serial.println();
 
 		// Serial.println("strobo.onbalansFase: " + String(strobo.onbalansFase));
-    // Serial.println("strobo.onbalansHarm: " + String(strobo.onbalansHarm));
 
-    // Serial.println("strobo.harmVerschuiving[1]" + String(strobo.harmVerschuiving[1]));
-    // Serial.println("strobo.harmVerschuiving[2]" + String(strobo.harmVerschuiving[2]));
-    // Serial.println("strobo.harmVerschuiving[3]" + String(strobo.harmVerschuiving[3]));
-
-    // Serial.println("strobo.harmEffect[1]" + String(strobo.harmEffect[1]));
-    // Serial.println("strobo.harmEffect[2]" + String(strobo.harmEffect[2]));
-    // Serial.println("strobo.harmEffect[3]" + String(strobo.harmEffect[3]));
   
 		// Serial.println("strobo.sampleNum: " + String(strobo.sampleNum));
 
@@ -358,10 +344,17 @@ void serieelFunc(){
       Serial.print(", ");
 			Serial.print(strobo.vaart - centerCompTargetRpm, 3);
 
-      Serial.print(", ");
-			Serial.print(strobo.vaart, 3);
+      // Serial.print(", ");
+			// Serial.print(strobo.vaart, 3);
       Serial.print(", ");
 			Serial.print((float)strobo.teller / strobo.pulsenPerRev, 3);
+
+      Serial.print(", ");
+			Serial.print(strobo.onbalansFilterCurve[strobo.teller], 4);
+
+      Serial.print(", ");
+			Serial.print(strobo.onbalansFilterCurve[strobo.teller], 4);
+      
       // Serial.print(", ");
 			// Serial.print(strobo.vaartLowPass, 3);
 
@@ -382,7 +375,9 @@ void serieelFunc(){
       // }
 
 
-
+      
+      Serial.print(", ");
+			Serial.print(strobo.procesInterval);
       
 
 
@@ -407,8 +402,8 @@ void serieelFunc(){
 			// Serial.print(", ");
 			// Serial.print(strobo.preComp, 4);
 
-			// Serial.print(", ");
-			// Serial.print(strobo.onbalansComp, 4);
+			Serial.print(", ");
+			Serial.print(strobo.onbalansComp, 4);
 
 			Serial.print(", ");
 			Serial.print(uitBuff, 2);

@@ -93,30 +93,16 @@ class COMPVAART
 
 		//---------------------------------------------onbalans compensatie
 
-		int onbalansFase = 180;//90;//100;//70;//90;//75;//90;  50 in pulsen per rev
-		int onbalansHarm = 120;
-    int harmonisen = 3;
-    int harmVerschuiving[10] = {0, 60, 120, 140};
-    float harmEffect[10] = {0, 1, 1, 1};
-
-    // int harmVerschuiving[6] = {0, 60,260,300};
-    // float harmEffect[6] = {0, 1.5, 1, 1};
-		
+		float onbalansFilterCurve[pprmax];
+    float onbalansFilterCurveBreedte = 100;
+    
+    int onbalansFase = 0;
 		
 		float onbalansCompensatie[pprmax];
 
 		volatile float onbalansComp = 0;
 		
 		float onbalansCompGewicht = 1.9;
-
-
-		float  onbalansSinTotaal[6];
-		float  onbalansCosTotaal[6];
-		float onbalansSinWaardes[6][pprmax];
-		float onbalansCosWaardes[6][pprmax];
-		
-		volatile float onbalansCompFourier = 0;
-    float onbalansSignaal = 0;
 
 
 
@@ -151,6 +137,9 @@ class COMPVAART
 				sinus[i] = sin(radiaalTeller);
 				cosin[i] = cos(radiaalTeller);
 			}
+
+
+      maakOnbalansFilterCurve();
 		}
 
 
@@ -230,20 +219,7 @@ class COMPVAART
       if(teller == 0){// als er een omwenteling is geweest
 
         if(compRaportPerOmwenteling){
-          float hoek[6];
-          float amplitude[6];
-          for(int i = 1; i < harmonisen + 1; i++){
-            hoek[i] = ( atan2(onbalansCosTotaal[i], onbalansSinTotaal[i]) * RAD_TO_DEG * 2  + 360 ) / i;
-            amplitude[i] = sqrt( onbalansSinTotaal[i] * onbalansSinTotaal[i]   +  onbalansCosTotaal[i] * onbalansCosTotaal[i]);
-            if(i == 1){
-              Serial.print("grondtoon a: " + voegMargeToe( String( amplitude[i], 2), 9) );           
-            }else{
-              Serial.print(" |     h" + String(i) + " a:" + voegMargeToe( String( amplitude[i] / amplitude[1], 2), 9) ); 
-            }
-            Serial.print(" f:" + voegMargeToe(String(hoek[i], 2), 9)  +
-            " +c:" + voegMargeToe(String(hoek[i] + harmVerschuiving[i], 2), 9));
-          }
-          Serial.println();
+
         }
 
 
@@ -366,7 +342,7 @@ class COMPVAART
 			
 
 			//-----------------------------------------------------------------------------ONBALANS COMPENSATIE
-      // procesTijd = micros();
+      procesTijd = micros();
       
 
 
@@ -380,52 +356,28 @@ class COMPVAART
           // staat == S_HOMEN_VOOR_SPELEN ||    
 					// staat == S_NAAR_BEGIN_PLAAT)
 			){ 
-        onbalansCompensatie[teller] +=  vaartCenterComp - targetRpm;
+        // onbalansCompensatie[teller] +=  vaartCenterComp - targetRpm;
+        float snelheidsError = vaartCenterComp - targetRpm;
+        for(int i = 0; i < pulsenPerRev; i++){
+          onbalansCompensatie[rondTrip(teller + i, pulsenPerRev)] += onbalansFilterCurve[i] * snelheidsError;
+        }
         
 				digitalWrite(ledWit, 1);//zet led aan
 			}else{
         digitalWrite(ledWit, 0);//zet led uit
       }
 
-      if(onbalansCompAan){
-        onbalansSignaal = onbalansCompensatie[teller];
-      }else{
-        onbalansSignaal = vaartCenterComp - targetRpm;
-      }
-
-			
-      
-      onbalansCompFourier = 0;
-
-			for(int harm = 1; harm < harmonisen + 1; harm++){
-				int hoek = rondTrip(teller * harm,  pulsenPerRev); // hoek vermenigvuldigd met de uidige harmonici
-
-				onbalansSinTotaal[harm] -= onbalansSinWaardes[harm][teller]; // haal de ouwe waarde uit het totaal
-				onbalansSinWaardes[harm][teller] = sinus[hoek]  *  onbalansSignaal; // bereken de nieuwe waarde
-				onbalansSinTotaal[harm] += onbalansSinWaardes[harm][teller]; // voeg de nieuwe to aan het totaal
-				
-				onbalansCosTotaal[harm] -= onbalansCosWaardes[harm][teller];
-				onbalansCosWaardes[harm][teller] = cosin[hoek]  *  onbalansSignaal;
-				onbalansCosTotaal[harm] += onbalansCosWaardes[harm][teller];
-
-				// hoek = rondTrip(hoek + onbalansFase - (onbalansHarm / harm),  pulsenPerRev); // hoek ofset om de compensati wat voorspellender te maken
-        hoek = rondTrip(hoek + harmVerschuiving[harm],  pulsenPerRev); // hoek ofset om de compensati wat voorspellender te maken
-        onbalansCompFourier += ( ( ( sinus[hoek] * onbalansSinTotaal[harm] ) + ( cosin[hoek] * onbalansCosTotaal[harm] ) ) / pulsenPerRev ) * harmEffect[harm];
-			}
-
-
 
 
 			if(onbalansCompAan){
-				onbalansComp = -onbalansCompFourier * onbalansCompGewicht;
+				onbalansComp = -onbalansCompensatie[rondTrip( teller + onbalansFase, pulsenPerRev)] * onbalansCompGewicht;
 			}else{
 				onbalansComp = 0;
 			}
 			
 
 
-
-			// procesInterval = micros() - procesTijd;
+			procesInterval = micros() - procesTijd;
 
 
 
@@ -450,20 +402,14 @@ class COMPVAART
 
 
 
-
+    void clearCompSamplesOpTellerNull(){
+			clearCompSamplesWachtrij = true;
+		}
 
 
 		void clearCompSamples(){
 			clearOnbalansCompSamples();
 			clearCenterCompSamples();
-      // Serial.println("clearComp"); 
-		}
-
-
-
-
-    void clearCompSamplesOpTellerNull(){
-			clearCompSamplesWachtrij = true;
 		}
 
 
@@ -471,15 +417,6 @@ class COMPVAART
 		void clearOnbalansCompSamples(){
 			for(int i = 0; i < pulsenPerRev; i++){
 				onbalansCompensatie[i] = 0;
-			}
-
-			for(int harm = 1; harm < harmonisen + 1; harm++){
-				onbalansSinTotaal[harm] = 0;
-				onbalansCosTotaal[harm] = 0;
-				for(int i = 0; i < pulsenPerRev; i++){
-					onbalansSinWaardes[harm][i] = 0;
-					onbalansCosWaardes[harm][i] = 0;
-				}
 			}
 
 		}
@@ -506,6 +443,34 @@ class COMPVAART
 			karPosMiddenPre = pos * pulsenPerRev;
 			karPosMidden = pos;
 		}
+
+
+
+
+
+
+
+    void maakOnbalansFilterCurve(){
+      
+      float totaal = 0;
+      
+      for(int i = 0; i < pulsenPerRev; i++){
+        int verschovenI = i - (pulsenPerRev / 2) ;
+        float j = float(verschovenI) / pulsenPerRev;
+        onbalansFilterCurve[rondTrip(verschovenI, pulsenPerRev)]  =  exp( -onbalansFilterCurveBreedte * (j*j));
+        totaal += onbalansFilterCurve[rondTrip(verschovenI, pulsenPerRev)];
+      }
+
+      for(int i = 0; i < pulsenPerRev; i++){
+        onbalansFilterCurve[i] /= totaal;
+      }
+    }
+
+
+
+
+
+
 
 
 
