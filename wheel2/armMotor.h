@@ -22,11 +22,15 @@ class ArmMotor
   float krachtHoog = 0.58;
 
   //op de plaat
-  float netUitHokGewicht = -0.8;
-  float netOpDePlaatGewicht = 0.5;
+  // float netUitHokGewicht = -0.8;
+  // float netOpDePlaatGewicht = 0.5;
+  float netUitHokGewicht = -1.5;
+  float netOpDePlaatGewicht = 0;
   //van de plaat af
+  // float netVanDePlaatGewicht = 0;
+  // float netInHokGewicht = -1;
   float netVanDePlaatGewicht = 0;
-  float netInHokGewicht = -1;
+  float netInHokGewicht = -1.5;
 
 
   bool armMotorAan = false;
@@ -112,6 +116,7 @@ class ArmMotor
           gewicht = targetGewicht;//zet dan de arm meteen op target gewicht
         }else{
           gewicht = mapF(aanInterval.sinds(), 0, snelheidOp, netUitHokGewicht, netOpDePlaatGewicht);
+          // gewicht = mapF(aanInterval.sinds(), 0, snelheidOp, pwm2armGewicht(0), netOpDePlaatGewicht);
         }
       
       }else{// moet de arm motor uit?
