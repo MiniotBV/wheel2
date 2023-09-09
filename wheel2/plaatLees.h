@@ -8,10 +8,19 @@
 
 
 float plaatLeesRuw;
-float plaatLeesRuwOud;
-float plaatLeesDiv;
+
 float plaatLeesGefilterd;
 float plaatLeesGefilterdOud;
+
+float plaatLeesDiv;
+float plaatLeesDivOud;
+
+float plaatLeesDivDiv;
+float plaatLeesDivDivOud;
+
+float plaatLeesTrack;
+
+
 float plaatLeesGefilterdBodem;
 float plaatLeesDivTrack;
 
@@ -112,17 +121,23 @@ void scannenVoorTracks(){
   plaatLeesLedSetMilliAmp(10);
 
   // trackTresshold = plaatLeesGefilterdBodem + ((AMAX - plaatLeesGefilterdBodem) / 3);
-  trackTresshold = (AMAX - plaatLeesGefilterdBodem) * 0.35;
+  trackTresshold = 100;//(AMAX - plaatLeesGefilterdBodem) * 0.35;
   
   if(sensorPos < PLAAT_EINDE + 2){
     return;
   }
     
-  if(plaatLeesDivTrack < trackTresshold && trackOnderTresh){
+  // if(plaatLeesDivTrack < trackTresshold && trackOnderTresh){
+  //   trackOnderTresh = false;
+  // }
+
+  // if(plaatLeesDivTrack > trackTresshold && !trackOnderTresh){
+
+  if(plaatLeesTrack < trackTresshold && trackOnderTresh){
     trackOnderTresh = false;
   }
 
-  if(plaatLeesDivTrack > trackTresshold && !trackOnderTresh){
+  if(plaatLeesTrack > trackTresshold && !trackOnderTresh){
     trackOnderTresh = true;
 
     if(hoeveelNummers == 0){
@@ -175,17 +190,24 @@ void plaatLeesFunc(){
     plaatLeesGefilterd += (plaatLeesRuw - plaatLeesGefilterd) / 5;
     
     plaatLeesDiv = plaatLeesGefilterd - plaatLeesGefilterdOud;
+    plaatLeesGefilterdOud = plaatLeesGefilterd;
+
+    plaatLeesDivDiv = plaatLeesDiv - plaatLeesDivOud;
+    plaatLeesDivOud = plaatLeesDiv;
+
+    if(plaatLeesDivDiv > 0) plaatLeesTrack += plaatLeesDivDiv; else plaatLeesTrack = 0;
+
     // plaatLeesDiv = plaatLeesRuw - plaatLeesRuwOud;
 
-    if(plaatLeesDiv > 0){//                     vermeer het effect van omhooggaande flanken, om nummer te vinden
-      plaatLeesDivTrack += plaatLeesDiv;
-    }else{
-      plaatLeesDivTrack = 0;
-    }
+    // if(plaatLeesDiv > 0){//                     vermeer het effect van omhooggaande flanken, om nummer te vinden
+    //   plaatLeesDivTrack += plaatLeesDiv;
+    // }else{
+    //   plaatLeesDivTrack = 0;
+    // }
 
     // plaatLeesDivTrack = plaatLeesRuwOud - plaatLeesRuw;
 
-    plaatLeesGefilterdOud = plaatLeesGefilterd;
+    
     // plaatLeesRuwOud = plaatLeesRuw;
 
 

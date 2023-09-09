@@ -56,7 +56,11 @@ void serieelFunc(){
       Serial.print(plaatLeesDiv);
 
       Serial.print(", ");
-      Serial.print(plaatLeesGefilterdBodem);
+      Serial.print(plaatLeesDivDiv);
+
+      Serial.print(", ");
+      Serial.print(plaatLeesTrack);
+      
       // Serial.print(", ");
       // Serial.print(trackTresshold);
       // Serial.print(", ");
