@@ -429,6 +429,7 @@ void staatDingen(){
 				debug("plaatDia: " + String(plaadDiaInch) + " : ±10\" ");
 				setPlateauRpm(rpm33);
 				plaatBegin = TIEN_INCH_PLAAT_BEGIN;
+        plaatLeesNaKijken();
 			
 			
 			}else{
@@ -438,10 +439,7 @@ void staatDingen(){
 			}
 
 			targetNummerPos = plaatBegin;
-      plaatLeesNaKijken();
-
 			setStaat(S_UITROLLEN_VOOR_SPELEN);
-      
 
 			return;
 		}
