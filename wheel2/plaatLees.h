@@ -64,6 +64,15 @@ void plaatDetectie(){
   plaatAanwezig = plaatLeesAbsDiv > plaatDetectieTreshold;//als er genoeg amplitude is is er een plaat
 
   plaatAanwezigGefilterd += (plaatAanwezig - plaatAanwezigGefilterd) / 10;
+
+
+  if(plaatAanwezigGefilterd < 0.5 &&       // is er nog een plaat aanwezig?
+    staat == S_SPELEN             &&
+    staat == S_PAUZE
+  ){
+    stoppen();
+    return;
+  }
 }
 
 

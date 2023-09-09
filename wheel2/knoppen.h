@@ -387,7 +387,7 @@ void knoppenUpdate(){
       
 
       if(staat == S_SCHOONMAAK){
-        armGewicht += riemDiv * 4;
+        armTargetGewicht += riemDiv * 4;
         // armGewichtUpdate();
       }
 

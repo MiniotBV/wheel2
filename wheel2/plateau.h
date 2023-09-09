@@ -1,5 +1,5 @@
 
-bool plateauLogica = false;
+bool plateauLogica = true;
 
 
 float plateauP = 0.005;//plateau33P;    //pid

@@ -13,9 +13,9 @@ float karInterval;
 bool karGolven;
 
 
-float karP = 0.002;//0.001;//0.0005; //0.00005;//0.00025;
+float karP = 2;//0.001;//0.0005; //0.00005;//0.00025;
 float karI = 0;//0.005; //0.00005;//0.00025;
-float karD = 0.0015;//0.0006;//-0.003;
+float karD = 1.5;//0.0006;//-0.003;
 
 float karBasis;
 float karPcomp = 0;
@@ -47,9 +47,14 @@ float karOffset = 0; // om te kijken wat de homing afwijking is
 
 
 
+float armHoekMin = 1700;
+float armHoekMax = 3340;
+float armHoekMinCall = AMAX;
+float armHoekMaxCall = 0;
+float armHoekCall;
+
 float armHoekRuw = analogRead(hoekSensor);
-float armHoekRuwPrev;
-float armHoekFilt;
+float armHoekPrev;
 float armHoekDiv;
 
 float armHoek;
@@ -152,7 +157,7 @@ void karNoodStop(){
 
 
 
-void armHoekCalibreer(){
+void armHoekCentreer(){
   armHoekOffset = armHoekSlow;
   // Serial.print("armHoekofset: ");
   // Serial.println(armHoekOffset);
@@ -270,7 +275,7 @@ void staatDingen(){
 
   if(staat == S_NAAR_HOK  ||  staat == S_HOMEN_VOOR_SPELEN){
     if(staatVeranderd.sinds() < 2000){//calibreren
-      armHoekCalibreer();
+      armHoekCentreer();
       return;
     }
 
@@ -289,9 +294,8 @@ void staatDingen(){
       return;
     }
 
-    if(armHoek < -500){//-800){//-1000)
-      Serial.print("div; ");
-      Serial.println(  (karOffset + karPos)  );
+    if(armHoek < -0.25){//-800){//-1000)
+      Serial.println("home verschill: " + String(karOffset + karPos));
       karOffset -= KAR_HOME - karPos;
       karPos = KAR_HOME;
 
@@ -321,7 +325,7 @@ void staatDingen(){
 
 
   if(staat == S_HOK){
-    armHoekCalibreer();
+    armHoekCentreer();
     karMotorEnable = false;
     return;
   }
@@ -422,31 +426,10 @@ void staatDingen(){
 
 
   if(staat == S_SPELEN){
-    // if(!decelereerKar()){return;}
-
-    if(plaatAanwezigGefilterd < 0.5){ // is er nog een plaat aanwezig?
-      stoppen();
-      return;
-    }
     
     if(naaldErop()){
       
-      // float acu = 0;
-      // acu += limieteerF(armHoek * -karP, -0.5, 0.5);
-      // acu += limieteerF(armHoekDiv * -karD, -0.3, 0.3);
-      // // karBasis += armHoek * -karI;
-      // // acu += limieteerF(karBasis, -0.1, 0.1);
-
-      // karPos += acu;
-
-
-      // karPcomp = 0;
-      // karPcomp += limieteerF(armHoek * karP, -0.5, 0.5);
-      // karPcomp += limieteerF(armHoekDiv * karD, -0.3, 0.3);
-      // karPos += limieteerF(armHoek * karI, -0.1, 0.1);
-      
       nieuwePos = karPos + limieteerF(armHoek * -karP, -3, 3);
-      // nieuwePos += limieteerF(armHoekDiv * karD, -0.3, 0.3);
       nieuwePos = limieteerF(nieuwePos, 0, plaatBegin);
       beweegKarNaarPos(nieuwePos, KAR_MAX_SNELHEID);
       
@@ -525,7 +508,7 @@ void staatDingen(){
   if(staat == S_PAUZE){
     if(naaldEraf()){
       if(staatVeranderd.sinds() > 3000){
-        armHoekCalibreer();
+        armHoekCentreer();
       }
       beweegKarNaarPos(targetNummerPos, KAR_MAX_SNELHEID);
     }
@@ -539,6 +522,11 @@ void staatDingen(){
     if(beweegKarNaarPos( SCHOONMAAK_PLEK,   KAR_MAX_SNELHEID)){
       naaldErop();
     }
+
+    if(sensorPos > PLAAT_EINDE + 2  &&  plaatAanwezig  &&  isNaaldEraf()){ // als de naalt erop is mag de plaat sensor wel afgaan
+      stoppen();      
+    }
+
     return;
   }
 
@@ -594,17 +582,19 @@ bool karMotorUitvoeren(){
   
   karInterval = (micros() - karMotorInt.vorrigeVorrigeTijd) / 1000000.0;
 
-  armHoekRuw = analogRead(hoekSensor);
-  armHoekFilt += (armHoekRuw - armHoekFilt)/6;
+  armHoekRuw += ( analogRead(hoekSensor) - armHoekRuw ) / 6;
 
-  armHoekRuw = armHoekFilt;
+  if(armHoekRuw < armHoekMinCall){armHoekMinCall = armHoekRuw;}
+  if(armHoekRuw > armHoekMaxCall){armHoekMaxCall = armHoekRuw;}
   
-  armHoekDiv = armHoekRuw - armHoekRuwPrev;
-  armHoekRuwPrev = armHoekRuw;
+  armHoekCall = mapF(armHoekRuw, armHoekMin, armHoekMax, 0, 1);
+  
+  armHoekDiv = armHoekCall - armHoekPrev;
+  armHoekPrev = armHoekCall;
 
-  armHoekSlow += (armHoekRuw - armHoekSlow) / 100;
+  armHoekSlow += (armHoekCall - armHoekSlow) / 100;
 
-  armHoek = armHoekRuw - armHoekOffset;
+  armHoek = armHoekCall - armHoekOffset;
 
 
   sensorPos = karPos - SENSOR_OFFSET;
@@ -671,9 +661,7 @@ bool karMotorUitvoeren(){
     Serial.print(',');
     Serial.print(armHoekRuw);
     Serial.print(',');
-    Serial.print(nieuwePos, 2);
-    
-    // Serial.print(armHoekFilt);
+    Serial.print(armHoekCall, 2);
 
     Serial.println();
   }

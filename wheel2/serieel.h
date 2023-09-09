@@ -188,7 +188,15 @@ void serieelFunc(){
       
       
       else if(letter == 'O'){
-        armHoekCalibreer();
+        armHoekCentreer();
+      }
+      else if(letter == 'o'){
+        armHoekMin = armHoekMinCall;
+        armHoekMax = armHoekMaxCall;
+
+        armHoekMinCall = AMAX;
+        armHoekMaxCall = 0;
+        Serial.println("armHoek gecalibreed en buffer waardes gereset");
       }
       
 
@@ -354,7 +362,7 @@ void serieelFunc(){
 
 
       else if(letter == '?'){    //help
-        Serial.println("help---------------------------------------------");   
+        Serial.println("\n\n\nhelp---------------------------------------------");   
         Serial.println("plateau P: " + String(plateauP, 5));
         Serial.println("plateau I: " + String(plateauI, 5));
         Serial.println("plateau D: " + String(plateauD, 5));
@@ -390,7 +398,7 @@ void serieelFunc(){
         printKnoppen();
         orientatie.print();
 
-        Serial.println("-------------------------------------------------");  
+        Serial.println("-------------------------------------------------\n\n\n");  
       }
     
     }

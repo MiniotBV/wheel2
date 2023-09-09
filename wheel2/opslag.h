@@ -15,7 +15,8 @@ float eepromVersie;
 
 #define EEPROM_TRACK_OFFSET       300
 
-
+#define EEPROM_ARMHOEK_MIN        400
+#define EEPROM_ARMHOEK_MAX        410
 
 
 
@@ -57,6 +58,9 @@ void eepromUitlezen(){
 
   eepromLeesFloatWaarde( EEPROM_TRACK_OFFSET,  trackOffset);
 
+  eepromLeesFloatWaarde( EEPROM_ARMHOEK_MIN,  armHoekMin);
+  eepromLeesFloatWaarde( EEPROM_ARMHOEK_MAX,  armHoekMax);
+
 }
 
 
@@ -68,17 +72,22 @@ void eepromOpslaan(){
   EEPROM.put( EEPROM_ARMGEWICHT,          armTargetGewicht);
   EEPROM.put( EEPROM_WATERPAS_OFFSET,     orientatie.gefilterdOffset);
   EEPROM.put( EEPROM_TRACK_OFFSET,        trackOffset);
+
+  EEPROM.put( EEPROM_ARMHOEK_MIN,         armHoekMin);
+  EEPROM.put( EEPROM_ARMHOEK_MAX,         armHoekMax);
 }
 
 
 
 void eepromPrint(){
-  Serial.println("EEPROM_VERSIE:            " + String(eepromVersie, 5)                );
-  Serial.println("EEPROM_ARMKRACHT_500MG:   " + String(armKracht500mg, 5)              );
-  Serial.println("EEPROM_ARMKRACHT_4000MG:  " + String(armKracht4000mg, 5)             );
-  Serial.println("EEPROM_ARMGEWICHT:        " + String(armTargetGewicht, 5)            );
-  Serial.println("EEPROM_WATERPAS_OFFSET:   " + String(orientatie.gefilterdOffset, 5)  );
-  Serial.println("EEPROM_TRACK_OFFSET:      " + String(trackOffset, 5)                 );
+  Serial.println("EEPROM_VERSIE:            " + String(eepromVersie,                  5));
+  Serial.println("EEPROM_ARMKRACHT_500MG:   " + String(armKracht500mg,                5));
+  Serial.println("EEPROM_ARMKRACHT_4000MG:  " + String(armKracht4000mg,               5));
+  Serial.println("EEPROM_ARMGEWICHT:        " + String(armTargetGewicht,              5));
+  Serial.println("EEPROM_WATERPAS_OFFSET:   " + String(orientatie.gefilterdOffset,    5));
+  Serial.println("EEPROM_TRACK_OFFSET:      " + String(trackOffset,                   5));
+  Serial.println("EEPROM_ARMHOEK_MIN        " + String(armHoekMin,                    5));
+  Serial.println("EEPROM_ARMHOEK_MAX        " + String(armHoekMax,                    5));
 }
 
 
