@@ -354,8 +354,6 @@ void serieelFunc(){
       Serial.print(", ");
 			Serial.print(strobo.onbalansFilterCurve[strobo.teller]);
 
-            Serial.print(", ");
-			Serial.print(strobo.preOnbalansFilterCurve[strobo.teller], 4);
 
       
       // Serial.print(", ");

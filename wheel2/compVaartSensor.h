@@ -91,8 +91,7 @@ class COMPVAART
 
 
 		//---------------------------------------------onbalans compensatie
-    float preOnbalansFilterCurve[pprmax];
-		int onbalansFilterCurve[pprmax];
+    int onbalansFilterCurve[pprmax];
     float onbalansFilterBreedte = 65;//50;//100;
     int onbalansFase = 25;//50;//50;
 		float onbalansCompGewicht = 1.3;//2;
@@ -142,7 +141,7 @@ class COMPVAART
 
 
 
-		void update(){
+		void update(){// voor als hij stil staat dat de snelheid ook egt naar 0 gaat
 			
 			if( micros() - vaartInterval > sampleMax ){
 				if(glitchTeller > 3){
@@ -157,9 +156,6 @@ class COMPVAART
 				glitchTeller = 0;
 			}
 
-			// if(!isOngeveer(centerCompTargetRpm, targetRpm, 5)){
-			// 	centerCompTargetRpm = targetRpm;
-			// }
 		}
 
 
@@ -361,6 +357,13 @@ class COMPVAART
           onbalansCompensatie[(teller + i) % pulsenPerRev] += onbalansFilterCurve[i] * snelheidsError;
           // onbalansCompensatie[rondTrip(teller + i, pulsenPerRev)] += onbalansFilterCurve[i] * snelheidsError;
         }
+
+
+        // for(int i = 0; i < onbalansFilterCurveBreedte; i++){
+        //   int waarde = onbalansFilterCurve[i] * snelheidsError;
+        //   onbalansCompensatie[(teller + 1 + i) % pulsenPerRev] += waarde;
+        //   onbalansCompensatie[(teller - i    ) % pulsenPerRev] += waarde;
+        // }
         
 				digitalWrite(ledWit, 1);//zet led aan
 			}else{
@@ -382,14 +385,14 @@ class COMPVAART
 
 
 
-			if(golven){
-				Serial.print(vaartRuw, 3);
-				Serial.print(",");
-				Serial.print(vaart, 3);
-				Serial.print(",");
-				Serial.print(karFourier, 3);
-				Serial.println();        
-			}
+			// if(golven){
+			// 	Serial.print(vaartRuw, 3);
+			// 	Serial.print(",");
+			// 	Serial.print(vaart, 3);
+			// 	Serial.print(",");
+			// 	Serial.print(karFourier, 3);
+			// 	Serial.println();        
+			// }
 
 
 			
@@ -460,15 +463,39 @@ class COMPVAART
         float waarde = exp( -onbalansFilterBreedte * (j*j));
         // int test = int(1000.0 * exp( -onbalansFilterBreedte * (j*j)) );//waarde;// * 100.0);
 
-        preOnbalansFilterCurve[rondTrip(verschovenI, pulsenPerRev)]  =  waarde * 1000;
+        onbalansFilterCurve[rondTrip(verschovenI, pulsenPerRev)]  =  waarde * 1000;
         // totaal += waarde;
       }
 
       for(int i = 0; i < pulsenPerRev; i++){
         // onbalansFilterCurve[i] /= totaal;
-        onbalansFilterCurve[i] = preOnbalansFilterCurve[i];
       }
     }
+
+
+    // void maakOnbalansFilterCurve(){
+      
+    //   float totaal = 0;
+    //   onbalansFilterCurveBreedte = pulsenPerRev;
+      
+    //   for(int i = 0; i < pulsenPerRev; i++){
+        
+    //     float j = float(i) / pulsenPerRev;
+    //     float waarde = exp( -onbalansFilterBreedte * (j*j));
+        
+    //     onbalansFilterCurve[i]  =  waarde * 1000;
+        
+    //     if(onbalansFilterCurveBreedte > i   &&   waarde < 0.01){
+    //       onbalansFilterCurveBreedte = i;
+    //     }        
+        
+    //     totaal += waarde;
+    //   }
+
+    //   for(int i = 0; i < pulsenPerRev; i++){
+    //     // onbalansFilterCurve[i] /= totaal;
+    //   }
+    // }
 
 
 
