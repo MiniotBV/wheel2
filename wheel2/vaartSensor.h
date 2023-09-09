@@ -39,19 +39,19 @@ class VAART{
       
       if(interval > sampleMax){interval = sampleMax;}
 
-      // shiftSamples(interval);
+      shiftSamples(interval);
 
 
       
 
-      filter[0] = huidigeVaart(interval);
-      vaart = filter[0];
+      // filter[0] = huidigeVaart(interval);
+      // vaart = filter[0];
             
-      for(int i = 1;   i < filterOrde + 1;   i++){
-        filter[i] +=  ( filter[i-1] - filter[i]) * filterWaarde;
-      }
+      // for(int i = 1;   i < filterOrde + 1;   i++){
+      //   filter[i] +=  ( filter[i-1] - filter[i]) * filterWaarde;
+      // }
 
-      glad = filter[filterOrde];
+      // glad = filter[filterOrde];
       
       
 
@@ -76,8 +76,8 @@ class VAART{
 
 
   float getVaart(){
-    // gemiddelde = gemiddeldeInterval();
-    // vaart =  huidigeVaart(gemiddelde);
+    gemiddelde = gemiddeldeInterval();
+    vaart =  huidigeVaart(gemiddelde);
     return vaart;
   }    
 

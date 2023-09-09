@@ -6,6 +6,19 @@
 #define AMAX 4095
 
 
+
+
+int rondTrip(int n, int max){
+  if( n < 0 ){
+    return max - (n % max);
+  }
+
+  return n % max;
+}
+
+
+
+
 float limieteerF(float n, float min, float max){
   if(n < min){
     return min;

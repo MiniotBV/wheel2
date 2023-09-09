@@ -39,7 +39,7 @@ void enableInterupts(bool aan){
 }
 
 #include "vaartSensor.h"
-VAART strobo(3, (60 / rpm33) * 1000); //1800
+VAART strobo(12, (60 / rpm33) * 1000); //1800
 // VAART strobo(7*2, (60 / rpm33) * 1000 * 2); //1800
 
 #include "compVaartSensor.h"

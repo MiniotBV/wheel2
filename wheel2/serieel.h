@@ -14,14 +14,14 @@ void serieelFunc(){
       Serial.print(TLE5012.vaart);
       Serial.print(", ");
       Serial.print(TLE5012.glad);
-      Serial.print(", ");
-      Serial.print(TLE5012.vaartRuw);
-      Serial.print(", ");
-      Serial.print(TLE5012.gladNieuw);
+      // Serial.print(", ");
+      // Serial.print(TLE5012.vaartRuw);
+      // Serial.print(", ");
+      // Serial.print(TLE5012.gladNieuw);
       Serial.print(", ");
       Serial.print(strobo.vaart);
-      Serial.print(", ");
-      Serial.print(strobo.glad);
+      // Serial.print(", ");
+      // Serial.print(strobo.glad);
       
       Serial.print(", ");
       Serial.print(TLE5012.div, 3);

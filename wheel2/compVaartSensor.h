@@ -56,11 +56,15 @@ class COMPVAART{
     float div;
     float dav;
 
+    float divAvrg[64];
+    int divTeller;
+    int divSamps = 20;
+
     int glitchTeller;
 
     int dir;
 
-    float pulsenPerRev;
+    int pulsenPerRev;
     int teller = 0;
 
     
@@ -107,24 +111,36 @@ class COMPVAART{
       teller += dir;
       if(teller >= pulsenPerRev){teller = 0;}
       if(teller < 0){teller = pulsenPerRev - 1;}
+      
+      int tellerMinEen = teller - 1;
+      if(tellerMinEen < 0){tellerMinEen = pulsenPerRev - 1;}
+
+      int tellerPlusEen = (teller+1) % pulsenPerRev;
+
+      
+      // vaartRuw = huidigeVaart(interval);    
+      // vaart = getVaart();
 
 
-      vaartRuw = huidigeVaart(interval);    
-      vaart = getVaart();
-
-
-      filter[0] = vaartRuw;
+      // filter[0] = vaartRuw;
             
-      for(int i = 1;   i < filterOrde + 1;   i++){
-        filter[i] +=  ( filter[i-1] - filter[i]) * filterWaarde;
-      }
+      // for(int i = 1;   i < filterOrde + 1;   i++){
+      //   filter[i] +=  ( filter[i-1] - filter[i]) * filterWaarde;
+      // }
 
       
       
 
-
+      // div = strobo.getVaart() / getVaart();
       // div = getVaart() / strobo.getVaart();
-      div = vaart / strobo.glad;
+      divAvrg[divTeller++ % divSamps] = getVaart() / strobo.getVaart();
+      float buf = 0;
+      for(int i = 0;  i < divSamps; i++){
+        buf += divAvrg[i];
+      }
+      div = buf / divSamps;
+
+      // div = strobo.glad / vaart ;
       
       if(compensatieMeten){
         
@@ -135,7 +151,12 @@ class COMPVAART{
           // }else{
           //   compSamples[teller] += ( div - compSamples[teller] ) / 100;
           // }
-          compSamples[teller] += (div-1) / 10;
+
+          
+          // compSamples[teller] += (compSamples[ tellerMinEen ]   -   compSamples[teller]) *0.9;
+          // compSamples[teller] += (compSamples[ tellerPlusEen  ]   -   compSamples[teller]) *0.9;
+
+          compSamples[teller] += (div-1) / 3;
         }
         
         // shiftSamples((interval * dir));
@@ -143,8 +164,9 @@ class COMPVAART{
       }
       
 
-      gladNieuw = filter[filterOrde] / compSamples[teller];
-
+      // gladNieuw = filter[filterOrde] * compSamples[teller];
+      
+      // shiftSamples((interval * dir) / compSamples[teller]);
       shiftSamples((interval * dir) * compSamples[teller]);
       
       dav = compSamples[teller];
