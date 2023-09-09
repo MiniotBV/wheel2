@@ -16,7 +16,13 @@ int nummersTeller = 0;
 
 float aa;
 
-float delayStart = 500;
+
+
+
+unsigned int displayDelay = 0;
+
+
+
 
 
 void displayInit(){
@@ -49,20 +55,24 @@ void displayPrint(float tijd){
     
     gpio_put(displayIN, displayData[i] >  displayRefreshDelayNu ? 1 : 0);
 
-    delayMicroseconds(1);
+    // delayMicroseconds(1);
     gpio_put(displayKLOK, 1);
-    delayMicroseconds(1);
+    // delayMicroseconds(1);
     gpio_put(displayKLOK, 0);
   }
   
   
   // delayMicroseconds(1);
-  gpio_put(displayLATCH, 0);
 
-  gpio_put(displayLATCH, 1);
 }
 
 
+
+
+void commitDisplay(){
+  gpio_put(displayLATCH, 0);
+  gpio_put(displayLATCH, 1);
+}
 
 
 
@@ -79,8 +89,8 @@ void displayUpdate(){
   //   displayPrint(0);
   // }
 
-  // if(displayUpInt.loop()){
-  if(true){
+  if(displayUpInt.loop()){
+  // if(true){
 
     nummersTeller = 0;
 
@@ -105,25 +115,29 @@ void displayUpdate(){
     // int naald = ((sin( aa += 0.01 )+1.0)/2.0) * (displayLengte-1);
 
     for(int pixel = 0; pixel < displayLengte; pixel++){
-      // displayData[i] = pow(  (  sin(  i/10.0   +   (millis()/100.0)  ) +1 ) /2   , 2);
-      // displayData[i] = i > abs(sin( millis()/100.0)) * displayLengte ? 1.0 : 0;
-      
       if(naald == pixel){
-        displayData[pixel] = 1;
+        displayData[pixel] = 0.9;
       }
-      // displayData[i] = i + 1 > naald && i - 1 < naald? 1   : 0;
-      // displayData[i] = 0;
-      
     }
-
-    // displayData[ int( abs(sin( millis()/100.0)) * displayLengte) ] = 10000;
-    // displayData[ displayLengte/ 2 ] = 1.0;
 
 
     displayPrint(0);
-    displayPrint(0.5);
+    displayDelay = micros();
+    commitDisplay();
 
-    delayMicroseconds(10000);
+
+    displayPrint(0.5);
+    while(micros() - displayDelay < 75){}
+    commitDisplay();
+
+
+    displayPrint(1);
+    while(micros() - displayDelay < 400){}
+    commitDisplay();
+
+
+
+    // delayMicroseconds(10000);
 
   }
 }

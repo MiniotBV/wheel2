@@ -8,27 +8,31 @@ INTERVAL serieelInt(10000, MICROS);
 void serieelFunc(){
   if(serieelInt.loop()){
 
-    Serial.print(TLE5012.getVaart());
-    Serial.print(", ");
-    Serial.print(analogRead(plaatLees));
-    Serial.print(", ");
-    Serial.print(targetRpm);
-    Serial.print(", ");
-    Serial.print(analogRead(displayPOTMETERanaloog));
-    // Serial.print(", ");
-    // Serial.print(strobo.getVaart());
-    Serial.print(", ");
-    Serial.print(uitBuff);
-    Serial.print(", ");
-    Serial.print(armHoekSlow);//1696);
-    Serial.print(", ");
-    Serial.print(armHoek - armHoekOffset);//1696);
-    Serial.print(", ");
-    Serial.print(karPositie);
-    Serial.print(", ");
-    Serial.print(armKracht);
+    if(golven){
+      Serial.print(TLE5012.getVaart());
+      Serial.print(", ");
+      Serial.print(analogRead(plaatLees));
+      Serial.print(", ");
+      Serial.print(targetRpm);
+      Serial.print(", ");
+      Serial.print(analogRead(displayPOTMETERanaloog));
+      // Serial.print(", ");
+      // Serial.print(strobo.getVaart());
+      Serial.print(", ");
+      Serial.print(uitBuff);
+      Serial.print(", ");
+      Serial.print(armHoekSlow);//1696);
+      Serial.print(", ");
+      Serial.print(armHoek);//1696);
+      Serial.print(", ");
+      Serial.print(karPositie);
+      Serial.print(", ");
+      Serial.print(armKracht);
 
-    Serial.println();
+      Serial.println();
+    }
+
+
 
 
     while(Serial.available() > 0){
@@ -40,6 +44,15 @@ void serieelFunc(){
       }
       else if(letter == 'g'){    //golven uit
         golven = false;
+      }
+      else if(letter == 'H'){    //set armhoekOfset
+        setStaat(S_NAAR_HOK);
+      }
+      else if(letter == 's'){    //set armhoekOfset
+        setStaat(S_BEGINNEN_SPELEN);
+      }
+      else if(letter == 'S'){    //set armhoekOfset
+        setStaat(S_SPELEN);
       }
       else if(letter == 'O'){    //set armhoekOfset
         armHoekOffset = armHoekSlow;

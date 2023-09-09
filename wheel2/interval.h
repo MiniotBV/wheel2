@@ -31,6 +31,11 @@ class INTERVAL{
     }
 
 
+    void offset(int ofst){
+      vorrigeTijd += ofst;
+    }
+
+
 
     unsigned long tijd(){
       if(eenheid == MILLIS){

@@ -11,6 +11,8 @@
 
 #include "interval.h"
 
+#include "staat.h"
+
 INTERVAL ledInt(200, MILLIS);
 
 
@@ -87,7 +89,7 @@ void setup() {
 void core1_entry(){
   while(1){
     displayUpdate();
-
+    serieelFunc();
     knoppenUpdate();
   }
 }
@@ -99,13 +101,9 @@ void loop() {
 
   karMotorFunc();
 
-  serieelFunc();
-
   volumeFunc();
 
   plateauFunc();
-
-
 
   pwmWrite(ledWit, pow( ((sin( (PI*millis()) / 500.0 )+1)/2), 3) * PMAX);
   // pwmWrite(ledRood, pow( ((cos( (PI*millis()) / 500.0 )+1)/2), 3) * PMAX);

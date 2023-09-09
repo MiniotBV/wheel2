@@ -7,25 +7,29 @@
 //PI = 2 stappen
 
 float mmPerStap = 1.5 / ( 48 / 12 );
-float karPositieVerhouding = ( 2 / PI ) * mmPerStap;
+float stap2mm = ( 2 / PI ) * mmPerStap;  // 0.238732414637843
+float mm2stap = 1 / stap2mm;             // 4.188790204786391
 
-float karP = 0.001;
+float karP = 0.00025;
 
 int stapperFaseA = 0;
 int stapperFaseB = 0;
 
 bool karMotorEnable = true;
 float karMotorPositie = 0;
+float karMotorOffset = 0;
 float karPositie = 0;
+float karTargetPositie = 0;
 
 
 
 
-float armHoek = analogRead(hoekSensor);
-float armHoekFilterWaarde = 2;
+float armHoekRuw = analogRead(hoekSensor);
+float armHoek;
+float armHoekFilterWaarde = 1;
 float armHoekSlow = armHoek;
 float armHoekSlowFilterWaarde = 1000;
-float armHoekOffset = 1890;
+float armHoekOffset = 1920;
 
 
 
@@ -68,16 +72,21 @@ void stapperFase(float kracht, int pinP, int pinN){
 
 
 
+
+
+
 INTERVAL armHoekInt(100, MICROS);
-INTERVAL karMotorInt(500, MICROS);
+INTERVAL karMotorInt(1000, MICROS);
 
 
 void karMotorFunc(){
   if(armHoekInt.loop()){
 
     // armHoek = analogRead(hoekSensor);
-    armHoek += (analogRead(hoekSensor) - armHoek) / armHoekFilterWaarde;
-    armHoekSlow += (armHoek - armHoekSlow) / armHoekSlowFilterWaarde;
+    armHoekRuw += (analogRead(hoekSensor) - armHoekRuw) / armHoekFilterWaarde;
+    armHoekSlow += (armHoekRuw - armHoekSlow) / armHoekSlowFilterWaarde;
+
+    armHoek = armHoekRuw - armHoekOffset;
   }
 
 
@@ -86,15 +95,56 @@ void karMotorFunc(){
       
   if(karMotorInt.loop()){
 
+    if(staat == S_NAAR_HOK){
+      if(armHoek < -600){
+        karMotorOffset = karMotorPositie;
+        karPositie = 0;
+        setStaat(S_HOK);
+      }else{
+        if(armHoek < -100){
+          karPositie -= 0.001;
+        }else{
+          karPositie -= 0.02;
+        }
+      }
+    }
+
+    else if(staat == S_HOK){
+      if(karPositie < 1){
+        karPositie += 0.002;
+      }
+    }
+
+    else if(staat == S_BEGINNEN_SPELEN){
+      if(karPositie < 96){
+        karPositie += 0.02;
+      }else{
+
+      }
+
+    }
+
+
+    else if(staat == S_SPELEN){
+      karPositie += limieteerF( -karP * armHoek , -0.02, 0.02);
+    }
+
     // karMotorPositie += 0.001;
 
     // karMotorPositie = 40 * sin(micros()/1000000.0);
     // karMotorPositie += sin(micros()/1000000.0) * 0.01;
 
     // karMotorPositie += limieteerF( -karP * ( analogRead(hoekSensor) - 1890 ) , -0.02, 0.02);
-    karMotorPositie += limieteerF( -karP * ( armHoek - armHoekOffset ) , -0.02, 0.02);
+    
+    // karMotorPositie = karMotorPositieRuw - karMotorOffset;
+    // karPositie = karMotorPositie * stap2mm;
 
-    karPositie = karMotorPositie * karPositieVerhouding;
+
+    karMotorPositie = (karPositie * mm2stap) - karMotorOffset;
+
+
+
+
 
 
     if(karMotorEnable){
