@@ -28,7 +28,10 @@ enum staats{
   S_TERUG_SPOELEN,
 
 
-  S_ERROR
+  S_ERROR,
+
+  S_JOGGEN,
+  S_PLAAT_AANWEZIG
 };
 
 
@@ -56,6 +59,7 @@ void printStaat(int s){
 
 
   if( s == S_BEGINNEN_SPELEN      ){ Serial.print("BEGINNEN_SPELEN");     return;}
+  if( s == S_PLAAT_AANWEZIG       ){ Serial.print("PLAAT_AANWEZIG");      return;}
   if( s == S_NAAR_BEGIN_PLAAT     ){ Serial.print("NAAR_BEGIN_PLAAT");    return;}
   if( s == S_BEGIN_PLAAT          ){ Serial.print("BEGIN_PLAAT");         return;}
   if( s == S_SPELEN               ){ Serial.print("SPELEN");              return;}
@@ -74,6 +78,7 @@ void printStaat(int s){
 
 
   if( s == S_ERROR                ){ Serial.print("ERROR");               return;}
+
   
   
   Serial.print("??????");
@@ -101,5 +106,58 @@ void setStaat(enum staats s){
 
 
 
+unsigned int staatsVeranderingInterval(){
+  return millis() - staatInterval;
+}
+
+
+
+
+
+
+
+
+Interval staatInt(10000, MICROS);
+
+
+void staatFunc(){
+  if(staatInt.loop()){
+    if(staat == S_BEGIN_PLAAT){
+      if(naaldErrop()){
+        setStaat(S_SPELEN);
+      }
+    }
+
+    else if(staat == S_STOPPEN){
+      if(naaldErraf()){
+        setStaat(S_NAAR_HOK);
+      }
+    }
+
+    else if(staat == S_PAUZE){
+      if(naaldErraf()){
+        // setStaat(S_NAAR_HOK);
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+void pauze(){
+  if(staat == S_SPELEN){
+    setStaat(S_PAUZE);
+  }
+  else if(staat == S_PAUZE){
+    setStaat(S_BEGINNEN_SPELEN);
+  }
+}
 
 

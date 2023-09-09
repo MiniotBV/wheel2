@@ -24,7 +24,7 @@ void armInit(){
 
 
 
-INTERVAL armInt(10, MILLIS);
+Interval armInt(10, MILLIS);
 
 void armFunc(){
   if(armInt.loop()){
@@ -64,4 +64,15 @@ void armFunc(){
     pwmWrite(armMotor, armKracht);
   }
 
+}
+
+
+bool naaldErrop(){
+  armMotorAan = true;
+  return armKracht == armTargetKracht;
+}
+
+bool naaldErraf(){
+  armMotorAan = false;
+  return armKracht == 0;
 }

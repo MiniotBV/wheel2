@@ -26,6 +26,26 @@ int limieteerI(int n, int min, int max){
 }
 
 
+
+float mapF(float n, float nMin, float nMax, float min, float max){
+  return ( ( (n - nMin) / (nMax - nMin) )  *  (max - min) ) + min;
+}
+
+
+
+
+bool isOngeveer(float waarde, float vergelijk, float marge){
+  return (waarde > vergelijk - marge) && (waarde < vergelijk + marge);
+}
+
+
+
+
+
+
+
+
+
 int volt2pwm(float volt){
   return (volt * PMAX) / 3.3;
 }

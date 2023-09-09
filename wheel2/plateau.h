@@ -47,7 +47,7 @@ float pid(float rpmIn){
 
 
 
-INTERVAL plateauInt(10000, MICROS);
+Interval plateauInt(10000, MICROS);
 
 void plateauFunc(){
 

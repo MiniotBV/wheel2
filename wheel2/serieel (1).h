@@ -3,7 +3,7 @@ bool golven = false;
 
 
 
-Interval serieelInt(10000, MICROS);
+INTERVAL serieelInt(10000, MICROS);
 
 void serieelFunc(){
   if(serieelInt.loop()){
@@ -11,25 +11,21 @@ void serieelFunc(){
     if(golven){
       Serial.print(TLE5012.getVaart());
       Serial.print(", ");
-      Serial.print(plaatLeesRuw);
-      Serial.print(", ");
-      Serial.print(plaatLeesGefilterd);
-      Serial.print(", ");
-      Serial.print(plaatLeesGefilterdBodem);
+      Serial.print(analogRead(plaatLees));
       Serial.print(", ");
       Serial.print(targetRpm);
       Serial.print(", ");
       Serial.print(analogRead(displayPOTMETERanaloog));
       // Serial.print(", ");
       // Serial.print(strobo.getVaart());
-      // Serial.print(", ");
-      // Serial.print(uitBuff);plaatLeesGefilterd
+      Serial.print(", ");
+      Serial.print(uitBuff);
       Serial.print(", ");
       Serial.print(armHoekSlow);//1696);
       Serial.print(", ");
       Serial.print(armHoek);//1696);
       Serial.print(", ");
-      Serial.print(karPos);
+      Serial.print(karPositie);
       Serial.print(", ");
       Serial.print(armKracht);
 
@@ -53,19 +49,10 @@ void serieelFunc(){
         setStaat(S_NAAR_HOK);
       }
       else if(letter == 's'){    //set armhoekOfset
-        setStaat(S_STOPPEN);
-      }
-      else if(letter == 'S'){    //set armhoekOfset
         setStaat(S_BEGINNEN_SPELEN);
       }
-      else if(letter == 'P'){    //set armhoekOfset
-        pauze();
-      }
-      else if(letter == 'J'){    //set armhoekOfset
-        setStaat(S_JOGGEN);
-        karTargetPos = Serial.parseFloat();
-        Serial.print("karTargetPos: ");
-        Serial.println(karTargetPos);
+      else if(letter == 'S'){    //set armhoekOfset
+        setStaat(S_SPELEN);
       }
       else if(letter == 'O'){    //set armhoekOfset
         armHoekOffset = armHoekSlow;
@@ -96,6 +83,9 @@ void serieelFunc(){
       else if(letter == 'm'){    //armmotor uit
         karMotorEnable = !karMotorEnable;
         Serial.println(karMotorEnable?"aan":"uit");
+      }
+      else if(letter == 'k'){    //armmotor uit
+        karMotorPositie = 0;
       }
       else if(letter == 'f'){    //armmotor uit
         armMotorAan = false;

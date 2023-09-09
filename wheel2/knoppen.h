@@ -15,7 +15,7 @@ int knoppen[8];
 
 
 
-INTERVAL knoppenInt(200, MILLIS);
+Interval knoppenInt(200, MILLIS);
 
 void knoppenUpdate(){
   if(knoppenInt.loop()){

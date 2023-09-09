@@ -3,13 +3,13 @@
 
 
 
-class INTERVAL{
+class Interval{
   public:
     unsigned int interval = 0;
     unsigned long vorrigeTijd = 0;
     int eenheid = MILLIS;
 
-    INTERVAL(int i, int tijdMode){
+    Interval(int i, int tijdMode){
       interval = i;
       eenheid = tijdMode;
       vorrigeTijd = tijd();

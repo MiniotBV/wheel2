@@ -11,21 +11,21 @@
 
 #include "interval.h"
 
+#include "armMotor.h"
+
 #include "staat.h"
 
-INTERVAL ledInt(200, MILLIS);
+Interval ledInt(200, MILLIS);
 
 
 
 
 #include "versterker.h"
 
-#include "armMotor.h"
-
 #include "karStappenMotor.h"
 
-
 #include "plaatLees.h"
+
 
 
 
@@ -97,6 +97,8 @@ void core1_entry(){
 
 void loop() {
 
+  plaatLeesFunc();
+
   armFunc();
 
   karMotorFunc();
@@ -105,8 +107,12 @@ void loop() {
 
   plateauFunc();
 
+  staatFunc();
+
   pwmWrite(ledWit, pow( ((sin( (PI*millis()) / 500.0 )+1)/2), 3) * PMAX);
   // pwmWrite(ledRood, pow( ((cos( (PI*millis()) / 500.0 )+1)/2), 3) * PMAX);
+
+  pwmWrite(ledRood, plaatAanwezig ? (PMAX-1) : 0);
 }
 
 

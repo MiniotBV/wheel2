@@ -5,6 +5,16 @@
 //1.5mm / 4 stappen per tand = 0.375mm per stap
 
 //PI = 2 stappen
+// #include "plaatLees.h"
+
+bool plaatAanwezig = false;
+
+#define KAR_SNELHEID 0.02
+
+#define KAR_BUITEN 97
+#define KAR_HOK 1
+#define KAR_EINDE_PLAAT 5
+#define SENSOR_NAALT_OFFSET 7.5//mm
 
 float mmPerStap = 1.5 / ( 48 / 12 );
 float stap2mm = ( 2 / PI ) * mmPerStap;  // 0.238732414637843
@@ -16,10 +26,10 @@ int stapperFaseA = 0;
 int stapperFaseB = 0;
 
 bool karMotorEnable = true;
-float karMotorPositie = 0;
+float karMotorPos = 0;
 float karMotorOffset = 0;
-float karPositie = 0;
-float karTargetPositie = 0;
+float karPos = 0;
+float karTargetPos = 0;
 
 
 
@@ -45,26 +55,6 @@ void karInit(){
 
 
 
-void stapperFase(float kracht, int pinP, int pinN){
-  int fase = kracht * PMAX;
-  
-  if(fase > 0){
-    pwmWrite(pinP,  PMAX - fase );
-    pwmWrite(pinN,  PMAX);
-  }else{
-    pwmWrite(pinP,  PMAX);
-    pwmWrite(pinN,  PMAX + fase );
-  }
-
-  // if(fase > 0){
-  //   pwmWrite(pinP,  fase );
-  //   pwmWrite(pinN,  0);
-  // }else{
-  //   pwmWrite(pinP,  0);
-  //   pwmWrite(pinN,  fase - PMAX );
-  // }
-
-}
 
 
 
@@ -74,9 +64,8 @@ void stapperFase(float kracht, int pinP, int pinN){
 
 
 
-
-INTERVAL armHoekInt(100, MICROS);
-INTERVAL karMotorInt(1000, MICROS);
+Interval armHoekInt(100, MICROS);
+Interval karMotorInt(1000, MICROS);
 
 
 void karMotorFunc(){
@@ -97,60 +86,77 @@ void karMotorFunc(){
 
     if(staat == S_NAAR_HOK){
       if(armHoek < -600){
-        karMotorOffset = karMotorPositie;
-        karPositie = 0;
+        Serial.print("div; ");
+        Serial.println(  (karMotorOffset - karMotorPos)  * stap2mm  );
+        karMotorOffset = karMotorPos;
+
+        karPos = 0;
         setStaat(S_HOK);
       }else{
         if(armHoek < -100){
-          karPositie -= 0.001;
+          karPos -= 0.001;
         }else{
-          karPositie -= 0.02;
+          karPos -= KAR_SNELHEID;
         }
       }
     }
 
     else if(staat == S_HOK){
-      if(karPositie < 1){
-        karPositie += 0.002;
+      if(karPos < KAR_HOK){
+        karPos += 0.002;
       }
     }
 
     else if(staat == S_BEGINNEN_SPELEN){
-      if(karPositie < 96){
-        karPositie += 0.02;
+      if(karPos - SENSOR_NAALT_OFFSET < KAR_EINDE_PLAAT){
+        karPos += KAR_SNELHEID;
       }else{
+        setStaat(S_PLAAT_AANWEZIG);
+      }
 
+    }
+
+    else if(staat == S_NAAR_BEGIN_PLAAT){
+      if(karPos < KAR_BUITEN){
+        karPos += KAR_SNELHEID;
+      }else{
+        setStaat(S_BEGIN_PLAAT);
       }
 
     }
 
 
     else if(staat == S_SPELEN){
-      karPositie += limieteerF( -karP * armHoek , -0.02, 0.02);
+      karPos += limieteerF( -karP * armHoek , -KAR_SNELHEID, KAR_SNELHEID);
+      karPos = limieteerF( karPos, 0, KAR_BUITEN);
+      if(karPos <= KAR_EINDE_PLAAT){
+        setStaat(S_STOPPEN);
+      }
     }
 
-    // karMotorPositie += 0.001;
-
-    // karMotorPositie = 40 * sin(micros()/1000000.0);
-    // karMotorPositie += sin(micros()/1000000.0) * 0.01;
-
-    // karMotorPositie += limieteerF( -karP * ( analogRead(hoekSensor) - 1890 ) , -0.02, 0.02);
-    
-    // karMotorPositie = karMotorPositieRuw - karMotorOffset;
-    // karPositie = karMotorPositie * stap2mm;
 
 
-    karMotorPositie = (karPositie * mm2stap) - karMotorOffset;
+    else if(staat == S_JOGGEN){
+      karPos += limieteerF( karTargetPos - karPos , -KAR_SNELHEID, KAR_SNELHEID);
+      // karPos = limieteerF( karPos, 0, KAR_BUITEN);
+
+      if(karPos == karTargetPos){
+        setStaat(S_PAUZE);
+      }
+    }
 
 
 
 
+
+
+    karMotorPos = (karPos * mm2stap) + karMotorOffset;
 
 
     if(karMotorEnable){
 
-      stapperFase( sin(karMotorPositie),  stapperAP, stapperAN);
-      stapperFase( cos(karMotorPositie),  stapperBP, stapperBN);
+      stapperFase( sin(karMotorPos),  stapperAP, stapperAN);
+      stapperFase( cos(karMotorPos),  stapperBP, stapperBN);
     
     }else{
       pwmWrite(stapperAP,  0 );

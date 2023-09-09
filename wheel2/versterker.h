@@ -13,13 +13,13 @@ void versterkerInit(){
 
 }
 
-INTERVAL versterkerInt(20, MILLIS);
+Interval versterkerInt(20, MILLIS);
 
 void volumeFunc(){
   if(versterkerInt.loop()){
     
 
-    pwmWrite(ledRood, digitalRead(koptelefoonAangesloten) ? (PMAX-1) : 0);
+    // pwmWrite(ledRood, digitalRead(koptelefoonAangesloten) ? (PMAX-1) : 0);
     // digitalWrite(ledRood, digitalRead(koptelefoonAangesloten));
     // jackIn = digitalRead(koptelefoonAangesloten);
   
