@@ -5,25 +5,28 @@ bool jackIn = false;
 int volume = 60;
 int volumeOud;
 bool isNaaldEropOud = false;
+bool volumeOverRide = false;
 
 
 
 
 
-char i2cRead(byte adress, byte reg, byte hoeveel)
+
+char i2cRead(byte adress, byte reg)
 {
   int err = 0;
   
   Wire1.begin();
   Wire1.beginTransmission(adress);
   Wire1.write(reg);
-  err = Wire1.endTransmission();
+  err = Wire1.endTransmission(false);
 
-  if(err) return -1;
+  if(err) return -111;
   
-  if(Wire1.requestFrom(adress, hoeveel) <= 0) return -1;
+  if(Wire1.requestFrom(adress, 1) <= 0) return -111;
   return Wire1.read();
 }
+
 
 
 int i2cWrite(byte adress, byte reg, byte data)
@@ -32,9 +35,207 @@ int i2cWrite(byte adress, byte reg, byte data)
   Wire1.beginTransmission(adress);
   Wire1.write(reg);
   Wire1.write(data);
+
+  // if(Wire1.endTransmission()){
+    // Serial.print("err@: ");
+    // Serial.print(adress);
+    // Serial.print(" er:");
+    // Serial.println(Wire1.endTransmission());
+  // }
   
   return Wire1.endTransmission();
 }
+
+
+
+void set_bit(uint8_t *byte, uint8_t n, bool value)
+{
+    *byte = (*byte & ~(1UL << n)) | (value << n);
+}
+
+bool get_bit(uint8_t byte, uint8_t n)
+{
+    return (byte >> n) & 1U;
+}
+
+
+
+
+
+
+
+
+
+
+// ========================
+//    ORIENTATIE
+// ========================
+class Orientatie //          QMA7981
+{
+  public:
+  // Orientatie()//(byte a)
+  // {
+  //   // i2cWrite(adress, 0x1B, 0b10000000);
+  // }
+  
+  bool isStaand    = false;
+  bool isStaandOud = false;
+  
+  byte adress = 0b0010010;
+
+  float x, y, z;
+  int id;
+  unsigned long loop;
+  bool eersteKeer = true;
+
+  void print()
+  {
+    // update();
+    Serial.print("id: ");
+    Serial.print(id);
+
+    Serial.print(" x: ");
+    Serial.print(x);
+    Serial.print(" y: ");
+    Serial.print(y);
+    Serial.print(" z: ");
+    Serial.print(z);
+    
+    Serial.println( isStaand ? " staand" : " liggend");
+  }
+
+  void update()
+  {
+    if(millis() - loop <= 100 || millis() < 200) return;
+    /*if(state.isNotSPELEN() && millis() - loop > 1000) { */
+    // if(millis() - loop <= 1000)return;
+
+    if(eersteKeer){
+      eersteKeer = false;
+      reset();
+    }
+    
+    loop = millis();
+
+    i2cWrite(adress, 0x1B, 0b10000000);
+
+    id = i2cRead(adress, 0x00);
+
+    x = read_accel_axis(1);
+    y = read_accel_axis(3);
+    z = read_accel_axis(5);
+
+    bool isFout = ! isOngeveer(y, 0, 0.2);
+    
+    isStaand = !(  isOngeveer(x, 0, 40)   &&   isOngeveer(z, 70, 40)  );
+
+    if(isStaand != isStaandOud)
+    {
+      isStaandOud = isStaand;
+      Serial.print("orientatie veranderd: ");
+      print();
+    }
+
+    // stick.isStaand = isStaand;
+
+    // print();
+  }
+
+  float read_accel_axis(uint8_t reg)
+  {
+      Wire1.begin();
+      Wire1.beginTransmission(adress);
+      Wire1.write(reg);
+      Wire1.endTransmission(false);
+      Wire1.requestFrom(adress, 2);
+      int16_t data = (Wire1.read() & 0b11111100) | (Wire1.read() << 8); // dump into a 16 bit signed int, so the sign is correct
+      data = data / 4;// divide the result by 4 to maintain the sign, since the data is 14 bits
+
+      float buf = data / 4096.0;
+      return buf;
+  }
+
+
+
+   enum qma7981_full_scale_range_t
+{
+    RANGE_2G = 0b0001,
+    RANGE_4G = 0b0010,
+    RANGE_8G = 0b0100,
+    RANGE_16G = 0b1000,
+    RANGE_32G = 0b1111
+};
+
+enum qma7981_bandwidth_t
+{
+    MCLK_DIV_BY_7695 = 0b000,
+    MCLK_DIV_BY_3855 = 0b001,
+    MCLK_DIV_BY_1935 = 0b010,
+    MCLK_DIV_BY_975 = 0b011,
+    MCLK_DIV_BY_15375 = 0b101,
+    MCLK_DIV_BY_30735 = 0b110,
+    MCLK_DIV_BY_61455 = 0b111
+};
+
+enum qma7981_clock_freq_t
+{
+    CLK_500_KHZ = 0b0000,
+    CLK_333_KHZ = 0b0001,
+    CLK_200_KHZ = 0b0010,
+    CLK_100_KHZ = 0b0011,
+    CLK_50_KHZ = 0b0100,
+    CLK_25_KHZ = 0b0101,
+    CLK_12_KHZ_5 = 0b0110,
+    CLK_5_KHZ = 0b0111
+};
+
+
+
+
+  void reset(){
+    //reset
+    i2cWrite(adress, 0x36, 0xB6);
+    i2cWrite(adress, 0x36, 0x00);
+
+    delay(10);
+
+    //set_mode
+    uint8_t data = i2cRead(adress, 0x11);
+    set_bit(&data, 7, 1);//1 = active, 0 = deactive;
+
+    //set_clock_freq
+    data &= 0b11110000;      // clear bits 0-3
+    data |= (CLK_500_KHZ & 0b1111); // set freq on bits 0-3
+    i2cWrite(adress, 0x11, data);
+
+
+    //set_bandwidth
+    data = 0b11100000;
+    data |= (MCLK_DIV_BY_7695 & 0b111);
+    i2cWrite(adress, 0x10, data);
+
+    //set_full_scale_range
+    data = 0b11110000;
+    data |= (RANGE_2G & 0b1111);
+    i2cWrite(adress, 0x0F, data);
+
+  }
+
+};
+
+
+
+Orientatie orientatie;
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -53,8 +254,9 @@ void volumeFunc(){
   if(versterkerInt.loop()){
     
 
-    if( volume != volumeOud   ||   isNaaldEropOud != isNaaldErop()){//  ||   jackIn != digitalRead(koptelefoonAangesloten)){
+    if( volume != volumeOud   ||   isNaaldEropOud != isNaaldErop()  || volumeOverRide){//  ||   jackIn != digitalRead(koptelefoonAangesloten)){
       
+      volumeOverRide = false;
       int waarde = volume;
       
       if(!isNaaldErop()){
@@ -100,9 +302,10 @@ void volumeFunc(){
 
 
 
-  if(orientatieInt.loop()){
+  orientatie.update();
+  // if(orientatieInt.loop()){
     
-  }
+  // }
 
 }
 
@@ -110,52 +313,6 @@ void volumeFunc(){
 
 
 
-
-
-
-
-
-
-
-
-// R1,R5 = 100Ohm
-// R2,R6 = 1.30kOhm 1% 0.25W, Multicomp MF25 1K3
-// R3,R7 = 39Ohm
-// R4,R8 = 1.5kOhm 5% 1W, Multicomp MCF 1W 1K5
-// R9,R11,R16,R20-R22 = 2.2kOhm
-// R10,R12-R15,R19 = 47kOhm
-// R17 = 150kOhm
-// R18 = 470kOhm
-
-// Capacitors
-// C1,C3,C24 = 47µF 20% 25V, lead pitch 2.5mm, Rubycon type 25ZLG47M6.3X7
-// C2,C4 = 100µF 20% 25V, lead pitch 2.5mm, 1.43A AC, Nichicon type UPM1E101MED
-// C5,C8 = 100nF 10% 100V, lead pitch 7.5mm, Epcos type B32560J1104K
-// C6,C7,C9,C10 = 4700µF 20% 35V, lead pitch 10mm, snap in, Panasonic type ECOS1VP472BA (25mm max. diameter)
-// C11-C18 = 47nF 10% 50V ceramic, lead pitch 5mm
-// C19,C20 = 47nF 20%, 630VDC X2, lead pitch 15mm, Vishay BCcomponents BFC233620473
-// C21 = 4.7µF 20% 63V, lead pitch 2.5mm
-// C22,C23 = 22µF 20% 35V, non polarised, lead pitch 2.5mm, Multicomp NP35V226M6.3X11
-
-// Semiconductors
-// D1-D4,D7 = 1N4002
-// D5,D8-D16 = 1N4148
-// D6,D17 = LED, green, 3mm
-// T1,T3,T4,T6 = BC337
-// T2,T5,T7 = BC327
-// IC1,IC2 = LT1083 (Linear Technology)
-// B1,B2 = GSIB1520 (15A/200V bridge rectifier) (Vishay General Semiconductor)
-// K1,K2,K4 = 2-way PCB terminal block, lead pitch 5mm
-// K3 = 3-way PCB terminal block, lead pitch 5mm
-// D6,D17,S1 = 2-pin SIL pinheader, lead pitch 0.1 inch
-// K5,K6 = 3-pin SIL pinheader, lead pitch 0.1 inch
-// F1,F2 = fuse, 6.3A antisurge (time lag), with 20x5mm PCB mount fuseholder and cover
-// Heatsink, Fischer Elektronik type SK92/75SA 1.6 K/W, size: 100x40mm, Farnell # 4621578, Reichelt # V7331G
-// Miscellaneous
-// M3 screws, nuts and washers for mounting IC1 and IC2 to heatsink (see text)
-// TO-3P thermal pad, (Bergquist type K6-104)
-// M4x10 screws for mounting heatsink to PCB
-// PCB # 100124-2, Elektor Shop
 
 
 

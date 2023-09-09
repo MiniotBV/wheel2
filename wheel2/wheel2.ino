@@ -130,9 +130,8 @@ void setup() {
   }
   
 
-  stoppen();
+  // stoppen();
 
-  // armHoekCalibreer();
 }
 
 

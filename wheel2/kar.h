@@ -39,7 +39,7 @@ int stapperFaseB = 0;
 bool karMotorEnable = true;
 float karMotorPos = 0;
 float karOffset = 0;
-float karPos = 0;
+float karPos = KAR_HOK;
 float karPosPrev = 0;
 float karTargetPos = 0;
 float sensorPos;

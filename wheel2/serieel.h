@@ -62,11 +62,11 @@ void serieelFunc(){
       // Serial.print(", ");
       // Serial.print(armHoekSlow);//1696);
       
-      // Serial.print(", ");
-      // Serial.print(armHoekRuw);//1696);
-
       Serial.print(", ");
-      Serial.print(armHoek);//1696);
+      Serial.print(armHoekRuw);//1696);
+
+      // Serial.print(", ");
+      // Serial.print(armHoek);//1696);
 
       Serial.print(", ");
       Serial.print((karPos - karPosPrev)*1000.0);//1696);
@@ -78,7 +78,23 @@ void serieelFunc(){
       // Serial.print(", ");
       // Serial.print(armKracht);
 
+
+      Serial.print(", ");
+      Serial.print(orientatie.x);
+      Serial.print(", ");
+      Serial.print(orientatie.y);
+      Serial.print(", ");
+      Serial.print(orientatie.z);
+
+
+
+
+
       Serial.println();
+
+
+
+
     }
 
 
@@ -165,6 +181,8 @@ void serieelFunc(){
       else if(letter == 'v'){    //set volume
         int i = Serial.parseInt();
         volume = i;
+        volumeOverRide = true;
+        Serial.print("volume: ");
         Serial.println(i);
       }
       else if(letter == '?'){    //help
@@ -174,7 +192,11 @@ void serieelFunc(){
         Serial.println(plateauI);
         Serial.print("d: ");
         Serial.println(plateauD);
+
+        Serial.print("staat: ");
+        printStaat(staat);
         
+        Serial.println();
         printKnoppen();
         
       

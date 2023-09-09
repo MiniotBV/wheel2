@@ -137,11 +137,14 @@ enum staats{
 
   S_ERROR,
 
+  S_FOUTE_ORIENTATIE,
+
   S_JOGGEN,
 };
 
 
-enum staats staat = S_STOPPEN;
+// enum staats staat = S_STOPPEN;
+enum staats staat = S_HOK;
 
 Interval staatVeranderd(1000, MILLIS);
 

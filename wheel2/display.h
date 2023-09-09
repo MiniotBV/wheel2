@@ -24,7 +24,8 @@ void displayInit(){
 
   setPwm(displayEN);
 
-  // pwmWriteF(displayEN, 0.9);
+  // pwmWriteF(displayEN, 0.99);
+  pwmWriteF(displayEN, 0.5);
 
   pinMode(displayPOTMETER, INPUT);
 }
@@ -47,9 +48,11 @@ void displayPrint(float tijd){
   for(int i = 0; i < displayLengte; i++){
     
     
-    // gpio_put(displayIN, displayData[i] >  tijd ? 1 : 0);//flip
+    // gpio_put(displayIN, displayData[i] >  tijd ? 1 : 0);
     int pix = (i + 7) - ((i % 8) * 2);
     gpio_put(displayIN, displayData[pix] >  tijd ? 1 : 0);//flip byte
+
+    // gpio_put(displayIN, (i%16) != 0);//flip byte
 
     gpio_put(displayKLOK, 1);
     gpio_put(displayKLOK, 0);
