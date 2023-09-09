@@ -1,7 +1,10 @@
 #include <stdio.h>
-// #include "pico/stdlib.h"
+#include "pico/stdlib.h"
+#include "pico/multicore.h"
 #include "hardware/pwm.h"
 #include "hardware/gpio.h"
+
+#include "pwm.h"
 
 #include "pins.h"
 #include "helper.h"
@@ -10,7 +13,7 @@
 
 INTERVAL ledInt(200, MILLIS);
 
-#include "pwm.h"
+
 
 
 #include "versterker.h"
@@ -30,7 +33,7 @@ float targetRpm = 33.333;
 #include "compVaartSensor.h"
 
 COMPVAART TLE5012(64, plateauA, 4096);
-VAART strobo(8, 0, 180*2);
+// VAART strobo(8, 0, 180*2);
 
 #include "knoppen.h"
 
@@ -72,6 +75,8 @@ void setup() {
   gpio_set_irq_enabled_with_callback(plateauIndex,   GPIO_IRQ_EDGE_FALL,  true,   &gpio_callback);
 
   // gpio_set_irq_enabled_with_callback(plaatStrobo,   GPIO_IRQ_EDGE_FALL + GPIO_IRQ_EDGE_RISE,  true,   &gpio_callback);
+
+   multicore_launch_core1(core1_entry);
 }
 
 
@@ -79,8 +84,13 @@ void setup() {
 
 
 
+void core1_entry(){
+  while(1){
+    displayUpdate();
 
-bool ll = false;
+    knoppenUpdate();
+  }
+}
 
 
 void loop() {
@@ -95,10 +105,6 @@ void loop() {
 
   plateauFunc();
 
-  displayUpdate();
-
-  knoppenUpdate();
-
 
 
   pwmWrite(ledWit, pow( ((sin( (PI*millis()) / 500.0 )+1)/2), 3) * PMAX);
@@ -112,21 +118,25 @@ void loop() {
 
 
 
-
+// bool interruptBezig = false;
 
 
 void gpio_callback(uint gpio, uint32_t events) {
+  // if(interruptBezig){return}
+  // interruptBezig = true;
+
   if(gpio == plateauA || gpio == plateauB){
     TLE5012.interrupt();
   }
   
   if(gpio == plateauIndex){
-    call = TLE5012.teller;
     TLE5012.teller = 0;
   }  
 
-  if(gpio == plaatStrobo){
-    strobo.interrupt();
-  }
+  // if(gpio == plaatStrobo){
+  //   strobo.interrupt();
+  // }
+
+  // interruptBezig = false;
 }
 

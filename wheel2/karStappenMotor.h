@@ -22,7 +22,10 @@ float karPositie = 0;
 
 
 float armHoek = analogRead(hoekSensor);
-float armHoekFilter = 2;
+float armHoekFilterWaarde = 2;
+float armHoekSlow = armHoek;
+float armHoekSlowFilterWaarde = 1000;
+float armHoekOffset = 1890;
 
 
 
@@ -39,14 +42,14 @@ void karInit(){
 
 
 void stapperFase(float kracht, int pinP, int pinN){
-  int fase = kracht * (PMAX-1);
+  int fase = kracht * PMAX;
   
   if(fase > 0){
-    pwmWrite(pinP,  (PMAX-1) - fase );
-    pwmWrite(pinN,  (PMAX-1));
+    pwmWrite(pinP,  PMAX - fase );
+    pwmWrite(pinN,  PMAX);
   }else{
-    pwmWrite(pinP,  (PMAX-1));
-    pwmWrite(pinN,  (PMAX-1) + fase );
+    pwmWrite(pinP,  PMAX);
+    pwmWrite(pinN,  PMAX + fase );
   }
 
   // if(fase > 0){
@@ -54,7 +57,7 @@ void stapperFase(float kracht, int pinP, int pinN){
   //   pwmWrite(pinN,  0);
   // }else{
   //   pwmWrite(pinP,  0);
-  //   pwmWrite(pinN,  fase - (PMAX-1) );
+  //   pwmWrite(pinN,  fase - PMAX );
   // }
 
 }
@@ -66,15 +69,15 @@ void stapperFase(float kracht, int pinP, int pinN){
 
 
 INTERVAL armHoekInt(100, MICROS);
-INTERVAL karMotorInt(200, MICROS);
+INTERVAL karMotorInt(500, MICROS);
 
 
 void karMotorFunc(){
   if(armHoekInt.loop()){
 
     // armHoek = analogRead(hoekSensor);
-    armHoek += (analogRead(hoekSensor) - armHoek) / armHoekFilter;
-
+    armHoek += (analogRead(hoekSensor) - armHoek) / armHoekFilterWaarde;
+    armHoekSlow += (armHoek - armHoekSlow) / armHoekSlowFilterWaarde;
   }
 
 
@@ -85,36 +88,19 @@ void karMotorFunc(){
 
     // karMotorPositie += 0.001;
 
-    karMotorPositie = 40 * sin(micros()/1000000.0);
+    // karMotorPositie = 40 * sin(micros()/1000000.0);
+    // karMotorPositie += sin(micros()/1000000.0) * 0.01;
 
     // karMotorPositie += limieteerF( -karP * ( analogRead(hoekSensor) - 1890 ) , -0.02, 0.02);
-    // karMotorPositie += limieteerF( -karP * ( armHoek - 1890 ) , -0.02, 0.02);
+    karMotorPositie += limieteerF( -karP * ( armHoek - armHoekOffset ) , -0.02, 0.02);
 
     karPositie = karMotorPositie * karPositieVerhouding;
 
-    // stapperFaseA = sin(karMotorPositie) * (PMAX-1);
-    // stapperFaseB = cos(karMotorPositie) * (PMAX-1);
 
     if(karMotorEnable){
 
       stapperFase( sin(karMotorPositie),  stapperAP, stapperAN);
       stapperFase( cos(karMotorPositie),  stapperBP, stapperBN);
-      
-      // if(stapperFaseA > 0){
-      //   pwmWrite(stapperAP,  (PMAX-1) - stapperFaseA );
-      //   pwmWrite(stapperAN,  (PMAX-1));
-      // }else{
-      //   pwmWrite(stapperAP,  (PMAX-1));
-      //   pwmWrite(stapperAN,  (PMAX-1) + stapperFaseA );
-      // }
-
-      // if(stapperFaseB > 0){
-      //   pwmWrite(stapperBP,  (PMAX-1) - stapperFaseB );
-      //   pwmWrite(stapperBN,  (PMAX-1));
-      // }else{
-      //   pwmWrite(stapperBP,  (PMAX-1));
-      //   pwmWrite(stapperBN,  (PMAX-1) + stapperFaseB );
-      // }
     
     }else{
       pwmWrite(stapperAP,  0 );

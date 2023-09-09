@@ -1,3 +1,5 @@
+#define AMAX 4095
+
 
 float limieteerF(float n, float min, float max){
   if(n < min){
@@ -21,4 +23,9 @@ int limieteerI(int n, int min, int max){
   }
 
   return n;
+}
+
+
+int volt2pwm(float volt){
+  return (volt * PMAX) / 3.3;
 }

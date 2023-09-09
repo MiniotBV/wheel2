@@ -10,19 +10,19 @@ void serieelFunc(){
 
     Serial.print(TLE5012.getVaart());
     Serial.print(", ");
-    Serial.print(analogRead(displayPOTMETERanaloog));
+    Serial.print(analogRead(plaatLees));
     Serial.print(", ");
     Serial.print(targetRpm);
     Serial.print(", ");
-    Serial.print(armKracht);
+    Serial.print(analogRead(displayPOTMETERanaloog));
     // Serial.print(", ");
     // Serial.print(strobo.getVaart());
     Serial.print(", ");
     Serial.print(uitBuff);
     Serial.print(", ");
-    Serial.print(analogRead(hoekSensor) - 1890);//1696);
+    Serial.print(armHoekSlow);//1696);
     Serial.print(", ");
-    Serial.print(armHoek - 1890);//1696);
+    Serial.print(armHoek - armHoekOffset);//1696);
     Serial.print(", ");
     Serial.print(karPositie);
     Serial.print(", ");
@@ -41,10 +41,10 @@ void serieelFunc(){
       else if(letter == 'g'){    //golven uit
         golven = false;
       }
-      else if(letter == 'D'){    //set P
-        delayStart = Serial.parseFloat();
-        Serial.print("delay: ");
-        Serial.println(delayStart);
+      else if(letter == 'O'){    //set armhoekOfset
+        armHoekOffset = armHoekSlow;
+        Serial.print("ofset: ");
+        Serial.println(armHoekOffset);
       }
       else if(letter == 'p'){    //set P
         plateauP = Serial.parseFloat();
@@ -94,6 +94,14 @@ void serieelFunc(){
         Serial.println(plateauI);
         Serial.print("d: ");
         Serial.println(plateauD);
+        
+        Serial.print("knoppen= ");
+        for(int i = 0; i < 8; i++){
+          Serial.print(knoppen[i]);
+          Serial.print(' ');
+        }
+        Serial.println();
+      
       }
       else if(letter == 'S'){    //golven uit
         TLE5012.printSamples();

@@ -3,7 +3,7 @@
 void setPwm(int pin){
   gpio_set_function(pin, GPIO_FUNC_PWM);
   pwm_set_enabled(  pwm_gpio_to_slice_num(pin),  true);
-  pwm_set_wrap(  pwm_gpio_to_slice_num(pin),   PMAX);
+  pwm_set_wrap(  pwm_gpio_to_slice_num(pin),   PMAX + 1);
 }
 
 void pwmWrite(int pin, int level){

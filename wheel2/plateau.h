@@ -38,7 +38,7 @@ float pid(float rpmIn){
   
   basis = limieteerF(basis, -4000, 4000);
   
-  return  limieteerF(uit + basis,  -(PMAX-1),  PMAX-1);
+  return  limieteerF(uit + basis,  -PMAX,  PMAX-1);
 }
 
 
@@ -67,11 +67,11 @@ void plateauFunc(){
       // }
 
       if(uitBuff > 0){
-        pwmWrite(motorP,  (PMAX-1) - uitBuff );
-        pwmWrite(motorN,  (PMAX-1));
+        pwmWrite(motorN,  PMAX - uitBuff );
+        pwmWrite(motorP,  PMAX);
       }else{
-        pwmWrite(motorP,  (PMAX-1));
-        pwmWrite(motorN,  (PMAX-1) + uitBuff );
+        pwmWrite(motorN,  PMAX);
+        pwmWrite(motorP,  PMAX + uitBuff );
       }
         
       

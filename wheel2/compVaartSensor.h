@@ -71,7 +71,9 @@ class COMPVAART{
       // shiftSamples(interval);
 
       // teller = limieteerI(teller + dir,   0,   pulsenPerRev);  
-      teller += dir; 
+      teller += dir;
+      if(teller >= pulsenPerRev){teller = 0;}
+      if(teller < 0){teller = pulsenPerRev - 1;}
     }
 
 

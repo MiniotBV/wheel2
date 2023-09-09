@@ -46,19 +46,20 @@ void displayPrint(float tijd){
   
   for(int i = 0; i < displayLengte; i++){
     
-    digitalWrite(displayIN, displayData[i] >  displayRefreshDelayNu ? 1 : 0);
+    
+    gpio_put(displayIN, displayData[i] >  displayRefreshDelayNu ? 1 : 0);
 
-    // delayMicroseconds(1);
-    digitalWrite(displayKLOK, 1);
-    // delayMicroseconds(1);
-    digitalWrite(displayKLOK, 0);
+    delayMicroseconds(1);
+    gpio_put(displayKLOK, 1);
+    delayMicroseconds(1);
+    gpio_put(displayKLOK, 0);
   }
   
   
   // delayMicroseconds(1);
-  digitalWrite(displayLATCH, 0);
+  gpio_put(displayLATCH, 0);
 
-  digitalWrite(displayLATCH, 1);
+  gpio_put(displayLATCH, 1);
 }
 
 
@@ -78,7 +79,8 @@ void displayUpdate(){
   //   displayPrint(0);
   // }
 
-  if(displayUpInt.loop()){
+  // if(displayUpInt.loop()){
+  if(true){
 
     nummersTeller = 0;
 
@@ -117,25 +119,11 @@ void displayUpdate(){
     // displayData[ int( abs(sin( millis()/100.0)) * displayLengte) ] = 10000;
     // displayData[ displayLengte/ 2 ] = 1.0;
 
-    float lichtLevels = 2;
-    float lichtLevel = 0;
-    // float delayStart = 1;
-    
-    int delays[] = {0, 500};
-    float delay = delayStart / pow(2, lichtLevels);
 
     displayPrint(0);
     displayPrint(0.5);
-    // for(int i = 0;  i < lichtLevels;  i++){
-    //   lichtLevel = i / lichtLevels;
-    //   displayPrint(lichtLevel);
-      
-    //   delayMicroseconds(delays[i]);
-    //   // delay *= 2;
-    // }
 
-    // displayPrint(2);
-
+    delayMicroseconds(10000);
 
   }
 }
