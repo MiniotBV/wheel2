@@ -13,11 +13,10 @@
 #include "pico/time.h"
 
 
-
-#include "pwm.h"
-
 #include "pins.h"
 #include "helper.h"
+
+#include "pwm.h"
 
 #include "interval.h"
 
@@ -173,7 +172,7 @@ void loop() {
   plateauFunc();
 
 
-  // digitalWrite(ledWit, abs(sin(karMotorPos)) < 0.05   ||  abs(cos(karMotorPos)) < 0.05);
+  digitalWrite(ledWit, isNaaldEropVoorZoLang(1000));
 }
 
 

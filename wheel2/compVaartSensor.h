@@ -34,12 +34,23 @@ class COMPVAART{
     int pulsenPerRev;
     int teller = 0;
     float radiaalTeller;
+    int cosTeller = 0;
 
+    int glitchTeller;
+
+    float sinus[1000];
+
+
+
+    //---------------------------------------filter
     float vaart;
-
     float glad;
     float gladglad;
 
+
+
+        
+    //--------------------------------------median filter
     int medianSampleNum = 11;
     int medianTeller = 0;
     float medianSamples[100];
@@ -47,22 +58,31 @@ class COMPVAART{
     float median;
 
 
+
+    //---------------------------------------kar fourier
     float karPosMiddenPre;
     float karUitCenterGolf[1000];
-    float karUitCenterMidden;  
+    float karUitCenterMidden;
+
+    float karSinWaardes[1000];
+    float karCosWaardes[1000];
+    float karSin;
+    float karCos;
+    float karFourier;
+
+    float karSinFilt;
+    float karCosFilt;
+    float karFourierFilt;
 
 
+
+    //-----------------------------------richting
     byte sens, sensPrev;
-
-
-
-    int glitchTeller;
-
     int dir;
     int dirPrev;
 
 
-
+    //---------------------------------------------onbalans compensatie
     int faseVerschuiving = 90;//100;//90;//180;//90;  50 voor singletjes
     float plateauCompensatie[1000];
     bool compMeten = true;
@@ -74,7 +94,7 @@ class COMPVAART{
 
     float meanWaardehouder;
     float vorrigeWaarde;
-    float mean;
+    // float mean;
 
     float sinTotaal[10];
     float cosTotaal[10];
@@ -84,8 +104,10 @@ class COMPVAART{
     volatile float plateauCompFourier = 0;
 
 
-    bool golven = false;    
 
+
+    bool golven = false;    
+    bool plaatUitMiddenComp = false;
 
 
 
@@ -96,6 +118,11 @@ class COMPVAART{
       
       clearSamples();
       clearCompSamples();
+
+      for(int i = 0; i < pulsenPerRev; i++){
+        radiaalTeller = ( i * TAU ) / pulsenPerRev;
+        sinus[i] = sin(radiaalTeller);
+      }
     }
 
 
@@ -153,6 +180,7 @@ class COMPVAART{
 
 
       teller = rondTrip(teller + dir,  pulsenPerRev);
+      cosTeller = rondTrip(teller + (pulsenPerRev / 4), pulsenPerRev);
       radiaalTeller = ( teller * TAU ) / pulsenPerRev;
 
       shiftSamples(interval);// * dir);
@@ -167,38 +195,44 @@ class COMPVAART{
       // getMedian();
 
 
-
       
+
+      //-----------------------------------------------------------------------UIT HET MIDDEN COMPENSATIE
       karPosMiddenPre -= karUitCenterGolf[teller];
+      // karUitCenterGolf[teller] = (egteKarPos - karUitCenterGolf[teller] ) / 5);
       karUitCenterGolf[teller] = egteKarPos;
       karPosMiddenPre += karUitCenterGolf[teller];
       karPosMidden = karPosMiddenPre / pulsenPerRev;
 
-      // sinTotaal -= sinWaardes[teller];
-      // sinWaardes[teller] = sin(radiaalTeller * harm)  *  nieuweWaarde;
-      // sinTotaal += sinWaardes[teller];
-      
-      // cosTotaal -= cosWaardes[teller];
-      // cosWaardes[teller] = cos(radiaalTeller * harm)  *  nieuweWaarde;
-      // cosTotaal += cosWaardes[teller];
+      float karPosUitMidden = egteKarPos - karPosMidden;
+      // float nieuweWaarde = karUitCenterGolf[teller];
 
-      // // float hoek = (radiaalTeller * harm) + (faseShiftRad / harm);
-      // float hoek = radiaalTeller;// + (faseShiftRad);
-      // plateauCompFourier += ( sin(hoek) * sinTotaal ) / pulsenPerRev;        
-      // plateauCompFourier += ( cos(hoek) * cosTotaal ) / pulsenPerRev;
-      
+      if(isNaaldEropVoorZoLang(1000)){
+        karSin -= karSinWaardes[teller];
+        karSinWaardes[teller] = sin(radiaalTeller)  *  karPosUitMidden;
+        karSin += karSinWaardes[teller];
+        
+        karCos -= karCosWaardes[teller];
+        karCosWaardes[teller] = cos(radiaalTeller)  *  karPosUitMidden;
+        karCos += karCosWaardes[teller];
+      }
 
+      karFourier  = ( ( ( sin(radiaalTeller) * karSin )  +  ( cos(radiaalTeller) * karCos ) ) / pulsenPerRev ) * 2;
 
+      karSinFilt += ( karSin - karSinFilt ) / 1000;
+      karCosFilt += ( karCos - karCosFilt ) / 1000;
 
-
-
-
-
-
+      karFourierFilt  = ( ( ( sin(radiaalTeller) * karSinFilt )  +  ( cos(radiaalTeller) * karCosFilt ) )  / pulsenPerRev  ) * 2;
 
 
+      centerCompTargetRpm = targetRpm *  ( karPosMidden / ( karPosMidden + karFourier ) );
 
-      
+
+
+
+
+
+      //-----------------------------------------------------------------------------UIT BALANS COMPENSATIE
       // plateauCompensatie[teller] += ( glad - targetRpm ) / 4;
       
       if( compMeten &&   //alle mementen waarom de compensatie niet mag werken, omdat er dan verschillen zijn met als de naald er egt op is
@@ -213,7 +247,12 @@ class COMPVAART{
      
       ){ 
         if(isOngeveer(glad, targetRpm, 10)){
-          plateauCompensatie[teller] += ( glad - targetRpm ) * compVermenigvuldiging; 
+          if(plaatUitMiddenComp){
+            plateauCompensatie[teller] += ( glad - centerCompTargetRpm ) * compVermenigvuldiging; 
+          }else{
+            plateauCompensatie[teller] += ( glad - targetRpm ) * compVermenigvuldiging; 
+          }
+          
         }
       }
 
@@ -227,13 +266,13 @@ class COMPVAART{
       float nieuweWaarde = plateauCompensatie[teller];
       plateauCompFourier = 0;
       
-      float faseShiftRad = ( faseVerschuiving / (float)pulsenPerRev ) * (PI*2);
+      float faseShiftRad = ( faseVerschuiving / (float)pulsenPerRev ) * TAU;
 
       meanWaardehouder -= vorrigeWaarde;
       meanWaardehouder += nieuweWaarde;
       vorrigeWaarde = nieuweWaarde;
 
-      mean = meanWaardehouder / (float)pulsenPerRev;
+      // mean = meanWaardehouder / (float)pulsenPerRev;
 
       for(int harm = 1; harm < harmonisen + 1; harm++){
         sinTotaal[harm] -= sinWaardes[harm][teller];
@@ -262,8 +301,8 @@ class COMPVAART{
         Serial.print(vaart, 3);
         Serial.print(",");
         Serial.print(glad, 3);
-        // Serial.print(",");
-        // Serial.print(median, 3);
+        Serial.print(",");
+        Serial.print(karFourier, 3);
         Serial.println();        
       }
     }
@@ -289,9 +328,24 @@ class COMPVAART{
         }        
       }
 
+      
+
+
       meanWaardehouder = 0;
     }
 
+
+    void clearCenterCompSamples(){
+      for(int i = 0; i < pulsenPerRev; i++){
+        karSinWaardes[i] = 0;
+        karCosWaardes[i] = 0;
+        karUitCenterGolf[i] = 0;
+      }
+
+      karSin = 0;
+      karCos = 0;
+      karPosMiddenPre = 0;
+    }    
 
 
 

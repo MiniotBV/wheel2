@@ -19,6 +19,7 @@ enum staats{
   S_TERUG_SPOELEN,
   S_UITROLLEN_NA_SPOELEN,
 
+  S_HOMEN_VOOR_SCHOONMAAK,  
   S_SCHOONMAAK,
   S_CALIBREER,
   S_HOMEN_GEFAALD,
@@ -54,6 +55,7 @@ String printStaat(int s){
   if( s == S_TERUG_SPOELEN            ){ return "S_TERUG_SPOELEN";}
   if( s == S_UITROLLEN_NA_SPOELEN     ){ return "S_UITROLLEN_NA_SPOELEN";}
     
+  if( s == S_HOMEN_VOOR_SCHOONMAAK    ){ return "S_HOMEN_VOOR_SCHOONMAAK";}
   if( s == S_SCHOONMAAK               ){ return "S_SCHOONMAAK";}
   if( s == S_CALIBREER                ){ return "S_CALIBREER";}
   if( s == S_HOMEN_GEFAALD            ){ return "S_HOMEN_GEFAALD";}
@@ -88,6 +90,10 @@ void stoppen(){
 void spelen(){
   setStaat(S_HOMEN_VOOR_SPELEN);
   plateauDraaien();
+}
+
+void schoonmaakStand(){
+  setStaat(S_HOMEN_VOOR_SCHOONMAAK);
 }
 
 

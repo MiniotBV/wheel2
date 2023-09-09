@@ -170,7 +170,7 @@ float nieuweHoek, karSin, karCos;
 void pwmStapperAntiCogging(float hoek, int pinAP, int pinAN, int pinBP, int pinBN, bool omgekeerd){
   
   float andereSchaal =  hoek + (PI * 1000);
-  int indexHoek = andereSchaal * ((antiCoggSampNum - 1) / (PI*2));
+  int indexHoek = andereSchaal * ((antiCoggSampNum - 1) / TAU);
   nieuweHoek = antiCoggSampels[indexHoek % antiCoggSampNum];
 
   karSin = antiCoggFases[indexHoek % antiCoggSampNum][0];

@@ -178,6 +178,8 @@ void checkenVoorCommando(bool info){
   if(checkZinF("SCF", "strobo.compFilter", info, strobo.compFilter)){return;}
   if(checkZinF("SCVermenigvuldiging", "strobo.compVermenigvuldiging", info, strobo.compVermenigvuldiging)){return;}
   if(checkZinF("SCVerval", "", info, strobo.compVerval)){return;}
+  if(checkZinB("KC", "kar sinus comp", info, karUitMiddenComp)){return;}
+  if(checkZinB("SKC", "plaatUitMiddenComp", info, strobo.plaatUitMiddenComp)){return;}
 
 
   //------------------------------------------------------OPSLAG
@@ -268,6 +270,7 @@ void serieelFunc(){
     if(golven){
       
       
+      
       Serial.print(strobo.vaart - targetRpm, 3);
       
       // Serial.print(", ");
@@ -279,23 +282,24 @@ void serieelFunc(){
       Serial.print(strobo.glad - targetRpm, 3);
 
       Serial.print(", ");
-      Serial.print(strobo.gladglad - targetRpm, 3);
+      Serial.print(strobo.glad - centerCompTargetRpm, 3);
+
+      // Serial.print(", ");
+      // Serial.print(strobo.gladglad - targetRpm, 3);
 
       Serial.print(", ");
-      Serial.print(strobo.median - targetRpm, 3);
+      Serial.print(centerCompTargetRpm - targetRpm, 3);
 
 
 
       Serial.print(", ");
       Serial.print(strobo.teller);
 
-      Serial.print(", ");
-      Serial.print(strobo.preComp, 4);
+      // Serial.print(", ");
+      // Serial.print(strobo.preComp, 4);
 
-
-
-      Serial.print(", ");
-      Serial.print(strobo.plateauComp, 4);
+      // Serial.print(", ");
+      // Serial.print(strobo.plateauComp, 4);
 
       Serial.print(", ");
       Serial.print(uitBuff, 4);
@@ -318,7 +322,14 @@ void serieelFunc(){
       Serial.print(egteKarPos, 4);
 
       Serial.print(", ");
-      Serial.print(karPosMidden, 4);  
+      Serial.print(karPosMidden, 4);
+
+
+      Serial.print(", ");
+      Serial.print(karPosMidden + strobo.karFourier, 4);  
+
+      Serial.print(", ");
+      Serial.print(karPosMidden + strobo.karFourierFilt, 4);  
 
 
       // Serial.print(", ");

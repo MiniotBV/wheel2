@@ -12,6 +12,7 @@ float mm2stap = 1 / stap2mm;
 
 float karInterval;
 bool karGolven;
+bool karUitMiddenComp = false;
 
 
 float karP = 2;//0.001;//0.0005; //0.00005;//0.00025;
@@ -288,7 +289,7 @@ void staatDingen(){
 
 
 
-  if(staat == S_NAAR_HOK  ||  staat == S_HOMEN_VOOR_SPELEN){
+  if(staat == S_NAAR_HOK  ||  staat == S_HOMEN_VOOR_SPELEN||  staat == S_HOMEN_VOOR_SCHOONMAAK){
     if(staatVeranderd.sinds() < 2000){//calibreren
       armHoekCentreer();
       return;
@@ -318,6 +319,8 @@ void staatDingen(){
 
       if(staat == S_HOMEN_VOOR_SPELEN){
         setStaat(S_NAAR_BEGIN_PLAAT);
+      }else if(staat == S_HOMEN_VOOR_SCHOONMAAK){
+        setStaat(S_SCHOONMAAK);
       }else{
         setStaat(S_PARKEREN);
       }
@@ -624,6 +627,9 @@ bool karMotorUitvoeren(){
   
   
   egteKarPos  = karPos + karDcomp;
+  if(karUitMiddenComp){
+    egteKarPos += strobo.karFourierFilt;   
+  }
   karMotorPos = (egteKarPos + karOffset)  *  mm2stap;
 
 

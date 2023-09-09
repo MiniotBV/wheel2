@@ -135,6 +135,10 @@ int isNaaldEropSinds(){
   return naaldEropInterval.sinds();
 }
 
+bool isNaaldEropVoorZoLang(int ms){
+  return isNaaldErop() && naaldEropInterval.sinds() > ms;
+}
+
 
 
 bool naaldErop(){
