@@ -325,21 +325,21 @@ void serieelFunc(){
 			
 			
 			
-			Serial.print(strobo.vaart - targetRpm, 3);
+			Serial.print(strobo.vaartRuw - targetRpm, 3);
 			
 			// Serial.print(", ");
-			// Serial.print(strobo.glad, 3);
+			// Serial.print(strobo.vaart, 3);
 			// Serial.print(", ");
 			// Serial.print(targetRpm, 2);
 
 			Serial.print(", ");
-			Serial.print(strobo.glad - targetRpm, 3);
+			Serial.print(strobo.vaart - targetRpm, 3);
 
 			Serial.print(", ");
-			Serial.print(strobo.glad - centerCompTargetRpm, 3);
+			Serial.print(strobo.vaart - centerCompTargetRpm, 3);
 
 			// Serial.print(", ");
-			// Serial.print(strobo.gladglad - targetRpm, 3);
+			// Serial.print(strobo.vaartglad - targetRpm, 3);
 
 			Serial.print(", ");
 			Serial.print(centerCompTargetRpm - targetRpm, 3);

@@ -39,7 +39,7 @@ class COMPVAART
 		int glitchTeller;
 		int pulsenPerRev;
 		int teller = 0;
-    int tellerRuw = 0;
+		int tellerRuw = 0;
 
 		
 		//---------------------------------versamplede sinus en cos
@@ -49,15 +49,15 @@ class COMPVAART
 		
 
 		//---------------------------------------filter
-                      int sampleNum;
+		int sampleNum;
 		volatile          int samples[100];
 		volatile unsigned int sampleTeller = 0;
 
-    float gemiddelde = sampleMax;
+		float gemiddelde = sampleMax;
 
+		float vaartRuw;
 		float vaart;
-		float glad;
-		float gladglad;
+		float vaartLowPass;
 
 
 
@@ -78,7 +78,7 @@ class COMPVAART
 		float karCosFilt;
 		float karFourierFilt;
 
-    float karPosMiddenGeschiedenis[pprmax];
+		float karPosMiddenGeschiedenis[pprmax];
 
 
 
@@ -86,7 +86,7 @@ class COMPVAART
 		//---------------------------------------------onbalans compensatie
 
 		int onbalansFase = 180;//90;//100;//70;//90;//75;//90;  50 in pulsen per rev
-    int onbalansHarm = 120;
+		int onbalansHarm = 120;
 		
 		float gemiddeldeSnelheidPre, gemiddeldeSnelheid;
 		
@@ -107,14 +107,14 @@ class COMPVAART
 
 
 
-    //------------------------------------------------debug
-    unsigned int procesTijd;
+		//------------------------------------------------debug
+		unsigned int procesTijd;
 		unsigned int procesInterval;
 
 		bool golven = false;    
-    bool onbalansCompAan = true;
+		bool onbalansCompAan = true;
 		bool plaatUitMiddenComp = true;
-    bool clearCompSamplesWachtrij = false;
+		bool clearCompSamplesWachtrij = false;
 
 
 
@@ -144,9 +144,9 @@ class COMPVAART
 			if( micros() - vaartInterval > sampleMax ){
 				if(glitchTeller > 3){
 					shiftSamples(sampleMax * dir);
-					vaart = 0;
-					glad += (vaart - glad) / 10;
-					gladglad += (glad - gladglad) / 10;
+					vaartRuw = 0;
+					vaart += (vaartRuw - vaart) / 10;
+					vaartLowPass += (vaart - vaartLowPass) / 10;
 				}else{
 					glitchTeller++;
 				}
@@ -194,23 +194,26 @@ class COMPVAART
 			
 			if(interval > sampleMax){interval = sampleMax;}
 
-      tellerRuw += dir;
+			tellerRuw += dir;
 			teller = rondTrip(teller + dir,  pulsenPerRev);
 
 
-      if(clearCompSamplesWachtrij  && teller == 0){
-        clearCompSamplesWachtrij = false;
-        clearCompSamples();
-      }
-
-
-			shiftSamples(interval);// * dir);
+      shiftSamples(interval);// * dir);
 
 
 			getVaart();
 
-			glad += (vaart - glad) / 10;
-			gladglad += (glad - gladglad) / 10;
+			vaart += (vaartRuw - vaart) / 10;
+			vaartLowPass += (vaart - vaartLowPass) / 10;
+
+
+
+			//--------------------------------------------------------T = 0 COMP RESET
+			if(clearCompSamplesWachtrij  && teller == 0){
+				clearCompSamplesWachtrij = false;
+				clearOnbalansCompSamples();
+				// clearCompSamples();
+			}
 
 
 			
@@ -222,8 +225,8 @@ class COMPVAART
 
 			karPosMidden = karPosMiddenPre / pulsenPerRev;
 
-      spoorafstand = karPosMiddenGeschiedenis[teller] - karPosMidden;
-      karPosMiddenGeschiedenis[teller] = karPosMidden;
+			spoorafstand = karPosMiddenGeschiedenis[teller] - karPosMidden;
+			karPosMiddenGeschiedenis[teller] = karPosMidden;
 
       if(spoorafstand > 0.01  ||  !(staat == S_SPELEN  &&  arm.isNaaldEropVoorZoLang(2000))){
         naaldNaarVorenBewogen.reset();
@@ -295,11 +298,11 @@ class COMPVAART
 					// true
 		 
 			){ 
-				if(isOngeveer(glad, targetRpm, 10)){
+				if(isOngeveer(vaart, targetRpm, 10)){
 					if(plaatUitMiddenComp){
-						onbalansCompensatie[teller] += ( glad - centerCompTargetRpm ) * onbalansCompGewicht; 
+						onbalansCompensatie[teller] += ( vaart - centerCompTargetRpm ) * onbalansCompGewicht; 
 					}else{
-						onbalansCompensatie[teller] += ( glad - targetRpm ) * onbalansCompGewicht; 
+						onbalansCompensatie[teller] += ( vaart - targetRpm ) * onbalansCompGewicht; 
 					}
 					
 				}
@@ -324,19 +327,14 @@ class COMPVAART
 				onbalansCosTotaal[harm] += onbalansCosWaardes[harm][teller];
 
 				hoek = rondTrip(hoek + onbalansFase - (onbalansHarm / harm),  pulsenPerRev); // hoek ofset om de compensati wat voorspellender te maken
-        // hoek = rondTrip(hoek +8+ (onbalansFase / harm),  pulsenPerRev); // hoek ofset om de compensati wat voorspellender te maken (vaste 8 voor 16sample avg filter)
-				onbalansCompFourier += ( ( sinus[hoek] * onbalansSinTotaal[harm] ) + ( cosin[hoek] * onbalansCosTotaal[harm] ) ) / pulsenPerRev;
+        onbalansCompFourier += ( ( sinus[hoek] * onbalansSinTotaal[harm] ) + ( cosin[hoek] * onbalansCosTotaal[harm] ) ) / pulsenPerRev;
 			}
 
 
 			if(onbalansCompAan){
-				onbalansComp = -onbalansCompFourier; // wat het was
-        // onbalansComp = (1 + (onbalansCompFourier/100)); // wat jiji net bedacht heb
-
-        
+				onbalansComp = -onbalansCompFourier;
 			}else{
 				onbalansComp = 0;
-        // onbalansComp = 1;
 			}
 			
 
@@ -349,9 +347,9 @@ class COMPVAART
 
 
 			if(golven){
-				Serial.print(vaart, 3);
+				Serial.print(vaartRuw, 3);
 				Serial.print(",");
-				Serial.print(glad, 3);
+				Serial.print(vaart, 3);
 				Serial.print(",");
 				Serial.print(karFourier, 3);
 				Serial.println();        
@@ -397,7 +395,7 @@ class COMPVAART
 				for(int i = 0; i < pulsenPerRev; i++){
 					onbalansSinWaardes[harm][i] = 0;
 					onbalansCosWaardes[harm][i] = 0;
-				}        
+				}
 			}
 
 		}
@@ -406,24 +404,24 @@ class COMPVAART
 
 		void clearCenterCompSamples(){
 
-      float pos = egteKarPos;
+			float pos = egteKarPos;
 
 			for(int i = 0; i < pulsenPerRev; i++){
 				karSinWaardes[i] = 0;
 				karCosWaardes[i] = 0;
 				karUitCenterGolf[i] = pos;
 
-        karPosMiddenGeschiedenis[i] = pos;
+				karPosMiddenGeschiedenis[i] = pos;
 			}
 
-      karSinFilt = 0;
+			karSinFilt = 0;
 			karCosFilt = 0;
 			karSin = 0;
 			karCos = 0;
-      
-      karPosMiddenPre = pos * pulsenPerRev;
+			
+			karPosMiddenPre = pos * pulsenPerRev;
 			karPosMidden = pos;
-		}    
+		}
 
 
 
@@ -436,11 +434,10 @@ class COMPVAART
 		float getVaart(){
 
 			gemiddelde = gemiddeldeInterval();
-			vaart = huidigeVaart(gemiddelde) * dir;
+			vaartRuw = huidigeVaart(gemiddelde) * dir;
 
-
-			return vaart;//niet compensenre
-		}    
+			return vaartRuw;//niet compensenre
+		}
 
 
 

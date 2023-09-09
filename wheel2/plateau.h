@@ -185,7 +185,7 @@ void plateauStaatDingen(){
 
 	if(!plateauLogica){return;}  
 	
-	float glad = strobo.glad;//gladglad;
+	float glad = strobo.vaart;//gladglad;
 
 
 
@@ -273,7 +273,7 @@ void plateauFunc(){
 	if(plateauInt.loop()){
 
 		strobo.update();
-		float vaart = strobo.glad;
+		float vaart = strobo.vaart;
 
 		if(plateauAan){             //staat de motor aan?
 
