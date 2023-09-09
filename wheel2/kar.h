@@ -14,8 +14,11 @@ float karP = 0.0001; //0.00005;//0.00025;
 
 #define KAR_SNELHEID 0.02
 
-#define PLAAT_BEGIN 148
-#define PLAAT_EINDE 52.5
+// #define PLAAT_BEGIN 148
+// #define PLAAT_BEGIN 147
+#define PLAAT_BEGIN 146
+// #define PLAAT_EINDE 52.5
+#define PLAAT_EINDE 55
 
 #define KAR_HOME 44.5
 #define KAR_HOK 45.5
@@ -184,7 +187,7 @@ void staatDingen(){
     //   armHoekCalibreer();
     //   return;
     // }
-    if(isNaaldEraf()){
+    if(naaldEraf()){
       // karMotorEnable = true;
       setStaat(S_NAAR_HOK);
     }
@@ -193,7 +196,7 @@ void staatDingen(){
 
 
   else if(staat == S_NAAR_HOK  ||  staat == S_HOMEN_VOOR_SPELEN){
-    if(staatVeranderd.sinds() < 500){//even wachten en teruch rijden
+    if(staatVeranderd.sinds() < 400){//even wachten en teruch rijden
       karPos += KAR_SNELHEID/5;
       return;
     }
@@ -267,7 +270,7 @@ void staatDingen(){
       if(plaatAanwezig  &&  plaatAanwezigSindsKarPos == 0){
         
         if(isOngeveer(karPos, PLAAT_BEGIN, 1)){ // is het grofweg 12inch dan is het een gewone plaat en kan ie geweoon weer spelen
-          naaldErop();
+          setStaat(S_NAALD_EROP);
           Serial.println("plaatDia: 12inch");
           return;
         
@@ -296,8 +299,7 @@ void staatDingen(){
         return;
       }
       
-      
-      naaldErop();
+      setStaat(S_NAALD_EROP);
 
       return;
     
@@ -310,7 +312,7 @@ void staatDingen(){
 
 
   else if(staat == S_NAALD_EROP){
-    if(isNaaldErop()){
+    if(naaldErop()){
       if(abs(armHoek) > 10){
         karPos += limieteerF( -karP * armHoek , -KAR_SNELHEID / 2, KAR_SNELHEID / 2);
         karPos = limieteerF( karPos, PLAAT_EINDE, PLAAT_BEGIN + 2);
@@ -325,9 +327,9 @@ void staatDingen(){
 
 
   else if(staat == S_NAAR_NUMMER){
-    if(isNaaldEraf()){
+    if(naaldEraf()){
       if(karPos == karTargetPos){
-        naaldErop();
+        setStaat(S_NAALD_EROP);
         return;
       }
       
@@ -339,36 +341,29 @@ void staatDingen(){
 
 
   else if(staat == S_JOGGEN){
-    if(isNaaldEraf()){
-      if(karPos == karTargetPos){
-        // naaldErop();
-      }else{
-        karPos += limieteerF( karTargetPos - karPos , -KAR_SNELHEID, KAR_SNELHEID);
-      }
+    if(naaldEraf()){
+      karPos += limieteerF( karTargetPos - karPos , -KAR_SNELHEID, KAR_SNELHEID);
     }
   }
 
 
 
   else if(staat == S_PAUZE){
-    if(isNaaldEraf()){
+    if(naaldEraf()){
       if(staatVeranderd.sinds() > 3000){
         armHoekCalibreer();
       }
       
-      if(karPos == karTargetPos){
-        // naaldErop();
-      }else{
-        karPos += limieteerF( (karTargetPos - karPos) / 10 , -KAR_SNELHEID, KAR_SNELHEID);
-        karPos = limieteerF( karPos, PLAAT_EINDE, PLAAT_BEGIN);
-      }
+      karPos += limieteerF( (karTargetPos - karPos) / 10 , -KAR_SNELHEID, KAR_SNELHEID);
+      karPos = limieteerF( karPos, PLAAT_EINDE, PLAAT_BEGIN);
+      
     }
   }
 
 
 
   else if(staat == S_DOOR_SPOELEN){
-    if(isNaaldEraf()){
+    if(naaldEraf()){
       if(karPos >= PLAAT_EINDE){
         karPos -= KAR_SNELHEID/2;
       }
@@ -378,7 +373,7 @@ void staatDingen(){
 
 
   else if(staat == S_TERUG_SPOELEN){
-    if(isNaaldEraf()){
+    if(naaldEraf()){
       if(karPos <= PLAAT_BEGIN){
         karPos += KAR_SNELHEID/2;
       }
@@ -391,7 +386,7 @@ void staatDingen(){
     if(karPos < SCHOONMAAK_PLEK){
       karPos += KAR_SNELHEID;
     }else{
-      isNaaldErop();
+      naaldErop();
     }
   }
 }

@@ -4,6 +4,7 @@
 bool jackIn = false;
 int volume = 60;
 int volumeOud;
+bool isNaaldEropOud = false;
 
 
 
@@ -19,7 +20,18 @@ void volumeFunc(){
   if(versterkerInt.loop()){
     
 
-    if( volume != volumeOud ){//  ||   jackIn != digitalRead(koptelefoonAangesloten)){
+    if( volume != volumeOud   ||   isNaaldEropOud != isNaaldErop()){//  ||   jackIn != digitalRead(koptelefoonAangesloten)){
+      
+      int waarde = volume;
+      
+      if(!isNaaldErop()){
+        waarde = 0;
+      }
+      
+      volumeOud = volume;
+      isNaaldEropOud = isNaaldErop();
+      
+      
       int err = 0;
 
       Wire1.begin();
@@ -37,10 +49,10 @@ void volumeFunc(){
     
       Wire1.beginTransmission(0x60);
       Wire1.write(2);
-      Wire1.write(byte(volume));
+      Wire1.write(byte(waarde));
       err = Wire1.endTransmission();
 
-      volumeOud = volume;
+      
 
       if(err){
         Serial.println("geen koptelefoon versterker");

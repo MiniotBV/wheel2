@@ -14,6 +14,10 @@ void serieelFunc(){
       Serial.print(TLE5012.vaart);
       Serial.print(", ");
       Serial.print(TLE5012.glad);
+      Serial.print(", ");
+      Serial.print(TLE5012.gladglad);
+
+
       // Serial.print(", ");
       // Serial.print(TLE5012.vaartRuw);
       // Serial.print(", ");
@@ -54,11 +58,11 @@ void serieelFunc(){
       // Serial.print(", ");
       // Serial.print(uitBuff * 30);
       
-      Serial.print(", ");
-      Serial.print(armHoekSlow);//1696);
+      // Serial.print(", ");
+      // Serial.print(armHoekSlow);//1696);
       
-      Serial.print(", ");
-      Serial.print(armHoekRuw);//1696);
+      // Serial.print(", ");
+      // Serial.print(armHoekRuw);//1696);
 
       Serial.print(", ");
       Serial.print(armHoek);//1696);
@@ -174,7 +178,11 @@ void serieelFunc(){
         
       
       }
-      else if(letter == '-'){    //golven uit
+
+      else if(letter == 'I'){    //golven uit
+        toggleAudioFreqMeting();
+      }
+      else if(letter == 'C'){    //golven uit
         TLE5012.clearCompSamples();
       }
       else if(letter == 'r'){    //golven uit
@@ -192,7 +200,12 @@ void serieelFunc(){
 
 
       else if(letter == 'Q'){    //golven uit
-        TLE5012.plateauCompensatieMeten = !TLE5012.plateauCompensatieMeten;
+        TLE5012.plateauCompMeten = !TLE5012.plateauCompMeten;
+        // TLE5012.clearPlateauSamples();
+      }
+      else if(letter == 'q'){    //golven uit
+        // TLE5012.plateauCompMeten = !TLE5012.plateauCompMeten;
+        TLE5012.clearPlateauSamples();
       }
     
     }

@@ -1,7 +1,7 @@
 #define MIN_ARMGEWICHT 0.5//gr
 #define MAX_ARMGEWICHT 4//gr
 
-float armGewicht = 2.5;
+float armGewicht = 3;
 float armTargetKracht;
 
 float armKracht = 0;
@@ -10,7 +10,7 @@ float armSnelheidAf = 0.001;
 
 
 
-// float armKracht500mg = 0.22; //tweede proto
+// float armKracht500mg = 0.22; //derde proto
 // float armKracht4000mg = 0.56;
 // //op de plaat
 // float netUitHokKracht = 0.15;
@@ -19,14 +19,23 @@ float armSnelheidAf = 0.001;
 // float netVanDePlaatKracht = 0.2;
 // float netInHokKracht = 0.15;
 
-float armKracht500mg = 0.33;  //derde proto
-float armKracht4000mg = 0.64;
+// float armKracht500mg = 0.33;  //vierde proto
+// float armKracht4000mg = 0.64;
+// //op de plaat
+// float netUitHokKracht = 0.25;
+// float netOpDePlaatKracht = 0.3;
+// //van de plaat af
+// float netVanDePlaatKracht = 0.3;
+// float netInHokKracht = 0.20;
+
+float armKracht500mg = 0.33;  //vierde proto
+float armKracht4000mg = 0.68;
 //op de plaat
 float netUitHokKracht = 0.25;
-float netOpDePlaatKracht = 0.3;
+float netOpDePlaatKracht = 0.35;
 //van de plaat af
-float netVanDePlaatKracht = 0.3;
-float netInHokKracht = 0.20;
+float netVanDePlaatKracht = 0.30;
+float netInHokKracht = 0.25;
 
 
 
@@ -99,11 +108,27 @@ void armFunc(){
 
 
 bool isNaaldErop(){
-  armMotorAan = true;
   return armKracht == armTargetKracht;
 }
 
+bool naaldErop(){
+  armMotorAan = true;
+  return isNaaldErop();
+}
+
+
+
+
 bool isNaaldEraf(){
-  armMotorAan = false;
   return armKracht == 0;
 }
+
+bool naaldEraf(){
+  armMotorAan = false;
+  return isNaaldEraf();
+}
+
+
+
+
+

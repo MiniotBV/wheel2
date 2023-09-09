@@ -10,7 +10,7 @@
 
 int rondTrip(int n, int max){
   if( n < 0 ){
-    return max - (n % max);
+    return max + (n % max);
   }
 
   return n % max;

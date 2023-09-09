@@ -53,6 +53,7 @@ class COMPVAART{
     // float vaartRuw;
     // float gladNieuw;
     float glad;
+    float gladglad;
     float div;
     float dav;
 
@@ -70,12 +71,12 @@ class COMPVAART{
 
     
     // float compSamples[4096];
-    float compSamples[8192];
-    bool compensatieMeten = false;
+    float compSamples[9000];
+    bool divCompMeten = false;
 
 
-    float plateauCompensatie[8192];
-    bool plateauCompensatieMeten = false;
+    float plateauCompensatie[9000];
+    bool plateauCompMeten = false;
     float plateauComp = 0;
 
 
@@ -92,6 +93,7 @@ class COMPVAART{
       
       clearSamples();
       clearCompSamples();
+      clearPlateauSamples();
     }
 
 
@@ -104,15 +106,15 @@ class COMPVAART{
 
 
       dir = 1;
-      if(!gpio_get(plateauB)){
-        terugdraaiTeller++;
-        if(terugdraaiTeller > 6){
-          dir = -1;
-          return;
-        }     
-      }else{
-        terugdraaiTeller = 0;
-      }
+      // if(!gpio_get(plateauB)){
+      //   terugdraaiTeller++;
+      //   if(terugdraaiTeller > 6){
+      //     dir = -1;
+      //     return;
+      //   }     
+      // }else{
+      //   terugdraaiTeller = 0;
+      // }
 
 
       
@@ -123,6 +125,7 @@ class COMPVAART{
       if(interval > sampleMax){interval = sampleMax;}
       
       shiftSamples((interval * dir) * compSamples[teller]);
+      // shiftSamples((interval * dir) / compSamples[teller]);
       
 
       teller = rondTrip(teller + dir,  pulsenPerRev);
@@ -133,37 +136,52 @@ class COMPVAART{
       // getVaart();
       getDiv();
 
-      if(compensatieMeten){
+      glad += (vaart - glad) / 100;
+      gladglad += (glad - gladglad) / 1000;
+
+
+
+
+      if(divCompMeten){
         
         if(isOngeveer(div, 1, 0.3)){
           compSamples[rondTrip(teller - 10,  pulsenPerRev)] += ( div - 1 ) / 3;
+          // compSamples[rondTrip(teller - 10,  pulsenPerRev)] -= ( div - 1 ) / 3;
         }
       }
-      
-      plateauComp = plateauCompensatie[rondTrip(teller-32,  pulsenPerRev)];
 
-      if(plateauCompensatieMeten){
-        plateauCompensatie[teller] += ( vaart - targetRpm ) *0.8;
 
-        // float waarde = ( vaart - targetRpm ) *0.1;
-        // for(int i = 0; i < 32; i++){
-        //   plateauCompensatie[rondTrip(teller + i,  pulsenPerRev)] += waarde;
-        // }        
-      }else{
-        plateauCompensatie[teller] = 0;
-        plateauComp = 0;
+
+      if(plateauCompMeten){
+        plateauCompensatie[teller] += ( glad - targetRpm )*0.5 ;//* 0.2;// *0.8;
+        // plateauCompensatie[teller] += ( gladglad - targetRpm )*0.5 ;//* 0.2;// *0.8;
+        // plateauCompensatie[teller] -= (plateauCompensatie[teller] - plateauCompensatie[rondTrip(teller + 400,  pulsenPerRev)])*0.9;
       }
+
+      plateauComp = plateauCompensatie[rondTrip(teller + random(200),  pulsenPerRev)];
+      // plateauComp = plateauCompensatie[rondTrip(teller + 580,  pulsenPerRev)];
       
     }
 
 
 
 
+
+
+
+
+    void clearPlateauSamples(){
+      for(int i = 0; i < pulsenPerRev + 1000; i++){
+        plateauCompensatie[i] = 0.0;
+      }
+    }
+
+
     void setCompensatieModus(bool c){
-      compensatieMeten = c;
+      divCompMeten = c;
       compInt.reset();
 
-      if(compensatieMeten){
+      if(divCompMeten){
         // clearCompSamples();
         Serial.println("meten aan");
       }else{
@@ -173,7 +191,7 @@ class COMPVAART{
 
 
     void toggleCompensatieModus(){
-      setCompensatieModus(!compensatieMeten);
+      setCompensatieModus(!divCompMeten);
 
     }
 
@@ -236,8 +254,8 @@ class COMPVAART{
 
 
     void saveCompSamples(){
-      noInterrupts();
-      rp2040.idleOtherCore();
+      // noInterrupts();
+      // rp2040.idleOtherCore();
       delay(10);      
 
       for(int i = 0;   i < pulsenPerRev;   i+=4){
@@ -317,14 +335,19 @@ class COMPVAART{
 
 
 
-    float getGlad(){
-      glad += (vaart - glad) / 10;
-      return glad;
-    }
+    // float getGlad(){
+    //   glad += (vaart - glad) / 100;
+    //   return glad;
+    // }
 
 
     float getDiv(){
       div = getVaart() / strobo.getVaart();
+
+      // getVaart();
+      // strobo.getVaart();
+      // div = (strobo.gemiddelde / strobo.sampleNum) / (gemiddelde / sampleNum);
+
       return div;
     }
 

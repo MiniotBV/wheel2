@@ -37,6 +37,9 @@ float potVolumeDiv;
 
 
 
+
+
+
 void printKnoppen(){
   Serial.print("knoppen= ");
   for(int i = 0; i < 8; i++){
@@ -78,7 +81,10 @@ const char* knopNaam(int knop){
 
 
 
-
+void knopLog(int knop, const char* actie){
+  Serial.print(knopNaam(knop));
+  Serial.println(actie);
+}
 
 
 
@@ -113,7 +119,7 @@ void knoppenUpdate(){
     getKnopData();
 
 
-    for(int knop = 0; knop < 8; knop++){
+    for(int knop = 1; knop < 4; knop++){
 
       
       if(       knopStaat[knop] == LOSGELATEN   &&    knopIn[knop] == INGEDRUKT ){//             KORT INGEDRUKT
@@ -122,7 +128,8 @@ void knoppenUpdate(){
         knopAlleInterval.reset();
         knopInterval[knop] = millis();
         
-        // Serial.print(knopNaam( knop));Serial.println(" in ");
+                
+        knopLog( knop, " in ");
         
         if( staat == S_SCHOONMAAK ){//   SCHOONMAAK STAND STOPPEN
           stoppen();
@@ -137,7 +144,7 @@ void knoppenUpdate(){
         knopStaat[knop] = LOSGELATEN;
         knopAlleInterval.reset();
         
-        // Serial.print(knopNaam( knop));Serial.println(" los ");
+        knopLog( knop, " los ");
         
         if(knop == KNOP_DOORSPOEL){
           
@@ -195,7 +202,7 @@ void knoppenUpdate(){
         knopStaat[knop] = LANG_INGEDRUKT;
         knopAlleInterval.reset();
 
-        // Serial.print(knopNaam( knop));Serial.println(" lang ");
+        knopLog( knop," lang ");
 
 
         
@@ -232,12 +239,12 @@ void knoppenUpdate(){
         knopStaat[knop] = LOSGELATEN;
         knopAlleInterval.reset();
         
-        // Serial.print(knopNaam( knop));Serial.println(" lang los ");
+        knopLog(  knop," lang los ");
 
 
 
         if(  (  staat == S_DOOR_SPOELEN   ||   staat == S_TERUG_SPOELEN  )  &&  (  knop == KNOP_DOORSPOEL  ||  knop == KNOP_TERUGSPOEL  )  ){//WEER BEGINNEN NA SPOELEN
-          naaldErop();
+          setStaat(S_NAALD_EROP);
           ledBlink();  //led blink
           
         }
@@ -250,7 +257,7 @@ void knoppenUpdate(){
         knopStaat[knop] = SUPER_LANG_INGEDRUKT;
         knopAlleInterval.reset();   //led blink
         
-        // Serial.print(knopNaam( knop));Serial.println(" super lang ");
+        knopLog(  knop, " super lang ");
 
 
         if(  staat == S_HOK  &&  knop == KNOP_TERUGSPOEL  ){//               NAALD TEST STAND
@@ -266,11 +273,11 @@ void knoppenUpdate(){
         knopStaat[knop] = LOSGELATEN;
         knopAlleInterval.reset();  //led blink
         
-        // Serial.print(knopNaam( knop));Serial.println(" super lang los ");
+        knopLog(  knop, " super lang los ");
 
         
         if(  (  staat == S_DOOR_SPOELEN   ||   staat == S_TERUG_SPOELEN  )  &&  (  knop == KNOP_DOORSPOEL  ||  knop == KNOP_TERUGSPOEL  )  ){//WEER BEGINNEN NA SPOELEN
-          naaldErop();
+          setStaat(S_NAALD_EROP);
           ledBlink();  //led blink
         }
       }

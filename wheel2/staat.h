@@ -227,9 +227,9 @@ void spelen(){
 
 
 
-void naaldErop(){
-  setStaat(S_NAALD_EROP);
-}
+// void naaldErop(){
+  // setStaat(S_NAALD_EROP);
+// }
 
 
 

@@ -67,7 +67,8 @@ void plateauFunc(){
 
 
     // float vaart = TLE5012.getVaart();
-    float vaart = TLE5012.vaart;
+    // float vaart = TLE5012.vaart;
+    float vaart = TLE5012.glad;
     vaart += TLE5012.plateauComp;
 
     if(plateauAan){             //staat de motor aan?
@@ -103,7 +104,8 @@ void plateauFunc(){
 
 
 
-    float glad = TLE5012.getGlad();
+    // float glad = TLE5012.getGlad();
+    float glad = TLE5012.glad;
 
     if(plateauLogica){
       if(plateauAan){                   //staat de motor aan?
@@ -120,11 +122,11 @@ void plateauFunc(){
             // stoppen();
           }
           else if(glad  <  targetRpm * 0.70   &&   draaienInterval.sinds() > 500){ //te langzaam 70%
-            // Serial.println("T");//----------------
-            if(test){
-              plateauStoppen();
-            }
-            // stoppen();//--------------------
+            Serial.println("T");//----------------
+            // if(test){
+            //   plateauStoppen();
+            // }
+            stoppen();//--------------------
           }
         }
 

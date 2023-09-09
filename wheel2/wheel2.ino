@@ -20,6 +20,7 @@
 // bool eepromPauze = false;
 
 bool enkeleCoreModus = true;
+bool audioFequencyMeten = false;
 
 void uitEnkeleCoreModus(){
   enkeleCoreModus = false;
@@ -36,8 +37,13 @@ void enableInterupts(bool aan){
 
     pinMode(audioFreqPin, INPUT);
     // gpio_set_irq_enabled_with_callback(audioFreqPin,   GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
-    gpio_set_irq_enabled_with_callback(audioFreqPin,   GPIO_IRQ_EDGE_RISE,  aan,   &gpio_callback);
+    // gpio_set_irq_enabled_with_callback(audioFreqPin,   GPIO_IRQ_EDGE_RISE,  aan,   &gpio_callback);
     // gpio_set_irq_enabled_with_callback(audioFreqPin,   GPIO_IRQ_EDGE_RISE + GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
+}
+
+void toggleAudioFreqMeting(){
+  audioFequencyMeten = !audioFequencyMeten;
+  gpio_set_irq_enabled_with_callback(audioFreqPin,   GPIO_IRQ_EDGE_RISE,  audioFequencyMeten,   &gpio_callback);
 }
 
 #include "vaartSensor.h"
@@ -48,7 +54,9 @@ VAART strobo(14, 1800); //1800
 
 #include "compVaartSensor.h"
 // COMPVAART TLE5012(16, 4096); //elker 5ms is 11.4 samples en 22.75 per 10ms
+// COMPVAART TLE5012(64, 4096); //elker 5ms is 11.4 samples en 22.75 per 10ms
 COMPVAART TLE5012(32, 4096); //elker 5ms is 11.4 samples en 22.75 per 10ms
+
 // COMPVAART TLE5012(64, 8192); //elker 5ms is 11.4 samples en 22.75 per 10ms
 
 
@@ -113,7 +121,7 @@ void setup() {
 
   delay(1);
 
-  TLE5012.recalCompSamples();
+  // TLE5012.recalCompSamples();
   
   enableInterupts(true);
 
@@ -126,7 +134,7 @@ void setup() {
 
   stoppen();
 
-  armHoekCalibreer();
+  // armHoekCalibreer();
 }
 
 
