@@ -9,7 +9,6 @@ bool volumeOverRide = false;
 
 
 
-
 char i2cRead(byte adress, byte reg)
 {
   int err = 0;

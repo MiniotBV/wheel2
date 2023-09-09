@@ -2,7 +2,6 @@
 bool golven = false;
 bool karPIDveranderen = true;
 
-float eepp;
 
 Interval serieelInt(10000, MICROS);
 // Interval serieelInt(5000, MICROS);
@@ -245,41 +244,7 @@ void serieelFunc(){
         volumeOverRide = true;
         Serial.println("volume: " + String(i));
       }
-      else if(letter == '?'){    //help
-        Serial.println("help----------------------------");   
-        Serial.println("plateau P: " + String(plateauP, 5));
-        Serial.println("plateau I: " + String(plateauI, 5));
-        Serial.println("plateau D: " + String(plateauD, 5));
-        Serial.println();
 
-        Serial.println("kar P: " + String(karP, 5));
-        Serial.println("kar I: " + String(karI, 5));
-        Serial.println("kar D: " + String(karD, 5));
-        Serial.println();
-        
-        Serial.println("staat: " + printStaat(staat));
-        Serial.println("volume: " + String(volume));
-        Serial.println();
-        
-        Serial.println("armKracht: " + String(armKracht));
-        Serial.println("armGewicht: " + String(armGewicht));
-        Serial.println("isNaaldErop(): " + String(isNaaldErop()));
-        Serial.println();
-
-        eepromUitlezen();
-        Serial.println();
-        
-        // Serial.println("V faseVerschuiving: " + String(strobo.faseVerschuiving));
-        // Serial.println("C compFilter: " + String(strobo.compFilter));
-        // Serial.println("c compVermenigvuldiging: " + String(strobo.compVermenigvuldiging));
-        // Serial.println("I compverval: " + String(strobo.compVerval));
-        // Serial.println();
-        
-        printKnoppen();
-        orientatie.print();
-
-        Serial.println("-----------------------------");  
-      }
 
 
 
@@ -333,6 +298,51 @@ void serieelFunc(){
       else if(letter == 'I'){    //
         strobo.compVerval = Serial.parseFloat();
         Serial.println("I compverval: " + String(strobo.compVerval));
+      }
+
+
+
+
+
+
+      else if(letter == '?'){    //help
+        Serial.println("help---------------------------------------------");   
+        Serial.println("plateau P: " + String(plateauP, 5));
+        Serial.println("plateau I: " + String(plateauI, 5));
+        Serial.println("plateau D: " + String(plateauD, 5));
+        Serial.println();
+
+        Serial.println("kar P: " + String(karP, 5));
+        Serial.println("kar I: " + String(karI, 5));
+        Serial.println("kar D: " + String(karD, 5));
+        Serial.println();
+        
+        Serial.println("staat: " + printStaat(staat));
+        Serial.println("volume: " + String(volume));
+        Serial.println();
+        
+        Serial.println("armKracht: " + String(armKracht));
+        Serial.println("armGewicht: " + String(armGewicht));
+        Serial.println("isNaaldErop(): " + String(isNaaldErop()));
+        Serial.println();
+
+        Serial.println("trackOffset: " + String(trackOffset);
+        Serial.println();
+
+
+        eepromUitlezen();
+        Serial.println();
+        
+        // Serial.println("V faseVerschuiving: " + String(strobo.faseVerschuiving));
+        // Serial.println("C compFilter: " + String(strobo.compFilter));
+        // Serial.println("c compVermenigvuldiging: " + String(strobo.compVermenigvuldiging));
+        // Serial.println("I compverval: " + String(strobo.compVerval));
+        // Serial.println();
+        
+        printKnoppen();
+        orientatie.print();
+
+        Serial.println("-------------------------------------------------");  
       }
     
     }
