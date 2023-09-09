@@ -1,7 +1,7 @@
 
 
 
-bool herhaalDeHelePlaat = false;
+
 
 
 enum staats{

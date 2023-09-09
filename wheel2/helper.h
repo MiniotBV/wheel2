@@ -40,6 +40,11 @@ float trackOffset = 0.3;//0.7;
 
 
 
+bool herhaalDeHelePlaat = false;
+bool puristenMode = false;
+
+
+
 float nummers[100];// = {0.2, 0.3, 0.6, 0.68, 0.85}; //staat nu in staat.h
 int hoeveelNummers = 0;
 float plaatBegin = 0;

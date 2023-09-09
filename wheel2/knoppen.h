@@ -1,11 +1,11 @@
-#define KNOP_PLAY 6//~5  knop3
-#define KNOP_DOORSPOEL 5//~4  knop2
-#define KNOP_TERUGSPOEL 7//~6   knop4
+#define KNOP_PLAY 6
+#define KNOP_DOORSPOEL 5
+#define KNOP_TERUGSPOEL 7
 
 
 #define KNOP_LANG 700  //wat is een lange klik
 #define KNOP_SUPER_LANG 3000  //een super lange klink voor naald stand
-#define KNOP_BLINK 100 //hoelang blinkt de stick led
+#define KNOP_BLINK 100 //hoelang blinkt de led
 
 
 #define INGEDRUKT             1
@@ -51,8 +51,7 @@ float riemDiv;
 
 
 
-void printKnoppen()
-{
+void printKnoppen(){
 	Serial.print("knoppen: ");
 	for(int i = 0; i < 8; i++) { Serial.print(knopIn[i]);  Serial.print(' '); }
 	Serial.println();
@@ -60,8 +59,7 @@ void printKnoppen()
 
 void ledBlink() { ledBlinkInterval.reset(); }
 
-const char* knopNaam(int knop)
-{
+const char* knopNaam(int knop){
 	if(knop == KNOP_PLAY) { return "play"; }
 	if(knop == KNOP_DOORSPOEL) { return "doorspoel"; }
 	if(knop == KNOP_TERUGSPOEL) { return "terugspoel"; }
@@ -143,6 +141,11 @@ void knopLogica(int knop){
 		knopLog( knop, " in ");
 
     if(knop == KNOP_PLAY){
+      if( staat == S_HOMEN_VOOR_SPELEN  ||  staat == S_NAAR_BEGIN_PLAAT){
+        puristenMode = true;
+        Serial.println("puristen modus aan");
+      }
+
       if( staat == S_HOK ){
         spelen();
         knopStaat[knop] = LANG_INGEDRUKT; // zodat de lange druk hem niet kan stoppen
