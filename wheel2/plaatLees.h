@@ -101,7 +101,7 @@ void scannenVoorTracks(){
   plaatLeesLedSetMilliAmp(20);
 
   // trackTresshold = plaatLeesGefilterdBodem + ((AMAX - plaatLeesGefilterdBodem) / 3);
-  trackTresshold = (AMAX - plaatLeesGefilterdBodem) / 2;
+  trackTresshold = (AMAX - plaatLeesGefilterdBodem) *0.35;
   
   if(sensorPos > PLAAT_EINDE){
     
@@ -112,7 +112,7 @@ void scannenVoorTracks(){
     if(plaatLeesDivTrack > trackTresshold && !trackOnderTresh){
       trackOnderTresh = true;
 
-      Serial.print("nummer: ");
+      Serial.print("track op: ");
       Serial.println(sensorPos);
 
       nummers[hoeveelNummers] = sensorPos;
@@ -192,7 +192,7 @@ void plaatLeesFunc(){
       plaatDetectie();
 
       if(staat == S_PLAAT_AANWEZIG){
-        if(staatsVeranderingInterval() > 500){
+        if(staatVeranderd.sinds() > 500){
           if(plaatAanwezig){
             armHoekCalibreer();
             setStaat(S_NAAR_BEGIN_PLAAT);

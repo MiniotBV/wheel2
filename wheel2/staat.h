@@ -1,13 +1,11 @@
-float nummers[20] = {0.2, 0.3, 0.6, 0.68, 0.85}; //staat nu in staat.h
-int hoeveelNummers = 5;
+float nummers[20];// = {0.2, 0.3, 0.6, 0.68, 0.85}; //staat nu in staat.h
+int hoeveelNummers = 0;
 
 
 enum staats{
-  S_BEGIN,
   S_NAAR_HOK,
   S_HOK,
   S_STOPPEN,
-  S_RUST,
 
   S_BEGINNEN_SCHOONMAAK,
   S_SCHOONMAAK_BEWEGEN,
@@ -15,7 +13,12 @@ enum staats{
 
 
 
+
+
+  S_HOMEN_VOOR_SPELEN,
   S_BEGINNEN_SPELEN,
+  S_PLAAT_AANWEZIG,
+  
   S_NAAR_BEGIN_PLAAT,
   // S_BEGIN_PLAAT,
   // S_SPELEN,
@@ -38,14 +41,12 @@ enum staats{
   S_ERROR,
 
   S_JOGGEN,
-  S_PLAAT_AANWEZIG
 };
 
 
 enum staats staat = S_STOPPEN;
 
-
-unsigned long staatInterval;
+Interval staatVeranderd(1000, MILLIS);
 
 
 
@@ -53,11 +54,9 @@ unsigned long staatInterval;
 
 
 void printStaat(int s){
-  if( s == S_BEGIN                ){ Serial.print("BEGIN");               return;}
   if( s == S_NAAR_HOK             ){ Serial.print("NAAR_HOK");            return;}
   if( s == S_HOK                  ){ Serial.print("HOK");                 return;}
   if( s == S_STOPPEN              ){ Serial.print("STOPPEN");             return;}
-  if( s == S_RUST                 ){ Serial.print("RUST");                return;}
 
   if( s == S_BEGINNEN_SCHOONMAAK  ){ Serial.print("BEGINNEN_SCHOONMAAK"); return;}
   if( s == S_SCHOONMAAK_BEWEGEN   ){ Serial.print("SCHOONMAAK_BEWEGEN");  return;}
@@ -105,7 +104,7 @@ void printStaat(int s){
 
 
 void setStaat(enum staats s){
-  staatInterval = millis();
+  staatVeranderd.reset();
   // karRemmen = false;
 
   printStaat(staat); Serial.print(" > "); printStaat(s); Serial.println();
@@ -113,12 +112,6 @@ void setStaat(enum staats s){
   staat = s; // set staat
 }
 
-
-
-
-unsigned int staatsVeranderingInterval(){
-  return millis() - staatInterval;
-}
 
 
 
@@ -132,7 +125,7 @@ void stoppen(){
 
 
 void spelen(){
-  setStaat(S_BEGINNEN_SPELEN);
+  setStaat(S_HOMEN_VOOR_SPELEN);
   plateauDraaien();
 }
 
@@ -148,6 +141,7 @@ void naaldErop(){
 
 
 
+
 Interval staatInt(10000, MICROS);
 
 
@@ -155,17 +149,9 @@ void staatFunc(){
   if(staatInt.loop()){
 
 
-    if(staat == S_STOPPEN){
-      if(isNaaldEraf()){
-        setStaat(S_NAAR_HOK);
-      }
-    }
 
-    else if(staat == S_PAUZE){
-      if(isNaaldEraf()){
-        // setStaat(S_NAAR_HOK);
-      }
-    }
+
+
   }
 }
 
@@ -178,13 +164,6 @@ void staatFunc(){
 
 
 
-void pauze(){
-  if(staat == S_NAALD_EROP){
-    setStaat(S_PAUZE);
-  }
-  else if(staat == S_PAUZE){
-    setStaat(S_NAALD_EROP);
-  }
-}
+
 
 

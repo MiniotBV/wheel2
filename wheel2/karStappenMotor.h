@@ -11,9 +11,12 @@ bool plaatAanwezig = false;
 
 #define KAR_SNELHEID 0.02
 
-#define PLAAT_BEGIN 100
-#define KAR_HOK 1
-#define PLAAT_EINDE 8
+#define PLAAT_BEGIN 148
+#define PLAAT_EINDE 52.5
+
+#define KAR_HOME 44.5
+#define KAR_HOK 45.5
+
 #define SENSOR_NAALT_OFFSET 7.5//mm
 
 // float mmPerStap = 1.5 / ( 48 / 12 );
@@ -28,7 +31,7 @@ int stapperFaseB = 0;
 
 bool karMotorEnable = true;
 float karMotorPos = 0;
-float karMotorOffset = 0;
+float karOffset = 0;
 float karPos = 0;
 float karTargetPos = 0;
 float sensorPos;
@@ -56,7 +59,7 @@ void karInit(){
 
 void armHoekCalibreer(){
   armHoekOffset = armHoekSlow;
-  Serial.print("ofset: ");
+  Serial.print("armHoekofset: ");
   Serial.println(armHoekOffset);
 }
 
@@ -69,6 +72,7 @@ void gaNaarNummer(float pos){
   Serial.println(karTargetPos);
   setStaat(S_NAAR_NUMMER);
 }
+
 
 
 
@@ -104,6 +108,8 @@ void naarVorrigNummer(){
 
 
 
+
+
 void naarVolgendNummer(){
   if(hoeveelNummers < 2){ // als er 1 nummer is is dat ook te weinig
     stoppen();
@@ -135,6 +141,17 @@ void naarVolgendNummer(){
 
 
 
+
+
+void pauze(){
+  if(staat == S_NAALD_EROP){
+    setStaat(S_PAUZE);
+    karTargetPos = karPos;
+  }
+  else if(staat == S_PAUZE){
+    setStaat(S_NAALD_EROP);
+  }
+}
 
 
 
@@ -173,14 +190,26 @@ void karMotorFunc(){
       
   if(karMotorInt.loop()){
 
-    if(staat == S_NAAR_HOK){
+    if(staat == S_STOPPEN){
+      if(isNaaldEraf()  &&  millis() > 1000){//pas 1 seconden na opstart naar home gaan om de armhoek sensor te calibreren
+        armHoekCalibreer();
+        setStaat(S_NAAR_HOK);
+      }
+    }
+
+    else if(staat == S_NAAR_HOK  ||  staat == S_HOMEN_VOOR_SPELEN){
       if(armHoek < -600){
         Serial.print("div; ");
-        Serial.println(  (karMotorOffset - karMotorPos)  * stap2mm  );
-        karMotorOffset = karMotorPos;
+        Serial.println(  (karOffset + karPos)  );
+        karOffset -= KAR_HOME - karPos;
+        karPos = KAR_HOME;
 
-        karPos = 0;
-        setStaat(S_HOK);
+        if(staat == S_HOMEN_VOOR_SPELEN){
+          setStaat(S_BEGINNEN_SPELEN);
+        }else{
+          setStaat(S_HOK);
+        }
+        
       }else{
         if(armHoek < -300){
           karPos -= KAR_SNELHEID/10;
@@ -224,7 +253,7 @@ void karMotorFunc(){
 
 
     else if(staat == S_PLAAT_DIAMETER_METEN){
-      if(staatsVeranderingInterval() > 500){
+      if(staatVeranderd.sinds() > 500){
         if(plaatAanwezig){
           if(isOngeveer(karPos, PLAAT_BEGIN, 1)){
             naaldErop();
@@ -232,17 +261,18 @@ void karMotorFunc(){
           
           }else if(plaatAanwezigSindsKarPos == 0){
             plaatAanwezigSindsKarPos = karPos;
+            Serial.print("plaatDia: ");
+            Serial.println((karPos / 25.4)*2);
           
           }else if(plaatAanwezigSindsKarPos - karPos <  SENSOR_NAALT_OFFSET + 0){
             karPos -= KAR_SNELHEID;
           
-           }else{
-            plaatAanwezigSindsKarPos = 0;
+          }else{
             naaldErop();
-            Serial.print("plaatDia: ");
-            Serial.println(karPos);
+            
           }
         }else{
+          plaatAanwezigSindsKarPos = 0;
           karPos -= KAR_SNELHEID;
         }
       }
@@ -253,7 +283,7 @@ void karMotorFunc(){
     else if(staat == S_NAALD_EROP){
       if(isNaaldErop()){
         karPos += limieteerF( -karP * armHoek , -KAR_SNELHEID / 2, KAR_SNELHEID / 2);
-        karPos = limieteerF( karPos, 0, PLAAT_BEGIN + 2);
+        karPos = limieteerF( karPos, PLAAT_EINDE, PLAAT_BEGIN + 2);
         if(karPos <= PLAAT_EINDE){
           stoppen();
         }
@@ -269,6 +299,19 @@ void karMotorFunc(){
           naaldErop();
         }else{
           karPos += limieteerF( karTargetPos - karPos , -KAR_SNELHEID, KAR_SNELHEID);
+        }
+      }
+    }
+
+
+
+    else if(staat == S_PAUZE){
+      if(isNaaldEraf()){
+        if(karPos == karTargetPos){
+          // naaldErop();
+        }else{
+          karPos += limieteerF( (karTargetPos - karPos) / 10 , -KAR_SNELHEID, KAR_SNELHEID);
+          karPos = limieteerF( karPos, PLAAT_EINDE, PLAAT_BEGIN);
         }
       }
     }
@@ -314,13 +357,13 @@ void karMotorFunc(){
 
 
     sensorPos = karPos - SENSOR_NAALT_OFFSET;
-    karMotorPos = (karPos * mm2stap) + karMotorOffset;
+    karMotorPos = (karPos + karOffset)  *  mm2stap;
 
 
     if(karMotorEnable){
 
-      stapperFase( sin(karMotorPos),  stapperAP, stapperAN);
-      stapperFase( cos(karMotorPos),  stapperBP, stapperBN);
+      pwmFase( sin(karMotorPos),  stapperAP, stapperAN, true);
+      pwmFase( cos(karMotorPos),  stapperBP, stapperBN, true);
     
     }else{
       pwmWrite(stapperAP,  0 );

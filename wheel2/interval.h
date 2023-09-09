@@ -36,6 +36,19 @@ class Interval{
     }
 
 
+    void reset(){
+      vorrigeTijd = tijd(); 
+    }
+    
+
+    int sinds(){
+      return tijd() - vorrigeTijd;
+    }
+
+    bool langerDan(){
+      return tijd() - vorrigeTijd > interval;
+    }
+
 
     unsigned long tijd(){
       if(eenheid == MILLIS){

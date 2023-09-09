@@ -14,21 +14,23 @@ void serieelFunc(){
       Serial.print(TLE5012.getVaart());
       Serial.print(", ");
       Serial.print(plaatLeesRuw);
-      Serial.print(", ");
-      Serial.print(plaatLeesGefilterd);
-      Serial.print(", ");
-      Serial.print(plaatLeesGefilterdBodem);
-      Serial.print(", ");
-      Serial.print(trackTresshold);
-      Serial.print(", ");
-      Serial.print(plaatLeesDivTrack);
       // Serial.print(", ");
-      // Serial.print(strobo.getVaart());
+      // Serial.print(plaatLeesGefilterd);
+      // Serial.print(", ");
+      // Serial.print(plaatLeesGefilterdBodem);
+      // Serial.print(", ");
+      // Serial.print(trackTresshold);
+      // Serial.print(", ");
+      // Serial.print(plaatLeesDivTrack);
+      // Serial.print(", ");
+      // Serial.print(potVal);
+      Serial.print(", ");
+      Serial.print(potVolume);
       Serial.print(", ");
       Serial.print(uitBuff);
       Serial.print(", ");
-      Serial.print(armHoekSlow);//1696);
-      Serial.print(", ");
+      // Serial.print(armHoekSlow);//1696);
+      // Serial.print(", ");
       Serial.print(armHoek);//1696);
       Serial.print(", ");
       Serial.print(karPos);
@@ -60,10 +62,10 @@ void serieelFunc(){
       else if(letter == 'H'){    //set armhoekOfset
         setStaat(S_NAAR_HOK);
       }
-      else if(letter == 's'){    //set armhoekOfset
+      else if(letter == 'S'){    //set armhoekOfset
         stoppen();
       }
-      else if(letter == 'S'){    //set armhoekOfset
+      else if(letter == 'D'){    //set armhoekOfset
         spelen();
       }
       else if(letter == 'P'){    //set armhoekOfset
@@ -128,9 +130,9 @@ void serieelFunc(){
         
       
       }
-      else if(letter == 'S'){    //golven uit
-        TLE5012.printSamples();
-      }
+      // else if(letter == 'S'){    //golven uit
+      //   TLE5012.printSamples();
+      // }
     
     }
   }

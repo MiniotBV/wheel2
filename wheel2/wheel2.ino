@@ -78,7 +78,10 @@ void setup() {
 
   // gpio_set_irq_enabled_with_callback(plaatStrobo,   GPIO_IRQ_EDGE_FALL + GPIO_IRQ_EDGE_RISE,  true,   &gpio_callback);
 
-   multicore_launch_core1(core1_entry);
+  multicore_launch_core1(core1_entry);
+
+
+  stoppen();
 }
 
 
@@ -111,7 +114,8 @@ void loop() {
 
   staatFunc();
 
-  pwmWrite(ledWit, pow( ((sin( (PI*millis()) / 500.0 )+1)/2), 3) * PMAX);
+  // pwmWrite(ledWit, pow( ((sin( (PI*millis()) / 500.0 )+1)/2), 3) * PMAX);
+  pwmWriteF(ledWit, 0.5);
   // pwmWrite(ledRood, pow( ((cos( (PI*millis()) / 500.0 )+1)/2), 3) * PMAX);
 
   pwmWrite(ledRood, plaatAanwezig ? (PMAX-1) : 0);

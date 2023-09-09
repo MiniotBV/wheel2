@@ -8,7 +8,7 @@ float basis = 0;
 float uitBuff;
 
 
-float plateauP = 100;    //pid
+float plateauP = 0.1;    //pid
 float plateauI = 0.05;
 float plateauD = 0;
 
@@ -48,13 +48,13 @@ float maakP(){
 float pid(float rpmIn){
   double uit = (targetRpm - rpmIn) * maakP();
   
-  uit = limieteerF(uit, -4000, 4000);
+  uit = limieteerF(uit, -1, 1);
   
   basis += uit * plateauI;            //breng basis voltage naar gemiddelde voor de juiste snelheid
   
-  basis = limieteerF(basis, -4000, 4000);
+  basis = limieteerF(basis, -1, 1);
   
-  return  limieteerF(uit + basis,  -(PMAX-1),  PMAX-1);
+  return  limieteerF(uit + basis,  -1,  1);
 }
 
 
@@ -72,31 +72,16 @@ void plateauFunc(){
     uitBuff = pid(TLE5012.getVaart());//                  bereken motor kracht
     // uitBuff = pid(strobo.getVaart());//                  bereken motor kracht
 
-
-    // if(targetRpm != 0){             //staat de motor aan?
+    if(targetRpm != 0){             //staat de motor aan?
+    
+      pwmFase(uitBuff, motorP, motorN, false);
       
-      if(uitBuff > 0){
-        pwmWrite(motorP,   uint16_t(uitBuff) );
-        pwmWrite(motorN,  0);
-      }else{
-        pwmWrite(motorP,  0);
-        pwmWrite(motorN,  uint16_t(-uitBuff));        
-      }
-
-      // if(uitBuff > 0){
-      //   pwmWrite(motorN,  (int) PMAX - uitBuff );
-      //   pwmWrite(motorP,  PMAX);
-      // }else{
-      //   pwmWrite(motorN,  PMAX);
-      //   pwmWrite(motorP,  (int) PMAX + uitBuff );
-      // }
-        
+    }else{
       
-    // }else{
-    //   pwmWrite(motorP,   0 );
-    //   digitalWrite(motorN,  0);
-    //   basis = 0; // reset I
-    // }
+      pwmWriteF(motorP,  1);
+      pwmWriteF(motorN,  1);
+      basis = 0; // reset I
+    }
 
   }
 }

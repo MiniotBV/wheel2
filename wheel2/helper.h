@@ -43,9 +43,6 @@ bool isOngeveer(float waarde, float vergelijk, float marge){
 
 
 
-
-
-
 int volt2pwm(float volt){
   return (volt * PMAX) / 3.3;
 }

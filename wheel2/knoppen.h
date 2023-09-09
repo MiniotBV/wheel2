@@ -31,7 +31,11 @@ unsigned long ledBlinkInterval;
 int potVal = 0;
 int potValPrev = 0;
 
-int potValPrevVoorVolume = 0;
+float potVolume = 0;
+float potVolumePrev = 0;
+float potVolumeDiv;
+float potVolumeFilter;
+float potVolumeFilterPrev;
 int pot2volume = 100;
 
 
@@ -105,20 +109,20 @@ void knoppenUpdate(){
 
     
 
-    bool zelfde = false;
+    // bool zelfde = false;
 
-    for(int i = 0; i < 8; i++){
+    // for(int i = 0; i < 8; i++){
       
-      if(knopOud[i] != knopIn[i]){
-        zelfde = true;
-      }
-      knopOud[i] = knopIn[i];
+    //   if(knopOud[i] != knopIn[i]){
+    //     zelfde = true;
+    //   }
+    //   knopOud[i] = knopIn[i];
 
-    }
+    // }
 
-    if(zelfde){
-      printKnoppen();
-    }
+    // if(zelfde){
+    //   printKnoppen();
+    // }
 
 
 
@@ -134,10 +138,10 @@ void knoppenUpdate(){
         knopAlleInterval = millis();
         knopInterval[knop] = millis();
         
-        Serial.print(knopNaam( knop));Serial.println(" in ");
+        // Serial.print(knopNaam( knop));Serial.println(" in ");
         
         if( staat == S_SCHOONMAAK_BEWEGEN  ||  staat == S_SCHOONMAAK ){//   SCHOONMAAK STAND STOPPEN
-          setStaat( S_STOPPEN );
+          stoppen();
           ledBlink();  //led blink
         }
       }
@@ -149,7 +153,7 @@ void knoppenUpdate(){
         knopStaat[knop] = LOSGELATEN;
         knopAlleInterval = millis();
         
-        Serial.print(knopNaam( knop));Serial.println(" los ");
+        // Serial.print(knopNaam( knop));Serial.println(" los ");
 
         if( (staat == S_NAALD_EROP  ||  staat == S_PAUZE  ||  staat == S_NAAR_NUMMER)   &&   knop == KNOP_DOORSPOEL){
           naarVolgendNummer();
@@ -184,7 +188,7 @@ void knoppenUpdate(){
         knopStaat[knop] = LANG_INGEDRUKT;
         knopAlleInterval = millis();
 
-        Serial.print(knopNaam( knop));Serial.println(" lang ");
+        // Serial.print(knopNaam( knop));Serial.println(" lang ");
 
 
         
@@ -201,10 +205,10 @@ void knoppenUpdate(){
 
         
 
-        
+
 
         if(knop == KNOP_PLAY){
-          if(staat == S_PAUZE  ||  staat == S_NAALD_EROP){//         STOPPEN
+          if(staat == S_BEGINNEN_SPELEN || staat == S_NAAR_BEGIN_PLAAT || staat == S_PLAAT_DIAMETER_METEN || staat == S_NAALD_EROP){//         STOPPEN
             stoppen();
             ledBlink();  //                  led blink
           }else{                                 
@@ -221,7 +225,7 @@ void knoppenUpdate(){
         knopStaat[knop] = LOSGELATEN;
         knopAlleInterval = millis();
         
-        Serial.print(knopNaam( knop));Serial.println(" lang los ");
+        // Serial.print(knopNaam( knop));Serial.println(" lang los ");
 
 
 
@@ -239,10 +243,10 @@ void knoppenUpdate(){
         knopStaat[knop] = SUPER_LANG_INGEDRUKT;
         knopAlleInterval = millis();   //led blink
         
-        Serial.print(knopNaam( knop));Serial.println(" super lang ");
+        // Serial.print(knopNaam( knop));Serial.println(" super lang ");
 
 
-        if(  staat == S_RUST  &&  knop == KNOP_TERUGSPOEL  ){//               NAALD TEST STAND
+        if(  staat == S_HOK  &&  knop == KNOP_TERUGSPOEL  ){//               NAALD TEST STAND
           setStaat( S_BEGINNEN_SCHOONMAAK);
           ledBlink();  //led blink
         }
@@ -255,7 +259,7 @@ void knoppenUpdate(){
         knopStaat[knop] = LOSGELATEN;
         knopAlleInterval = millis();   //led blink
         
-        Serial.print(knopNaam( knop));Serial.println(" super lang los ");
+        // Serial.print(knopNaam( knop));Serial.println(" super lang los ");
 
         
         if(  (  staat == S_DOOR_SPOELEN   ||   staat == S_TERUG_SPOELEN  )  &&  (  knop == KNOP_DOORSPOEL  ||  knop == KNOP_TERUGSPOEL  )  ){//WEER BEGINNEN NA SPOELEN
@@ -285,26 +289,28 @@ void knoppenUpdate(){
 
     potVal = analogRead(displayPOTMETERanaloog);
 
-    if(potVal - potValPrev   >   AMAX * 0.6){
-      potValPrev += AMAX;
+    if(!isOngeveer(potVal, potValPrev, AMAX/2)){
+      if(potVal > potValPrev){
+        potValPrev += AMAX;
+      }else{
+        potValPrev -= AMAX;        
+      }
     }
 
-    if(potVal - potValPrev   <   -AMAX * 0.6){
-      potValPrev -= AMAX;
+    potVolume    +=     float(potVal - potValPrev) / AMAX;
+    potVolumeFilter += (potVolume - potVolumeFilter)/10;
+    potVolumeDiv = potVolumeFilter - potVolumeFilterPrev;
+    potVolumeFilterPrev = potVolumeFilter;
+
+    if(staat == S_PAUZE){
+      // if(!isOngeveer(potVolumeDiv , 0, 0.0005)){
+        karTargetPos -= potVolumeDiv * 50;        
+      // }
+    }else{
+
     }
-
-    potValPrevVoorVolume    +=     potVal - potValPrev;
-
+    
     potValPrev = potVal;
-
-
-
-
-
-
-
-
-
 
 
   }

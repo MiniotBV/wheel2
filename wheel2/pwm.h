@@ -11,25 +11,34 @@ void pwmWrite(int pin, int level){
 }
 
 
+void pwmWriteF(int pin, float level){
+  pwmWrite(pin, level * PMAX);
+}
 
-void stapperFase(float kracht, int pinP, int pinN){
+
+void pwmFase(float kracht, int pinP, int pinN, bool omgekeerd){
   int fase = kracht * PMAX;
   
-  if(fase > 0){
-    pwmWrite(pinP,  PMAX - fase );
-    pwmWrite(pinN,  PMAX);
+  if(omgekeerd){
+    if(fase > 0){
+      pwmWrite(pinP,  PMAX - fase );
+      pwmWrite(pinN,  PMAX);
+    }else{
+      pwmWrite(pinP,  PMAX);
+      pwmWrite(pinN,  PMAX + fase );
+    }
   }else{
-    pwmWrite(pinP,  PMAX);
-    pwmWrite(pinN,  PMAX + fase );
+    if(fase > 0){
+      pwmWrite(pinP,  fase );
+      pwmWrite(pinN,  0);
+    }else{
+      pwmWrite(pinP,  0);
+      pwmWrite(pinN,  fase - PMAX );
+    }
   }
 
-  // if(fase > 0){
-  //   pwmWrite(pinP,  fase );
-  //   pwmWrite(pinN,  0);
-  // }else{
-  //   pwmWrite(pinP,  0);
-  //   pwmWrite(pinN,  fase - PMAX );
-  // }
+
+
 
 }
 
