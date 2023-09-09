@@ -1,67 +1,76 @@
-int armTargetKracht = 2000;
-int armKracht = 0;
-int armSnelheid = 2;
-unsigned int armLoop = 0;
+#define MAX_ARMGEWICHT 4//gr
+#define MIN_ARMGEWICHT 0.5//gr
 
+class Arm
+{
+  public:
+  /** arm variables */
+  float weight = 2.5f;
+  float w500mg = 0.22f;
+  float w4000mg = 0.56f;
+  float targetWeight = 0.4f;
+  float armKracht = 0.0f;
+  float velocityOn = 0.00025f;
+  float velocityOff = 0.001f;
 
-//op de plaat
-int netUitHokKracht = 800;
-int netOpDePlaatKracht = 1500;
+  //op de plaat
+  float netUitHokKracht = 0.15;
+  float netOpDePlaatKracht = 0.2;
 
+  //van de plaat af
+  float netVanDePlaatKracht = 0.2;
+  float netInHokKracht = 0.15;
 
-//van de plaat af
-int netVanDePlaatKracht = 1000;
-int netInHokKracht = 500;
+  bool isMotorOn = false;
 
+  void armInit() { setPwm(armMotor); }
 
-bool armMotorAan = false;
-
-
-void armInit(){
-  setPwm(armMotor);
-}
-
-
-
-
-INTERVAL armInt(10, MILLIS);
-
-void armFunc(){
-  if(armInt.loop()){
-
-    if(armMotorAan == true){//moet de arm motor aan?
-
-      if(armKracht < netUitHokKracht){//als de arm net aan staat jump meteen naar nogNetInHokKracht
-        armKracht = netUitHokKracht;
-      }
-
-      if(armKracht < armTargetKracht){//is de arm al op het target gewicht?
-        armKracht += armSnelheid;
-      }
-
-      if(armKracht > netOpDePlaatKracht){//is de arm al op de plaat?
-        armKracht = armTargetKracht;//zet dan de arm meteen op target gewicht
-      }
-    }
-    
-
-
-    if(armMotorAan == false){// moet de arm motor uit?
-      
-      if(armKracht > netVanDePlaatKracht){ //als de arm net is uitgezet
-        armKracht = netVanDePlaatKracht; // zet haal dan meteen het meeste gewicht van de arm
-      }
-
-      if(armKracht > 0){ //is de arm nog niet helemaal uit
-        armKracht -= armSnelheid; // zet hem dan wat minder hard
-      }
-      
-      if(armKracht < netInHokKracht){ //is de arm al van de plaat?
-        armKracht = 0; // zet de arm dan meteen uit
-      }
-    }
-
-    pwmWrite(armMotor, armKracht);
+  void updateWeight()
+  {
+    weight = limitF(weight, MIN_ARMGEWICHT, MAX_ARMGEWICHT);  
+    targetWeight = mapF(weight, MIN_ARMGEWICHT, MAX_ARMGEWICHT, w500mg, w4000mg);
   }
 
-}
+  Interval interval {10, inMILLIS};
+
+  void update()
+  {
+    if(!interval.loop()) return;  //if(interval.loop()){
+
+    if(isMotorOn)   // moet arm motor aan?
+    {
+      // arm net aan => jump naar nogNetInHokKracht
+      if(armKracht < netUitHokKracht) armKracht = netUitHokKracht;
+      
+      // arm al op target gewicht?
+      if(armKracht < targetWeight) armKracht += velocityOn; 
+      
+      // arm al op plaat => meteen op target gewicht
+      if(armKracht > netOpDePlaatKracht) armKracht = targetWeight;
+    }
+
+    if(!isMotorOn)    // moet arm motor uit?
+    {
+      // als arm net is uitgezet => haal meeste gewicht van de arm
+      if(armKracht > netVanDePlaatKracht) armKracht = netVanDePlaatKracht;
+      // arm nog niet helemaal uit => minder hard
+      if(armKracht > 0) armKracht -= velocityOff;
+      //is de arm al van de plaat? // zet de arm dan meteen uit
+      if(armKracht < netInHokKracht) armKracht = 0;
+    }
+
+    pwmWriteF(armMotor, armKracht);
+  }
+
+  bool isNaaldErop()
+  {
+    isMotorOn = true;
+    return armKracht == targetWeight;
+  }
+
+  bool isNaaldEraf()
+  {
+    isMotorOn = false;
+    return armKracht == 0;
+  }
+};

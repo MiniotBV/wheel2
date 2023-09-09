@@ -1,46 +1,41 @@
-#define MILLIS 0
-#define MICROS 1
+#define inMILLIS true   // #define MILLIS 0 #define MICROS 1
+#define inMICROS false
 
-
-
-class INTERVAL{
+class Interval
+{
   public:
-    unsigned int interval = 0;
-    unsigned long vorrigeTijd = 0;
-    int eenheid = MILLIS;
-
-    INTERVAL(int i, int tijdMode){
+    Interval(int i, bool shouldBeInMillis = true) // int tijdMode)
+    {
       interval = i;
-      eenheid = tijdMode;
-      vorrigeTijd = tijd();
+      isInMillis = shouldBeInMillis;  //eenheid = tijdMode;
+      lastTime = getTime();
     }
 
+    unsigned int interval = 0;
+    unsigned long lastTime = 0;
+    bool isInMillis = true;   //int eenheid = MILLIS;
 
-
-    bool loop(){
-      if(tijd() - vorrigeTijd >= interval){
-          vorrigeTijd += interval;
-
-          if(tijd() - vorrigeTijd >= interval){
-            vorrigeTijd = tijd();            
-          }
-
+    bool loop()
+    {
+      if(getTime() - lastTime >= interval)
+      {
+          lastTime += interval;
+          if(getTime() - lastTime >= interval) lastTime = getTime();
           return true;
       }
       return false;
     }
 
 
+    void offset(int ofst) { lastTime += ofst; }
+    void reset() { lastTime = getTime(); }
+    int sinds() { return getTime() - lastTime; }
+    bool langerDan() { return getTime() - lastTime > interval; }
 
-    unsigned long tijd(){
-      if(eenheid == MILLIS){
-        return millis();
-      }
-      if(eenheid == MICROS){
-        return micros();
-      }
-
-      return 0;
+    unsigned long getTime()
+    {
+      if(isInMillis) return millis();
+      return micros();
     }
 
 };
