@@ -149,8 +149,8 @@ class COMPVAART
 				glitchTeller = 0;
 			}
 
-			if(!isOngeveer(centerCompTargetRpm, rpm.targetRpm, 5)){
-				centerCompTargetRpm = rpm.targetRpm;
+			if(!isOngeveer(centerCompTargetRpm, targetRpm, 5)){
+				centerCompTargetRpm = targetRpm;
 			}
 		}
 
@@ -236,7 +236,7 @@ class COMPVAART
 			int leadTeller = rondTrip(teller - (8+9), pulsenPerRev);
 			float uitMiddenSnelheidsComp = ( ( ( sinus[leadTeller] * karSinFilt )  +  ( cosin[leadTeller] * karCosFilt ) )  / pulsenPerRev  ) * 2;
 
-			centerCompTargetRpm = rpm.targetRpm *  (( karPosMidden - uitMiddenSnelheidsComp ) / karPosMidden );
+			centerCompTargetRpm = targetRpm *  (( karPosMidden - uitMiddenSnelheidsComp ) / karPosMidden );
 
       // targetrpm * midden / (midden + afwijking)
 
@@ -264,7 +264,7 @@ class COMPVAART
       digitalWrite(ledWit, 0);//zet led aan
 
 			if( onbalansCompAan &&   //alle mementen waarom de compensatie niet mag werken, omdat er dan verschillen zijn met als de naald er egt op is
-					isPlateauAan && 
+					plateauAan && 
 					draaienInterval.sinds() > 1000 && //moet 1 seconden aan staan
 					opsnelheid &&                      // en opsnelheid zijn     
 					
@@ -278,11 +278,11 @@ class COMPVAART
 					// true
 		 
 			){ 
-				if(isOngeveer(glad, rpm.targetRpm, 10)){
+				if(isOngeveer(glad, targetRpm, 10)){
 					if(plaatUitMiddenComp){
 						onbalansCompensatie[teller] += ( glad - centerCompTargetRpm ) * onbalansCompGewicht; 
 					}else{
-						onbalansCompensatie[teller] += ( glad - rpm.targetRpm ) * onbalansCompGewicht; 
+						onbalansCompensatie[teller] += ( glad - targetRpm ) * onbalansCompGewicht; 
 					}
 					
 				}
@@ -447,7 +447,7 @@ class COMPVAART
 		float huidigeVaart(float inter){//                                                           RPM BEREKENEN
 
 			float waarde = ((1000000.0 * 60) / inter) / pulsenPerRev;  //  return totaal
-			return limitF(waarde, -300, 300);
+			return limieteerF(waarde, -300, 300);
 		}
 
 

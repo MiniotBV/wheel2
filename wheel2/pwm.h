@@ -10,7 +10,7 @@ float faseA, faseB;
 void setPwm(int pin){
 	gpio_set_function(pin, GPIO_FUNC_PWM);
 	pwm_set_enabled(  pwm_gpio_to_slice_num(pin),  true);
-	pwm_set_wrap(  pwm_gpio_to_slice_num(pin), PMAX + 1);
+	pwm_set_wrap(  pwm_gpio_to_slice_num(pin),   PMAX + 1);
 }
 
 void pwmWrite(int pin, int level){
@@ -85,8 +85,8 @@ void pwmFaseDisable(int pinP, int pinN){
 
 
 void pwmStapper(float hoek, int pinAP, int pinAN, int pinBP, int pinBN, bool omgekeerd){
-	pwmFase( sin(hoek), pinAP, pinAN, omgekeerd);
-	pwmFase( cos(hoek), pinBP, pinBN, omgekeerd);
+	pwmFase( sin(hoek),   pinAP, pinAN, omgekeerd);
+	pwmFase( cos(hoek),   pinBP, pinBN, omgekeerd);
 }
 
 
@@ -176,8 +176,8 @@ void pwmStapperAntiCogging(float hoek, int pinAP, int pinAN, int pinBP, int pinB
 	karSin = antiCoggFases[indexHoek % antiCoggSampNum][0];
 	karCos = antiCoggFases[indexHoek % antiCoggSampNum][1];
 
-	pwmFase( karSin, pinAP, pinAN, omgekeerd);
-	pwmFase( karCos, pinBP, pinBN, omgekeerd);
+	pwmFase( karSin,   pinAP, pinAN, omgekeerd);
+	pwmFase( karCos,   pinBP, pinBN, omgekeerd);
 
 	// pwmStapper(nieuweHoek, pinAP, pinAN,  pinBP, pinBN,  omgekeerd);
 }

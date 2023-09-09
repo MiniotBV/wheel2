@@ -1,14 +1,19 @@
-// =========================================
-//  helper.h
-//  defines, helper functions and 
-//  global variables
-// =========================================
+
 
 #define TAU 2*PI
 
-//#define rpm33 33.333  #define rpm45 45  #define rpm78 78
+
+#define rpm33 33.333
+#define rpm45 45
+#define rpm78 78
+
 
 #define AMAX 4095
+
+
+
+
+
 
 #define NUMMER_TERUG_OPFSET 1 //hoeveel mm kan de kar bewegen voor er terug gespoeld kan worden naar het begin van het nummer ipv naar een vorrig nummer
 
@@ -58,11 +63,9 @@ float karPosMidden;
 
 
 
-
-
-//float targetRpm = 0;
+float targetRpm = 0;
 float centerCompTargetRpm;
-bool isPlateauAan = false;
+bool plateauAan = false;
 
 bool opsnelheid;
 bool uitdraaien;
@@ -94,7 +97,7 @@ int rondTrip(int n, int max){
 
 
 
-float limitF(float n, float min, float max){
+float limieteerF(float n, float min, float max){
 	if(n < min){
 		return min;
 	}
@@ -108,7 +111,7 @@ float limitF(float n, float min, float max){
 
 
 
-int limitInt(int n, int min, int max){
+int limieteerI(int n, int min, int max){
 	if(n < min){
 		return min;
 	}
@@ -126,17 +129,31 @@ float mapF(float n, float nMin, float nMax, float min, float max){
 	return ( ( (n - nMin) / (nMax - nMin) )  *  (max - min) ) + min;
 }
 
+
+
+
 bool isOngeveer(float waarde, float vergelijk, float marge){
 	return (waarde > vergelijk - marge) && (waarde < vergelijk + marge);
 }
 
+
 bool isTussen(float waarde, float min, float max){
-	return waarde > min && waarde < max;
+	return   waarde > min   &&   waarde < max;
 }
+
+
+
+
 
 int sign(float v) {
 	return (v < 0) ? -1 : ((v > 0) ? 1 : 0);
 }
+
+
+
+
+
+
 
 
 

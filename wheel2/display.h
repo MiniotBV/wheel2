@@ -1,6 +1,8 @@
-//	=================
-//	display.h
-//	=================
+
+
+
+
+
 #define displayLengte 120
 float displayData[displayLengte];
 
@@ -102,7 +104,7 @@ void displayUpdate(){
 		nummersTeller = 0;
 		int naald = egtePos2displayPos(karPosFilter);//int naald = egtePos2displayPos(karPos);
 		int target = egtePos2displayPos(targetNummerPos);
-		int sensor = egtePos2displayPos(trackSensorPos);
+		int sensor = egtePos2displayPos(sensorPos);
 		int sensorMaxBerijk = egtePos2displayPos(ELPEE_PLAAT_BEGIN - SENSOR_OFFSET)  +  3;
 		int plaatGroote = egtePos2displayPos(plaatBegin);
 
@@ -181,39 +183,28 @@ void displayUpdate(){
 
 		//----------------------------------------------------------------SCHOONMAAK STAND
 		else if(staat == S_SCHOONMAAK  ||  staat == S_HOMEN_VOOR_SCHOONMAAK){
-			float verdeelPuntTeller = 0;
-			int volumePunt = mapF(arm.targetGewicht, 0, 4, (displayLengte-1) - volumeMargin,   volumeMargin);
+			
+			int volumePunt = mapF(arm.targetGewicht, 0, 4, 0, displayLengte) / 2.0;
+
+      float verdeelPuntTeller = 0.5;//arm.targetGewicht / 2;
 
 			for(int i = 0; i < displayLengte; i++){
 				displayData[i] = 0;
 
-				
+				if(i > (dispHalf-1) - volumePunt   &&   i < dispHalf + volumePunt){
+          displayData[i] = 0.1;
+        }
 
-				if(i < (displayLengte-1) - volumeMargin    &&    i > volumePunt){
-					displayData[i] = 0.1;
-				}
-
-
-				int verdeelPunt = mapF(verdeelPuntTeller, 0, 4,  volumeMargin,  (displayLengte-1) - volumeMargin);
+				float verdeelPunt = mapF(verdeelPuntTeller, 0, 4,  (dispHalf-1) - volumePunt,  ((dispHalf-1) - volumePunt) + (displayLengte-1));
 				if(i > verdeelPunt){
-					verdeelPuntTeller += 0.5;          
+					verdeelPuntTeller += 0.5;
+          if(verdeelPuntTeller >= 4){verdeelPuntTeller += 0.5;}
+
+          displayData[i] = 0;         
 				}
+      }
 
-				if(i == verdeelPunt){
-					displayData[i] = 0;
-				}
-
-				if(i == volumeMargin   ||   i == (displayLengte-1) - volumeMargin){ //eind van de schaal punt
-					displayData[i] = 0.1;
-				}
-
-				if(i == volumePunt){
-					displayData[i] = 0.9;
-				}
-
-			}
-
-      if(!orientatie.isStaand){
+      if(orientatie.isStaand){
         flipDisplayData();
       }
 		}
@@ -266,23 +257,22 @@ void displayUpdate(){
 		
 
 		//--------------------------------------------------------------RPM
-		else if(rpmDisplayActie.sinds() < 2000)
-    {
+		else if(rpmDisplayActie.sinds() < 2000){
 
-			// float blokken = 0;
+			float blokken = 0;
 
-			// if(rpmStaat == R33){
-			// 	blokken = 3;//3.33;
-			// }  
-			// else if(rpmStaat == R45){
-			// 	blokken = 4;//4.5;
-			// }
-			// else if(rpmStaat == AUTO){
-			// 	blokken = 1;//4.5;
-			// } 
+			if(rpmStaat == R33){
+				blokken = 3;//3.33;
+			}  
+			else if(rpmStaat == R45){
+				blokken = 4;//4.5;
+			}
+			else if(rpmStaat == AUTO){
+				blokken = 1;//4.5;
+			} 
 
 			float blokBreedte = 0.1 * displayLengte;
-			float totaleBreedte = blokBreedte * rpm.rpm2blokken();
+			float totaleBreedte = blokBreedte * blokken;
 			float halveBreedte = totaleBreedte / 2;
 			float beginPos = dispHalf - halveBreedte;
 			float eindPos = dispHalf + halveBreedte;
@@ -360,6 +350,11 @@ void displayUpdate(){
 						displayData[i] = 0.9;
 					}
 				}
+        else if(staat == S_SPELEN  &&  !arm.isNaaldErop()  &&  (staatVeranderd.sinds() % 500 > 200) ){// knipperen voordat de naald erop is
+          if(naald-1 == i || naald+1 == i){ // dubbele punt
+						displayData[i] = 0.9;
+					}
+        }
 				else if(herhaalDeHelePlaat){
 					if(naald == i || naald-2 == i || naald+2 == i){ // 3 dubbele punt
 						displayData[i] = 0.9;
@@ -380,9 +375,9 @@ void displayUpdate(){
 
 
 		//-----------------------------------------------------------KNOP BLINK
-		if(ledBlinkInterval.sinds() < 50){
+		if(ledBlinkInterval.sinds() < 100){
 			
-			int knopGroote = 4;
+			int knopGroote = 6;
 			int knopGrooteHalf = knopGroote/2;
 			int knopUitMidden = 0.23 * displayLengte;
 
