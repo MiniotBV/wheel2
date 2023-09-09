@@ -336,7 +336,7 @@ void staatDingen(){
       
 			karOffset -= KAR_HOME - egteKarPos;
 			karPos = KAR_HOME;
-      // karDcomp = 0;
+      karDcomp = 0;
 
 			karNoodStop();
 			strobo.clearCompSamples();// dit is een mooi moment om te stoppen
@@ -361,8 +361,12 @@ void staatDingen(){
 
 	if(staat == S_PARKEREN){
 		if(beweegKarNaarPos(KAR_HOK, KAR_MAX_SNELHEID)){
-			setStaat(S_HOK);
-		} 
+      // if(staatVeranderd.sinds() < 2000){
+        setStaat(S_HOK);
+      // }
+		}
+    karDcomp = 0;
+    // karDcomp *= 0.98;
 		return;
 	}
 
@@ -413,7 +417,7 @@ void staatDingen(){
 				return;
 			}
 			
-			if(plaadDiaInch < 8){// ongeveer 
+			if(plaadDiaInch < 9){// ongeveer 
 				debug("plaatDia: " + String(plaadDiaInch) + " : ±7\" ");
 				setPlateauRpm(rpm45);
 				plaatBegin = SINGLETJE_PLAAT_BEGIN;

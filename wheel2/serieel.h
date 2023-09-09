@@ -436,10 +436,10 @@ void serieelFunc(){
 
 
 
-			// Serial.print(", ");
-			// Serial.print(karPos, 3);  
-			// Serial.print(", ");
-			// Serial.print(egteKarPos, 3);
+			Serial.print(", ");
+			Serial.print(karPos, 3);  
+			Serial.print(", ");
+			Serial.print(egteKarPos, 3);
 
 			// // Serial.print(", ");
 			// // Serial.print(karPosMidden, 3);
