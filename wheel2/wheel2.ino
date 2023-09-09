@@ -1,3 +1,8 @@
+// # Wheel2 #
+//rp2040
+#define versie 27
+
+
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "pico/multicore.h"
@@ -5,6 +10,8 @@
 #include "hardware/gpio.h"
 
 #include <EEPROM.h>
+
+
 
 bool eepromShit = false;
 // #include <LittleFS.h>
@@ -31,6 +38,10 @@ void uitEnkeleCoreModus(){
 
 
 void enableInterupts(bool aan){
+  pinMode(plateauA,     INPUT_PULLUP);
+  pinMode(plateauB,     INPUT_PULLUP);
+  pinMode(plateauIndex, INPUT_PULLUP);
+
   gpio_set_irq_enabled_with_callback(plateauA,   GPIO_IRQ_EDGE_RISE + GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
     // gpio_set_irq_enabled_with_callback(plateauA,   GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
   gpio_set_irq_enabled_with_callback(plateauB,   GPIO_IRQ_EDGE_RISE + GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
@@ -50,17 +61,18 @@ void toggleAudioFreqMeting(){
 }
 
 #include "vaartSensor.h"
-// VAART strobo(12, (60 / rpm33) * 1000); //1800
-// VAART strobo(24, (60 / rpm33) * 1000); //1800
-// VAART strobo(7*2, (60 / rpm33) * 1000 * 2); //1800
-VAART strobo(7, 1800); //1800
+// VAART calibratieToon(12, (60 / rpm33) * 1000); //1800
+// VAART calibratieToon(24, (60 / rpm33) * 1000); //1800
+// VAART calibratieToon(7*2, (60 / rpm33) * 1000 * 2); //1800
+VAART calibratieToon(10, 1800); //1800
 
 #include "compVaartSensor.h"
-// COMPVAART TLE5012(2, 1024); //elker 5ms is 11.4 samples en 22.75 per 10ms
-// COMPVAART TLE5012(16, 4096); //elker 5ms is 11.4 samples en 22.75 per 10ms
-// COMPVAART TLE5012(64, 8192); //elker 5ms is 11.4 samples en 22.75 per 10ms
+// COMPVAART strobo(2, 1024); //elker 5ms is 11.4 samples en 22.75 per 10ms
+// COMPVAART strobo(16, 4096); //elker 5ms is 11.4 samples en 22.75 per 10ms
+// COMPVAART strobo(64, 8192); //elker 5ms is 11.4 samples en 22.75 per 10ms
 
-COMPVAART TLE5012(8, 720);//360); //elker 5ms is 11.4 samples en 22.75 per 10ms
+// COMPVAART strobo(8, 720);//360); //elker 5ms is 11.4 samples en 22.75 per 10ms
+COMPVAART strobo(16, 720);//360); //elker 5ms is 11.4 samples en 22.75 per 10ms
 
 
 
@@ -122,7 +134,7 @@ void setup() {
 
   delay(1);
 
-  TLE5012.recalCompSamples();
+  strobo.recalCompSamples();
   
   enableInterupts(true);
 
@@ -230,21 +242,21 @@ void gpio_callback(uint gpio, uint32_t events) {
   if(!encoderBezig){
     if( gpio == plateauA || gpio == plateauB){
       // encoderBezig = true;
-      TLE5012.interrupt();
+      strobo.interrupt();
       // encoderBezig = false;
     }
   }
   
   if(gpio == plateauIndex){
-    TLE5012.teller = 0;
+    strobo.teller = 0;
   }  
 
   if(gpio == audioFreqPin){
-    strobo.interrupt();
+    calibratieToon.interrupt();
   }
 
   //   if(gpio == plaatStrobo){
-  //   strobo.interrupt();
+  //   calibratieToon.interrupt();
   // }
 
   // interruptBezig = false;

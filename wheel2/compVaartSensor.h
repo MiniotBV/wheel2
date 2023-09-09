@@ -98,6 +98,23 @@ class COMPVAART{
 
 
 
+    void update(){
+      if( micros() - vaartInterval > sampleMax ){
+        if(glitchTeller > 6){
+          shiftSamples(sampleMax * dir);
+          vaart = 0;
+          glad = 0;
+        }else{
+          glitchTeller++;
+        }
+      }else{
+        glitchTeller = 0;
+      }
+    }
+
+
+
+
 	
 
     void interrupt(){
@@ -175,7 +192,7 @@ class COMPVAART{
       // getVaart();
       getDiv();
 
-      glad += (vaart - glad) / 100;
+      glad += (vaart - glad) / 10;
       gladglad += (glad - gladglad) / 1000;
 
 
@@ -232,7 +249,6 @@ class COMPVAART{
 
     void toggleCompensatieModus(){
       setCompensatieModus(!divCompMeten);
-
     }
 
 
@@ -252,7 +268,8 @@ class COMPVAART{
 
     void recalCompSamples(){
       int i = 0;
-      for(int i = 0;   i < pulsenPerRev;   i += 2){
+      for(int i = 0;   i < pulsenPerRev;   i ++){
+      // for(int i = 0;   i < pulsenPerRev;   i += 2){
         // compSamples[i*2] = eepLeesFloat(i*2);
         // compSamples[(i*2)+1] = compSamples[i*2];
         
@@ -261,8 +278,10 @@ class COMPVAART{
         // compSamples[i+2] = compSamples[i];
         // compSamples[i+3] = compSamples[i];
 
-        compSamples[i] = eepLeesFloat(i);
-        compSamples[i+1] = compSamples[i];
+        // compSamples[i] = eepLeesFloat(i);
+        // compSamples[i+1] = compSamples[i];
+
+        compSamples[i] = eepLeesFloat(i*2);
       }
 
       if(compSamples[10] < 2){
@@ -316,11 +335,15 @@ class COMPVAART{
       //   eepSchrijfFloat(i/2,   inpol);
       // }
 
-      for(int i = 0;   i < pulsenPerRev;   i+=2){
-        float inpol = ( compSamples[i+0] + 
-                        compSamples[i+1] )/2;
+      // for(int i = 0;   i < pulsenPerRev;   i+=2){
+      //   float inpol = ( compSamples[i+0] + 
+      //                   compSamples[i+1] )/2;
                         
-        eepSchrijfFloat(i,   inpol);
+      //   eepSchrijfFloat(i,   inpol);
+      // }
+
+      for(int i = 0;   i < pulsenPerRev;   i++){
+        eepSchrijfFloat(i*2, compSamples[i]);
       }
 
       bool geenError = EEPROM.commit();
@@ -399,12 +422,12 @@ class COMPVAART{
 
 
     float getDiv(){
-      div = getVaart() / strobo.getVaart();
-      // div = strobo.getVaart() / getVaart();
+      div = getVaart() / calibratieToon.getVaart();
+      // div = calibratieToon.getVaart() / getVaart();
 
       // getVaart();
-      // strobo.getVaart();
-      // div = (strobo.gemiddelde / strobo.sampleNum) / (gemiddelde / sampleNum);
+      // calibratieToon.getVaart();
+      // div = (calibratieToon.gemiddelde / calibratieToon.sampleNum) / (gemiddelde / sampleNum);
 
       return div;
     }

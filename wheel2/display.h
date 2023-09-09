@@ -293,6 +293,8 @@ void displayUpdate(){
     commitDisplay();
 
     displayDelay = micros();
+    while(micros() - displayDelay < 2){}
+    
     digitalWrite(displayEN, 0);
 
     while(micros() - displayDelay < 20){}

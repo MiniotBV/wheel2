@@ -90,7 +90,7 @@
 // #define plateauB            1//~
 // #define plateauIndex        2//~
 
-// // wheel1 style strobo
+// // wheel1 style calibratieToon
 // #define plaatStrobo         17 
 
 // // leds

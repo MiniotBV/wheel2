@@ -10,35 +10,35 @@ Interval serieelInt(10000, MICROS);
 void serieelFunc(){
   if(serieelInt.loop()){
     if(golven){
-      // TLE5012.getDiv();
-      Serial.print(TLE5012.vaart);
-      Serial.print(", ");
-      Serial.print(TLE5012.glad);
-      Serial.print(", ");
-      Serial.print(TLE5012.gemiddelde);
-
-      Serial.print(", ");
+      // strobo.getDiv();
       Serial.print(strobo.vaart);
-
-      // Serial.print(", ");
-      // Serial.print(TLE5012.teller);
-
-      // Serial.print(", ");
-      // Serial.print(TLE5012.vaartRuw);
-      // Serial.print(", ");
-      // Serial.print(TLE5012.gladNieuw);
       Serial.print(", ");
-      Serial.print(TLE5012.plateauComp);
+      Serial.print(strobo.glad);
+      Serial.print(", ");
+      Serial.print(strobo.gemiddelde);
+
+      Serial.print(", ");
+      Serial.print(calibratieToon.vaart);
+
+      Serial.print(", ");
+      Serial.print(strobo.teller);
+
+      // Serial.print(", ");
+      // Serial.print(strobo.vaartRuw);
+      // Serial.print(", ");
+      // Serial.print(strobo.gladNieuw);
+      Serial.print(", ");
+      Serial.print(strobo.plateauComp);
       
 
       
       // Serial.print(", ");
-      // Serial.print(strobo.glad);
+      // Serial.print(calibratieToon.glad);
       
-      Serial.print(", ");
-      Serial.print(TLE5012.div, 3);
-      Serial.print(", ");
-      Serial.print(TLE5012.dav, 3);
+      // Serial.print(", ");
+      // Serial.print(strobo.div, 3);
+      // Serial.print(", ");
+      // Serial.print(strobo.dav, 3);
 
       
       
@@ -62,18 +62,18 @@ void serieelFunc(){
       // Serial.print(", ");
       // Serial.print(uitBuff * 30);
       
-      // Serial.print(", ");
-      // Serial.print(armHoekSlow);//1696);
+      Serial.print(", ");
+      Serial.print(armHoekSlow);//1696);
       
       Serial.print(", ");
       Serial.print(armHoekRuw);//1696);
 
-      // Serial.print(", ");
-      // Serial.print(armHoek);//1696);
-
       Serial.print(", ");
-      Serial.print((karPos - karPosPrev)*1000.0);//1696);
-      karPosPrev = karPos;
+      Serial.print(armHoek);//1696);
+
+      // Serial.print(", ");
+      // Serial.print((karPos - karPosPrev)*1000.0);//1696);
+      // karPosPrev = karPos;
 
       // Serial.print(", ");
       // Serial.print(karPos);
@@ -209,29 +209,29 @@ void serieelFunc(){
         toggleAudioFreqMeting();
       }
       else if(letter == 'C'){    //golven uit
-        TLE5012.clearCompSamples();
+        strobo.clearCompSamples();
       }
       else if(letter == 'r'){    //golven uit
-        TLE5012.recalCompSamples();
+        strobo.recalCompSamples();
       }
       else if(letter == 's'){    //golven uit
-        TLE5012.saveCompSamples();
+        strobo.saveCompSamples();
       }
       else if(letter == 'c'){    //golven uit
-        TLE5012.toggleCompensatieModus();
+        strobo.toggleCompensatieModus();
       }
       else if(letter == '~'){    //golven uit
-        TLE5012.printCompSamples();
+        strobo.printCompSamples();
       }
 
 
       else if(letter == 'Q'){    //golven uit
-        TLE5012.plateauCompMeten = !TLE5012.plateauCompMeten;
-        // TLE5012.clearPlateauSamples();
+        strobo.plateauCompMeten = !strobo.plateauCompMeten;
+        // strobo.clearPlateauSamples();
       }
       else if(letter == 'q'){    //golven uit
-        // TLE5012.plateauCompMeten = !TLE5012.plateauCompMeten;
-        TLE5012.clearPlateauSamples();
+        // strobo.plateauCompMeten = !strobo.plateauCompMeten;
+        strobo.clearPlateauSamples();
       }
     
     }

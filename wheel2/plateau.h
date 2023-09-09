@@ -64,11 +64,11 @@ void plateauFunc(){
 
   if(plateauInt.loop()){
 
-
-    // float vaart = TLE5012.getVaart();
-    // float vaart = TLE5012.vaart;
-    float vaart = TLE5012.glad;
-    // vaart += TLE5012.plateauComp;
+    strobo.update();
+    // float vaart = strobo.getVaart();
+    // float vaart = strobo.vaart;
+    float vaart = strobo.glad;
+    // vaart += strobo.plateauComp;
 
     if(plateauAan){             //staat de motor aan?
 
@@ -77,10 +77,10 @@ void plateauFunc(){
       //   Serial.println(vaart);
       //   return;
       // }
-      // float vaart = strobo.getVaart();
+      // float vaart = calibratieToon.getVaart();
 
       uitBuff = pid(vaart);//                  bereken motor kracht
-      // uitBuff = pid(strobo.getVaart());//                  bereken motor kracht
+      // uitBuff = pid(calibratieToon.getVaart());//                  bereken motor kracht
     
       pwmFase(uitBuff, motorP, motorN, false);
       
@@ -103,8 +103,8 @@ void plateauFunc(){
 
 
 
-    // float glad = TLE5012.getGlad();
-    float glad = TLE5012.glad;
+    // float glad = strobo.getGlad();
+    float glad = strobo.glad;
 
     if(plateauLogica){
       if(plateauAan){                   //staat de motor aan?
