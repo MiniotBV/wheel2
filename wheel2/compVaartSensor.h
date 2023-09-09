@@ -57,7 +57,9 @@ class COMPVAART
 
 		float vaartRuw;
 		float vaart;
+    float vaartCenterComp;
 		float vaartLowPass;
+    float vaartHighPass;
 
 
 
@@ -80,6 +82,8 @@ class COMPVAART
 
 		float karPosMiddenGeschiedenis[pprmax];
 
+    float centerComp;
+
 
 
 
@@ -88,7 +92,6 @@ class COMPVAART
 		int onbalansFase = 180;//90;//100;//70;//90;//75;//90;  50 in pulsen per rev
 		int onbalansHarm = 120;
 		
-		float gemiddeldeSnelheidPre, gemiddeldeSnelheid;
 		
 		float onbalansCompensatie[pprmax];
 
@@ -146,7 +149,7 @@ class COMPVAART
 					shiftSamples(sampleMax * dir);
 					vaartRuw = 0;
 					vaart += (vaartRuw - vaart) / 10;
-					vaartLowPass += (vaart - vaartLowPass) / 10;
+					vaartLowPass += (vaart - vaartLowPass) / 100;
 				}else{
 					glitchTeller++;
 				}
@@ -154,9 +157,9 @@ class COMPVAART
 				glitchTeller = 0;
 			}
 
-			if(!isOngeveer(centerCompTargetRpm, targetRpm, 5)){
-				centerCompTargetRpm = targetRpm;
-			}
+			// if(!isOngeveer(centerCompTargetRpm, targetRpm, 5)){
+			// 	centerCompTargetRpm = targetRpm;
+			// }
 		}
 
 
@@ -204,7 +207,7 @@ class COMPVAART
 			getVaart();
 
 			vaart += (vaartRuw - vaart) / 10;
-			vaartLowPass += (vaart - vaartLowPass) / 10;
+
 
 
 
@@ -258,7 +261,27 @@ class COMPVAART
 			int leadTeller = rondTrip(teller - (8+9), pulsenPerRev); // fase verschuiving: 8 van de 16samples avg filter, en 9 van het gewonde filter er achteraan
 			float uitMiddenSnelheidsComp = ( ( ( sinus[leadTeller] * karSinFilt )  +  ( cosin[leadTeller] * karCosFilt ) )  / pulsenPerRev  ) * 2;
 
-			centerCompTargetRpm = targetRpm *  (( karPosMidden - uitMiddenSnelheidsComp ) / karPosMidden );
+      centerComp = (( karPosMidden - uitMiddenSnelheidsComp ) / karPosMidden );
+			centerCompTargetRpm = targetRpm * centerComp;
+      
+
+
+
+
+
+      //-----------------------------------------------------------------------------gecompenseerde snelheden
+      if(plaatUitMiddenComp){
+        vaartCenterComp = vaart / centerComp;
+      }else{
+        vaartCenterComp = vaart;
+      }
+
+      vaartLowPass += (vaartCenterComp - vaartLowPass) / 100;
+      vaartHighPass = vaartCenterComp - vaartLowPass;
+
+
+
+
 
 
 			
@@ -278,7 +301,6 @@ class COMPVAART
 			procesTijd = micros();
 
 			//-----------------------------------------------------------------------------UIT BALANS COMPENSATIE
-			// gemiddeldeSnelheidPre -= onbalansCompensatie[teller];
 
 			
       digitalWrite(ledWit, 0);//zet led aan
@@ -299,17 +321,10 @@ class COMPVAART
 		 
 			){ 
 				if(isOngeveer(vaart, targetRpm, 10)){
-					if(plaatUitMiddenComp){
-						onbalansCompensatie[teller] += ( vaart - centerCompTargetRpm ) * onbalansCompGewicht; 
-					}else{
-						onbalansCompensatie[teller] += ( vaart - targetRpm ) * onbalansCompGewicht; 
-					}
-					
+					onbalansCompensatie[teller] += ( centerCompTargetRpm - targetRpm ) * onbalansCompGewicht;
 				}
         digitalWrite(ledWit, 1);//zet led aan
 			}
-
-			// onbalansCompensatie[teller] *= compVerval;
 
 			float nieuweWaarde = onbalansCompensatie[teller];
 

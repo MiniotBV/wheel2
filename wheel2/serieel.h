@@ -333,13 +333,15 @@ void serieelFunc(){
 			// Serial.print(targetRpm, 2);
 
 			Serial.print(", ");
-			Serial.print(strobo.vaart - targetRpm, 3);
-
-			Serial.print(", ");
+			Serial.print(strobo.vaartCenterComp - targetRpm, 3);
+      Serial.print(", ");
 			Serial.print(strobo.vaart - centerCompTargetRpm, 3);
 
-			// Serial.print(", ");
-			// Serial.print(strobo.vaartglad - targetRpm, 3);
+			Serial.print(", ");
+			Serial.print(strobo.vaartLowPass - targetRpm, 3);
+
+      Serial.print(", ");
+			Serial.print(strobo.vaartHighPass, 3);
 
 			Serial.print(", ");
 			Serial.print(centerCompTargetRpm - targetRpm, 3);
@@ -352,8 +354,8 @@ void serieelFunc(){
 			// Serial.print(", ");
 			// Serial.print(strobo.preComp, 4);
 
-			Serial.print(", ");
-			Serial.print(strobo.onbalansComp, 4);
+			// Serial.print(", ");
+			// Serial.print(strobo.onbalansComp, 4);
 
 			Serial.print(", ");
 			Serial.print(uitBuff, 2);
@@ -377,23 +379,23 @@ void serieelFunc(){
 
 
 
-			Serial.print(", ");
-			Serial.print(karPos, 3);  
-			Serial.print(", ");
-			Serial.print(egteKarPos, 3);
+			// Serial.print(", ");
+			// Serial.print(karPos, 3);  
+			// Serial.print(", ");
+			// Serial.print(egteKarPos, 3);
+
+			// // Serial.print(", ");
+			// // Serial.print(karPosMidden, 3);
+
+			// // Serial.print(", ");
+			// // Serial.print(karPosMidden + strobo.karFourier, 3);  
 
 			// Serial.print(", ");
-			// Serial.print(karPosMidden, 3);
-
-			// Serial.print(", ");
-			// Serial.print(karPosMidden + strobo.karFourier, 3);  
-
-			Serial.print(", ");
-			Serial.print(karPosMidden + strobo.karFourierFilt, 3);  
+			// Serial.print(karPosMidden + strobo.karFourierFilt, 3);  
 
 
-      Serial.print(", ");
-			Serial.print(spoorafstand, 3);
+      // Serial.print(", ");
+			// Serial.print(spoorafstand, 3);
 
 
 

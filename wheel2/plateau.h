@@ -152,12 +152,7 @@ float pid(float rpmIn){
 	vorrigeVaart = rpmIn;
 
 
-	float divTarget;
-	if(strobo.plaatUitMiddenComp){
-		divTarget = centerCompTargetRpm - rpmIn;
-	}else{
-		divTarget = targetRpm - rpmIn;
-	}
+	float divTarget = targetRpm - rpmIn;
 
 
 
@@ -273,7 +268,7 @@ void plateauFunc(){
 	if(plateauInt.loop()){
 
 		strobo.update();
-		float vaart = strobo.vaart;
+		float vaart = strobo.vaartCenterComp;//strobo.vaart;
 
 		if(plateauAan){             //staat de motor aan?
 
