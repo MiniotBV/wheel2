@@ -1,7 +1,7 @@
-//  ## Wheel2 ##
-//      rp2040
+//  Wheel2 
+//    rp2040
 
-#define versie 83
+#define versie 84
 
 
 #include <stdio.h>
