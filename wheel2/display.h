@@ -110,6 +110,31 @@ void displayUpdate(){
 
 
 
+        //----------------------------------------------------------------ERROR WEERGEVEN
+    if(errorVeranderd.sinds() < 5000  &&  (millis() / 500) % 2 ){
+      
+      int blokken = error;
+
+      float blokBreedte = 0.1 * displayLengte;
+      float totaleBreedte = blokBreedte * blokken;
+      float halveBreedte = totaleBreedte / 2;
+      float beginPos = dispHalf - halveBreedte;
+      float eindPos = dispHalf + halveBreedte;
+
+
+      for(int i = 0; i < displayLengte; i++){
+        displayData[i] = 0;
+
+        if(i > beginPos  &&  i < eindPos){
+          displayData[i] = 0.1;
+
+          if( (int(beginPos) + i) % int(blokBreedte) < 2 ){
+            displayData[i] = 0;
+          }
+        }
+      }
+    }
+
     //----------------------------------------------------------------SCHOONMAAK STAND
     if(staat == S_SCHOONMAAK){
       float verdeelPuntTeller = 0;

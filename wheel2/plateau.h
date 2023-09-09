@@ -82,7 +82,7 @@ void plateauDraaien(){
   plateauAan = true;
   setPlateauRpm(rpm33);
 
-  basis = 75;
+  basis = 60;//75;
   
   // strobo.clearCompSamples();
   // draaienInterval.reset();
@@ -101,6 +101,8 @@ void plateauStoppen(){
   draaienInterval.reset();
   uitdraaien = true;
   opsnelheid = false;
+
+  strobo.clearCompSamples();
 }
 
 

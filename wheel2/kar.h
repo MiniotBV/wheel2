@@ -4,20 +4,25 @@
 //48 stappen / 12 tanden = 4 stappen per tand
 //1.5mm / 4 stappen per tand = 0.375mm per stap
 //PI = 2 stappen
-// float mmPerStap = 1.5 / ( 48 / 10 );//8 );// / 12 );
-float mmPerStap = 1.5 / ( 48 / 8 );// / 12 );
+
+int karStapperTanden = 12;
+// int karStapperTanden = 8;
+
+float mmPerStap = 1.5 / ( 48 / karStapperTanden );
 float stap2mm = ( 2 / PI ) * mmPerStap;  // 0.238732414637843
 float mm2stap = 1 / stap2mm;   
 
 
 float karInterval;
 bool karGolven;
-bool karUitMiddenComp = false;
+
+bool karUitMiddenCompAan = true;
+float karUitMiddenCompFilter;
 
 
-float karP = 2;//0.001;//0.0005; //0.00005;//0.00025;
+float karP = 4;//0.001;//0.0005; //0.00005;//0.00025;
 float karI = 0;//0.005; //0.00005;//0.00025;
-float karD = 1;//1.5;//0.0006;//-0.003;
+float karD = 2;//1.5;//1.5;//0.0006;//-0.003;
 
 float karBasis;
 float karPcomp = 0;
@@ -627,9 +632,13 @@ bool karMotorUitvoeren(){
   
   
   egteKarPos  = karPos + karDcomp;
-  if(karUitMiddenComp){
-    egteKarPos += strobo.karFourierFilt;   
+
+  if(karUitMiddenCompAan){
+    karUitMiddenCompFilter +=  ( strobo.karFourierFilt - karUitMiddenCompFilter ) / 4;
+    egteKarPos += karUitMiddenCompFilter;   
   }
+
+
   karMotorPos = (egteKarPos + karOffset)  *  mm2stap;
 
 

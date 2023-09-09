@@ -33,12 +33,13 @@ class COMPVAART{
     
     int pulsenPerRev;
     int teller = 0;
-    float radiaalTeller;
-    int cosTeller = 0;
+    // float radiaalTeller;
+    // int cosTeller = 0;
 
     int glitchTeller;
 
     float sinus[1000];
+    float cosin[1000];
 
 
 
@@ -83,7 +84,7 @@ class COMPVAART{
 
 
     //---------------------------------------------onbalans compensatie
-    int faseVerschuiving = 90;//100;//90;//180;//90;  50 voor singletjes
+    int faseVerschuiving = 90;//75;//90;//100;//90;//180;//90;  50 voor singletjes
     float plateauCompensatie[1000];
     bool compMeten = true;
     float preComp = 0;
@@ -100,7 +101,7 @@ class COMPVAART{
     float cosTotaal[10];
     float sinWaardes[10][1000];
     float cosWaardes[10][1000];
-    int harmonisen = 1;
+    int harmonisen = 2;
     volatile float plateauCompFourier = 0;
 
 
@@ -120,8 +121,9 @@ class COMPVAART{
       clearCompSamples();
 
       for(int i = 0; i < pulsenPerRev; i++){
-        radiaalTeller = ( i * TAU ) / pulsenPerRev;
+        float radiaalTeller = ( i * TAU ) / pulsenPerRev;
         sinus[i] = sin(radiaalTeller);
+        cosin[i] = cos(radiaalTeller);
       }
     }
 
@@ -180,8 +182,8 @@ class COMPVAART{
 
 
       teller = rondTrip(teller + dir,  pulsenPerRev);
-      cosTeller = rondTrip(teller + (pulsenPerRev / 4), pulsenPerRev);
-      radiaalTeller = ( teller * TAU ) / pulsenPerRev;
+      // cosTeller = rondTrip(teller + (pulsenPerRev / 4), pulsenPerRev);
+      // radiaalTeller = ( teller * TAU ) / pulsenPerRev;
 
       shiftSamples(interval);// * dir);
 
@@ -209,23 +211,23 @@ class COMPVAART{
 
       if(isNaaldEropVoorZoLang(1000)){
         karSin -= karSinWaardes[teller];
-        karSinWaardes[teller] = sin(radiaalTeller)  *  karPosUitMidden;
+        karSinWaardes[teller] = sinus[teller]  *  karPosUitMidden;
         karSin += karSinWaardes[teller];
         
         karCos -= karCosWaardes[teller];
-        karCosWaardes[teller] = cos(radiaalTeller)  *  karPosUitMidden;
+        karCosWaardes[teller] = cosin[teller]  *  karPosUitMidden;
         karCos += karCosWaardes[teller];
       }
 
-      karFourier  = ( ( ( sin(radiaalTeller) * karSin )  +  ( cos(radiaalTeller) * karCos ) ) / pulsenPerRev ) * 2;
+      karFourier  = ( ( ( sinus[teller] * karSin )  +  ( cosin[teller] * karCos ) ) / pulsenPerRev ) * 2;
 
-      karSinFilt += ( karSin - karSinFilt ) / 1000;
-      karCosFilt += ( karCos - karCosFilt ) / 1000;
+      karSinFilt += ( karSin - karSinFilt ) / 2000;
+      karCosFilt += ( karCos - karCosFilt ) / 2000;
 
-      karFourierFilt  = ( ( ( sin(radiaalTeller) * karSinFilt )  +  ( cos(radiaalTeller) * karCosFilt ) )  / pulsenPerRev  ) * 2;
+      karFourierFilt  = ( ( ( sinus[teller] * karSinFilt )  +  ( cosin[teller] * karCosFilt ) )  / pulsenPerRev  ) * 2;
 
 
-      centerCompTargetRpm = targetRpm *  ( karPosMidden / ( karPosMidden + karFourier ) );
+      centerCompTargetRpm = targetRpm *  (( karPosMidden - karFourierFilt ) / karPosMidden );
 
 
 
@@ -262,12 +264,11 @@ class COMPVAART{
 
       // plateauComp = -plateauCompensatie[rondTrip(teller + faseVerschuiving,  pulsenPerRev)];
 
+
       preComp = plateauCompensatie[teller];
       float nieuweWaarde = plateauCompensatie[teller];
       plateauCompFourier = 0;
       
-      float faseShiftRad = ( faseVerschuiving / (float)pulsenPerRev ) * TAU;
-
       meanWaardehouder -= vorrigeWaarde;
       meanWaardehouder += nieuweWaarde;
       vorrigeWaarde = nieuweWaarde;
@@ -275,18 +276,18 @@ class COMPVAART{
       // mean = meanWaardehouder / (float)pulsenPerRev;
 
       for(int harm = 1; harm < harmonisen + 1; harm++){
+        int hoek = rondTrip(teller * harm,  pulsenPerRev);
+
         sinTotaal[harm] -= sinWaardes[harm][teller];
-        sinWaardes[harm][teller] = sin(radiaalTeller * harm)  *  nieuweWaarde;
+        sinWaardes[harm][teller] = sinus[hoek]  *  nieuweWaarde;
         sinTotaal[harm] += sinWaardes[harm][teller];
         
         cosTotaal[harm] -= cosWaardes[harm][teller];
-        cosWaardes[harm][teller] = cos(radiaalTeller * harm)  *  nieuweWaarde;
+        cosWaardes[harm][teller] = cosin[hoek]  *  nieuweWaarde;
         cosTotaal[harm] += cosWaardes[harm][teller];
 
-        // float hoek = (radiaalTeller * harm) + (faseShiftRad / harm);
-        float hoek = (radiaalTeller * harm) + (faseShiftRad);
-        plateauCompFourier += ( sin(hoek) * sinTotaal[harm] ) / pulsenPerRev;        
-        plateauCompFourier += ( cos(hoek) * cosTotaal[harm] ) / pulsenPerRev;
+        hoek = rondTrip(hoek + faseVerschuiving,  pulsenPerRev);
+        plateauCompFourier += ( ( sinus[hoek] * sinTotaal[harm] ) + ( cosin[hoek] * cosTotaal[harm] ) ) / pulsenPerRev;
       }
 
 
@@ -315,6 +316,14 @@ class COMPVAART{
 
 
     void clearCompSamples(){
+      clearOnbalansCompSamples();
+      clearCenterCompSamples();
+    }
+
+
+
+
+    void clearOnbalansCompSamples(){
       for(int i = 0; i < pulsenPerRev; i++){
         plateauCompensatie[i] = 0;
       }
@@ -328,11 +337,10 @@ class COMPVAART{
         }        
       }
 
-      
-
-
       meanWaardehouder = 0;
     }
+
+
 
 
     void clearCenterCompSamples(){
@@ -345,7 +353,15 @@ class COMPVAART{
       karSin = 0;
       karCos = 0;
       karPosMiddenPre = 0;
+
+      karSinFilt = 0;
+      karCosFilt = 0;
     }    
+
+
+
+
+
 
 
 

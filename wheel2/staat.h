@@ -113,12 +113,12 @@ void schoonmaakStand(){
 enum errors{
   E_GEEN = 0,
   
-  E_KON_NIET_HOMEN,
+  E_KON_NIET_HOMEN = 1,
     
-  E_NAALD_TERUG_GELOPEN,
-  E_NAALD_NIET_BEWOGEN,
+  E_NAALD_TERUG_GELOPEN = 2,
+  E_NAALD_NIET_BEWOGEN = 3,
 
-  E_PLAAT_NIET_OPGANG,
+  E_PLAAT_NIET_OPGANG = 4,
   
 };
 

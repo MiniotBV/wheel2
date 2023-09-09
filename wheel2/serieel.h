@@ -178,7 +178,7 @@ void checkenVoorCommando(bool info){
   if(checkZinF("SCF", "strobo.compFilter", info, strobo.compFilter)){return;}
   if(checkZinF("SCVermenigvuldiging", "strobo.compVermenigvuldiging", info, strobo.compVermenigvuldiging)){return;}
   if(checkZinF("SCVerval", "", info, strobo.compVerval)){return;}
-  if(checkZinB("KC", "kar sinus comp", info, karUitMiddenComp)){return;}
+  if(checkZinB("KC", "kar sinus comp", info, karUitMiddenCompAan)){return;}
   if(checkZinB("SKC", "plaatUitMiddenComp", info, strobo.plaatUitMiddenComp)){return;}
 
 
@@ -288,7 +288,7 @@ void serieelFunc(){
       // Serial.print(strobo.gladglad - targetRpm, 3);
 
       Serial.print(", ");
-      Serial.print(centerCompTargetRpm - targetRpm, 3);
+      Serial.print(centerCompTargetRpm - targetRpm, 4);
 
 
 
@@ -306,10 +306,10 @@ void serieelFunc(){
 
       
 
-      // Serial.print(", ");
-      // Serial.print(armHoekRuw);//1696);
-      // Serial.print(", ");
-      // Serial.print(armHoek, 5);//1696);
+      Serial.print(", ");
+      Serial.print(armHoekRuw);//1696);
+      Serial.print(", ");
+      Serial.print(armHoek, 5);//1696);
 
 
 
