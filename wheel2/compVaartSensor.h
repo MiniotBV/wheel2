@@ -20,7 +20,8 @@ Interval draaienInterval(10, MILLIS);
 Interval compInt(0, MILLIS);
 
 
-class COMPVAART{
+class COMPVAART
+{ 
   public:
     //-------------------------------------snelheid
     volatile unsigned int vaartInterval;
@@ -30,6 +31,8 @@ class COMPVAART{
     volatile unsigned long tijd;
     volatile unsigned int interval;
     float gemiddelde = sampleMax;
+
+    int processTijd;
 
     //-----------------------------------richting
     byte sens, sensPrev;
@@ -215,8 +218,15 @@ class COMPVAART{
       karCosFilt += ( karCos - karCosFilt ) / 2000;
 
       karFourierFilt  = ( ( ( sinus[teller] * karSinFilt )  +  ( cosin[teller] * karCosFilt ) )  / pulsenPerRev  ) * 2;
+      
 
-      centerCompTargetRpm = targetRpm *  (( karPosMidden - karFourierFilt ) / karPosMidden );
+
+      int leadTeller = rondTrip(teller - (8+9), pulsenPerRev);
+      float uitMiddenSnelheidsComp = ( ( ( sinus[leadTeller] * karSinFilt )  +  ( cosin[leadTeller] * karCosFilt ) )  / pulsenPerRev  ) * 2;
+
+      centerCompTargetRpm = targetRpm *  (( karPosMidden - uitMiddenSnelheidsComp ) / karPosMidden );
+
+      
 
       float sinBuff = karSinFilt / pulsenPerRev;
       float cosBuff = karCosFilt / pulsenPerRev;
@@ -297,6 +307,9 @@ class COMPVAART{
         Serial.print(karFourier, 3);
         Serial.println();        
       }
+
+
+      processTijd = micros() - tijd;
     }
 
 
@@ -332,7 +345,6 @@ class COMPVAART{
 
 
 
-
     void clearCenterCompSamples(){
       for(int i = 0; i < pulsenPerRev; i++){
         karSinWaardes[i] = 0;
@@ -356,11 +368,6 @@ class COMPVAART{
 
 
 
-
-
-
-
-
     float getVaart(){
 
       gemiddelde = gemiddeldeInterval();
@@ -375,9 +382,11 @@ class COMPVAART{
 
 
 
+
     void shiftSamples(int samp){
       samples[ sampleTeller++ % sampleNum ] = samp;   
     }
+
 
 
 

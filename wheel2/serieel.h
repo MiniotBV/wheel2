@@ -333,11 +333,11 @@ void serieelFunc(){
       // Serial.print(", ");
       // Serial.print(karPosMidden, 3);
 
-      // // Serial.print(", ");
-      // // Serial.print(karPosMidden + strobo.karFourier, 3);  
+      Serial.print(", ");
+      Serial.print(karPosMidden + strobo.karFourier, 3);  
 
-      // Serial.print(", ");
-      // Serial.print(karPosMidden + strobo.karFourierFilt, 3);  
+      Serial.print(", ");
+      Serial.print(karPosMidden + strobo.karFourierFilt, 3);  
 
 
 
@@ -361,11 +361,8 @@ void serieelFunc(){
       // Serial.print(", ");
       // Serial.print(orientatie.z);
 
-
-      Serial.print(", ");
-      Serial.print(strobo.karSinFilt * strobo.karSinFilt  +  strobo.karCosFilt * strobo.karCosFilt);
-
-
+      // Serial.print(", ");
+      // Serial.print(strobo.processTijd);
 
 
 

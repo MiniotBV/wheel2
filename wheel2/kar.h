@@ -595,7 +595,7 @@ bool karMotorUitvoeren(){
 	armHoek = armHoekCall - armHoekOffset;
 
 
-  if(  !(   staat == S_HOK  ||  staat == S_NAAR_HOK  ||  staat == S_HOMEN_VOOR_SPELEN  ||  staat == S_HOMEN_VOOR_SCHOONMAAK  ||  staat == S_FOUTE_ORIENTATIE   ) ){
+  if(  !(   staat == S_HOK  ||  staat == S_NAAR_HOK  ||  staat == S_HOMEN_VOOR_SPELEN  ||  staat == S_HOMEN_VOOR_SCHOONMAAK  ||  staat == S_SCHOONMAAK||  staat == S_FOUTE_ORIENTATIE   ) ){
     if(armHoekCall > 0.95){
       setError(E_ARMHOEK_LIMIET_POS);
       staat = S_HOK;

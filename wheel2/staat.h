@@ -146,7 +146,6 @@ enum errors{
   E_ARMHOEK_LIMIET_NEG = 7,//
 
   E_TE_GROTE_UITSLAG = 8,
-  
 };
 
 enum errors error = E_GEEN;

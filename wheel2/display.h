@@ -52,9 +52,9 @@ void displayPrint(float tijd){
 	for(int i = 0; i < displayLengte; i++){
 		
 		int pix = i;
-		if(!orientatie.isStaand){
-			pix = (displayLengte - 1) - pix;//flip display   
-		}
+		// if(!orientatie.isStaand){
+		// 	pix = (displayLengte - 1) - pix;//flip display   
+		// }
 		pix = (pix + 7) - ((pix % 8) * 2);//flip byte
 		
 		
@@ -106,11 +106,30 @@ void displayUpdate(){
 
 
 
+    //--------------------------------------------------------------------INTRO
+    if(millis()<4000){
+
+      int pos = (millis()/5) - 120;
+
+      for(int i = 0; i < displayLengte; i++){
+        if(i > pos  &&  i < pos + 200){
+          
+          if((i - pos) % 20 < 16){
+            displayData[i] = 0.1;
+          }else{
+            displayData[i] = 0;
+          }
+        }else{
+          displayData[i] = 0;
+        }
+      }
+    }
+
 
 				//----------------------------------------------------------------ERROR WEERGEVEN
-		if(errorVeranderd.sinds() < 10000  &&  error != E_GEEN){ // 10seonden knipperen
+		else if(errorVeranderd.sinds() < 10000  &&  error != E_GEEN){ // 10seonden knipperen
 
-			if((millis()/300) % 2){//                knipper
+			if((millis()%1000) > 800){//                knipper
 				for(int i = 0; i < displayLengte; i++){
 					displayData[i] = 0;
 				}
@@ -141,7 +160,7 @@ void displayUpdate(){
 		}
 
 		//----------------------------------------------------------------SCHOONMAAK STAND
-		else if(staat == S_SCHOONMAAK){
+		else if(staat == S_SCHOONMAAK  ||  staat == S_HOMEN_VOOR_SCHOONMAAK){
 			float verdeelPuntTeller = 0;
 			int volumePunt = mapF(armTargetGewicht, 0, 4, (displayLengte-1) - volumeMargin,   volumeMargin);
 
