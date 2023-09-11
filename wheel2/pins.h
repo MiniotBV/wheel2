@@ -1,192 +1,119 @@
-//3mei22 moederbord----------------------------------------------
-//voeding
-#define slaapStand                0
-#define VUSBsens                  1
-#define VBATsens                  29// ADC3
+#ifndef PINS_H
+#define PINS_H
+
+#include <Arduino.h>
+
+#define BOARD_WHEEL // Select wich board to use: BOARD_PICO, BOARD_WHEEL
+
+
+////////// Pico Board inside Wheel 2 /////////////
+#if defined(BOARD_WHEEL)
+#define BOARD_DESCRIPTION "Wheel 2 rp2040"
+
+//------------------- Power
+#define SLEEPMODE_PIN               0
+
+//------------------- Display
+#define DISPLAY_IN_PIN              9
+#define DISPLAY_OUT_PIN             10
+#define DISPLAY_CLOCK_PIN           11
+#define DISPLAY_LATCH_PIN           12
+#define DISPLAY_EN_PIN              13 //~ PWM6 B
+#define DISPLAY_POTMETER_PIN        28 // ADC2
 
-//kar stapper
-#define stapperAN                 2//~ PWM1 A
-#define stapperAP                 3//~ PWM1 B
-#define stapperBN                 4//~ PWM2 A
-#define stapperBP                 5//~ PWM2 B
+//------------------- Cart steppers
+#define CART_STEPPER_AN_PIN         2 //~ PWM1 A
+#define CART_STEPPER_AP_PIN         3 //~ PWM1 B
+#define CART_STEPPER_BN_PIN         4 //~ PWM2 A
+#define CART_STEPPER_BP_PIN         5 //~ PWM2 B
 
-// plateau encoder      
-#define plateauA                  8
-#define plateauB                  7
-#define plateauEN                 6
+//------------------- Plateau encoder
+#define PLATEAU_A_PIN               8
+#define PLATEAU_B_PIN               7
+#define PLATEAU_EN_PIN              6
 
-// display
+//------------------- Plateau motor
+#define PLATEAU_MOTOR_P_PIN         15 //~ PWM7 B
+#define PLATEAU_MOTOR_N_PIN         14 //~ PWM7 A
 
-#define displayIN                 9
-#define displayUIT                10
-#define displayKLOK               11
-#define displayLATCH              12
-#define displayEN                 13//~ PWM6 B
-#define displayPOTMETER           28// ADC2
+//------------------- Arm
+#define ARM_MOTOR_PIN               16 //~ PWM0 A
+#define SCANNER_LED_PIN             17
+#define ARM_ANGLE_SENSOR_PIN        26 // ADC0
+#define SCANNER_PIN                 27 // ADC1
 
-// plateau motor      
-#define motorP                    15//~ PWM7 B
-#define motorN                    14//~ PWM7 A
+//------------------- Leds
+#define LED_PIN                     19 //~ PWM1 B -> same as 'stepperAP'
 
-// leds     
-#define ledWit                    19//~ PWM1 B ----zelfe als 'stapperAP'
+//------------------- I2C
+#define I2C_SDA_PIN                 22
+#define I2C_SCL_PIN                 23
 
-// arm      
-#define armMotor                  16//~ PWM0 A
-#define plaatLeesLed              17//~ PWM0 B
-#define hoekSensor                26// ADC0
-#define plaatLees                 27// ADC1
+//------------------- Bluetooth
+#define BT_TXD_PIN                  20 // UART1 TX
+#define BT_RXD_PIN                  21 // UART1 RX
 
+#define AMP_HEADSET_CONNECTED_PIN   25
+#define AMP_HEADSET_EN_PIN          24
 
-#define BT_TXD                    20// UART1 TX
-#define BT_RXD                    21// UART1 RX
+#endif // BOARD_WHEEL
+//////////////////////////////////////////////////
 
-#define SDA                       22// I2C1 SDA 
-#define SCL                       23// I2C1 SCL
 
-#define koptelefoonAangesloten    25
-#define koptelefoonEn             24
- 
+////////// Real Raspberry Pi Pico Board //////////
+#if defined(BOARD_PICO)
+#define BOARD_DESCRIPTION "Raspberry Pi Pico"
 
+//------------------- Power
+#define SLEEPMODE_PIN               0
 
+//------------------- Display
+#define DISPLAY_IN_PIN              9
+#define DISPLAY_OUT_PIN             10
+#define DISPLAY_CLOCK_PIN           11
+#define DISPLAY_LATCH_PIN           12
+#define DISPLAY_EN_PIN              13 //~ PWM6 B
+#define DISPLAY_POTMETER_PIN        28 // ADC2
 
+//------------------- Cart steppers
+#define CART_STEPPER_AN_PIN         2 //~ PWM1 A
+#define CART_STEPPER_AP_PIN         3 //~ PWM1 B
+#define CART_STEPPER_BN_PIN         4 //~ PWM2 A
+#define CART_STEPPER_BP_PIN         5 //~ PWM2 B
 
+//------------------- Plateau encoder
+#define PLATEAU_A_PIN               8
+#define PLATEAU_B_PIN               7
+#define PLATEAU_EN_PIN              6
 
-// //14jan22 moederbord----------------------------------------------
-// //voeding
-// #define slaapStand                0
-// #define VUSBsens                  1
+//------------------- Plateau motor
+#define PLATEAU_MOTOR_P_PIN         15 //~ PWM7 B
+#define PLATEAU_MOTOR_N_PIN         14 //~ PWM7 A
 
-// //kar stapper
-// #define stapperAN                 2//~ PWM1 A
-// #define stapperAP                 3//~ PWM1 B
-// #define stapperBN                 4//~ PWM2 A
-// #define stapperBP                 5//~ PWM2 B
+//------------------- Arm
+#define ARM_MOTOR_PIN               16 //~ PWM0 A
+#define SCANNER_LED_PIN             17
+#define ARM_ANGLE_SENSOR_PIN        26 // ADC0
+#define SCANNER_PIN                 27 // ADC1
 
-// // plateau encoder      
-// #define plateauA                  8
-// #define plateauB                  7
-// #define plateauIndex              6
-// // #define plateauA                  6
-// // #define plateauB                  7
-// // #define plateauIndex              8
+//------------------- Leds
+#define LED_PIN                     25
 
-// // display
+//------------------- I2C
+#define I2C_SDA_PIN                 2
+#define I2C_SCL_PIN                 3
 
-// #define displayIN                 9
-// #define displayUIT                10
-// #define displayKLOK               11
-// #define displayLATCH              12
-// #define displayEN                 13//~ PWM6 B
-// #define displayPOTMETER           28
+//------------------- Bluetooth
+#define BT_TXD_PIN                  20 // UART1 TX
+#define BT_RXD_PIN                  21 // UART1 RX
 
-// // plateau motor      
-// #define motorP                    15//14//~ PWM7 A
-// #define motorN                    14//15//~ PWM7 B
+#define AMP_HEADSET_CONNECTED_PIN   25
+#define AMP_HEADSET_EN_PIN          24
 
-// // leds     
-// #define ledWit                    16//~ PWM0 A
+#endif // BOARD_PICO
+//////////////////////////////////////////////////
 
-// // arm      
-// #define armMotor                  17//~ PWM0 B
-// // #define plaatLeesLed              18//~ PWM1 A
-// #define plaatLeesLed              24//~ PWM4 A
-// #define hoekSensor                26
-// #define plaatLees                 27
 
-// #define audioFreqPin              19
 
-// #define BT_TXD                    20
-// #define BT_RXD                    21
 
-// #define SDA                       22
-// #define SCL                       23
-
-// // #define koptelefoonAangesloten    24//  PWM4 A
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// //kar stapper
-// #define stapperAN           8//~ 
-// #define stapperAP           9//~ 
-// #define stapperBN           10//~ 
-// #define stapperBP           11//~ 
-
-// // plateau motor
-// #define motorP              12//~  
-// #define motorN              13//~ 
-
-// // plateau encoder
-// #define plateauA            0//~ 
-// #define plateauB            1//~
-// #define plateauIndex        2//~
-
-// // wheel1 style calibratieToon
-// #define plaatStrobo         17 
-
-// // leds
-// #define ledWit              14//~
-// #define ledRood             15//~
-
-// // arm
-// #define armMotor            16//~ 
-// #define plaatLeesLed        17//~ 
-// #define karIndex            18//~
-
-// #define hoekSensor          26//~ 
-// #define plaatLees           27//~ 
-
-// #define audioFreqPin        29
-
-
-
-// // display
-// #define displayKLOK         3//~
-// #define displayIN           4//~
-// #define displayUIT          5//~
-// #define displayLATCH        6//~
-// #define displayPOTMETER     7//~
-// #define displayPOTMETERanaloog     28//~
-
-
-// #define SCL                 23//~
-// #define SDA                 22//~
-// #define koptelefoonAangesloten     25//~
-
-// #define BT_TXD              20//~
-// #define BT_RXD              21//~
-
-
-
-
-
-
-
-
+#endif // PINS_H
