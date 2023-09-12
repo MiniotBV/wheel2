@@ -226,6 +226,15 @@ void displayUpdate(){
       }
 		}
 
+
+
+    //---------------------------------------------------------------PLAAT_SCHOONMAAK
+    else if(staat == S_PLAAT_SCHOONMAAK){
+
+       int rpmPunt = mapF(strobo.vaart - targetRpm, 10, -10, 0, displayLengte-1);
+      displayTekenBlok(rpmPunt-2, rpmPunt+2, 0.9);
+    }
+
 	 
 	 //----------------------------------------------------------------CALIBREER STAND
 		else if(staat == S_CALIBREER){
