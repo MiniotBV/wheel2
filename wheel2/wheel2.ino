@@ -3,7 +3,7 @@
   Name: wheel2
 
   Author: Piet Kolkman (MiniotBv), refactored by Eduard Kuijt (EddyK69
-  
+
   Based on offical Miniot Wheel2 Firmware:
     https://drive.google.com/drive/folders/1BKKGxrlx6HUjvCHgJyVHJfkWcCUIp_lk
     https://pietk.com/wheel2/
