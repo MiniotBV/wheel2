@@ -1,6 +1,6 @@
 #include "log.h"
 #include "speedcomp.h"
-#include "cart.h"
+#include "carriage.h"
 #include "pins.h"
 #include "helper.h"
 #include "plateau.h"
@@ -10,9 +10,9 @@ SpeedComp::SpeedComp(Shared& shared, Arm& arm) :
   _arm(arm) {
 } // SpeedComp()
 
-void SpeedComp::init(Cart* cart, Plateau* plateau) { // to prevent circular reference
+void SpeedComp::init(Carriage* carriage, Plateau* plateau) { // to prevent circular reference
   LOG_DEBUG("speedcomp.cpp", "[init]");
-  _cart = cart;
+  _carriage = carriage;
   _plateau = plateau;
   float radialCounter;
   clearSamples();
@@ -92,42 +92,42 @@ void SpeedComp::stroboInterrupt() {
 
 
   //------------------------------------------------------------ OFF CENTER COMPENSATION
-  _cartPosMiddlePre -= _cartOffCenterWave[counter];
-  _cartOffCenterWave[counter] = _cart->realPosition;
-  _cartPosMiddlePre += _cartOffCenterWave[counter];
-  cartPosMiddle = _cartPosMiddlePre / pulsesPerRev;
+  _carriagePosMiddlePre -= _carriageOffCenterWave[counter];
+  _carriageOffCenterWave[counter] = _carriage->realPosition;
+  _carriagePosMiddlePre += _carriageOffCenterWave[counter];
+  carriagePosMiddle = _carriagePosMiddlePre / pulsesPerRev;
 
-  trackSpacing = _cartPosCenterHist[counter] - cartPosMiddle;
-  _cartPosCenterHist[counter] = cartPosMiddle;
+  trackSpacing = _carriagePosCenterHist[counter] - carriagePosMiddle;
+  _carriagePosCenterHist[counter] = carriagePosMiddle;
 
   // if ((trackSpacing > 0.01) || !(_arm.isNeedleDownFor(2000))) {
-  //   _cart->movedForwardInterval.reset();
+  //   _carriage->movedForwardInterval.reset();
   // } else {
   //   // Nothing
   // }
 
-  float cartPosOffCenter = _cart->realPosition - cartPosMiddle;
+  float carriagePosOffCenter = _carriage->realPosition - carriagePosMiddle;
 
   if (_arm.isNeedleDownFor(1000) && _shared.state == S_PLAYING) { // needle has to be down while playing before calculation
-    _cartSin -= _cartSinValues[counter];
-    _cartSinValues[counter] = _sinus[counter] * cartPosOffCenter;
-    _cartSin += _cartSinValues[counter];
+    _carriageSin -= _carriageSinValues[counter];
+    _carriageSinValues[counter] = _sinus[counter] * carriagePosOffCenter;
+    _carriageSin += _carriageSinValues[counter];
     
-    _cartCos -= _cartCosValues[counter];
-    _cartCosValues[counter] = _cosin[counter] * cartPosOffCenter;
-    _cartCos += _cartCosValues[counter];
+    _carriageCos -= _carriageCosValues[counter];
+    _carriageCosValues[counter] = _cosin[counter] * carriagePosOffCenter;
+    _carriageCos += _carriageCosValues[counter];
 
-    _cartSinFilt += (_cartSin - _cartSinFilt) / 2000;
-    _cartCosFilt += (_cartCos - _cartCosFilt) / 2000;
+    _carriageSinFilt += (_carriageSin - _carriageSinFilt) / 2000;
+    _carriageCosFilt += (_carriageCos - _carriageCosFilt) / 2000;
   }
 
-  cartFourier  = ( ( (_sinus[counter] * _cartSin) + ( _cosin[counter] * _cartCos) ) / pulsesPerRev ) * 2;
-  cartFourierFilter  = ( ( ( _sinus[counter] * _cartSinFilt )  +  ( _cosin[counter] * _cartCosFilt ) ) / pulsesPerRev) * 2;
+  carriageFourier  = ( ( (_sinus[counter] * _carriageSin) + ( _cosin[counter] * _carriageCos) ) / pulsesPerRev ) * 2;
+  carriageFourierFilter  = ( ( ( _sinus[counter] * _carriageSinFilt )  +  ( _cosin[counter] * _carriageCosFilt ) ) / pulsesPerRev) * 2;
   
 
   //------------------------------------------------------------ too big break-out ERROR
-  float sinBuff = _cartSinFilt / pulsesPerRev;
-  float cosBuff = _cartCosFilt / pulsesPerRev;
+  float sinBuff = _carriageSinFilt / pulsesPerRev;
+  float cosBuff = _carriageCosFilt / pulsesPerRev;
   // an off-center of 6mm (3mm radius) triggers error
   if (sinBuff * sinBuff + cosBuff * cosBuff > 3 * 3) {
     _shared.setError(E_TO_MUCH_TRAVEL);
@@ -139,9 +139,9 @@ void SpeedComp::stroboInterrupt() {
   //------------------------------------------------------------ COMP SPEEDS
   // phase shift: 8 of 16 samples avg filter, and 9 from found filter
   int leadCounter = roundTrip(counter - (8+9), pulsesPerRev);
-  float offCenterSpeedComp = ( ( (_sinus[leadCounter] * _cartSinFilt) + (_cosin[leadCounter] * _cartCosFilt) ) / pulsesPerRev) * 2;
+  float offCenterSpeedComp = ( ( (_sinus[leadCounter] * _carriageSinFilt) + (_cosin[leadCounter] * _carriageCosFilt) ) / pulsesPerRev) * 2;
 
-  _centerComp = ((cartPosMiddle - offCenterSpeedComp) / cartPosMiddle);
+  _centerComp = ((carriagePosMiddle - offCenterSpeedComp) / carriagePosMiddle);
   centerCompTargetRpm = _plateau->targetRpm * _centerComp;
   
   if (recordOffCenterComp) {
@@ -238,22 +238,22 @@ void SpeedComp::clearUnbalanceCompSamples() {
 
 void SpeedComp::clearCenterCompSamples() {
   LOG_DEBUG("speedcomp.cpp", "[clearCenterCompSamples]");
-  float pos = _cart->realPosition;
+  float pos = _carriage->realPosition;
 
   for (int i = 0; i < pulsesPerRev; i++) {
-    _cartSinValues[i] = 0;
-    _cartCosValues[i] = 0;
-    _cartOffCenterWave[i] = pos;
-    _cartPosCenterHist[i] = pos;
+    _carriageSinValues[i] = 0;
+    _carriageCosValues[i] = 0;
+    _carriageOffCenterWave[i] = pos;
+    _carriagePosCenterHist[i] = pos;
   }
 
-  _cartSinFilt = 0;
-  _cartCosFilt = 0;
-  _cartSin = 0;
-  _cartCos = 0;
+  _carriageSinFilt = 0;
+  _carriageCosFilt = 0;
+  _carriageSin = 0;
+  _carriageCos = 0;
 
-  _cartPosMiddlePre = pos * pulsesPerRev;
-  cartPosMiddle = pos;
+  _carriagePosMiddlePre = pos * pulsesPerRev;
+  carriagePosMiddle = pos;
 } // clearCenterCompSamples()
 
 void SpeedComp::createUnbalanceFilterCurve(){
@@ -302,14 +302,14 @@ void SpeedComp::shiftSamples(int sample) {
 
 void SpeedComp::printGraphicData() {
   if (!_headerShown) {
-    Serial.println("GRAPH_HEADER: SpeedRaw, Speed, CartFourier");
+    Serial.println("GRAPH_HEADER: SpeedRaw, Speed, CarriageFourier");
     _headerShown = true;
   }
   Serial.print(speedRaw, 3);
   Serial.print(",");
   Serial.print(speed, 3);
   Serial.print(",");
-  Serial.print(cartFourier, 3);
+  Serial.print(carriageFourier, 3);
   Serial.println();
 }
 

@@ -4,14 +4,14 @@
 #include "helper.h"
 
 
-SerialComm::SerialComm(Shared& shared, Amplifier& amplifier, Arm& arm, Bluetooth& bluetooth, Buttons& buttons, Cart& cart,
+SerialComm::SerialComm(Shared& shared, Amplifier& amplifier, Arm& arm, Bluetooth& bluetooth, Buttons& buttons, Carriage& carriage,
       Orientation& orientation, Plateau& plateau, Scanner& scanner, SpeedComp& speedcomp, Storage& storage) :
       _shared(shared),
       _amplifier(amplifier),
       _arm(arm),
       _bluetooth(bluetooth),
       _buttons(buttons),
-      _cart(cart),
+      _carriage(carriage),
       _orientation(orientation),
       _plateau(plateau),
       _scanner(scanner),
@@ -69,21 +69,21 @@ void SerialComm::checkReceivedLine(String line, eCheckMode mode) {
 
   if (checkLineBool(    "G",      "Graphics",                   mode, _graphicData)) {                        return; }
   if (checkLineBool(    "PLG",    "RecordScanner graphics",     mode, _scanner.graphicData)) {                return; }
-  if (checkLineBool(    "KG",     "Cart graphics",              mode, _cart.graphicData)) {                   return; }
+  if (checkLineBool(    "KG",     "Carriage graphics",          mode, _carriage.graphicData)) {               return; }
   if (checkLineBool(    "SG",     "Strobo graphics",            mode, _speedcomp.graphicData)) {              return; }
   if (checkLineBool(    "OG",     "Orientation graphics",       mode, _orientation.graphicData)) {            return; }
 
   //-------------------------------------------------- STATE --------------------------------------------------
   println(mode);
-  if (checkLineCommand( ">>",     "Next track",                 mode)) { _cart.gotoNextTrack();               return; }
-  if (checkLineCommand( "<<",     "Previous track",             mode)) { _cart.gotoPreviousTrack();           return; }
+  if (checkLineCommand( ">>",     "Next track",                 mode)) { _carriage.gotoNextTrack();           return; }
+  if (checkLineCommand( "<<",     "Previous track",             mode)) { _carriage.gotoPreviousTrack();       return; }
   if (checkLineCommand( "HOK",    "Home",                       mode)) { _shared.setState(S_HOME);            return; }
   if (checkLineCommand( "STOP",   "Stop",                       mode)) { _plateau.stop();                     return; }
   if (checkLineCommand( "SPEEL",  "Play",                       mode)) { _plateau.play();                     return; }
-  if (checkLineCommand( "PAUZE",  "Pause",                      mode)) { _cart.pause();                       return; }
+  if (checkLineCommand( "PAUZE",  "Pause",                      mode)) { _carriage.pause();                   return; }
   if (checkLineCommand( "NAALD",  "Clean needle",               mode)) { _shared.setState(S_NEEDLE_CLEAN);    return; }
   if (checkLineCommand( "CAL",    "Calibrate",                  mode)) { _shared.setState(S_CALIBRATE);       return; }
-  if (checkLineBool(    "REP",    "Repeat",                     mode, _cart.repeat)) {                        return; }
+  if (checkLineBool(    "REP",    "Repeat",                     mode, _carriage.repeat)) {                    return; }
 
   //-------------------------------------------------- ARM --------------------------------------------------
   println(mode);
@@ -96,12 +96,12 @@ void SerialComm::checkReceivedLine(String line, eCheckMode mode) {
   if (checkLineCommand( "AKH",    "Arm force 4000mg calibrate", mode)) { _arm.forceHigh = _arm.force;      Serial.println(padRight("AKH", 8)   + " " + padRight("Arm force 4000mg calibrate", 26) + " SET: " + String(_arm.forceHigh, 5));      _storage.saveRequired = true; return;}
   if (checkLineFloat(   "AK",     "Arm force",                  mode, _arm.force)) { _arm.force = limitFloat(_arm.force, 0, 1); return;}
  
-  //-------------------------------------------------- CART --------------------------------------------------
+  //-------------------------------------------------- CARRIAGE --------------------------------------------------
   println(mode);
-  if (checkLineFloat(   "KP",     "Cart P",                     mode, _cart.P)) {                             return; }
-  if (checkLineFloat(   "KI",     "Cart I",                     mode, _cart.I)) {                             return; }
-  if (checkLineFloat(   "KD",     "Cart D",                     mode, _cart.D)) {                             return; }
-  if (checkLineFloat(   "TNP",    "Target track",               mode, _cart.targetTrack)) { _cart.targetTrack = limitFloat(_cart.targetTrack, CART_HOME, CART_12INCH_START); return; }
+  if (checkLineFloat(   "KP",     "Carriage P",                 mode, _carriage.P)) {                         return; }
+  if (checkLineFloat(   "KI",     "Carriage I",                 mode, _carriage.I)) {                         return; }
+  if (checkLineFloat(   "KD",     "Carriage D",                 mode, _carriage.D)) {                         return; }
+  if (checkLineFloat(   "TNP",    "Target track",               mode, _carriage.targetTrack)) { _carriage.targetTrack = limitFloat(_carriage.targetTrack, CARRIAGE_HOME, CARRIAGE_12INCH_START); return; }
 
   //-------------------------------------------------- PLATEAU --------------------------------------------------
   println(mode);
@@ -121,7 +121,7 @@ void SerialComm::checkReceivedLine(String line, eCheckMode mode) {
   // if (checkLineInt(     "SSN",    "Strobo samples",             mode, _speedcomp.samples)) {                  return; }
   if (checkLineBool(    "SOC",    "Strobo unbalance Comp. On",  mode, _speedcomp.unbalanceCompOn)) {          return; }
   if (checkLineBool(    "SKC",    "Strobo OffCenter Comp.",     mode, _speedcomp.recordOffCenterComp)) {      return; }
-  if (checkLineBool(    "KC",     "Cart OffCenter Comp.",       mode, _cart.offCenterCompensation)) {         return; }
+  if (checkLineBool(    "KC",     "Carriage OffCenter Comp.",   mode, _carriage.offCenterCompensation)) {     return; }
 
   if (checkLineFloat(   "SOG",    "Strobo unbal. Comp. Weight", mode, _speedcomp.unbalanceCompWeight)) {      return; }
   if (checkLineFloat(   "SOFB",   "Strobo unbal. Filter Width", mode, _speedcomp.unbalanceFilterWidth)) {_speedcomp.createUnbalanceFilterCurve(); return; }
@@ -136,10 +136,10 @@ void SerialComm::checkReceivedLine(String line, eCheckMode mode) {
   if (checkLineCommand( "EO",     "Save EEPROM",                mode)) { _storage.write();                    return; }
   if (checkLineCommand( "EL",     "Read EEPROM",                mode)) { _storage.read();                     return; }
   if (checkLineCommand( "OC",     "Orientation calibrate",      mode)) { _orientation.calibrate(); _storage.saveRequired  = true; return; }
-  if (checkLineFloat(   "TO",     "Track offset",               mode, _cart.trackOffset)) { _storage.saveRequired  = true; return; }
+  if (checkLineFloat(   "TO",     "Track offset",               mode, _carriage.trackOffset)) { _storage.saveRequired  = true; return; }
   // if (checkLineCommand( "AHCal",  "armHoekCalibreer()",         mode)) { armHoekCalibreer(); _storage.saveRequired = true; return; }
 
-  //-------------------------------------------------- CART SENSORS --------------------------------------------------
+  //-------------------------------------------------- CARRIAGE SENSORS --------------------------------------------------
   println(mode);
   // if(checkLineFloat(    "PLS",    "Scanner current",            mode, _scanner.current)) {                    return; }
   if (checkLineInt(     "VOLUME", "Volume w/o override",        mode, _amplifier.volume)) { _amplifier.volumeOverRide = false; return; }
@@ -314,7 +314,7 @@ void SerialComm::printGraphicData() {
   // Serial.print(_arm.armAngleRaw); // 1696);
 
   // Serial.print(", ");
-  // Serial.print(_cart._Dcomp, 4); // 1696);
+  // Serial.print(_carriage._Dcomp, 4); // 1696);
   Serial.print(", ");
   Serial.print(_arm.armAngleCall, 4); // 1696);
 
@@ -324,18 +324,18 @@ void SerialComm::printGraphicData() {
   // Serial.print(_arm.armAngleOffset, 5); // 1696);
 
   // Serial.print(", ");
-  // Serial.print(_cart.position, 3);
+  // Serial.print(_carriage.position, 3);
   Serial.print(", ");
-  Serial.print(_cart.realPosition, 3);
+  Serial.print(_carriage.realPosition, 3);
 
   // // Serial.print(", ");
-  // // Serial.print(_speedcomp.cartPosMiddle, 3);
+  // // Serial.print(_speedcomp.carriagePosMiddle, 3);
 
   // // Serial.print(", ");
-  // // Serial.print(_speedcomp.cartPosMiddle + _speedcomp.cartFourier, 3);
+  // // Serial.print(_speedcomp.carriagePosMiddle + _speedcomp.carriageFourier, 3);
 
   // Serial.print(", ");
-  // Serial.print(_speedcomp.cartPosMiddle + _speedcomp.cartFourierFilter, 3);
+  // Serial.print(_speedcomp.carriagePosMiddle + _speedcomp.carriageFourierFilter, 3);
 
   Serial.print(", ");
   Serial.print(_speedcomp.trackSpacing, 3);
@@ -357,7 +357,7 @@ void SerialComm::info() {
   _orientation.info();
   _plateau.info();
   _speedcomp.info();
-  _cart.info();
+  _carriage.info();
   _scanner.info();
   _arm.info();
   _buttons.info();

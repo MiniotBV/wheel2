@@ -8,14 +8,14 @@
 
 #define SCANNER_DETECTION_THRESHOLD 200
 
-class Cart; // pre-declare class
+class Carriage; // pre-declare class
 
 class Scanner {
   private:
     Interval _interval;
     Shared& _shared;
     Plateau _plateau;
-    Cart* _cart;
+    Carriage* _carriage;
     bool _cut;
     bool _trackBelowThreshold = true;
     bool _headerShown = false;
@@ -50,7 +50,7 @@ class Scanner {
     float current = 10;
     int trackCount = 0;
     Scanner(Shared& shared, Plateau& plateau);
-    void init(Cart* cart);
+    void init(Carriage* carriage);
     void func();
     void check();
     void setTracksAs7inch();

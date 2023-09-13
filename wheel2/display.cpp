@@ -3,13 +3,13 @@
 #include "pins.h"
 #include "helper.h"
 
-Display::Display(Shared& shared, Amplifier& amplifier, Arm& arm, Buttons& buttons, Cart& cart,
+Display::Display(Shared& shared, Amplifier& amplifier, Arm& arm, Buttons& buttons, Carriage& carriage,
   Orientation& orientation, Plateau& plateau, Scanner& scanner, SpeedComp& speedcomp, Storage& storage) :
   _shared(shared),
   _amplifier(amplifier),
   _arm(arm),
   _buttons(buttons),
-  _cart(cart),
+  _carriage(carriage),
   _orientation(orientation),
   _plateau(plateau),
   _scanner(scanner),
@@ -34,10 +34,10 @@ void Display::update() {
   if (_interval.tick()) {
 
     _trackCounter = 0;
-    int needle = mapRealPos2Display(_cart.positionFilter);
-    int target = mapRealPos2Display(_cart.targetTrack);
-    int sensor = mapRealPos2Display(_cart.sensorPosition);
-    int sensorMaxRange = mapRealPos2Display(CART_12INCH_START - CART_SENSOR_OFFSET) + 3;
+    int needle = mapRealPos2Display(_carriage.positionFilter);
+    int target = mapRealPos2Display(_carriage.targetTrack);
+    int sensor = mapRealPos2Display(_carriage.sensorPosition);
+    int sensorMaxRange = mapRealPos2Display(CARRIAGE_12INCH_START - CARRIAGE_SENSOR_OFFSET) + 3;
     int recordSize = mapRealPos2Display(_scanner.recordStart);
     int _dispHalf = DISPLAY_LENGTH / 2;
 
@@ -176,7 +176,7 @@ void Display::update() {
       int volPoint = mapFloat(_amplifier.volume, 0, 63, 1, _dispHalf);
       drawBlock(_dispHalf + volPoint, _dispHalf - volPoint, 0.1);
 
-    //--------------------------------------------- TRACK & CART DISPLAY
+    //--------------------------------------------- TRACK & CARRIAGE DISPLAY
     } else {
       for (int i = 0; i < DISPLAY_LENGTH; i++) {
         if (!(_shared.state == S_STOPPING || _shared.state == S_PARKING || _shared.state == S_HOMING || _shared.state == S_HOME )) {
@@ -212,7 +212,7 @@ void Display::update() {
         }
       } else if (_shared.state == S_PLAYING && !_arm.isNeedleDown() && (_shared.stateChangedInterval.duration() % 1000 < 250) && !_shared.puristMode) {
         // Nothing
-      } else if (_cart.repeat) {
+      } else if (_carriage.repeat) {
         drawPoint(needle, 0.9);
         drawPoint((needle - 2), 0.9);
         drawPoint((needle + 2), 0.9);
@@ -279,7 +279,7 @@ void Display::clear() {
 } // clear()
 
 int Display::mapRealPos2Display(float pos) {
-  return mapFloat(pos, CART_RECORD_END, CART_12INCH_START, 0, DISPLAY_LENGTH - 1);
+  return mapFloat(pos, CARRIAGE_RECORD_END, CARRIAGE_12INCH_START, 0, DISPLAY_LENGTH - 1);
 } // mapRealPos2Display()
 
 void Display::drawBlock(int start, int end, float color) {

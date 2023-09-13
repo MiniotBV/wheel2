@@ -7,7 +7,7 @@
 #include "arm.h"
 #include "bluetooth.h"
 #include "buttons.h"
-#include "cart.h"
+#include "carriage.h"
 #include "display.h"
 #include "orientation.h"
 #include "plateau.h"
@@ -23,7 +23,7 @@ class Wheel {
     Arm arm;
     Bluetooth bluetooth;
     Buttons buttons;
-    Cart cart;
+    Carriage carriage;
     Display display;
     Orientation orientation;
     Plateau plateau;

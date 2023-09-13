@@ -1,6 +1,6 @@
 #include "log.h"
 #include "scanner.h"
-#include "cart.h"
+#include "carriage.h"
 #include "pins.h"
 #include "pwm.h"
 #include "helper.h"
@@ -11,16 +11,16 @@ Scanner::Scanner(Shared& shared, Plateau& plateau) :
   _interval(10000, TM_MICROS) {
 } // Scanner()
 
-void Scanner::init(Cart* cart) { // to prevent circular reference
+void Scanner::init(Carriage* carriage) { // to prevent circular reference
   LOG_DEBUG("scanner.cpp", "[init]");
-  _cart = cart;
+  _carriage = carriage;
   setPwm(SCANNER_LED_PIN);
   setLedMilliAmp(0); // 10mA
 } // init()
 
 void Scanner::func() {
   if (_interval.tick()) {
-    if (_shared.state == S_HOME) { // if cart @home, stop scanner
+    if (_shared.state == S_HOME) { // if carriage @home, stop scanner
       clearTracks();
       scanLedOff();
       return;
@@ -93,9 +93,9 @@ void Scanner::check() {
 void Scanner::setTracksAs7inch() {
   LOG_DEBUG("scanner.cpp", "[setTracksAs7inch]");
   trackCount = 1;
-  tracks[1] = CART_7INCH_START;
+  tracks[1] = CARRIAGE_7INCH_START;
 
-  if (tracks[0] > CART_7INCH_START - 12) {
+  if (tracks[0] > CARRIAGE_7INCH_START - 12) {
     tracks[0] = 55;
     // LOG_NOTICE("scanner.cpp", "[setTracksAs7inch] Adjusted record-end");
     Serial.println("Adjusted record-end");
@@ -142,14 +142,14 @@ bool Scanner::isRecordPresent() {
 void Scanner::scanForTracks() {
   // LOG_DEBUG("scanner.cpp", "[scanForTracks]");
 
-  if (_cart->sensorPosition < CART_RECORD_END + 2 || _shared.state != S_GOTO_RECORD_START) {
+  if (_carriage->sensorPosition < CARRIAGE_RECORD_END + 2 || _shared.state != S_GOTO_RECORD_START) {
     _bufferCounter = 0;
     return;
   }
 
   float value = -_diff;
 
-  _buffer[_bufferCounter][0] = _cart->sensorPosition; // save for after-check
+  _buffer[_bufferCounter][0] = _carriage->sensorPosition; // save for after-check
   _buffer[_bufferCounter][1] = value;
   _bufferCounter++;
 
@@ -158,7 +158,7 @@ void Scanner::scanForTracks() {
   }
   if (value > _trackThreshold && !_trackBelowThreshold) {
     _trackBelowThreshold = true;
-    newTrack(_cart->sensorPosition);
+    newTrack(_carriage->sensorPosition);
   }
 } // scanForTracks()
 

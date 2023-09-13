@@ -2,9 +2,9 @@
 #include "bluetooth.h"
 #include "pins.h"
 
-Bluetooth::Bluetooth(Shared& shared, Cart& cart, Plateau& plateau) :
+Bluetooth::Bluetooth(Shared& shared, Carriage& carriage, Plateau& plateau) :
   _shared(shared),
-  _cart(cart),
+  _carriage(carriage),
   _plateau(plateau),
   _interval(200, TM_MILLIS),
   _checkBeforeStartInterval(2000, TM_MILLIS) {
@@ -94,7 +94,7 @@ void Bluetooth::encode() {
 
       // if (_buffer == BT_PLAY) {
       //   if (_shared.state == S_PAUSE || _shared.state == S_PLAYING) { // maybe remove S_PLAYING?
-      //     _cart.pause();
+      //     _carriage.pause();
       //   } else if(_shared.state == S_HOME) {
       //     _plateau.play();
       //   }
@@ -102,21 +102,21 @@ void Bluetooth::encode() {
 
       if (_buffer == BT_PLAY) {
         if (_shared.state == S_PAUSE) { 
-          _cart.pause();
+          _carriage.pause();
         } else if (_shared.state == S_HOME) {
           _plateau.play();
         }
       } else if (_buffer == BT_PAUSE) {
         if (_shared.state == S_PAUSE || _shared.state == S_PLAYING) { // maybe remove S_PLAYING?
-          _cart.pause();
+          _carriage.pause();
         }
       } else if (_buffer == BT_NEXT_TRACK) {
         if (_shared.state == S_PLAYING || _shared.state == S_PAUSE || _shared.state == S_GOTO_TRACK) {
-          _cart.gotoNextTrack();
+          _carriage.gotoNextTrack();
         }
       } else if (_buffer == BT_PREV_TRACK) {
         if (_shared.state == S_PLAYING || _shared.state == S_PAUSE || _shared.state == S_GOTO_TRACK) {
-          _cart.gotoPreviousTrack();
+          _carriage.gotoPreviousTrack();
         }
       }
     } else if (_buffer.startsWith(BT_BUTTON_OUT)) {

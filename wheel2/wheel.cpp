@@ -7,15 +7,15 @@ Wheel::Wheel(float version) :
     arm(shared),
     amplifier(shared, arm),
     orientation(shared, arm),
-    speedcomp(shared, arm), // cart & plateau are passed via init()
+    speedcomp(shared, arm), // carriage & plateau are passed via init()
     plateau(shared, speedcomp),
-    scanner(shared, plateau), // cart is passed via init()
-    cart(shared, arm, plateau, scanner), // speedcomp is passed via init()
-    buttons(shared, amplifier, arm, bluetooth, cart, orientation, plateau, scanner),
-    storage(shared, arm, cart, orientation),
-    display(shared, amplifier, arm, buttons, cart, orientation, plateau, scanner, speedcomp, storage),
-    serialcomm(shared, amplifier, arm, bluetooth, buttons, cart, orientation, plateau, scanner, speedcomp, storage),
-    bluetooth(shared, cart, plateau) {
+    scanner(shared, plateau), // carriage is passed via init()
+    carriage(shared, arm, plateau, scanner), // speedcomp is passed via init()
+    buttons(shared, amplifier, arm, bluetooth, carriage, orientation, plateau, scanner),
+    storage(shared, arm, carriage, orientation),
+    display(shared, amplifier, arm, buttons, carriage, orientation, plateau, scanner, speedcomp, storage),
+    serialcomm(shared, amplifier, arm, bluetooth, buttons, carriage, orientation, plateau, scanner, speedcomp, storage),
+    bluetooth(shared, carriage, plateau) {
 } // Wheel()
 
 void Wheel::init() {
@@ -28,10 +28,10 @@ void Wheel::init() {
   orientation.init();
   arm.init();
   buttons.init();
-  cart.init(&speedcomp); // to prevent circular reference
-  scanner.init(&cart); // to prevent circular reference
+  carriage.init(&speedcomp); // to prevent circular reference
+  scanner.init(&carriage); // to prevent circular reference
   plateau.init();
-  speedcomp.init(&cart, &plateau); // to prevent circular reference
+  speedcomp.init(&carriage, &plateau); // to prevent circular reference
 
   storage.read();
 

@@ -7,7 +7,7 @@
 #include "amplifier.h"
 #include "arm.h"
 #include "bluetooth.h"
-#include "cart.h"
+#include "carriage.h"
 #include "orientation.h"
 #include "plateau.h"
 #include "scanner.h"
@@ -32,7 +32,7 @@ class Buttons {
     Amplifier& _amplifier;
     Arm& _arm;
     Bluetooth& _bluetooth;
-    Cart& _cart;
+    Carriage& _carriage;
     Orientation& _orientation;
     Plateau& _plateau;
     Scanner& _scanner;
@@ -61,7 +61,7 @@ class Buttons {
     Interval volumeDisplayActionInterval;
     Interval ledBlinkInterval;
     int state[BUTTON_COUNT];
-    Buttons(Shared& shared, Amplifier& amplifier, Arm& arm, Bluetooth& bluetooth, Cart& cart, Orientation& orientation, Plateau& plateau, Scanner& scanner);
+    Buttons(Shared& shared, Amplifier& amplifier, Arm& arm, Bluetooth& bluetooth, Carriage& carriage, Orientation& orientation, Plateau& plateau, Scanner& scanner);
     void init();
     void update();
     void info();
