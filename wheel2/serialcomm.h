@@ -48,6 +48,7 @@ class SerialComm {
     void printCommando(String command, String description);
     void printValue(String command, String description, String value);
     void printGraphicData();
+    void report();
     void info();
   public:
     SerialComm(Shared& shared, Amplifier& amplifier, Arm& arm, Bluetooth& bluetooth, Buttons& buttons, Carriage& carriage,
