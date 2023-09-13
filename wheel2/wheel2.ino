@@ -57,13 +57,7 @@ void setup() {
   // Sets the size (in bits) of the value returned by analogRead(). It defaults to 10 bits.
   analogReadResolution(12);
 
-  // Start serial output
-  Serial.begin(SERIAL_BAUDRATE);
 
-  // Wait until the serial stream is open
-  delay(1000); // while (!Serial); <- don't use this, as it waits for ages for a serial connection before is will startup
-
-  Serial.println("***** Starting sketch version " + String(APP_VERSION) + " *****");
 
   // Initialize Wheel
   wheel.init();
