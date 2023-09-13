@@ -39,7 +39,7 @@ enum eErrors {
   E_HOMING_FAILED = 5,          // counld not finish homing; this means that there might be an obstruction (cable), of the toothed track is unstable, or calibration is bad
 
   E_ARMANGLE_LIMIT_POS = 6,     // the arm is close to its limit; maybe stuck to home position or hard bump
-  E_ARMANGLE_LIMIT_NEG = 7,     // the arm is close to its limit; maybe an obstruction outside of the cart, or hard bump
+  E_ARMANGLE_LIMIT_NEG = 7,     // the arm is close to its limit; maybe an obstruction outside of the carriage, or hard bump
 
   E_TO_MUCH_TRAVEL = 8,         // if the record is far off-center for tracking of a huge tracking error (hard bump) during tracking?
 }; // eErrors

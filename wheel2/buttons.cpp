@@ -3,12 +3,12 @@
 #include "pins.h"
 #include "helper.h"
 
-Buttons::Buttons(Shared& shared, Amplifier& amplifier, Arm& arm, Bluetooth& bluetooth, Cart& cart, Orientation& orientation, Plateau& plateau, Scanner& scanner) :
+Buttons::Buttons(Shared& shared, Amplifier& amplifier, Arm& arm, Bluetooth& bluetooth, Carriage& carriage, Orientation& orientation, Plateau& plateau, Scanner& scanner) :
   _shared(shared),
   _amplifier(amplifier),
   _arm(arm),
   _bluetooth(bluetooth),
-  _cart(cart),
+  _carriage(carriage),
   _orientation(orientation),
   _plateau(plateau),
   _scanner(scanner),
@@ -66,8 +66,8 @@ void Buttons::update() {
         _arm.force = limitFloat(_arm.force, 0, 1);
 
       } else if(_shared.state == S_PAUSE) {
-        _cart.targetTrack -= beltDiff * 0.25;
-        _cart.targetTrack = limitFloat(_cart.targetTrack, CART_RECORD_END, _scanner.recordStart);
+        _carriage.targetTrack -= beltDiff * 0.25;
+        _carriage.targetTrack = limitFloat(_carriage.targetTrack, CARRIAGE_RECORD_END, _scanner.recordStart);
 
       } else {
         // to prevent volume popping up after button press while skipping
@@ -135,19 +135,19 @@ void Buttons::logic(int button) {
 
     if (isButtonNext(button)) {
       if (_shared.state == S_PLAYING || _shared.state == S_PAUSE || _shared.state == S_GOTO_TRACK) {
-        _cart.gotoNextTrack();
+        _carriage.gotoNextTrack();
       }
     }
 
     if (isButtonPrev(button)) {
       if (_shared.state == S_PLAYING || _shared.state == S_PAUSE || _shared.state == S_GOTO_TRACK) {
-        _cart.gotoPreviousTrack();
+        _carriage.gotoPreviousTrack();
       }
     }
 
     if (button == BUTTON_PLAY) {
       if (_shared.state == S_PAUSE || _shared.state == S_PLAYING) {
-        _cart.pause();
+        _carriage.pause();
       }
     }
 
@@ -216,7 +216,7 @@ void Buttons::logic(int button) {
 
     if ((_shared.state == S_SKIP_FORWARD || _shared.state == S_SKIP_REVERSE) &&
       (button == BUTTON_NEXT || button == BUTTON_PREV)) { // Resume after forward/reverse
-      _cart.targetTrack = _cart.position;
+      _carriage.targetTrack = _carriage.position;
       _shared.setState(S_RESUME_AFTER_SKIP);
     }
     return;
@@ -231,7 +231,7 @@ void Buttons::logic(int button) {
 
     if (button == BUTTON_PLAY) {
       if (_shared.state == S_HOMING_BEFORE_PLAYING || _shared.state == S_GOTO_RECORD_START) { // Repeat
-        _cart.repeat = true;
+        _carriage.repeat = true;
       }
     }
 
@@ -251,7 +251,7 @@ void Buttons::logic(int button) {
 
     if ((_shared.state == S_SKIP_FORWARD || _shared.state == S_SKIP_REVERSE)  &&  
       (button == BUTTON_NEXT || button == BUTTON_PREV)) { // Resume after forward/reverse
-      _cart.targetTrack = _cart.position;
+      _carriage.targetTrack = _carriage.position;
       _shared.setState(S_RESUME_AFTER_SKIP);
     }
     return;

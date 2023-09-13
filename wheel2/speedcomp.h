@@ -12,14 +12,14 @@
 #define SPEEDCOMP_SAMPLES_MAX 65500
 #define SPEEDCOMP_PPR_MAX     1000
 
-class Cart; // pre-declare class
+class Carriage; // pre-declare class
 class Plateau; // pre-declare class
 
 class SpeedComp {
   private:
     Shared& _shared;
     Arm& _arm;
-    Cart* _cart;
+    Carriage* _carriage;
     Plateau* _plateau;
 
     //-------------------- speed
@@ -45,16 +45,16 @@ class SpeedComp {
     float _average = SPEEDCOMP_SAMPLES_MAX;
 
     //-------------------- off center compensation
-    float _cartPosMiddlePre;
-    float _cartOffCenterWave[SPEEDCOMP_PPR_MAX];
-    float _cartPosCenterHist[SPEEDCOMP_PPR_MAX];
-    float _cartSinValues[SPEEDCOMP_PPR_MAX];
-    float _cartCosValues[SPEEDCOMP_PPR_MAX];
-    float _cartSin;
-    float _cartCos;
+    float _carriagePosMiddlePre;
+    float _carriageOffCenterWave[SPEEDCOMP_PPR_MAX];
+    float _carriagePosCenterHist[SPEEDCOMP_PPR_MAX];
+    float _carriageSinValues[SPEEDCOMP_PPR_MAX];
+    float _carriageCosValues[SPEEDCOMP_PPR_MAX];
+    float _carriageSin;
+    float _carriageCos;
 
-    float _cartSinFilt;
-    float _cartCosFilt;
+    float _carriageSinFilt;
+    float _carriageCosFilt;
     float _centerComp;
 
     //-------------------- unbalance compensation
@@ -94,8 +94,8 @@ class SpeedComp {
     float wow;
 
     //-------------------- off center compensation
-    float cartFourier;
-    float cartFourierFilter;
+    float carriageFourier;
+    float carriageFourierFilter;
 
     //-------------------- unbalance compensation
     int unbalancePhase = 23; //25; //50; //50;
@@ -108,12 +108,12 @@ class SpeedComp {
     bool unbalanceCompOn = true;
     bool recordOffCenterComp = true;
 
-    float cartPosMiddle;
+    float carriagePosMiddle;
     float trackSpacing;
     float centerCompTargetRpm;
 
     SpeedComp(Shared& shared, Arm& arm);
-    void init(Cart* cart, Plateau* plateau);
+    void init(Carriage* carriage, Plateau* plateau);
     void update();
     void clearCompSamples();
     void clearCompSamplesOnT0();

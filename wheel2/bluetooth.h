@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include "interval.h"
 #include "shared.h"
-#include "cart.h"
+#include "carriage.h"
 #include "plateau.h"
 
 #define BT_WIRELESS_VERSION false;
@@ -34,7 +34,7 @@ class Bluetooth {
     Interval _interval;
     Interval _checkBeforeStartInterval;
     Shared& _shared;
-    Cart& _cart;
+    Carriage& _carriage;
     Plateau& _plateau;
     bool _initTodo = true;
     bool _wirelessVersion = false;
@@ -43,7 +43,7 @@ class Bluetooth {
   public:
     const bool wirelessVersion = BT_WIRELESS_VERSION;
     bool debug = false;
-    Bluetooth(Shared& shared, Cart& cart, Plateau& plateau);
+    Bluetooth(Shared& shared, Carriage& carriage, Plateau& plateau);
     void init();
     void func();
     void write(String command);

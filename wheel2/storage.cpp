@@ -12,10 +12,10 @@
   EEPROM.commit();
 */
 
-Storage::Storage(Shared& shared, Arm& arm, Cart& cart, Orientation& orientation) :
+Storage::Storage(Shared& shared, Arm& arm, Carriage& carriage, Orientation& orientation) :
   _shared(shared),
   _arm(arm),
-  _cart(cart),
+  _carriage(carriage),
   _orientation(orientation) {
 } // Storage()
 
@@ -36,16 +36,16 @@ void Storage::read() {
   readAddress(EEPROM_TRACK_OFFSET,     _trackOffset);
   readAddress(EEPROM_ARM_ANGLE_MIN,    _armAngleMin);
   readAddress(EEPROM_ARM_ANGLE_MAX,    _armAngleMax);
-  _arm.forceLow        = _armForceLow;
-  _arm.forceHigh       = _armForceHigh;
-  // _arm.targetWeight    = _armTargetWeight;
-  _arm.justHomeWeight  = _armForceHome;
-  _orientation.offsetX = _levelOffsetX;
-  _orientation.offsetY = _levelOffsetY;
-  _orientation.offsetZ = _levelOffsetZ;
-  _cart.trackOffset    = _trackOffset;
-  _arm.armAngleMin     = _armAngleMin;
-  _arm.armAngleMax     = _armAngleMax;
+  _arm.forceLow         = _armForceLow;
+  _arm.forceHigh        = _armForceHigh;
+  // _arm.targetWeight     = _armTargetWeight;
+  _arm.justHomeWeight   = _armForceHome;
+  _orientation.offsetX  = _levelOffsetX;
+  _orientation.offsetY  = _levelOffsetY;
+  _orientation.offsetZ  = _levelOffsetZ;
+  _carriage.trackOffset = _trackOffset;
+  _arm.armAngleMin      = _armAngleMin;
+  _arm.armAngleMax      = _armAngleMax;
 } // read()
 
 void Storage::write() {
@@ -57,7 +57,7 @@ void Storage::write() {
   _levelOffsetX    = _orientation.offsetX;
   _levelOffsetY    = _orientation.offsetY;
   _levelOffsetZ    = _orientation.offsetZ;
-  _trackOffset     = _cart.trackOffset;
+  _trackOffset     = _carriage.trackOffset;
   _armAngleMin     = _arm.armAngleMin;
   _armAngleMax     = _arm.armAngleMax;
   writeAddress(EEPROM_VERSION,          eepromVersion);

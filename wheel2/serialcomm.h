@@ -11,7 +11,7 @@
 #include "arm.h"
 #include "bluetooth.h"
 #include "buttons.h"
-#include "cart.h"
+#include "carriage.h"
 #include "orientation.h"
 #include "plateau.h"
 #include "scanner.h"
@@ -25,7 +25,7 @@ class SerialComm {
     Arm& _arm;
     Buttons& _buttons;
     Bluetooth& _bluetooth;
-    Cart& _cart;
+    Carriage& _carriage;
     Orientation& _orientation;
     Plateau& _plateau;
     Scanner& _scanner;
@@ -48,9 +48,10 @@ class SerialComm {
     void printCommando(String command, String description);
     void printValue(String command, String description, String value);
     void printGraphicData();
+    void report();
     void info();
   public:
-    SerialComm(Shared& shared, Amplifier& amplifier, Arm& arm, Bluetooth& bluetooth, Buttons& buttons, Cart& cart,
+    SerialComm(Shared& shared, Amplifier& amplifier, Arm& arm, Bluetooth& bluetooth, Buttons& buttons, Carriage& carriage,
       Orientation& orientation, Plateau& plateau, Scanner& scanner, SpeedComp& speedcomp, Storage& storage);
     void init();
     void func();

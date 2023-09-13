@@ -7,7 +7,7 @@
 #include "amplifier.h"
 #include "arm.h"
 #include "buttons.h"
-#include "cart.h"
+#include "carriage.h"
 #include "orientation.h"
 #include "plateau.h"
 #include "scanner.h"
@@ -23,7 +23,7 @@ class Display {
     Amplifier& _amplifier;
     Arm& _arm;
     Buttons& _buttons;
-    Cart& _cart;
+    Carriage& _carriage;
     Orientation& _orientation;
     Plateau& _plateau;
     Scanner& _scanner;
@@ -41,7 +41,7 @@ class Display {
     void print(float time);
     void commit();
   public:
-    Display(Shared& shared, Amplifier& amplifier, Arm& arm, Buttons& buttons, Cart& cart,
+    Display(Shared& shared, Amplifier& amplifier, Arm& arm, Buttons& buttons, Carriage& carriage,
       Orientation& orientation, Plateau& plateau, Scanner& scanner, SpeedComp& speedcomp,
       Storage& storage);
     void init();

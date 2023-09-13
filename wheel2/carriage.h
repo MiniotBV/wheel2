@@ -5,8 +5,8 @@
 // 1.5mm / 4 steps per tooth = 0.375mm per step
 // PI = 2 steps
 
-#ifndef CART_H
-#define CART_H
+#ifndef CARRIAGE_H
+#define CARRIAGE_H
 
 #include <Arduino.h>
 #include "interval.h"
@@ -15,24 +15,24 @@
 #include "plateau.h"
 #include "scanner.h"
 
-#define CART_HOME 44
-#define CART_PARK CART_HOME - 1.5 // 2.5 //2
-#define CART_CLEAN_POS 75 
+#define CARRIAGE_HOME 44
+#define CARRIAGE_PARK CARRIAGE_HOME - 1.5 // 2.5 //2
+#define CARRIAGE_CLEAN_POS 75 
 
-#define CART_12INCH_START 146.5 //147
-#define CART_10INCH_START 124 //125
-#define CART_7INCH_START 84 //85
-#define CART_RECORD_END 52.5
+#define CARRIAGE_12INCH_START 146.5 //147
+#define CARRIAGE_10INCH_START 124 //125
+#define CARRIAGE_7INCH_START 84 //85
+#define CARRIAGE_RECORD_END 52.5
 
-#define CART_BACKTRACK_OFFSET 1 // how many mm the cart can move before skipping to start track instead of previous track 
-#define CART_MAX_SPEED 0.02
-#define CART_ACCELERATION 0.0001
+#define CARRIAGE_BACKTRACK_OFFSET 1 // how many mm the carriage can move before skipping to start track instead of previous track 
+#define CARRIAGE_MAX_SPEED 0.02
+#define CARRIAGE_ACCELERATION 0.0001
 
-#define CART_SENSOR_OFFSET 7.5 //mm
+#define CARRIAGE_SENSOR_OFFSET 7.5 //mm
 
 class SpeedComp;
 
-class Cart {
+class Carriage {
   private:
     Interval _interval;
     Shared& _shared;
@@ -72,11 +72,11 @@ class Cart {
     float D = 1; // 2; //1.5; //1.5; //0.0006; //-0.003;
     float targetTrack = 0;
     float trackOffset = 0.3; //0.7;
-    float position = CART_HOME;
-    float positionFilter = CART_HOME;
-    float realPosition = CART_HOME;
+    float position = CARRIAGE_HOME;
+    float positionFilter = CARRIAGE_HOME;
+    float realPosition = CARRIAGE_HOME;
     float sensorPosition;
-    Cart(Shared& shared, Arm& arm, Plateau& plateau, Scanner& scanner);
+    Carriage(Shared& shared, Arm& arm, Plateau& plateau, Scanner& scanner);
     void init(SpeedComp* speedcomp);
     void func();
     void gotoNextTrack();

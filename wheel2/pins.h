@@ -21,11 +21,11 @@
 #define DISPLAY_EN_PIN              13 //~ PWM6 B
 #define DISPLAY_POTMETER_PIN        28 // ADC2
 
-//------------------- Cart steppers
-#define CART_STEPPER_AN_PIN         2 //~ PWM1 A
-#define CART_STEPPER_AP_PIN         3 //~ PWM1 B
-#define CART_STEPPER_BN_PIN         4 //~ PWM2 A
-#define CART_STEPPER_BP_PIN         5 //~ PWM2 B
+//------------------- Carriage steppers
+#define CARRIAGE_STEPPER_AN_PIN     2 //~ PWM1 A
+#define CARRIAGE_STEPPER_AP_PIN     3 //~ PWM1 B
+#define CARRIAGE_STEPPER_BN_PIN     4 //~ PWM2 A
+#define CARRIAGE_STEPPER_BP_PIN     5 //~ PWM2 B
 
 //------------------- Plateau encoder
 #define PLATEAU_A_PIN               8
@@ -75,11 +75,11 @@
 #define DISPLAY_EN_PIN              13 //~ PWM6 B
 #define DISPLAY_POTMETER_PIN        28 // ADC2
 
-//------------------- Cart steppers
-#define CART_STEPPER_AN_PIN         2 //~ PWM1 A
-#define CART_STEPPER_AP_PIN         3 //~ PWM1 B
-#define CART_STEPPER_BN_PIN         4 //~ PWM2 A
-#define CART_STEPPER_BP_PIN         5 //~ PWM2 B
+//------------------- Carriage steppers
+#define CARRIAGE_STEPPER_AN_PIN     2 //~ PWM1 A
+#define CARRIAGE_STEPPER_AP_PIN     3 //~ PWM1 B
+#define CARRIAGE_STEPPER_BN_PIN     4 //~ PWM2 A
+#define CARRIAGE_STEPPER_BP_PIN     5 //~ PWM2 B
 
 //------------------- Plateau encoder
 #define PLATEAU_A_PIN               8

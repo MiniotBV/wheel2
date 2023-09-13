@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include "shared.h"
 #include "arm.h"
-#include "cart.h"
+#include "carriage.h"
 #include "orientation.h"
 
 #define EEPROM_VERSION            0
@@ -36,7 +36,7 @@ class Storage {
     float _armAngleMax = 0;
     Shared& _shared;
     Arm& _arm;
-    Cart& _cart;
+    Carriage& _carriage;
     Orientation& _orientation;
     void readAddress(int address, float& value);
     void writeAddress(int address, float value);
@@ -44,7 +44,7 @@ class Storage {
   public:
     float eepromVersion = 0;
     bool saveRequired = false;
-    Storage(Shared& shared, Arm& arm, Cart& cart, Orientation& orientation);
+    Storage(Shared& shared, Arm& arm, Carriage& carriage, Orientation& orientation);
     void init();
     void read();
     void write();

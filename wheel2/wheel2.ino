@@ -74,7 +74,7 @@ void setup() {
 // core 0 loop
 void loop() {
   wheel.scanner.func();
-  wheel.cart.func();
+  wheel.carriage.func();
   wheel.amplifier.func();
   wheel.orientation.update();
   wheel.plateau.func();

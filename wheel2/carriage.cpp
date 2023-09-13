@@ -1,28 +1,28 @@
 #include "log.h"
-#include "cart.h"
+#include "carriage.h"
 #include "helper.h"
 #include "pins.h"
 #include "pwm.h"
 
-Cart::Cart(Shared& shared, Arm& arm, Plateau& plateau, Scanner& scanner) :
+Carriage::Carriage(Shared& shared, Arm& arm, Plateau& plateau, Scanner& scanner) :
   _shared(shared),
   _arm(arm),
   _plateau(plateau),
   _scanner(scanner),
   _interval(1000, TM_MICROS),
   movedForwardInterval(1, TM_MILLIS) {
-} // Cart()
+} // Carriage()
 
-void Cart::init(SpeedComp* speedcomp) { // to prevent circular reference
-  LOG_DEBUG("cart.cpp", "[init]");
+void Carriage::init(SpeedComp* speedcomp) { // to prevent circular reference
+  LOG_DEBUG("carriage.cpp", "[init]");
   _speedcomp = speedcomp;
-  setPwm(CART_STEPPER_AP_PIN);
-  setPwm(CART_STEPPER_AN_PIN);
-  setPwm(CART_STEPPER_BP_PIN);
-  setPwm(CART_STEPPER_BN_PIN);
+  setPwm(CARRIAGE_STEPPER_AP_PIN);
+  setPwm(CARRIAGE_STEPPER_AN_PIN);
+  setPwm(CARRIAGE_STEPPER_BP_PIN);
+  setPwm(CARRIAGE_STEPPER_BN_PIN);
 } // init()
 
-void Cart::func() {
+void Carriage::func() {
   if (_interval.tick()) {
     //--------------------------------------------- ARM ANGLE
     _arm.armAngleRaw += (analogRead(ARM_ANGLE_SENSOR_PIN) - _arm.armAngleRaw ) / 6;
@@ -55,28 +55,28 @@ void Cart::func() {
       }
     }
 
-    sensorPosition = (position - CART_SENSOR_OFFSET) - trackOffset;
+    sensorPosition = (position - CARRIAGE_SENSOR_OFFSET) - trackOffset;
 
     stateUpdate();
 
     _Dcomp *= 0.999;
-    _Dcomp += limitFloat(_arm.armAngleDiff * D, -CART_MAX_SPEED, CART_MAX_SPEED); // to prevent oscillation
+    _Dcomp += limitFloat(_arm.armAngleDiff * D, -CARRIAGE_MAX_SPEED, CARRIAGE_MAX_SPEED); // to prevent oscillation
     realPosition = position + _Dcomp;
 
     if (offCenterCompensation) {
-      _offCenterCompFilter +=  (_speedcomp->cartFourierFilter - _offCenterCompFilter) / 4;
+      _offCenterCompFilter +=  (_speedcomp->carriageFourierFilter - _offCenterCompFilter) / 4;
       realPosition += _offCenterCompFilter;
     }
 
     _motorPos = (realPosition + _offset) * _mm2step;
 
     if (_motorEnable) {
-      pwmStepper(-_motorPos, CART_STEPPER_AP_PIN, CART_STEPPER_AN_PIN, CART_STEPPER_BP_PIN, CART_STEPPER_BN_PIN, true);
+      pwmStepper(-_motorPos, CARRIAGE_STEPPER_AP_PIN, CARRIAGE_STEPPER_AN_PIN, CARRIAGE_STEPPER_BP_PIN, CARRIAGE_STEPPER_BN_PIN, true);
     } else {
-      pwmDisableStepper(CART_STEPPER_AP_PIN, CART_STEPPER_AN_PIN, CART_STEPPER_BP_PIN, CART_STEPPER_BN_PIN);
+      pwmDisableStepper(CARRIAGE_STEPPER_AP_PIN, CARRIAGE_STEPPER_AN_PIN, CARRIAGE_STEPPER_BP_PIN, CARRIAGE_STEPPER_BN_PIN);
     }
 
-    if (_shared.state == S_PLAYING && _arm.isNeedleDown()) { // cart pos filter for display
+    if (_shared.state == S_PLAYING && _arm.isNeedleDown()) { // carriage pos filter for display
       float div = position - positionFilter;
       if (div < 0) {
         positionFilter += (div) / 1000;
@@ -95,7 +95,7 @@ void Cart::func() {
   } // _interval.tick()
 } // func()
 
-void Cart::stateUpdate() {
+void Carriage::stateUpdate() {
   if (_shared.state == S_HOME) {
     _arm.centerArmAngle();
     _motorEnable = false;
@@ -117,14 +117,14 @@ void Cart::stateUpdate() {
       return;
     }
 
-    float speed = mapFloat(_arm.armAngleCall, 0.75, 0.5, 0, CART_MAX_SPEED);
-    speed = limitFloat(speed, (CART_MAX_SPEED / 10), CART_MAX_SPEED);
+    float speed = mapFloat(_arm.armAngleCall, 0.75, 0.5, 0, CARRIAGE_MAX_SPEED);
+    speed = limitFloat(speed, (CARRIAGE_MAX_SPEED / 10), CARRIAGE_MAX_SPEED);
     bool arrived = movetoPosition(-150, speed);
-    // bool arrived = movetoPosition(-150, CART_MAX_SPEED);
+    // bool arrived = movetoPosition(-150, CARRIAGE_MAX_SPEED);
 
     if (arrived) {
-      _offset -= CART_PARK - position;
-      position = CART_PARK;
+      _offset -= CARRIAGE_PARK - position;
+      position = CARRIAGE_PARK;
       
       if (_shared.error == E_HOMING_FAILED){
         _shared.setError(E_HOMING_FAILED);
@@ -137,12 +137,12 @@ void Cart::stateUpdate() {
     }
 
     if (_arm.armAngleCall > 0.75) { //75 //-800 //-1000
-      // LOG_DEBUG("cart.cpp", "[stateUpdate] Home diff: " + String(CART_PARK - realPosition) + " realPosition: " + String(realPosition) + " CART_PARK: " + String(CART_PARK) + " Dcomp: " + String(_Dcomp));
-      LOG_DEBUG("cart.cpp", "[stateUpdate] Home diff: " + String(CART_PARK - realPosition) + " realPosition: " + String(realPosition));
-      // Serial.println("Home diff: " + String(CART_PARK - realPosition) + " realPosition: " + String(realPosition));
+      // LOG_DEBUG("carriage.cpp", "[stateUpdate] Home diff: " + String(CARRIAGE_PARK - realPosition) + " realPosition: " + String(realPosition) + " CARRIAGE_PARK: " + String(CARRIAGE_PARK) + " Dcomp: " + String(_Dcomp));
+      LOG_DEBUG("carriage.cpp", "[stateUpdate] Home diff: " + String(CARRIAGE_PARK - realPosition) + " realPosition: " + String(realPosition));
+      // Serial.println("Home diff: " + String(CARRIAGE_PARK - realPosition) + " realPosition: " + String(realPosition));
       
-      _offset -= CART_PARK - realPosition;
-      position = CART_PARK;
+      _offset -= CARRIAGE_PARK - realPosition;
+      position = CARRIAGE_PARK;
       _Dcomp = 0;
 
       emergencyStop();
@@ -162,7 +162,7 @@ void Cart::stateUpdate() {
 
 
   if (_shared.state == S_PARKING) {
-    if (movetoPosition(CART_HOME, CART_MAX_SPEED)) {
+    if (movetoPosition(CARRIAGE_HOME, CARRIAGE_MAX_SPEED)) {
       // if (_shared.stateChangedInterval.duration() < 2000) {
         _shared.setState(S_HOME);
       // }
@@ -174,7 +174,7 @@ void Cart::stateUpdate() {
 
 
   if (_shared.state == S_HOMING_FAILED) {
-    if (movetoPosition(CART_HOME + 10, CART_MAX_SPEED)) {
+    if (movetoPosition(CARRIAGE_HOME + 10, CARRIAGE_MAX_SPEED)) {
       if (_shared.stateChangedInterval.duration() < 2000) {
         _arm.centerArmAngle();
         return;
@@ -197,28 +197,28 @@ void Cart::stateUpdate() {
       _scanner.recordStart = 1000;
     }
 
-    if (!_scanner.recordPresent && sensorPosition > CART_RECORD_END + 1) { // record present?
+    if (!_scanner.recordPresent && sensorPosition > CARRIAGE_RECORD_END + 1) { // record present?
       float recordDiaInch = (sensorPosition / 25.4) * 2;
 
       if (recordDiaInch < 6) { // stop when smaller than 6"
-        // LOG_DEBUG("cart.cpp", "[stateUpdate] No record? RecordDiameter: " + String(recordDiaInch));
+        // LOG_DEBUG("carriage.cpp", "[stateUpdate] No record? RecordDiameter: " + String(recordDiaInch));
         Serial.println("No record? RecordDiameter: " + String(recordDiaInch));
         _plateau.stop();
         return;
       } else if (recordDiaInch < 9) {
-        // LOG_DEBUG("cart.cpp", "[stateUpdate] RecordDiameter: " + String(recordDiaInch) + " : ±7\" ");
+        // LOG_DEBUG("carriage.cpp", "[stateUpdate] RecordDiameter: " + String(recordDiaInch) + " : ±7\" ");
         Serial.println("RecordDiameter: " + String(recordDiaInch) + " : ±7\" ");
         _plateau.setRpm(RPM_45);
-        _scanner.recordStart = CART_7INCH_START;
+        _scanner.recordStart = CARRIAGE_7INCH_START;
         _scanner.setTracksAs7inch();
       } else if (recordDiaInch < 11) { 
-        // LOG_DEBUG("cart.cpp", "[stateUpdate] RecordDiameter: " + String(recordDiaInch) + " : ±10\" ");
+        // LOG_DEBUG("carriage.cpp", "[stateUpdate] RecordDiameter: " + String(recordDiaInch) + " : ±10\" ");
         Serial.println("RecordDiameter: " + String(recordDiaInch) + " : ±10\" ");
         _plateau.setRpm(RPM_33);
-        _scanner.recordStart = CART_10INCH_START;
+        _scanner.recordStart = CARRIAGE_10INCH_START;
         _scanner.check();
       } else {
-        // LOG_DEBUG("cart.cpp", "[stateUpdate] RecordDiameter: " + String(recordDiaInch) + " : ???\" ");
+        // LOG_DEBUG("carriage.cpp", "[stateUpdate] RecordDiameter: " + String(recordDiaInch) + " : ???\" ");
         Serial.println("RecordDiameter: " + String(recordDiaInch) + " : ???\" ");
         _scanner.recordStart = sensorPosition;
         // _plateau.setRpm(RPM_33);
@@ -228,11 +228,11 @@ void Cart::stateUpdate() {
       return;
     }
 
-    // when arrived at cart endrange
-    if (movetoPosition(CART_12INCH_START, CART_MAX_SPEED)) { 
-      _scanner.recordStart = CART_12INCH_START;
+    // when arrived at carriage endrange
+    if (movetoPosition(CARRIAGE_12INCH_START, CARRIAGE_MAX_SPEED)) { 
+      _scanner.recordStart = CARRIAGE_12INCH_START;
       targetTrack = _scanner.recordStart;
-      // LOG_DEBUG("cart.cpp", "[stateUpdate] RecordDiameter: 12\" ");
+      // LOG_DEBUG("carriage.cpp", "[stateUpdate] RecordDiameter: 12\" ");
       Serial.println("RecordDiameter: 12\" ");
       _plateau.setRpm(RPM_33);
       _scanner.check();
@@ -244,7 +244,7 @@ void Cart::stateUpdate() {
   }
 
   if (_shared.state == S_PLAY_TILL_END) {
-    if (movetoPosition(targetTrack, CART_MAX_SPEED)) {
+    if (movetoPosition(targetTrack, CARRIAGE_MAX_SPEED)) {
       _shared.setState(S_PLAYING);
       return;
     }
@@ -270,17 +270,17 @@ void Cart::stateUpdate() {
       //---------------------------------------- transport calculations
       _newPosition = position + limitFloat(_arm.armAngle * P, -3, 3);
       _newPosition = limitFloat(_newPosition, 0, _scanner.recordStart);
-      movetoPosition(_newPosition, CART_MAX_SPEED);
+      movetoPosition(_newPosition, CARRIAGE_MAX_SPEED);
       
       //---------------------------------------- events during playing
-      if (realPosition <= CART_RECORD_END) {
-        // LOG_NOTICE("cart.cpp", "[stateUpdate] Cart reached limit!");
-        Serial.println("Cart reached limit!");
+      if (realPosition <= CARRIAGE_RECORD_END) {
+        // LOG_NOTICE("carriage.cpp", "[stateUpdate] Carriage reached limit!");
+        Serial.println("Carriage reached limit!");
         stopOrRepeat();
         return;
       }
       if (realPosition < positionFilter - 3) {
-        // LOG_NOTICE("cart.cpp", "[stateUpdate] Run-out groove?");
+        // LOG_NOTICE("carriage.cpp", "[stateUpdate] Run-out groove?");
         Serial.println("Run-out groove?");
         stopOrRepeat();
         return;
@@ -298,16 +298,16 @@ void Cart::stateUpdate() {
           stopOrRepeat();
           return;
         } else {
-          _shared.setError(E_NEEDLE_DIDNT_MOVE); // cart didn't move for a while
+          _shared.setError(E_NEEDLE_DIDNT_MOVE); // carriage didn't move for a while
           movedForwardInterval.reset(); // reset time to prevent another trigger
-          gotoTrack(position - 0.25); // move cart 0.5mm inside to skip the skip
+          gotoTrack(position - 0.25); // move carriage 0.5mm inside to skip the skip
           return;
         }
       } 
 
       if (_shared.puristMode) {
         if ((_speedcomp->wow < 0.15) || _arm.isNeedleDownFor(10000) ){
-          // LOG_NOTICE("cart.cpp", "[stateUpdate] Seems to runs ok");
+          // LOG_NOTICE("carriage.cpp", "[stateUpdate] Seems to runs ok");
           Serial.println("Seems to runs ok");
           _shared.puristMode = false;
           Serial.println("PURIST MODE: OFF");
@@ -325,7 +325,7 @@ void Cart::stateUpdate() {
   //  ================================================================
   if (_shared.state == S_GOTO_TRACK) {
     if (_arm.needleUp()) {
-      if (movetoPosition(targetTrack, CART_MAX_SPEED)) {
+      if (movetoPosition(targetTrack, CARRIAGE_MAX_SPEED)) {
         _shared.setState(S_PLAYING);
         return;
       }
@@ -335,20 +335,20 @@ void Cart::stateUpdate() {
 
   if (_shared.state == S_SKIP_FORWARD) {
     if (_arm.needleUp()) {
-      movetoPosition(CART_RECORD_END, CART_MAX_SPEED / 4);
+      movetoPosition(CARRIAGE_RECORD_END, CARRIAGE_MAX_SPEED / 4);
     }
     targetTrack = position; // to clean display
   }
 
   if (_shared.state == S_SKIP_REVERSE) {
     if (_arm.needleUp()) {
-      movetoPosition(_scanner.recordStart, CART_MAX_SPEED / 4);
+      movetoPosition(_scanner.recordStart, CARRIAGE_MAX_SPEED / 4);
     }
     targetTrack = position; // to clean display
   }
 
   if (_shared.state == S_RESUME_AFTER_SKIP) {
-    if (movetoPosition(targetTrack, CART_MAX_SPEED / 4)) { 
+    if (movetoPosition(targetTrack, CARRIAGE_MAX_SPEED / 4)) { 
       _shared.setState(S_PLAYING);
       return;
     }
@@ -357,19 +357,19 @@ void Cart::stateUpdate() {
 
   if (_shared.state == S_PAUSE) {
     if (_arm.needleUp()) {
-      movetoPosition(targetTrack, CART_MAX_SPEED);
+      movetoPosition(targetTrack, CARRIAGE_MAX_SPEED);
     }
     return;
   }
 
   if (_shared.state == S_NEEDLE_CLEAN) {
-    if (movetoPosition(CART_CLEAN_POS, CART_MAX_SPEED)) {
+    if (movetoPosition(CARRIAGE_CLEAN_POS, CARRIAGE_MAX_SPEED)) {
       _arm.needleDown();
     }
 
-    if (sensorPosition > CART_RECORD_END + 2 && sensorPosition < CART_RECORD_END + 12 && _scanner.recordPresent) {
+    if (sensorPosition > CARRIAGE_RECORD_END + 2 && sensorPosition < CARRIAGE_RECORD_END + 12 && _scanner.recordPresent) {
       // record present? stop!
-      // LOG_ALERT("cart.cpp", "[stateUpdate] Cannot clean needle; Record present?");
+      // LOG_ALERT("carriage.cpp", "[stateUpdate] Cannot clean needle; Record present?");
       Serial.println("Cannot clean needle; Record present? Clean record instead");
       _shared.setState(S_RECORD_CLEAN);
       _plateau.motorStart();
@@ -381,7 +381,7 @@ void Cart::stateUpdate() {
   if (_shared.state == S_RECORD_CLEAN) {
     decelerate();
     if (!_scanner.recordPresent) {
-      // LOG_ALERT("cart.cpp", "[stateUpdate] Record removed!");
+      // LOG_ALERT("carriage.cpp", "[stateUpdate] Record removed!");
       Serial.println("Record removed!");
       _plateau.stop();
     }
@@ -390,17 +390,17 @@ void Cart::stateUpdate() {
 
   if (_shared.state == S_CALIBRATE) {
     if (_shared.stateChangedInterval.duration() < 100) {
-      targetTrack = CART_CLEAN_POS;
+      targetTrack = CARRIAGE_CLEAN_POS;
     }
-    if (movetoPosition(targetTrack, CART_MAX_SPEED)) {
+    if (movetoPosition(targetTrack, CARRIAGE_MAX_SPEED)) {
       // Nothing      
     }
     return;
   }
 } // stateUpdate()
 
-void Cart::gotoNextTrack() {
-  LOG_DEBUG("cart.cpp", "[gotoNextTrack]");
+void Carriage::gotoNextTrack() {
+  LOG_DEBUG("carriage.cpp", "[gotoNextTrack]");
 
   float pos = positionFilter;
 
@@ -424,8 +424,8 @@ void Cart::gotoNextTrack() {
   gotoTrack(_scanner.tracks[track]);
 } // gotoNextTrack()
 
-void Cart::gotoPreviousTrack() {
-  LOG_DEBUG("cart.cpp", "[gotoPreviousTrack]");
+void Carriage::gotoPreviousTrack() {
+  LOG_DEBUG("carriage.cpp", "[gotoPreviousTrack]");
 
   float pos = positionFilter;
 
@@ -434,7 +434,7 @@ void Cart::gotoPreviousTrack() {
   }
 
   int track = 0;
-  while (pos + CART_BACKTRACK_OFFSET >= _scanner.tracks[track]) {
+  while (pos + CARRIAGE_BACKTRACK_OFFSET >= _scanner.tracks[track]) {
     track++;
     if (track > _scanner.trackCount - 1) {
       gotoRecordStart();
@@ -448,26 +448,26 @@ void Cart::gotoPreviousTrack() {
   gotoTrack(_scanner.tracks[track]);
 } // gotoPreviousTrack()
 
-void Cart::gotoTrack(float pos) {
-  LOG_DEBUG("cart.cpp", "[gotoTrack]");
+void Carriage::gotoTrack(float pos) {
+  LOG_DEBUG("carriage.cpp", "[gotoTrack]");
   targetTrack = pos;
-  // LOG_DEBUG("cart.cpp", "[gotoTrack] To position " + String(targetTrack));
+  // LOG_DEBUG("carriage.cpp", "[gotoTrack] To position " + String(targetTrack));
   Serial.println("To position " + String(targetTrack));
   _shared.setState(S_GOTO_TRACK);
 } // gotoTrack()
 
-void Cart::gotoRecordStart() {
-  LOG_DEBUG("cart.cpp", "[gotoRecordStart]");
+void Carriage::gotoRecordStart() {
+  LOG_DEBUG("carriage.cpp", "[gotoRecordStart]");
   gotoTrack(_scanner.recordStart);
 } // gotoRecordStart()
 
-bool Cart::movetoPosition(float target, float spd) {
+bool Carriage::movetoPosition(float target, float spd) {
   _acceleration = 0;
 
   float togo = abs(target - position);
   int togoDirection = target - position > 0 ? 1 : -1;
 
-  _distanceToStop = (_speed * _speed) / ( 2 * CART_ACCELERATION );
+  _distanceToStop = (_speed * _speed) / ( 2 * CARRIAGE_ACCELERATION );
   int _distanceToStopDirection = _speed > 0 ? 1 : -1;
 
   if (isApprox(togo, 0, 0.01) && _distanceToStop < 0.1) {
@@ -476,9 +476,9 @@ bool Cart::movetoPosition(float target, float spd) {
   }
 
   if (_distanceToStop >= togo) {
-    _acceleration = -CART_ACCELERATION * togoDirection;
-  } else if (abs(_speed) < CART_MAX_SPEED) {
-    _acceleration = CART_ACCELERATION * togoDirection;
+    _acceleration = -CARRIAGE_ACCELERATION * togoDirection;
+  } else if (abs(_speed) < CARRIAGE_MAX_SPEED) {
+    _acceleration = CARRIAGE_ACCELERATION * togoDirection;
   }
 
   position += _speed + (_acceleration / 2);
@@ -488,8 +488,8 @@ bool Cart::movetoPosition(float target, float spd) {
   return false;
 } // movetoPosition()
 
-void Cart::stopOrRepeat() {
-  LOG_DEBUG("cart.cpp", "[stopOrRepeat]");
+void Carriage::stopOrRepeat() {
+  LOG_DEBUG("carriage.cpp", "[stopOrRepeat]");
   if (repeat) {
     gotoRecordStart();
   } else {
@@ -497,8 +497,8 @@ void Cart::stopOrRepeat() {
   }
 } // stopOrRepeat()
 
-void Cart::pause() {
-  LOG_DEBUG("cart.cpp", "[pause]");
+void Carriage::pause() {
+  LOG_DEBUG("carriage.cpp", "[pause]");
   if (_shared.state == S_PLAYING) {
     _shared.setState(S_PAUSE);
     targetTrack = position;
@@ -507,26 +507,26 @@ void Cart::pause() {
   }
 } // pause()
 
-bool Cart::decelerate() {
+bool Carriage::decelerate() {
   int direction = _speed > 0 ? 1 : -1;
 
-  if(abs(_speed) < CART_ACCELERATION){
+  if(abs(_speed) < CARRIAGE_ACCELERATION){
     _speed = 0;
     return true;
   }
 
-  _acceleration = -CART_ACCELERATION * direction;
+  _acceleration = -CARRIAGE_ACCELERATION * direction;
   position += _speed + (_acceleration / 2);
   _speed += _acceleration;
   return false;
 } // decelerate()
 
-void Cart::emergencyStop() {
-  LOG_DEBUG("cart.cpp", "[emergencyStop]");
+void Carriage::emergencyStop() {
+  LOG_DEBUG("carriage.cpp", "[emergencyStop]");
   _speed = 0;
 } // emergencyStop()
 
-void Cart::printGraphicData() {
+void Carriage::printGraphicData() {
   if (!_headerShown) {
     Serial.println("GRAPH_HEADER: DComp, ArmAngleRaw, ArmAngleCall");
     _headerShown = true;
@@ -539,12 +539,12 @@ void Cart::printGraphicData() {
   Serial.println();
 } // printGraphicData()
 
-void Cart::info() {
+void Carriage::info() {
   int padR = 25;
-  Serial.println(padRight("CART_P", padR) + ": " + String(P, 5));
-  Serial.println(padRight("CART_I", padR) + ": " + String(I, 5));
-  Serial.println(padRight("CART_D", padR) + ": " + String(D, 5));
-  Serial.println(padRight("CART_POSITION", padR) + ": " + String(position));
-  Serial.println(padRight("CART_REAL_POSITION", padR) + ": " + String(realPosition));
+  Serial.println(padRight("CARRIAGE_P", padR) + ": " + String(P, 5));
+  Serial.println(padRight("CARRIAGE_I", padR) + ": " + String(I, 5));
+  Serial.println(padRight("CARRIAGE_D", padR) + ": " + String(D, 5));
+  Serial.println(padRight("CARRIAGE_POSITION", padR) + ": " + String(position));
+  Serial.println(padRight("CARRIAGE_REAL_POS", padR) + ": " + String(realPosition));
   Serial.println();
 } // info()
