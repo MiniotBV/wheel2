@@ -315,8 +315,8 @@ void SpeedComp::printGraphicData() {
 
 void SpeedComp::info() {
   int padR = 25;
-  Serial.println(padRight("STROBO_SAMPLES", padR) +            ": " + String(samples));
-  Serial.println(padRight("STROBO_PULSES_PER_REV", padR) +     ": " + String(pulsesPerRev));
+  // Serial.println(padRight("STROBO_SAMPLES", padR) +            ": " + String(samples));
+  // Serial.println(padRight("STROBO_PULSES_PER_REV", padR) +     ": " + String(pulsesPerRev));
   Serial.println(padRight("STROBO_UNBAL_PHASE", padR) +        ": " + String(unbalancePhase));
   Serial.println(padRight("STROBO_UNBAL_COMP_WEIGHT", padR) +  ": " + String(unbalanceCompWeight));
   Serial.println(padRight("STROBO_UNBAL_FILT_WIDTH", padR) +   ": " + String(unbalanceFilterWidth));

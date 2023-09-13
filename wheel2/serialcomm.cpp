@@ -150,7 +150,8 @@ void SerialComm::checkReceivedLine(String line, eCheckMode mode) {
   println(mode);
   if (checkLineCommand( "C?",     "Show commands",              mode)) { checkReceivedLine(line, CM_COMMAND); return; }
   if (checkLineCommand( "CW",     "Show values",                mode)) { checkReceivedLine(line, CM_VALUE);   return; }
-  if (checkLineCommand( "?",      "Info",                       mode)) { info();                              return; }
+  if (checkLineCommand( "?",      "Report",                     mode)) { report();                            return; }
+  if (checkLineCommand( "INFO",   "Info",                       mode)) { info();                              return; }
 
   if (mode == CM_NONE) {
     line.toUpperCase();
@@ -342,6 +343,22 @@ void SerialComm::printGraphicData() {
 
  Serial.println();
 } // printGraphicData()
+
+void SerialComm::report() {
+  int padR = 25;
+  Serial.println("-------------------- V" + String(_shared.version, 0) + " --------------------");
+  Serial.println();
+  // Serial.println(padRight("WHEEL_BOARD", padR) +            ": " + String(BOARD_DESCRIPTION));
+  Serial.println(padRight("WHEEL_TEMPERATURE", padR) +      ": " + String(analogReadTemp(), 2) + " °C");
+  // Serial.println(padRight("WHEEL_STATE", padR) +            ": " + getState(_shared.state));
+  // Serial.println(padRight("WHEEL_VOLUME", padR) +           ": " + String(_amplifier.volume));
+  Serial.println(padRight("WHEEL_WIRELESS_VERSION", padR) + ": " + String(_bluetooth.wirelessVersion ? "YES" : "NO"));
+  Serial.println();
+  _storage.info();
+  _orientation.info();
+  _speedcomp.info();
+  Serial.println("----------------------------------------------");
+} // report()
 
 void SerialComm::info() {
   int padR = 25;
