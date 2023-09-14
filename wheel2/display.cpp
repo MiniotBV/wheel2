@@ -128,6 +128,10 @@ void Display::update() {
       int rpmPoint = mapFloat(_speedcomp.speed - _plateau.targetRpm, 10, -10, 0, DISPLAY_LENGTH - 1);
       drawBlock(rpmPoint - 2, rpmPoint + 2, 0.9);
 
+      if (!_orientation.isStanding) {
+        flipData();
+      }
+
     //--------------------------------------------- CALIBRATE
     } else if (_shared.state == S_CALIBRATE) {
         int volPoint = mapFloat(_arm.force, 0, 1, DISPLAY_LENGTH - 1, 0);
