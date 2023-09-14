@@ -22,6 +22,7 @@
 #define EEPROM_ARM_ANGLE_MIN      400
 #define EEPROM_ARM_ANGLE_MAX      410
 
+
 class Storage {
   private:
     float _armForceLow = 0;
@@ -51,4 +52,5 @@ class Storage {
     void info();
 }; // Storage
 
-#endif
+
+#endif // STORAGE_H

@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include "enums.h"
 
+
 class Interval {
   private:
     uint64_t _interval = 0;
@@ -21,4 +22,5 @@ class Interval {
     bool once();
 }; // Interval
 
-#endif
+
+#endif // INTERVAL_H

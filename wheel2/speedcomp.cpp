@@ -5,10 +5,12 @@
 #include "helper.h"
 #include "plateau.h"
 
+
 SpeedComp::SpeedComp(Shared& shared, Arm& arm) :
   _shared(shared),
   _arm(arm) {
 } // SpeedComp()
+
 
 void SpeedComp::init(Carriage* carriage, Plateau* plateau) { // to prevent circular reference
   LOG_DEBUG("speedcomp.cpp", "[init]");
@@ -27,6 +29,7 @@ void SpeedComp::init(Carriage* carriage, Plateau* plateau) { // to prevent circu
   createUnbalanceFilterCurve();
 } // init()
 
+
 void SpeedComp::update() {
   if ((micros() - _speedInterval) > SPEEDCOMP_SAMPLES_MAX ) {
     if (_glitchCounter > 3) {
@@ -41,6 +44,7 @@ void SpeedComp::update() {
     _glitchCounter = 0;
   }
 } // update()
+
 
 void SpeedComp::stroboInterrupt() {
   _time = micros();
@@ -211,10 +215,12 @@ void SpeedComp::stroboInterrupt() {
   }
 } // stroboInterrupt()
 
+
 void SpeedComp::clearCompSamplesOnT0() {
   LOG_DEBUG("speedcomp.cpp", "[clearCompSamplesOnT0]");
   _clearCompSamplesQueue = true;
 } // clearCompSamplesOnT0()
+
 
 void SpeedComp::clearSamples() {
   LOG_DEBUG("speedcomp.cpp", "[clearSamples]");
@@ -223,11 +229,13 @@ void SpeedComp::clearSamples() {
   }
 } // clearSamples()
 
+
 void SpeedComp::clearCompSamples() {
   LOG_DEBUG("speedcomp.cpp", "[clearCompSamples]");
   clearUnbalanceCompSamples();
   clearCenterCompSamples();
 } // clearCompSamples()
+
 
 void SpeedComp::clearUnbalanceCompSamples() {
   // LOG_DEBUG("speedcomp.cpp", "[clearUnbalanceCompSamples]");
@@ -235,6 +243,7 @@ void SpeedComp::clearUnbalanceCompSamples() {
     _unbalansComp[i] = 0;
   }
 } // clearUnbalanceCompSamples()
+
 
 void SpeedComp::clearCenterCompSamples() {
   LOG_DEBUG("speedcomp.cpp", "[clearCenterCompSamples]");
@@ -256,6 +265,7 @@ void SpeedComp::clearCenterCompSamples() {
   carriagePosMiddle = pos;
 } // clearCenterCompSamples()
 
+
 void SpeedComp::createUnbalanceFilterCurve(){
   LOG_DEBUG("speedcomp.cpp", "[createUnbalanceFilterCurve]");
 
@@ -276,11 +286,13 @@ void SpeedComp::createUnbalanceFilterCurve(){
   }
 } // createUnbalanceFilterCurve()
 
+
 float SpeedComp::getSpeed() {
   _average = averageInterval();
   speedRaw = currentSpeed(_average) * _direction;
   return speedRaw; // don't compensate
 } // getSpeed()
+
 
 float SpeedComp::averageInterval() {
   int total = 0;
@@ -291,14 +303,17 @@ float SpeedComp::averageInterval() {
   return total / float(SPEEDCOMP_SAMPLES);
 } // averageInterval()
 
+
 float SpeedComp::currentSpeed(float inter) { // Calculate rpm
   float value = ((1000000.0 * 60) / inter) / pulsesPerRev; // return total
   return limitFloat(value, -300, 300);
 } // currentSpeed()
 
+
 void SpeedComp::shiftSamples(int sample) {
   _samplesArr[_sampleCounter++ % samples] = sample;
 } // shiftSamples()
+
 
 void SpeedComp::printGraphicData() {
   if (!_headerShown) {
@@ -312,6 +327,7 @@ void SpeedComp::printGraphicData() {
   Serial.print(carriageFourier, 3);
   Serial.println();
 }
+
 
 void SpeedComp::info() {
   int padR = 25;

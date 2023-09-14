@@ -4,6 +4,7 @@
 #include "pins.h"
 #include "pwm.h"
 
+
 Arm::Arm(Shared& shared) :
   _shared(shared),
   _interval(10, TM_MILLIS),
@@ -12,6 +13,7 @@ Arm::Arm(Shared& shared) :
   _motorOffInterval(0, TM_MILLIS) {
 } // Arm()
 
+
 void Arm::init() {
   LOG_DEBUG("arm.cpp", "[init]");
   setPwm(ARM_MOTOR_PIN);
@@ -19,6 +21,7 @@ void Arm::init() {
   armAngleRaw = analogRead(ARM_ANGLE_SENSOR_PIN);
   armAngleSlow = armAngleRaw;
 } // init()
+
 
 void Arm::func() {
   if (_interval.tick()) {
@@ -65,15 +68,18 @@ void Arm::func() {
   } // _interval.tick()
 } // func()
 
+
 bool Arm::needleDown() {
   motorOn = true;
   return isNeedleDown();
 } // needleDown()
 
+
 bool Arm::needleUp() {
   motorOn = false;
   return isNeedleUp();
 } // needleUp()
+
 
 bool Arm::needleEmergencyStop() {
   LOG_DEBUG("arm.cpp", "[needleEmergencyStop]");
@@ -82,22 +88,27 @@ bool Arm::needleEmergencyStop() {
   return true;
 } // needleEmergencyStop()
 
+
 bool Arm::isNeedleDown() {
   return weight == targetWeight;
 } // isNeedleDown()
+
 
 bool Arm::isNeedleUp() {
   return weight == ARM_HOME_WEIGHT;
 } // isNeedleUp()
 
+
 bool Arm::isNeedleDownFor(int ms) {
   return isNeedleDown() && _needleDownInterval.duration() > ms;
 } // isNeedleDownFor()
+
 
 void Arm::centerArmAngle() {
   // LOG_DEBUG("arm.cpp", "[centerArmAngle]");
   armAngleOffset = armAngleSlow;
 } // centerArmAngle
+
 
 void Arm::calibrateAngle() {
   LOG_DEBUG("arm.cpp", "[calibrateAngle]");
@@ -110,14 +121,17 @@ void Arm::calibrateAngle() {
   Serial.println("ArmAngle calibrated and buffer values reset. MIN:" + String(armAngleMin) + " MAX:" + String(armAngleMax));
 } // calibrateAngle()
 
+
 float Arm::armWeight2Pwm(float weight) {
   float pwm = mapFloat(weight, ARM_MIN_WEIGHT, ARM_MAX_WEIGHT, forceLow, forceHigh);
   return limitFloat(pwm, 0, 1);
 } // armWeight2Pwm()
 
+
 float Arm::pwm2ArmWeight(float pwm) {
   return mapFloat(pwm, forceLow, forceHigh, ARM_MIN_WEIGHT, ARM_MAX_WEIGHT);
 } // pwm2ArmWeight()
+
 
 void Arm::info() {
   int padR = 25;

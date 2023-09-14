@@ -12,8 +12,12 @@
 #define SPEEDCOMP_SAMPLES_MAX 65500
 #define SPEEDCOMP_PPR_MAX     1000
 
+
 class Carriage; // pre-declare class
+
+
 class Plateau; // pre-declare class
+
 
 class SpeedComp {
   private:
@@ -122,4 +126,5 @@ class SpeedComp {
     void info();
 }; // SpeedComp
 
-#endif
+
+#endif // SPEEDCOMP_H

@@ -2,6 +2,7 @@
 #include "bluetooth.h"
 #include "pins.h"
 
+
 Bluetooth::Bluetooth(Shared& shared, Carriage& carriage, Plateau& plateau) :
   _shared(shared),
   _carriage(carriage),
@@ -9,6 +10,7 @@ Bluetooth::Bluetooth(Shared& shared, Carriage& carriage, Plateau& plateau) :
   _interval(200, TM_MILLIS),
   _checkBeforeStartInterval(2000, TM_MILLIS) {
 } // Bluetooth()
+
 
 void Bluetooth::init() {
   LOG_DEBUG("bluetooth.cpp", "[init]");
@@ -21,6 +23,7 @@ void Bluetooth::init() {
 
   write("AT+");
 } // init()
+
 
 void Bluetooth::func() {
   if (millis() < 1000) {
@@ -69,6 +72,7 @@ void Bluetooth::func() {
   }
 } // func()
 
+
 void Bluetooth::write(String command) {
   Serial2.print(command + "\r\n");
 
@@ -77,6 +81,7 @@ void Bluetooth::write(String command) {
     Serial.println("BT OUT:" + command);
   }
 } // write()
+
 
 void Bluetooth::encode() {
   // LOG_DEBUG("bluetooth.cpp", "[encode] BT IN:" + _buffer);

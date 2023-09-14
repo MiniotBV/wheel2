@@ -29,6 +29,7 @@
 //AT+REST
 //AT+DELVMLINK
 
+
 class Bluetooth {
   private:
     Interval _interval;
@@ -49,4 +50,5 @@ class Bluetooth {
     void write(String command);
 }; // Bluetooth
 
-#endif
+
+#endif // BLUETOOTH_H

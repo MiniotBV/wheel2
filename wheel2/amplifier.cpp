@@ -3,17 +3,20 @@
 #include "pins.h"
 #include "i2c.h"
 
+
 Amplifier::Amplifier(Shared& shared, Arm& arm) :
   _shared(shared),
   _arm(arm),
   _interval(20, TM_MILLIS) {
 } // Amplifier()
 
+
 void Amplifier::init() {
   LOG_DEBUG("amplifier.cpp", "[init]");
   pinMode(AMP_HEADSET_EN_PIN, OUTPUT);
   digitalWrite(AMP_HEADSET_EN_PIN, 1);
 } // init()
+
 
 void Amplifier::func() {
   if (_interval.tick()) {
@@ -49,6 +52,7 @@ void Amplifier::func() {
     }
   } // _interval.tick()
 } // func()
+
 
 bool Amplifier::isNeedeDownLongEnough() {
   // no sound when in puristMode
