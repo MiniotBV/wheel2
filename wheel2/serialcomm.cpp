@@ -26,9 +26,8 @@ void SerialComm::init() {
   Serial.begin(SERIAL_BAUDRATE);
 
   // Wait until the serial stream is open
-  // delay(1000); // while (!Serial); <- don't use this, as it waits for ages for a serial connection before is will startup
-
-  // Serial.println("***** Starting sketch version " + String(APP_VERSION) + " *****");
+  delay(1000); // Needed, otherwise you miss the debug log's in all the init-void's
+  // while (!Serial); // <- don't use this, as it waits for ages for a serial connection before is will startup
 
   if (Serial) {
     LOG_INFO("serialcomm.cpp", "[init] Serial port has been openend at " + String(SERIAL_BAUDRATE) + " bps (baud)");
