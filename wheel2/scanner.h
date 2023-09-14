@@ -8,7 +8,9 @@
 
 #define SCANNER_DETECTION_THRESHOLD 200
 
+
 class Carriage; // pre-declare class
+
 
 class Scanner {
   private:
@@ -57,4 +59,5 @@ class Scanner {
     void info();
 }; // Scanner
 
-#endif
+
+#endif // SCANNER_H

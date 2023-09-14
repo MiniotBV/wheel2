@@ -16,6 +16,7 @@
 #include "speedcomp.h"
 #include "storage.h"
 
+
 class Wheel {
   public:
     Shared shared;
@@ -35,4 +36,5 @@ class Wheel {
     void init();
 }; // Wheel
 
-#endif
+
+#endif // WHEEL_H

@@ -4,6 +4,7 @@
 #include "pins.h"
 #include "i2c.h"
 
+
 Orientation::Orientation(Shared& shared, Arm& arm) :
   _shared(shared),
   _arm(arm),
@@ -11,10 +12,12 @@ Orientation::Orientation(Shared& shared, Arm& arm) :
   _isOkInterval(0, TM_MILLIS) {
 } // Orientation()
 
+
 void Orientation::init() {
   LOG_DEBUG("orientation.cpp", "[init]");
   setI2CPins();
 } // init()
+
 
 void Orientation::update() {
   if (_interval.tick() && millis() > 200) { // turned on for 200ms?
@@ -74,6 +77,7 @@ void Orientation::update() {
   } // _interval.tick()
 } // update()
 
+
 void Orientation::calibrate() {
   LOG_DEBUG("orientation.cpp", "[calibrate]");
   offsetX += x;
@@ -81,6 +85,7 @@ void Orientation::calibrate() {
   offsetZ += (z + 1);
   LOG_DEBUG("orientation.cpp", "[update] OffsetX: " + String(offsetX, 5) + " OffsetY: " + String(offsetY, 5) + " OffsetZ: " + String(offsetZ, 5));
 } // calibrate()
+
 
 void Orientation::reset() {
   LOG_DEBUG("orientation.cpp", "[reset]");
@@ -96,6 +101,7 @@ void Orientation::reset() {
   i2cWrite(_i2cAdress, 0x11, data);
 } // reset()
 
+
 void Orientation::printGraphicData() {
   if (!_headerShown) {
     Serial.println("GRAPH_HEADER: X-axis, Y-axis, Z-axis");
@@ -108,6 +114,7 @@ void Orientation::printGraphicData() {
   Serial.print(z, 5);
   Serial.println();
 }
+
 
 void Orientation::info() {
   int padR = 25;

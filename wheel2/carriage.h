@@ -30,7 +30,9 @@
 
 #define CARRIAGE_SENSOR_OFFSET 7.5 //mm
 
+
 class SpeedComp;
+
 
 class Carriage {
   private:
@@ -85,4 +87,5 @@ class Carriage {
     void info();
 };
 
-#endif
+
+#endif // CARRIAGE_H

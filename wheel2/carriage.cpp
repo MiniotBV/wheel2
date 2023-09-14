@@ -4,6 +4,7 @@
 #include "pins.h"
 #include "pwm.h"
 
+
 Carriage::Carriage(Shared& shared, Arm& arm, Plateau& plateau, Scanner& scanner) :
   _shared(shared),
   _arm(arm),
@@ -13,6 +14,7 @@ Carriage::Carriage(Shared& shared, Arm& arm, Plateau& plateau, Scanner& scanner)
   movedForwardInterval(1, TM_MILLIS) {
 } // Carriage()
 
+
 void Carriage::init(SpeedComp* speedcomp) { // to prevent circular reference
   LOG_DEBUG("carriage.cpp", "[init]");
   _speedcomp = speedcomp;
@@ -21,6 +23,7 @@ void Carriage::init(SpeedComp* speedcomp) { // to prevent circular reference
   setPwm(CARRIAGE_STEPPER_BP_PIN);
   setPwm(CARRIAGE_STEPPER_BN_PIN);
 } // init()
+
 
 void Carriage::func() {
   if (_interval.tick()) {
@@ -94,6 +97,7 @@ void Carriage::func() {
     }
   } // _interval.tick()
 } // func()
+
 
 void Carriage::stateUpdate() {
   if (_shared.state == S_HOME) {
@@ -399,6 +403,7 @@ void Carriage::stateUpdate() {
   }
 } // stateUpdate()
 
+
 void Carriage::gotoNextTrack() {
   LOG_DEBUG("carriage.cpp", "[gotoNextTrack]");
 
@@ -424,6 +429,7 @@ void Carriage::gotoNextTrack() {
   gotoTrack(_scanner.tracks[track]);
 } // gotoNextTrack()
 
+
 void Carriage::gotoPreviousTrack() {
   LOG_DEBUG("carriage.cpp", "[gotoPreviousTrack]");
 
@@ -448,6 +454,7 @@ void Carriage::gotoPreviousTrack() {
   gotoTrack(_scanner.tracks[track]);
 } // gotoPreviousTrack()
 
+
 void Carriage::gotoTrack(float pos) {
   LOG_DEBUG("carriage.cpp", "[gotoTrack]");
   targetTrack = pos;
@@ -456,10 +463,12 @@ void Carriage::gotoTrack(float pos) {
   _shared.setState(S_GOTO_TRACK);
 } // gotoTrack()
 
+
 void Carriage::gotoRecordStart() {
   LOG_DEBUG("carriage.cpp", "[gotoRecordStart]");
   gotoTrack(_scanner.recordStart);
 } // gotoRecordStart()
+
 
 bool Carriage::movetoPosition(float target, float spd) {
   _acceleration = 0;
@@ -488,6 +497,7 @@ bool Carriage::movetoPosition(float target, float spd) {
   return false;
 } // movetoPosition()
 
+
 void Carriage::stopOrRepeat() {
   LOG_DEBUG("carriage.cpp", "[stopOrRepeat]");
   if (repeat) {
@@ -496,6 +506,7 @@ void Carriage::stopOrRepeat() {
     _plateau.stop();
   }
 } // stopOrRepeat()
+
 
 void Carriage::pause() {
   LOG_DEBUG("carriage.cpp", "[pause]");
@@ -506,6 +517,7 @@ void Carriage::pause() {
     _shared.setState(S_PLAY_TILL_END);
   }
 } // pause()
+
 
 bool Carriage::decelerate() {
   int direction = _speed > 0 ? 1 : -1;
@@ -521,10 +533,12 @@ bool Carriage::decelerate() {
   return false;
 } // decelerate()
 
+
 void Carriage::emergencyStop() {
   LOG_DEBUG("carriage.cpp", "[emergencyStop]");
   _speed = 0;
 } // emergencyStop()
+
 
 void Carriage::printGraphicData() {
   if (!_headerShown) {
@@ -538,6 +552,7 @@ void Carriage::printGraphicData() {
   Serial.print(_arm.armAngleCall, 2);
   Serial.println();
 } // printGraphicData()
+
 
 void Carriage::info() {
   int padR = 25;

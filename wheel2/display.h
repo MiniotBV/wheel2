@@ -16,6 +16,7 @@
 
 #define DISPLAY_LENGTH 120
 
+
 class Display {
   private:
     Interval _interval;
@@ -46,6 +47,8 @@ class Display {
       Storage& storage);
     void init();
     void update();
+    void bootLED();
 };
 
-#endif
+
+#endif // DISPLAY_H

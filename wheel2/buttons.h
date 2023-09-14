@@ -26,6 +26,7 @@
 #define BUTTON_LONG_CLICK       700
 #define BUTTON_SUPERLONG_CLICK  3000
 
+
 class Buttons {
   private:
     Shared& _shared;
@@ -67,4 +68,5 @@ class Buttons {
     void info();
 };
 
-#endif
+
+#endif // BUTTONS_H

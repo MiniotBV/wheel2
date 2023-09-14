@@ -11,6 +11,7 @@
 
 #define ARM_AMAX 4095
 
+
 class Arm {
   private:
     Interval _interval;
@@ -56,4 +57,5 @@ class Arm {
     void info();
 }; // Arm
 
-#endif
+
+#endif // ARM_H

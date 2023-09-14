@@ -6,6 +6,7 @@
 #include "shared.h"
 #include "arm.h"
 
+
 class Amplifier {
   private:
     Interval _interval;
@@ -23,4 +24,5 @@ class Amplifier {
     void func();
 }; // Amplifier
 
-#endif
+
+#endif // AMPLIFIER_H

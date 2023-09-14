@@ -3,6 +3,7 @@
 #include "pins.h"
 #include "helper.h"
 
+
 Buttons::Buttons(Shared& shared, Amplifier& amplifier, Arm& arm, Bluetooth& bluetooth, Carriage& carriage, Orientation& orientation, Plateau& plateau, Scanner& scanner) :
   _shared(shared),
   _amplifier(amplifier),
@@ -19,10 +20,12 @@ Buttons::Buttons(Shared& shared, Amplifier& amplifier, Arm& arm, Bluetooth& blue
   _allButtonsInterval(0, TM_MILLIS) {
 } // Buttons()
 
+
 void Buttons::init() {
   LOG_DEBUG("buttons.cpp", "[init]");
   // Nothing to do really ;)
 } // init()
+
 
 void Buttons::update() {
   if (_interval.tick()) {
@@ -82,6 +85,7 @@ void Buttons::update() {
   } // _interval.tick()
 } // update()
 
+
 void Buttons::readData() {
   gpio_put(DISPLAY_LATCH_PIN, 0);
   delayMicroseconds(1);
@@ -96,6 +100,7 @@ void Buttons::readData() {
     gpio_put(DISPLAY_CLOCK_PIN, 0);
   }  
 } // readData()
+
 
 void Buttons::logic(int button) {
   //--------------------------------------------- SHORT PRESS
@@ -263,17 +268,21 @@ void Buttons::logic(int button) {
   }
 } // logic()
 
+
 void Buttons::ledBlink() {
   ledBlinkInterval.reset();
 } // ledBlink()
+
 
 bool Buttons::isButtonNext(int button) {
   return button == buttonNextComp();
 } // isButtonNext()
 
+
 bool Buttons::isButtonPrev(int button) {
   return button == buttonPrevComp();
 } // isButtonPrev()
+
 
 int Buttons::buttonNextComp() {
   if (_orientation.isStanding) {
@@ -282,6 +291,7 @@ int Buttons::buttonNextComp() {
   return BUTTON_NEXT;
 } // buttonNextComp()
 
+
 int Buttons::buttonPrevComp() {
   if (_orientation.isStanding) {
     return BUTTON_NEXT;
@@ -289,10 +299,12 @@ int Buttons::buttonPrevComp() {
   return BUTTON_PREV;
 } // buttonPrevComp()
 
+
 void Buttons::log(int button, String action) {
     LOG_DEBUG("buttons.cpp", "[logic] " + getButton(button) + ": " + action);
   // Serial.println(getButton(button) + ": " + action);
 } // log()
+
 
 String Buttons::getButton(int button) {
   String strButton = "BUTTON_UNKNOWN";
@@ -303,6 +315,7 @@ String Buttons::getButton(int button) {
   }
   return strButton;
 } // getButton()
+
 
 void Buttons::info() {
   int padR = 25;
