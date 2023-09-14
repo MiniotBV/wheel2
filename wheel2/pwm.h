@@ -5,6 +5,7 @@
 
 #include <Arduino.h>
 
+
 void setPwm(int pin);
 void pwmWriteFloat(int pin, float level);
 void pwmWrite(int pin, int level);
@@ -13,4 +14,5 @@ void pwmStepper(float angle, int pinAP, int pinAN, int pinBP, int pinBN, bool re
 void pwmDisableStepper(int pinAP, int pinAN, int pinBP, int pinBN);
 void pwmPhaseDisable(int pinP, int pinN);
 
-#endif
+
+#endif // PWM_H

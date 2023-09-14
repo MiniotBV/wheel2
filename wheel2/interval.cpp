@@ -4,11 +4,13 @@
 #include <stdint.h>
 #include "hardware/timer.h"
 
+
 Interval::Interval(uint64_t interval, eTimeMode mode = TM_MILLIS) :
   _interval(interval),
   _mode(mode) {
   _timenowPrev = timenow();
 } // Interval()
+
 
 bool Interval::tick() {
   uint64_t now = timenow();
@@ -25,14 +27,17 @@ bool Interval::tick() {
   return false;
 } // tick()
 
+
 uint64_t Interval::duration() {
   return timenow() - _timenowPrev;
 } // duration()
+
 
 void Interval::reset() {
   _timenowPrev = timenow();
   _onetimeLatch = true;
 } // reset()
+
 
 uint64_t Interval::timenow() {
   if (_mode == TM_MILLIS) {
@@ -44,9 +49,11 @@ uint64_t Interval::timenow() {
   }
 } // timenow()
 
+
 void Interval::offset(uint64_t offst) {
   _timenowPrev += offst;
 } // offset()
+
 
 bool Interval::once() {
   if (_onetimeLatch && ((timenow() - _timenowPrev)  > _interval)) {

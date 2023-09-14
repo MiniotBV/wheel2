@@ -5,6 +5,7 @@
 #include "enums.h"
 #include "interval.h"
 
+
 class Shared {
   private:
     bool firstTimeStateChange = false;
@@ -21,4 +22,5 @@ class Shared {
     bool firstTimeStateChanged();
 }; // Shared
 
-#endif
+
+#endif //SHARED_H

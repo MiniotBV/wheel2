@@ -20,22 +20,22 @@ SerialComm::SerialComm(Shared& shared, Amplifier& amplifier, Arm& arm, Bluetooth
       _interval(10000, TM_MICROS) {
 } // SerialComm()
 
+
 void SerialComm::init() {
     // Start serial output
   Serial.begin(SERIAL_BAUDRATE);
 
   // Wait until the serial stream is open
-  // delay(1000); // while (!Serial); <- don't use this, as it waits for ages for a serial connection before is will startup
+  delay(1000); // Needed, otherwise you miss the debug log's in all the init-void's
+  // while (!Serial); // <- don't use this, as it waits for ages for a serial connection before is will startup
 
-  // Serial.println("***** Starting sketch version " + String(APP_VERSION) + " *****");
-
-  
   if (Serial) {
     LOG_INFO("serialcomm.cpp", "[init] Serial port has been openend at " + String(SERIAL_BAUDRATE) + " bps (baud)");
   } else {
     LOG_CRITICAL("serialcomm.cpp", "[init] Serial port has not been opened!");
   }
 } // init()
+
 
 void SerialComm::func() {
   if (_interval.tick()) {
@@ -66,6 +66,7 @@ void SerialComm::func() {
     }
   }
 } // func()
+
 
 void SerialComm::checkReceivedLine(String line, eCheckMode mode) {
   LOG_DEBUG("serialcomm.cpp", "[checkReceivedLine]");
@@ -168,6 +169,7 @@ void SerialComm::checkReceivedLine(String line, eCheckMode mode) {
   }
 } // checkReceivedLine()
 
+
 bool SerialComm::checkLineCommand(String command, String description, eCheckMode mode) {
   if (mode == CM_VALUE) {
     return false;
@@ -178,6 +180,7 @@ bool SerialComm::checkLineCommand(String command, String description, eCheckMode
   Serial.println();
   return true;
 } // checkLineCommand()
+
 
 bool SerialComm::checkLine(String command, String description, eCheckMode mode) {
   if (mode == CM_COMMAND) {
@@ -195,6 +198,7 @@ bool SerialComm::checkLine(String command, String description, eCheckMode mode) 
   printCommando(command, description);
   return true;
 } // checkLine()
+
 
 bool SerialComm::checkLineInt(String command, String description, eCheckMode mode, int& value) {
   if (mode == CM_VALUE) {
@@ -214,6 +218,7 @@ bool SerialComm::checkLineInt(String command, String description, eCheckMode mod
   return true;
 } // checkLineInt()
 
+
 bool SerialComm::checkLineFloat(String command, String description, eCheckMode mode, float& value) {
   if (mode == CM_VALUE) {
     printValue(command, description, String(value, 5));
@@ -231,6 +236,7 @@ bool SerialComm::checkLineFloat(String command, String description, eCheckMode m
   Serial.println(String(value, 5));
   return true;
 } // checkLineFloat()
+
 
 bool SerialComm::checkLineBool(String command, String description, eCheckMode mode, bool& value) {
   if (mode == CM_VALUE) {
@@ -253,21 +259,25 @@ bool SerialComm::checkLineBool(String command, String description, eCheckMode mo
   return true;
 } // checkLineBool()
 
+
 void SerialComm::println(eCheckMode mode) {
   if (mode != CM_NONE) {
     Serial.println();
   }
 } // println()
 
+
 void SerialComm::printCommando(String command, String description) {
   command.toUpperCase();
   Serial.print(padRight(command, 8) + " " + padRight(description, 26) + " ");
 } // printCommando()
 
+
 void SerialComm::printValue(String command, String description, String value) {
   command.toUpperCase();
   Serial.println(padRight(command, 8) + " " + padRight(description, 26) +  " " + value);
 } // printValue()
+
 
 void SerialComm::printGraphicData() {
   if (!_headerShown) {
@@ -353,6 +363,7 @@ void SerialComm::printGraphicData() {
  Serial.println();
 } // printGraphicData()
 
+
 void SerialComm::report() {
   int padR = 25;
   Serial.println("-------------------- V" + String(_shared.version, 0) + " --------------------");
@@ -368,6 +379,7 @@ void SerialComm::report() {
   _speedcomp.info();
   Serial.println("----------------------------------------------");
 } // report()
+
 
 void SerialComm::info() {
   int padR = 25;
@@ -389,6 +401,7 @@ void SerialComm::info() {
   _buttons.info();
   Serial.println("----------------------------------------------");
 } // info()
+
 
 //             bytes   cycles                
 // LD (HL),d8      2   12

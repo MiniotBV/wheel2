@@ -2,11 +2,13 @@
 #include "shared.h"
 #include "helper.h"
 
+
 Shared::Shared(float version) :
   version(version),
   stateChangedInterval(1000, TM_MILLIS),
   errorChangedInterval(0, TM_MILLIS) {
 } // Shared()
+
 
 void Shared::setState(eStates newState) {
   LOG_DEBUG("shared.cpp", "[setState]");
@@ -18,6 +20,7 @@ void Shared::setState(eStates newState) {
   Serial.println("STATE: " + getState(state));
 } // setState()
 
+
 void Shared::setError(eErrors newError) {
   LOG_DEBUG("shared.cpp", "[setError]");
   error = newError;
@@ -25,6 +28,7 @@ void Shared::setError(eErrors newError) {
   Serial.println("ERROR: " + getError(error));
   Serial.println("STATE: " + getState(state));
 } // setError()
+
 
 bool Shared::firstTimeStateChanged() {
   if (firstTimeStateChange) {

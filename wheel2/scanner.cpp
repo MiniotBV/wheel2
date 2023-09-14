@@ -5,11 +5,13 @@
 #include "pwm.h"
 #include "helper.h"
 
+
 Scanner::Scanner(Shared& shared, Plateau& plateau) :
   _shared(shared),
   _plateau(plateau),
   _interval(10000, TM_MICROS) {
 } // Scanner()
+
 
 void Scanner::init(Carriage* carriage) { // to prevent circular reference
   LOG_DEBUG("scanner.cpp", "[init]");
@@ -17,6 +19,7 @@ void Scanner::init(Carriage* carriage) { // to prevent circular reference
   setPwm(SCANNER_LED_PIN);
   setLedMilliAmp(0); // 10mA
 } // init()
+
 
 void Scanner::func() {
   if (_interval.tick()) {
@@ -57,6 +60,7 @@ void Scanner::func() {
   } // _interval.tick()
 } // func()
 
+
 void Scanner::check() {
   LOG_DEBUG("scanner.cpp", "[check]");
 
@@ -90,6 +94,7 @@ void Scanner::check() {
   }
 } // check()
 
+
 void Scanner::setTracksAs7inch() {
   LOG_DEBUG("scanner.cpp", "[setTracksAs7inch]");
   trackCount = 1;
@@ -101,6 +106,7 @@ void Scanner::setTracksAs7inch() {
     Serial.println("Adjusted record-end");
   }
 } // setTrackAs7inch()
+
 
 void Scanner::newTrack(float pos) {
   // LOG_DEBUG("scanner.cpp", "[newTrack]");
@@ -119,6 +125,7 @@ void Scanner::newTrack(float pos) {
   trackCount++;
 } // newTrack()
 
+
 void Scanner::recordDetection() {
   // LOG_DEBUG("scanner.cpp", "[recordDetection]");
 
@@ -135,9 +142,11 @@ void Scanner::recordDetection() {
   }
 } // recordDetection()
 
+
 bool Scanner::isRecordPresent() {
   return _recordPresentFiltered > 0.5;
 } // isRecordPresent()
+
 
 void Scanner::scanForTracks() {
   // LOG_DEBUG("scanner.cpp", "[scanForTracks]");
@@ -162,16 +171,19 @@ void Scanner::scanForTracks() {
   }
 } // scanForTracks()
 
+
 void Scanner::clearTracks() {
   // LOG_DEBUG("scanner.cpp", "[clearTracks]");
   trackCount = 0;
   tracks[trackCount] = 1;
 } // clearTracks()
 
+
 void Scanner::scanLedOff() {
   // LOG_DEBUG("scanner.cpp", "[scanLedOff]");
   pwmWrite(SCANNER_LED_PIN, 0); // 100ohm + 1volt led drop
 } // scanLedOff()
+
 
 void Scanner::setLedMilliAmp(float amp) {
   // LOG_DEBUG("scanner.cpp", "[setLedMilliAmp]");
@@ -179,9 +191,11 @@ void Scanner::setLedMilliAmp(float amp) {
   pwmWrite(SCANNER_LED_PIN, volt2pwm(1 + (100 * amp))); // 100ohm + 1volt led drop
 } // setLedMilliAmp()
 
+
 int Scanner::volt2pwm(float volt) {
   return (volt * PWM_PMAX) / 3.3;
 } // volt2pwm()
+
 
 void Scanner::printGraphicData() {
   if (!_headerShown) {
@@ -197,6 +211,7 @@ void Scanner::printGraphicData() {
   Serial.print(current * 100);
   Serial.println();
 } // printGraphicData()
+
 
 void Scanner::info() {
   int padR = 25;

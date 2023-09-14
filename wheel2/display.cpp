@@ -3,6 +3,7 @@
 #include "pins.h"
 #include "helper.h"
 
+
 Display::Display(Shared& shared, Amplifier& amplifier, Arm& arm, Buttons& buttons, Carriage& carriage,
   Orientation& orientation, Plateau& plateau, Scanner& scanner, SpeedComp& speedcomp, Storage& storage) :
   _shared(shared),
@@ -18,6 +19,7 @@ Display::Display(Shared& shared, Amplifier& amplifier, Arm& arm, Buttons& button
   _interval(10000, TM_MICROS) {
 } // Display()
 
+
 void Display::init() {
   LOG_DEBUG("display.cpp", "[init]");
 
@@ -29,6 +31,7 @@ void Display::init() {
   pinMode(DISPLAY_EN_PIN,       OUTPUT);
   digitalWrite(DISPLAY_EN_PIN, 1);
 } // init()
+
 
 void Display::update() {
   if (_interval.tick()) {
@@ -272,15 +275,18 @@ void Display::update() {
   } // _interval.tick()
 } // update()
 
+
 void Display::clear() {
   for (int i = 0; i < DISPLAY_LENGTH; i++) {
     _data[i] = 0;
   }
 } // clear()
 
+
 int Display::mapRealPos2Display(float pos) {
   return mapFloat(pos, CARRIAGE_RECORD_END, CARRIAGE_12INCH_START, 0, DISPLAY_LENGTH - 1);
 } // mapRealPos2Display()
+
 
 void Display::drawBlock(int start, int end, float color) {
   int startLim = min(start, end);
@@ -299,12 +305,14 @@ void Display::drawBlock(int start, int end, float color) {
   }  
 } // drawBlock()
 
+
 void Display::drawPoint(int pos, float color) {
   if (pos < 0 || pos >= DISPLAY_LENGTH) {
     return;
   }
   _data[pos] = color;
 } // drawPoint()
+
 
 void Display::flipData() {
   float buffer;
@@ -314,6 +322,7 @@ void Display::flipData() {
     _data[(DISPLAY_LENGTH - 1) - i] = buffer;
   }
 } // flipData()
+
 
 void Display::print(float time) {
   for (int i = 0; i < DISPLAY_LENGTH; i++) {
@@ -329,8 +338,14 @@ void Display::print(float time) {
   }
 } // print()
 
+
 void Display::commit() {
   gpio_put(DISPLAY_LATCH_PIN, 0);
   delayMicroseconds(2);
   gpio_put(DISPLAY_LATCH_PIN, 1);
 } // commit()
+
+
+void Display::bootLED() {
+  digitalWrite(LED_PIN, millis() < 3000); // turn LED on
+}

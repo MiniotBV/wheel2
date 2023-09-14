@@ -12,6 +12,7 @@
   EEPROM.commit();
 */
 
+
 Storage::Storage(Shared& shared, Arm& arm, Carriage& carriage, Orientation& orientation) :
   _shared(shared),
   _arm(arm),
@@ -19,10 +20,12 @@ Storage::Storage(Shared& shared, Arm& arm, Carriage& carriage, Orientation& orie
   _orientation(orientation) {
 } // Storage()
 
+
 void Storage::init() {
   LOG_DEBUG("storage.cpp", "[init]");
   EEPROM.begin(4096);
 } // init()
+
 
 void Storage::read() {
   readAddress(EEPROM_VERSION,          eepromVersion);
@@ -47,6 +50,7 @@ void Storage::read() {
   _arm.armAngleMin      = _armAngleMin;
   _arm.armAngleMax      = _armAngleMax;
 } // read()
+
 
 void Storage::write() {
   eepromVersion    = _shared.version;
@@ -77,6 +81,7 @@ void Storage::write() {
   commit();
 } // write()
 
+
 void Storage::commit() {
   if (EEPROM.commit()) {
     LOG_INFO("storage.cpp", "[commit] EEPROM successfully committed");
@@ -86,6 +91,7 @@ void Storage::commit() {
     LOG_CRITICAL("storage.cpp", "[commit] EEPROM commit failed!");
   }
 } // commit()
+
 
 void Storage::info() {
   int padR = 25;
@@ -104,6 +110,7 @@ void Storage::info() {
   Serial.println();
 } // info()
 
+
 void Storage::readAddress(int address, float& value) {
   float buffer = 0;
   buffer = EEPROM.get(address, buffer);
@@ -116,6 +123,7 @@ void Storage::readAddress(int address, float& value) {
     writeAddress(address, value);
   }
 } // readAddress()
+
 
 void Storage::writeAddress(int address, float value) {
   EEPROM.put(address, value);

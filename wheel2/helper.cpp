@@ -1,6 +1,7 @@
 #include "log.h"
 #include "helper.h"
 
+
 String padRight(String value, int length, char character) {
   while (value.length() < length) {
     value += character;
@@ -8,12 +9,14 @@ String padRight(String value, int length, char character) {
   return value;
 } // padRight()
 
+
 int roundTrip(int n, int max) {
   if (n < 0) {
     return max + (n % max);
   }
   return n % max;
 } // roundTrip()
+
 
 float limitFloat(float n, float min, float max) {
   if (n < min) {
@@ -25,6 +28,7 @@ float limitFloat(float n, float min, float max) {
   }
 } // limitFloat()
 
+
 int limitInt(int n, int min, int max) {
   if (n < min) {
     return min;
@@ -35,13 +39,16 @@ int limitInt(int n, int min, int max) {
   }
 } // limitInt()
 
+
 float mapFloat(float n, float nMin, float nMax, float min, float max) {
   return (((n - nMin) / (nMax - nMin)) * (max - min)) + min;
 } // mapFloat()
 
+
 bool isApprox(float value, float compare, float margin) {
   return (value > compare - margin) && (value < compare + margin);
 } // isApprox()
+
 
 String getState(eStates state) {
   String strState = "S_UNKNOWN";
@@ -72,6 +79,7 @@ String getState(eStates state) {
   return strState;
 } // getState()
 
+
 String getRpmState(eRpmMode rpm) {
   String strRpm = "RPM_UNKNOWN";
 
@@ -82,6 +90,7 @@ String getRpmState(eRpmMode rpm) {
   }
   return strRpm;
 } // getRpmState()
+
 
 String getError(eErrors error) {
   String strError = "ERROR_UNKNOWN";
@@ -98,9 +107,11 @@ String getError(eErrors error) {
   return strError;
 } // getError()
 
+
 void setBit(uint8_t *byte, uint8_t n, bool value) {
   *byte = (*byte & ~(1UL << n)) | (value << n);
 } // setBit()
+
 
 bool getBit(uint8_t byte, uint8_t n) {
   return (byte >> n) & 1U;

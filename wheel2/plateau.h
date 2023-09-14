@@ -13,6 +13,7 @@
 
 #define PLATEAU_ENABLE_RPM78 false
 
+
 class Plateau {
   private:
     Interval _interval;
@@ -50,4 +51,5 @@ class Plateau {
     void info();
 }; // Plateau
 
-#endif
+
+#endif // PLATEAU_H

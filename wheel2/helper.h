@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include "enums.h"
 
+
 String padRight(String value, int length, char character = ' ');
 int roundTrip(int n, int max);
 float limitFloat(float n, float min, float max);
@@ -16,4 +17,5 @@ String getError(eErrors error);
 void setBit(uint8_t *byte, uint8_t n, bool value);
 bool getBit(uint8_t byte, uint8_t n);
 
-#endif
+
+#endif // HELPER_H

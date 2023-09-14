@@ -18,6 +18,7 @@
 #include "speedcomp.h"
 #include "storage.h"
 
+
 class SerialComm {
   private:
     Shared& _shared;
@@ -57,4 +58,5 @@ class SerialComm {
     void func();
 }; // SerialComm
 
-#endif
+
+#endif // SERIALCOMM_H

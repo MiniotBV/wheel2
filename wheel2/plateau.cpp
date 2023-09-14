@@ -4,12 +4,14 @@
 #include "pwm.h"
 #include "helper.h"
 
+
 Plateau::Plateau(Shared& shared, SpeedComp& speedcomp) :
   _shared(shared),
   _speedcomp(speedcomp),
   _interval(5000, TM_MICROS),
   turnInterval(10, TM_MILLIS) {
 } // Plateau()
+
 
 void Plateau::init() {
   LOG_DEBUG("plateau.cpp", "[init]");
@@ -21,6 +23,7 @@ void Plateau::init() {
   setPwm(PLATEAU_MOTOR_P_PIN);
   setPwm(PLATEAU_MOTOR_N_PIN);
 } // init()
+
 
 void Plateau::func() {
   if (_interval.tick()) {
@@ -42,6 +45,7 @@ void Plateau::func() {
     update();
   } // _interval.tick()
 } // func()
+
 
 void Plateau::update() {
   if (!logic || _shared.state == S_RECORD_CLEAN) {
@@ -108,6 +112,7 @@ void Plateau::update() {
   }
 } // update()
 
+
 void Plateau::motorStart() {
   LOG_DEBUG("plateau.cpp", "[motorStart]");
   motorOn = true;
@@ -117,6 +122,7 @@ void Plateau::motorStart() {
 
   Serial.println("PLATEAU: ON");
 } // motorStart
+
 
 void Plateau::motorStop() {
   LOG_DEBUG("plateau.cpp", "[motorStop]");
@@ -129,6 +135,7 @@ void Plateau::motorStop() {
 
   Serial.println("PLATEAU: OFF");
 } // motorStop
+
 
 void Plateau::updateRpm() {
   LOG_DEBUG("plateau.cpp", "[updateRpm]");
@@ -146,6 +153,7 @@ void Plateau::updateRpm() {
   }
   LOG_DEBUG("plateau.cpp", "[updateRpm] targetRpm: " + String(targetRpm));
 } // updateRpm
+
 
 void Plateau::setRpm(eRpmMode rpmMode) {
   LOG_DEBUG("plateau.cpp", "[setRpm]");
@@ -171,6 +179,7 @@ void Plateau::setRpm(eRpmMode rpmMode) {
   turnInterval.reset();
 } // setRpm
 
+
 float Plateau::pid(float rpm) {
   float pp, pd;
   float diffRpm = rpm - _rpmPrev;
@@ -186,6 +195,7 @@ float Plateau::pid(float rpm) {
   return  pp + _basic + pd;
 } // pid()
 
+
 void Plateau::play() {
   LOG_DEBUG("plateau.cpp", "[play]");
   _shared.setState(S_HOMING_BEFORE_PLAYING); // Home first
@@ -195,6 +205,7 @@ void Plateau::play() {
     Serial.println("PURIST MODE: OFF");
   }
 } // play()
+
 
 void Plateau::stop() {
   LOG_DEBUG("plateau.cpp", "[stop]");
@@ -210,10 +221,12 @@ void Plateau::stop() {
   }
 } // stop()
 
+
 void Plateau::cleanMode() {
   // LOG_DEBUG("plateau.cpp", "[cleanMode]");
   _shared.setState(S_HOMING_BEFORE_CLEANING);
 } // cleanMode()
+
 
 void Plateau::info() {
   int padR = 25;

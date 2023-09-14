@@ -3,12 +3,14 @@
 #include <Wire.h>
 #include "pins.h"
 
+
 void setI2CPins() {
   LOG_DEBUG("i2c.cpp", "[setI2CPins]");
   // Set i2c pins
   Wire1.setSDA(I2C_SDA_PIN);
   Wire1.setSCL(I2C_SCL_PIN);
 } // setI2CPins()
+
 
 char i2cRead(byte adress, byte reg) {
   int err = 0;
@@ -26,6 +28,7 @@ char i2cRead(byte adress, byte reg) {
   return Wire1.read();
 } // i2cRead()
 
+
 int i2cWrite(byte adress, byte reg, byte data) {
   Wire1.begin();
   Wire1.beginTransmission(adress);
@@ -40,6 +43,7 @@ int i2cWrite(byte adress, byte reg, byte data) {
   // }
   return Wire1.endTransmission();
 } // i2cWrite()
+
 
 float readAccelerationAxis(byte adress, uint8_t reg) {
   Wire1.begin();

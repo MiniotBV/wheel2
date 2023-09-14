@@ -2,6 +2,7 @@
 #include "wheel.h"
 #include "pins.h"
 
+
 Wheel::Wheel(float version) :
     shared(version),
     arm(shared),
@@ -17,6 +18,7 @@ Wheel::Wheel(float version) :
     serialcomm(shared, amplifier, arm, bluetooth, buttons, carriage, orientation, plateau, scanner, speedcomp, storage),
     bluetooth(shared, carriage, plateau) {
 } // Wheel()
+
 
 void Wheel::init() {
   LOG_DEBUG("wheel.cpp", "[init]");

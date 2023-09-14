@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 
+
 enum eStates {
   S_STOPPING,   // wait until needle is up and arm angle is 0
   S_HOMING,
@@ -28,6 +29,7 @@ enum eStates {
   S_BAD_ORIENTATION
 }; // eStates
 
+
 enum eErrors {
   E_NONE = 0,
 
@@ -44,16 +46,19 @@ enum eErrors {
   E_TO_MUCH_TRAVEL = 8,         // if the record is far off-center for tracking of a huge tracking error (hard bump) during tracking?
 }; // eErrors
 
+
 enum eTimeMode {
   TM_MILLIS,
   TM_MICROS
 }; // eTimeMode
+
 
 enum eCheckMode {
   CM_NONE,
   CM_COMMAND,
   CM_VALUE
 }; // eCheckMode
+
 
 enum eRpmMode {
   RPM_AUTO,
@@ -62,4 +67,5 @@ enum eRpmMode {
   RPM_78
 }; // eRpmMode
 
-#endif
+
+#endif // ENUMS_H

@@ -13,6 +13,7 @@ I2C Slave Address: b0010010
 #include "shared.h"
 #include "arm.h"
 
+
 class Orientation {
   private:
     Interval _interval;
@@ -42,4 +43,5 @@ class Orientation {
     void info();
 }; // Orientation
 
-#endif
+
+#endif // ORIENTATION_H
