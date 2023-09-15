@@ -147,7 +147,7 @@ void SerialComm::checkReceivedLine(String line, eCheckMode mode) {
   if (checkLineCommand( "EL",     "Read EEPROM",                mode)) { _storage.read();                     return; }
   if (checkLineCommand( "OC",     "Orientation calibrate",      mode)) { _orientation.calibrate(); _storage.saveRequired  = true; return; }
   if (checkLineFloat(   "TO",     "Track offset",               mode, _carriage.trackOffset)) { _storage.saveRequired  = true; return; }
-  // if (checkLineCommand( "AHCal",  "armHoekCalibreer()",         mode)) { armHoekCalibreer(); _storage.saveRequired = true; return; }
+  if (checkLineCommand( "AHCal",  "Calibrate arm angle",        mode)) { _arm.calibrateAngle(); _storage.saveRequired = true; return; }
 
   //-------------------------------------------------- CARRIAGE SENSORS --------------------------------------------------
   println(mode);
