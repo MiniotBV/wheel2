@@ -1,6 +1,7 @@
 #include "log.h"
 #include "bluetooth.h"
 #include "pins.h"
+#include "helper.h"
 
 
 Bluetooth::Bluetooth(Shared& shared, Carriage& carriage, Plateau& plateau) :
@@ -26,7 +27,7 @@ void Bluetooth::init() {
 
 
 void Bluetooth::func() {
-  if (millis() < 1000) {
+  if (millisSinceBoot() < 1000) {
     return;
   }
 
@@ -133,7 +134,7 @@ void Bluetooth::encode() {
   }
 
   if (_buffer.startsWith("OK+")) {
-    if (millis() < 4000) {
+    if (millisSinceBoot() < 4000) {
       _wirelessVersion = true;  // ff checken of er wel een bluetooth module is aangesloten
     }
   }

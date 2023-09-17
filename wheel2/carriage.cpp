@@ -30,7 +30,7 @@ void Carriage::func() {
     //--------------------------------------------- ARM ANGLE
     _arm.armAngleRaw += (analogRead(ARM_ANGLE_SENSOR_PIN) - _arm.armAngleRaw ) / 6;
 
-    if (millis() > 1000) {
+    if (millisSinceBoot() > 1000) {
         if (_arm.armAngleRaw < _arm.armAngleMinCall) {
           _arm.armAngleMinCall = _arm.armAngleRaw;
         }

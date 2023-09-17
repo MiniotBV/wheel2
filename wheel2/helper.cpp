@@ -116,3 +116,7 @@ void setBit(uint8_t *byte, uint8_t n, bool value) {
 bool getBit(uint8_t byte, uint8_t n) {
   return (byte >> n) & 1U;
 } // getBit()
+
+unsigned long millisSinceBoot() { // TODO Piet; do your stuff here!
+  return millis();
+}

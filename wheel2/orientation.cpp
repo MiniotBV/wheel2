@@ -20,7 +20,7 @@ void Orientation::init() {
 
 
 void Orientation::update() {
-  if (_interval.tick() && millis() > 200) { // turned on for 200ms?
+  if (_interval.tick() && millisSinceBoot() > 200) { // turned on for 200ms?
     if (_firstTime) {
       _firstTime = false;
       reset();

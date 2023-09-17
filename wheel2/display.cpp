@@ -47,8 +47,8 @@ void Display::update() {
     clear();
 
     //--------------------------------------------- INTRO
-    if (millis() < 4000) {
-      int pos = DISPLAY_LENGTH - (millis() / 10);
+    if (millisSinceBoot() < 4000) {
+      int pos = DISPLAY_LENGTH - (millisSinceBoot() / 10);
       int blockLength = 10;
       int spaceLength = 3;
 
@@ -85,7 +85,7 @@ void Display::update() {
 
     //--------------------------------------------- SHOW ERROR
     } else if (_shared.errorChangedInterval.duration() < 10000 && _shared.error != E_NONE) { // Blink for 10 sec.
-      if ((millis() % 1000) < 800) { // Blink
+      if ((millisSinceBoot() % 1000) < 800) { // Blink
         int blockLength = 0.1 * DISPLAY_LENGTH;
         int begin = _dispHalf - (blockLength / 2) * _shared.error;
 
@@ -146,7 +146,7 @@ void Display::update() {
 
     //--------------------------------------------- LEVEL MODE
     } else if (_shared.state == S_BAD_ORIENTATION) {
-      if ((millis() % 1000) < 800) {
+      if ((millisSinceBoot() % 1000) < 800) {
         drawBlock(0, DISPLAY_LENGTH / 4, 0.1);
         drawBlock(DISPLAY_LENGTH - (DISPLAY_LENGTH / 4), DISPLAY_LENGTH, 0.1);
       }
@@ -223,7 +223,7 @@ void Display::update() {
         drawPoint(needle, 0.9);
         drawPoint((needle - 2), 0.9);
         drawPoint((needle + 2), 0.9);
-      } else if (_shared.puristMode && (millis() % 1000 < 500)) {
+      } else if (_shared.puristMode && (millisSinceBoot() % 1000 < 500)) {
         drawPoint((needle - 1), 0.9);
         drawPoint((needle + 1), 0.9);
       } else {
@@ -236,7 +236,7 @@ void Display::update() {
     }
 
     if (_storage.saveRequired) { // keep blinking when EEPROM is not saved yet
-      if (millis() % 1000 > 500) {
+      if (millisSinceBoot() % 1000 > 500) {
         drawBlock(0, (DISPLAY_LENGTH / 20), 0.9);
         drawBlock(DISPLAY_LENGTH, DISPLAY_LENGTH - DISPLAY_LENGTH / 20, 0.9);
       }
@@ -351,5 +351,5 @@ void Display::commit() {
 
 
 void Display::bootLED() {
-  digitalWrite(LED_PIN, millis() < 3000); // turn LED on
+  digitalWrite(LED_PIN, millisSinceBoot() < 3000); // turn LED on
 }

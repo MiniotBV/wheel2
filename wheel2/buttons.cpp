@@ -52,7 +52,7 @@ void Buttons::update() {
       beltDiff = beltFilter - beltFilterPrev;
       beltFilterPrev = beltFilter;
 
-      if (millis() < 1000) { // belt action only after 1 sec.
+      if (millisSinceBoot() < 1000) { // belt action only after 1 sec.
         return;
       }
 
@@ -108,7 +108,7 @@ void Buttons::logic(int button) {
     state[button] = BUTTON_PRESS;
 
     _allButtonsInterval.reset();
-    _buttonInterval[button] = millis();
+    _buttonInterval[button] = millisSinceBoot();
 
     ledBlink();
 
@@ -184,7 +184,7 @@ void Buttons::logic(int button) {
   }
 
   //--------------------------------------------- LONG PRESS
-  if (state[button] == BUTTON_PRESS && millis() - _buttonInterval[button] > BUTTON_LONG_CLICK) {
+  if (state[button] == BUTTON_PRESS && millisSinceBoot() - _buttonInterval[button] > BUTTON_LONG_CLICK) {
     state[button] = BUTTON_LONG_PRESS;
     _allButtonsInterval.reset();
 
@@ -228,7 +228,7 @@ void Buttons::logic(int button) {
   }
 
   //--------------------------------------------- SUPER LONG PRESS
-  if (state[button] == BUTTON_LONG_PRESS && millis() - _buttonInterval[button] > BUTTON_SUPERLONG_CLICK) {
+  if (state[button] == BUTTON_LONG_PRESS && millisSinceBoot() - _buttonInterval[button] > BUTTON_SUPERLONG_CLICK) {
     state[button] = BUTTON_SUPERLONG_PRESS;
     _allButtonsInterval.reset();
 
