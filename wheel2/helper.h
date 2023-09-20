@@ -1,3 +1,4 @@
+#include <sys/_stdint.h>
 #ifndef HELPER_H
 #define HELPER_H
 
@@ -16,7 +17,7 @@ String getRpmState(eRpmMode rpm);
 String getError(eErrors error);
 void setBit(uint8_t *byte, uint8_t n, bool value);
 bool getBit(uint8_t byte, uint8_t n);
-unsigned long millisSinceBoot();
+uint64_t millisSinceBoot();
 
 
 #endif // HELPER_H
