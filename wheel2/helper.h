@@ -1,9 +1,9 @@
-#include <sys/_stdint.h>
 #ifndef HELPER_H
 #define HELPER_H
 
 #include <Arduino.h>
 #include "enums.h"
+#include <sys/_stdint.h>
 
 
 String padRight(String value, int length, char character = ' ');

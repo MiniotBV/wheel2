@@ -117,6 +117,6 @@ bool getBit(uint8_t byte, uint8_t n) {
   return (byte >> n) & 1U;
 } // getBit()
 
-uint64_t millisSinceBoot() { // TODO Piet; do your stuff here!
-  return time_us_64()/1000;
+uint64_t millisSinceBoot() {
+  return time_us_64() / 1000;
 }

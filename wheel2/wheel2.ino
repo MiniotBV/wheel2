@@ -38,7 +38,7 @@
     https://techexplorations.com/guides/arduino/programming/millis-rollover/
 */
 
-#define APP_VERSION 200 // 12-09-2023
+#define APP_VERSION 200
 
 #include "log.h"
 #include "pico/time.h"

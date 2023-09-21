@@ -41,7 +41,7 @@ void Interval::reset() {
 
 uint64_t Interval::timenow() {
   if (_mode == TM_MILLIS) {
-    return time_us_64()/1000; // millis();
+    return time_us_64() / 1000; // millis();
   } else if (_mode == TM_MICROS) {
     return time_us_64(); // micros();
   } else {
@@ -62,4 +62,3 @@ bool Interval::once() {
   }
   return false;
 } // once()
-
