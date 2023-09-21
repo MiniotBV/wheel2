@@ -1,123 +1,18 @@
-#define PMAX 4000
+#ifndef PWM_H
+#define PWM_H
 
-float procentWaarde = 0.5;
-float dollarWaarde = 0;
-float hashtagWaarde = 0;
+#define PWM_PMAX 4000
 
-float faseA, faseB;
-
-
-void setPwm(int pin){
-	gpio_set_function(pin, GPIO_FUNC_PWM);
-	pwm_set_enabled(  pwm_gpio_to_slice_num(pin),  true);
-	pwm_set_wrap(  pwm_gpio_to_slice_num(pin),   PMAX + 1);
-}
-
-void pwmWrite(int pin, int level){
-	pwm_set_chan_level(  pwm_gpio_to_slice_num(pin),  pwm_gpio_to_channel(pin), level);
-}
+#include <Arduino.h>
 
 
-void pwmWriteF(int pin, float level){
-	pwmWrite(pin, level * PMAX);
-}
+void setPwm(int pin);
+void pwmWriteFloat(int pin, float level);
+void pwmWrite(int pin, int level);
+void pwmPhase(float force, int pinP, int pinN, bool reversed = false);
+void pwmStepper(float angle, int pinAP, int pinAN, int pinBP, int pinBN, bool reversed = false);
+void pwmDisableStepper(int pinAP, int pinAN, int pinBP, int pinBN);
+void pwmPhaseDisable(int pinP, int pinN);
 
 
-void pwmFase(float kracht, int pinP, int pinN, bool omgekeerd){
-	
-	int fase = kracht * PMAX;
-	
-	if(omgekeerd){
-		if(fase > 0){
-			pwmWrite(pinP,  PMAX - fase );
-			pwmWrite(pinN,  PMAX);
-		}else{
-			pwmWrite(pinP,  PMAX);
-			pwmWrite(pinN,  PMAX + fase );
-		}
-	}else{
-		if(fase > 0){
-			pwmWrite(pinP,  abs(fase) );
-			pwmWrite(pinN,  0);
-		}else{
-			pwmWrite(pinP,  0);
-			pwmWrite(pinN,  abs(fase) );
-		}
-	}
-}
-
-
-
-void pwmNietLinearFase(float kracht, int pinP, int pinN, bool omgekeerd){
-	
-	// int fase = pow(abs(kracht), logWaarde) * PMAX;
-	int fase = abs(kracht) * PMAX * procentWaarde;
-	
-	if(omgekeerd){
-		if(kracht > 0){
-			pwmWrite(pinP,  PMAX - fase );
-			pwmWrite(pinN,  PMAX);
-		}else{
-			pwmWrite(pinP,  PMAX);
-			pwmWrite(pinN,  PMAX - fase );
-		}
-	}else{
-		if(kracht > 0){
-			pwmWrite(pinP,  fase );
-			pwmWrite(pinN,  0);
-		}else{
-			pwmWrite(pinP,  0);
-			pwmWrite(pinN,  fase );
-		}
-	}
-}
-
-
-
-
-void pwmFaseDisable(int pinP, int pinN){
-	pwmWrite(pinP,  0);
-	pwmWrite(pinN,  0);
-}
-
-
-
-
-
-void pwmStapper(float hoek, int pinAP, int pinAN, int pinBP, int pinBN, bool omgekeerd){
-	pwmFase( sin(hoek),   pinAP, pinAN, omgekeerd);
-	pwmFase( cos(hoek),   pinBP, pinBN, omgekeerd);
-}
-
-
-void pwmDisableStapper(int pinAP, int pinAN, int pinBP, int pinBN){
-	pwmFaseDisable( pinAP, pinAN );
-	pwmFaseDisable( pinBP, pinBN );
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#endif // PWM_H

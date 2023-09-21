@@ -1,198 +1,106 @@
-//  Wheel2 
-//  rp2040
+/**
+  Wheel2 Firmware
+  Name: wheel2
 
-//board instaleren:
-//https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json
+  Author: Piet Kolkman (MiniotBv), refactored by Eduard Kuijt (EddyK69
+  Many thanks to Piet, Peter & Greet from Miniot!
 
-#define versie 167
-  
+  Based on offical Miniot Wheel2 Firmware:
+    https://drive.google.com/drive/folders/1BKKGxrlx6HUjvCHgJyVHJfkWcCUIp_lk
+    https://pietk.com/wheel2/
 
+  Install board (Raspberry Pi Pico, rp2040):
+    https://arduino-pico.readthedocs.io/en/latest/install.html
+    https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json
+
+  Arduine Code Guidelines:
+    https://sites.google.com/a/cabrillo.edu/cs-11m/howtos/cppdoc
+
+  DebugLog Library:
+    https://github.com/hideakitai/DebugLog
+
+  Multi Core Processing:
+    https://arduino-pico.readthedocs.io/en/latest/multicore.html
+      "setup() and setup1() will be called at the same time, and the loop() or loop1() will 
+      be started as soon as the core’s setup() completes (i.e. not necessarily simultaneously!)."
+    https://arduino-pico.readthedocs.io/en/latest/sdk.html#multicore-core1-processing
+      "Warning: While you may spawn multicore applications on CORE1 using the SDK,
+      the Arduino core may have issues running properly with them.
+      In particular, anything involving flash writes (i.e. EEPROM, filesystems) will
+      probably crash due to CORE1 attempting to read from flash while CORE0 is writing to it."
+    https://github.com/earlephilhower/arduino-pico/discussions/1479#discussioncomment-6043482
+      "As a user you can run your own setup1/loop1 and never ever call rp2040.idle/resumeOtherCore
+      and write to flash via EEPROM or LittleFS. The Arduino core plumbing here does all that for you"
+
+  millis() overflow rollover (50 days!!)
+    https://www.best-microcontroller-projects.com/arduino-millis.html
+    https://www.norwegiancreations.com/2018/10/arduino-tutorial-avoiding-the-overflow-issue-when-using-millis-and-micros/
+    https://techexplorations.com/guides/arduino/programming/millis-rollover/
+*/
+
+#define APP_VERSION 200
+
+#include "log.h"
+#include "pico/time.h"
 #include <stdio.h>
 #include "pico/stdlib.h"
-#include "pico/multicore.h"
-#include "hardware/pwm.h"
 #include "hardware/gpio.h"
 
-#include "pico/time.h"
-
-
-
 #include "pins.h"
-#include "helper.h"
-
-#include "pwm.h"
-
-#include "interval.h"
+#include "wheel.h"
 
 
-#include "staat.h"
-
-#include "armMotor.h"
-ArmMotor arm;
+Wheel wheel(APP_VERSION);
 
 
-
-
-
-void enableInterupts(bool aan){
-	pinMode(plateauA,     INPUT_PULLUP);
-	pinMode(plateauB,     INPUT_PULLUP);
-	pinMode(plateauEN,    OUTPUT);
-
-	gpio_set_irq_enabled_with_callback(plateauA,   GPIO_IRQ_EDGE_RISE + GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
-	gpio_set_irq_enabled_with_callback(plateauB,   GPIO_IRQ_EDGE_RISE + GPIO_IRQ_EDGE_FALL,  aan,   &gpio_callback);
-}
-
-
-
-
-#include "compVaartSensor.h"
-COMPVAART strobo(16, 720);
-
-
-
-
-
-#include "plateau.h"
-
-Interval ledInt(200, MILLIS);
-
-
-
-#include "kar.h"
-
-#include "versterker.h"
-
-#include "plaatLees.h"
-
-
-
-
-#include "knoppen.h"
-
-#include "opslag.h"
-
-#include "display.h"
-
-#include "serieel.h"
- 
-
-
-
+// The normal, core 0 setup
 void setup() {
-	analogReadResolution(12);// moet sinds nieuwe core versie, anders leest hij in 10bit
+  // Sets the size (in bits) of the value returned by analogRead(). It defaults to 10 bits.
+  analogReadResolution(12);
 
-	Serial.begin();  
+  // Initialize Wheel
+  wheel.init();
 
-  Wire1.setSCL(SCL);
-	Wire1.setSDA(SDA);
-
-  
-
-	opslagInit();
-	eepromUitlezen();
+  enableInterupts(true);
+} // setup()
 
 
-	versterkerInit();
-
-	
-
-	arm.armInit();
-
-	karInit();
-
-	plaatLeesInit();
-
-	plateauInit();
-
-
-	
-	multicore_launch_core1(loop2);
-	
-	pinMode(slaapStand, OUTPUT);
-	digitalWrite(slaapStand, 1); // hou de batterij aan
-
-
-	enableInterupts(true);//zet interrupts aan
-
-
-	pinMode(ledWit, OUTPUT);
-	// digitalWrite(ledWit, 1);//zet led aan
-
-
-
-}
-
-
-
-
-
-
-
-
-void core1Dingen(){
-	displayUpdate();
-	
-	serieelFunc();
-
-	knoppenUpdate();
-
-	arm.armFunc();  
-}
-
-
-
-
-void loop2(){
-
-  displayInit();
-
-	while(1){
-		core1Dingen();
-
-		if(eepromShit){//sckakel core2 tijdelijk uit om te zorge dat er vijlig flash beschreven kan worde
-			sleep_ms(100);
-		}
-	}
-}
-
-
-
-
-
-
+// core 0 loop
 void loop() {
+  wheel.scanner.func();
+  wheel.carriage.func();
+  wheel.amplifier.func();
+  wheel.orientation.update();
+  wheel.plateau.func();
 
-	if(eepromShit){//dit moet omdat je core2 moet uitschakelen om in flash te schrijven, zodat je niet leest en schrijft tegelijkertijd
-		delay(20);
-		eepCommit();
-		Serial.println("opgeslagen!");
-	}
+  wheel.bluetooth.func();
 
-
-	plaatLeesFunc();
-
-	karMotorFunc();
-
-	volumeFunc();
-
-  orientatie.update();
-
-	plateauFunc();
-
-  bluetoothFunc();
-
-  digitalWrite(ledWit, millis() < 1000);//zet led aan
-
-}
+  wheel.display.bootLED(); // turn LED on
+} // loop()
 
 
+// Running on core 1
+void setup1() {
+  wheel.display.init();
+} // setup1()
 
 
+// core 1 loop
+void loop1() {
+  wheel.display.update();
+  wheel.serialcomm.func();
+  wheel.buttons.update();
+  wheel.arm.func();
+} // loop1()
 
 
+void enableInterupts(bool enabled) {
+  LOG_DEBUG("wheel2.ino", "enableInterupts");
+  gpio_set_irq_enabled_with_callback(PLATEAU_A_PIN, GPIO_IRQ_EDGE_RISE + GPIO_IRQ_EDGE_FALL, enabled, &gpioCallback);
+  gpio_set_irq_enabled_with_callback(PLATEAU_B_PIN, GPIO_IRQ_EDGE_RISE + GPIO_IRQ_EDGE_FALL, enabled, &gpioCallback);
+} // enableInterupts
 
-void gpio_callback(uint gpio, uint32_t events) {
-	strobo.interrupt();
-}
 
+void gpioCallback(uint gpio, uint32_t events) {
+  wheel.speedcomp.stroboInterrupt();
+} // gpioCallback

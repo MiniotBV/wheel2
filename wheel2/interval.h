@@ -1,83 +1,26 @@
-#include <stdint.h>
-#include "hardware/timer.h"
-#define MILLIS 0
-#define MICROS 1
+#ifndef INTERVAL_H
+#define INTERVAL_H
+
+#include <Arduino.h>
+#include "enums.h"
 
 
-
-class Interval{
-	public:
-		uint64_t interval = 0;
-		uint64_t vorrigeTijd = 0;
-		uint64_t vorrigeVorrigeTijd = 0;
-		int eenheid = MILLIS;
-    bool eenKeerLatch = true;
-
-		Interval(int i, int tijdMode){
-			interval = i;
-			eenheid = tijdMode;
-			vorrigeTijd = tijd();
-		}
-
-
-
-		bool loop(){
-			if(tijd() - vorrigeTijd >= interval){
-					vorrigeVorrigeTijd = vorrigeTijd;
-					vorrigeTijd += interval;
-
-					if(tijd() - vorrigeTijd >= interval){
-						vorrigeVorrigeTijd = vorrigeTijd;
-						vorrigeTijd = tijd();            
-					}
-
-					return true;
-			}
-			return false;
-		}
+class Interval {
+  private:
+    uint64_t _interval = 0;
+    uint64_t _timenowPrev = 0;
+    uint64_t _timenowPrevPrev = 0;
+    eTimeMode _mode;
+    uint64_t timenow();
+    bool _onetimeLatch = true;
+  public:
+    Interval(uint64_t interval, eTimeMode mode);
+    bool tick();
+    uint64_t duration();
+    void reset();
+    void offset(uint64_t offst);
+    bool once();
+}; // Interval
 
 
-		void offset(uint64_t ofst){
-			vorrigeTijd += ofst;
-		}
-
-
-		void reset(){
-			vorrigeTijd = tijd(); 
-      eenKeerLatch = true;
-		}
-
-
-    bool eenKeer(){
-      if(eenKeerLatch   &&   tijd() - vorrigeTijd  > interval){
-        eenKeerLatch = false;
-        return true;
-      }
-      return false;
-    }
-		
-
-		uint64_t  sinds(){
-			return tijd() - vorrigeTijd;
-		}
-
-		bool langerDan(){
-			return tijd() - vorrigeTijd > interval;
-		}
-
-
-		uint64_t tijd(){
-			if(eenheid == MILLIS){
-				return time_us_64()/1000;//millis();
-			}
-			if(eenheid == MICROS){
-				return time_us_64();//micros(); //
-        // time_us_32()
-        // time_us_64();
-        
-			}
-
-			return 0;
-		}
-
-};
+#endif // INTERVAL_H

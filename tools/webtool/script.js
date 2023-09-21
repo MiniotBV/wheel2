@@ -30,6 +30,7 @@ var plotterDataPunten = []; // dataPoints
 var plotterData = [];
 var plotterKleuren = ["red", "blue","green", "#edc240", "#afd8f8", "#cb4b4b", "#4da74d", "#9440ed"]//['Tomato', 'blue', 'Lime', 'gold', 'DarkTurquoise', 'magenta', , ]
 var plotterTabel = [];
+var plotterTitles = [];
 var lijnToggle = false;
 var serialInterval = Date.now();
 var plotterSampleNummer = 1000; // number of dataPoints visible at any point
@@ -52,7 +53,7 @@ var plot = $.plot("#plotter", plotterData, {
         hoverable: true,
         clickable: true,
         autoHighlight: true,
-        borderWidth: 1,  //oringende rand
+        borderWidth: 1,  //omringende rand
         color: "black", //kleur van de rand
         markingsColor: "green" //kleur van het grid
     },
@@ -101,7 +102,7 @@ $(function() {
         if (item) {
 
                 // $("#tooltip").html(item.series.label + " of " + x + " = " + y)
-            $("#tooltip").html("lijn"+ item.seriesIndex + " ( " + item.datapoint[0] + " ) = " + item.datapoint[1])
+            $("#tooltip").html(plotterTitles[item.seriesIndex] + " ( " + item.datapoint[0] + " ) = " + item.datapoint[1])
                 // .css({top: item.pageY+5, left: item.pageX+5})//, backgroundColor: item.series.color})
                 .css({top: pos.pageY+5, left: pos.pageX+5})
                 .show(0);
@@ -257,7 +258,11 @@ async function serialRead() {
                         }
 
                     }else if(ontvagAlleenBijNewLine){
-                        
+                    	var graphHeader = "GRAPH_HEADER:";
+	                	if (line.indexOf(graphHeader) != -1) {
+    	            		var headers = line.substr(line.indexOf(graphHeader) + graphHeader.length);
+    	            		plotterTitles = headers.split(',');
+        	        	}
                         // if(showTimeStamp){line = tijdString() + " > " + line}//-----------------tijd stamp
                         if(showTimeStamp){line = sampleIndex + " > " + line}//-----------------sample stamp
                         serialBuffer += line + '\n';
@@ -409,7 +414,7 @@ async function clickConnect() {
             await connect();
         } catch (error) {
             console.log(error)
-            console.log("niet kunne aansluiten")
+            console.log("niet kunnen aansluiten")
             await disconnect();
         }
     }
@@ -434,7 +439,7 @@ function clearPlotter(){
     plotterDataPunten = []; // dataPoints
     plotterData = [];
     sampleIndex = 0;
-    while(tabel.rows.length > 1){tabel.rows[1].remove()} //verweider alle data behalve de titel
+    while(tabel.rows.length > 1){tabel.rows[1].remove()} //verwijder alle data behalve de titel
     updatePlotter()
 }
 
@@ -593,7 +598,7 @@ function nieuweGrafiek(i){
     // }else{\
     //     plotterData[" +i+ "].data = [];\
     // } lijnToggle = true' checked = 'true'> 
-    "lijn " + i;
+    plotterTitles[i];
 
     tabb.index = i;
     tabb.checked = true;
