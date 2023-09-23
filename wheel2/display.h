@@ -48,7 +48,7 @@ class Display {
     void init();
     void update();
     void bootLED();
-};
+}; // Display
 
 
 #endif // DISPLAY_H
