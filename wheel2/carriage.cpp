@@ -103,7 +103,10 @@ void Carriage::stateUpdate() {
   if (_shared.state == S_HOME) {
     _arm.centerArmAngle();
     _motorEnable = false;
-    repeat = false;
+    if (repeat) {
+      repeat = false;
+      Serial.println("REPEAT: OFF");
+    }
     return;
   }
 

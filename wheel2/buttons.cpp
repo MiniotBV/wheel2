@@ -237,6 +237,7 @@ void Buttons::logic(int button) {
     if (button == BUTTON_PLAY) {
       if (_shared.state == S_HOMING_BEFORE_PLAYING || _shared.state == S_GOTO_RECORD_START) { // Repeat
         _carriage.repeat = true;
+        Serial.println("REPEAT: ON");
       }
     }
 
