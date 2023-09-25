@@ -371,7 +371,7 @@ void Carriage::stateUpdate() {
       _arm.needleDown();
     }
 
-    if (sensorPosition > CARRIAGE_RECORD_END + 2 && sensorPosition < CARRIAGE_RECORD_END + 12 && _scanner.recordPresent) {
+    if (sensorPosition > (CARRIAGE_RECORD_END + 2) && sensorPosition < (CARRIAGE_RECORD_END + 12) && _scanner.recordPresent) {
       // record present? stop!
       // LOG_ALERT("carriage.cpp", "[stateUpdate] Cannot clean needle; Record present?");
       Serial.println("Cannot clean needle; Record present? Clean record instead");
@@ -419,7 +419,7 @@ void Carriage::gotoNextTrack() {
     return;
   }
 
-  while (pos - 2 <= _scanner.tracks[track]) { // 2mm offset to prevent repeating the same track
+  while ((pos - 2) <= _scanner.tracks[track]) { // 2mm offset to prevent repeating the same track
     track--;
     if (track <= 0) {
       stopOrRepeat();
@@ -440,7 +440,7 @@ void Carriage::gotoPreviousTrack() {
   }
 
   int track = 0;
-  while (pos + CARRIAGE_BACKTRACK_OFFSET >= _scanner.tracks[track]) {
+  while ((pos + CARRIAGE_BACKTRACK_OFFSET) >= _scanner.tracks[track]) {
     track++;
     if (track > _scanner.trackCount - 1) {
       gotoRecordStart();
@@ -556,10 +556,11 @@ void Carriage::printGraphicData() {
 
 void Carriage::info() {
   int padR = 25;
-  Serial.println(padRight("CARRIAGE_P", padR) + ": " + String(P, 5));
-  Serial.println(padRight("CARRIAGE_I", padR) + ": " + String(I, 5));
-  Serial.println(padRight("CARRIAGE_D", padR) + ": " + String(D, 5));
+  Serial.println(padRight("CARRIAGE_P", padR) +        ": " + String(P, 5));
+  Serial.println(padRight("CARRIAGE_I", padR) +        ": " + String(I, 5));
+  Serial.println(padRight("CARRIAGE_D", padR) +        ": " + String(D, 5));
   Serial.println(padRight("CARRIAGE_POSITION", padR) + ": " + String(position));
   Serial.println(padRight("CARRIAGE_REAL_POS", padR) + ": " + String(realPosition));
+  Serial.println(padRight("CARRIAGE_REPEAT", padR) +   ": " + String(repeat ? "ON" : "OFF"));
   Serial.println();
 } // info()

@@ -84,7 +84,7 @@ void Scanner::check() {
   for (int i = 0; i < _bufferLength; i++) {
     float value = _buffer[i][1];
     
-    if (value < newThreshold / 2 && _trackBelowThreshold) {
+    if (value < (newThreshold / 2) && _trackBelowThreshold) {
       _trackBelowThreshold = false;
     }
     if (value > newThreshold && !_trackBelowThreshold) {
@@ -100,7 +100,7 @@ void Scanner::setTracksAs7inch() {
   trackCount = 1;
   tracks[1] = CARRIAGE_7INCH_START;
 
-  if (tracks[0] > CARRIAGE_7INCH_START - 12) {
+  if (tracks[0] > (CARRIAGE_7INCH_START - 12)) {
     tracks[0] = 55;
     // LOG_NOTICE("scanner.cpp", "[setTracksAs7inch] Adjusted record-end");
     Serial.println("Adjusted record-end");
@@ -151,7 +151,7 @@ bool Scanner::isRecordPresent() {
 void Scanner::scanForTracks() {
   // LOG_DEBUG("scanner.cpp", "[scanForTracks]");
 
-  if (_carriage->sensorPosition < CARRIAGE_RECORD_END + 2 || _shared.state != S_GOTO_RECORD_START) {
+  if (_carriage->sensorPosition < (CARRIAGE_RECORD_END + 2) || _shared.state != S_GOTO_RECORD_START) {
     _bufferCounter = 0;
     return;
   }

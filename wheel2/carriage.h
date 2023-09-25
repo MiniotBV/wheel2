@@ -85,7 +85,7 @@ class Carriage {
     void gotoPreviousTrack();
     void pause();
     void info();
-};
+}; // Carriage
 
 
 #endif // CARRIAGE_H
