@@ -419,7 +419,7 @@ void Carriage::gotoNextTrack() {
     return;
   }
 
-  while (pos - 2 <= _scanner.tracks[track]) { // 2mm offset to prevent repeating the same track
+  while ((pos - 2) <= _scanner.tracks[track]) { // 2mm offset to prevent repeating the same track
     track--;
     if (track <= 0) {
       stopOrRepeat();
@@ -440,9 +440,9 @@ void Carriage::gotoPreviousTrack() {
   }
 
   int track = 0;
-  while (pos + CARRIAGE_BACKTRACK_OFFSET >= _scanner.tracks[track]) {
+  while ((pos + CARRIAGE_BACKTRACK_OFFSET) >= _scanner.tracks[track]) {
     track++;
-    if (track > _scanner.trackCount - 1) {
+    if (track > (_scanner.trackCount - 1)) {
       gotoRecordStart();
       return;
     }
@@ -450,8 +450,9 @@ void Carriage::gotoPreviousTrack() {
 
   if (_scanner.tracks[track] > _scanner.recordStart) {
     gotoRecordStart();
+  } else {
+    gotoTrack(_scanner.tracks[track]);
   }
-  gotoTrack(_scanner.tracks[track]);
 } // gotoPreviousTrack()
 
 
@@ -469,12 +470,11 @@ void Carriage::gotoRecordStart() {
   gotoTrack(_scanner.recordStart);
 } // gotoRecordStart()
 
-
 bool Carriage::movetoPosition(float target, float spd) {
   _acceleration = 0;
 
   float togo = abs(target - position);
-  int togoDirection = target - position > 0 ? 1 : -1;
+  int togoDirection = (target - position) > 0 ? 1 : -1;
 
   _distanceToStop = (_speed * _speed) / ( 2 * CARRIAGE_ACCELERATION );
   int _distanceToStopDirection = _speed > 0 ? 1 : -1;
