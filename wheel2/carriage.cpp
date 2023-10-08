@@ -339,7 +339,7 @@ void Carriage::stateUpdate() {
 
   if (_shared.state == S_SKIP_FORWARD) {
     if (_arm.needleUp()) {
-      movetoPosition(CARRIAGE_RECORD_END, CARRIAGE_MAX_SPEED / 4);
+      movetoPosition(_scanner.tracks[0], CARRIAGE_MAX_SPEED / 4);
     }
     targetTrack = position; // to clean display
   }
@@ -476,7 +476,7 @@ bool Carriage::movetoPosition(float target, float spd) {
   float togo = abs(target - position);
   int togoDirection = (target - position) > 0 ? 1 : -1;
 
-  _distanceToStop = (_speed * _speed) / ( 2 * CARRIAGE_ACCELERATION );
+  _distanceToStop = (_speed * _speed) / (2 * CARRIAGE_ACCELERATION);
   int _distanceToStopDirection = _speed > 0 ? 1 : -1;
 
   if (isApprox(togo, 0, 0.01) && _distanceToStop < 0.1) {
