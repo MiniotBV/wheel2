@@ -70,7 +70,7 @@ void Buttons::update() {
 
       } else if(_shared.state == S_PAUSE) {
         _carriage.targetTrack -= beltDiff * 0.25;
-        _carriage.targetTrack = limitFloat(_carriage.targetTrack, CARRIAGE_RECORD_END, _scanner.recordStart);
+        _carriage.targetTrack = limitFloat(_carriage.targetTrack, _scanner.tracks[0], _scanner.recordStart);
 
       } else {
         // to prevent volume popping up after button press while skipping

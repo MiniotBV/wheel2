@@ -35,11 +35,13 @@ class Scanner {
     int _bufferCounter = 0;
     int _bufferLength = 0;
     int _trackThreshold = 500;
+    int _currentTrackPrev;
     void newTrack(float pos);
     void recordDetection();
     bool isRecordPresent();
     void scanForTracks();
     void clearTracks();
+    int getCurrentTrack();
     void scanLedOff();
     void setLedMilliAmp(float amp);
     int volt2pwm(float volt);
@@ -51,6 +53,7 @@ class Scanner {
     float recordStart = 0;
     float current = 10;
     int trackCount = 0;
+    int currentTrack = 0;
     Scanner(Shared& shared, Plateau& plateau);
     void init(Carriage* carriage);
     void func();

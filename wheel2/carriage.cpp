@@ -342,7 +342,7 @@ void Carriage::stateUpdate() {
 
   if (_shared.state == S_SKIP_FORWARD) {
     if (_arm.needleUp()) {
-      movetoPosition(CARRIAGE_RECORD_END, CARRIAGE_MAX_SPEED / 4);
+      movetoPosition(_scanner.tracks[0], CARRIAGE_MAX_SPEED / 4);
     }
     targetTrack = position; // to clean display
   }
@@ -445,7 +445,7 @@ void Carriage::gotoPreviousTrack() {
   int track = 0;
   while ((pos + CARRIAGE_BACKTRACK_OFFSET) >= _scanner.tracks[track]) {
     track++;
-    if (track > _scanner.trackCount - 1) {
+    if (track > (_scanner.trackCount - 1)) {
       gotoRecordStart();
       return;
     }
@@ -453,8 +453,9 @@ void Carriage::gotoPreviousTrack() {
 
   if (_scanner.tracks[track] > _scanner.recordStart) {
     gotoRecordStart();
+  } else {
+    gotoTrack(_scanner.tracks[track]);
   }
-  gotoTrack(_scanner.tracks[track]);
 } // gotoPreviousTrack()
 
 
@@ -472,14 +473,13 @@ void Carriage::gotoRecordStart() {
   gotoTrack(_scanner.recordStart);
 } // gotoRecordStart()
 
-
 bool Carriage::movetoPosition(float target, float spd) {
   _acceleration = 0;
 
   float togo = abs(target - position);
-  int togoDirection = target - position > 0 ? 1 : -1;
+  int togoDirection = (target - position) > 0 ? 1 : -1;
 
-  _distanceToStop = (_speed * _speed) / ( 2 * CARRIAGE_ACCELERATION );
+  _distanceToStop = (_speed * _speed) / (2 * CARRIAGE_ACCELERATION);
   int _distanceToStopDirection = _speed > 0 ? 1 : -1;
 
   if (isApprox(togo, 0, 0.01) && _distanceToStop < 0.1) {
