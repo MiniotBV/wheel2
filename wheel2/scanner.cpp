@@ -53,10 +53,11 @@ void Scanner::func() {
     _cut = !_cut; // toggle led
 
     currentTrack = getCurrentTrack();
-    if (_shared.state != S_HOMING && currentTrack > 0 && currentTrack != _currentTrackPrev) {
+    if ((_shared.state == S_PLAYING || _shared.state == S_PAUSE || _shared.state == S_SKIP_FORWARD || _shared.state == S_SKIP_REVERSE) &&
+      currentTrack > 0 && currentTrack != _currentTrackPrev) {
       Serial.println("TRACK: " + String(currentTrack) + "-" + String(trackCount));
+      _currentTrackPrev = currentTrack;
     }
-    _currentTrackPrev = currentTrack;
 
     if (graphicData) {
       printGraphicData();
