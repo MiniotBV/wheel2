@@ -184,6 +184,7 @@ void Scanner::clearTracks() {
   trackCount = 0;
   tracks[trackCount] = 1;
   currentTrack = 0;
+  _currentTrackPrev = 0;
 } // clearTracks()
 
 
