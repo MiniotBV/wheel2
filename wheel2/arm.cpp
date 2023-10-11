@@ -46,20 +46,20 @@ void Arm::func() {
       
       if (weight > _justInGroveWeight) { // is the needle already in the groove?
         weight = targetWeight; // put arm on target weight immediately
-      } else if (weight < justDockedWeight){
+      } else if (weight < justDockedWeight) {
         weight = justDockedWeight;
       } else {
-        weight += (10 / _speedUp)  *  (_justInGroveWeight - justDockedWeight); //10 moet eig _interval.interval zijn
+        weight += (10 / _speedUp) * (_justInGroveWeight - justDockedWeight); // 10 moet eig _interval.interval zijn
       }
     } else { // should the motor be off?
       _motorOnInterval.reset();
 
       if (weight < justDockedWeight) { // is needle up?
-        weight = ARM_HOME_WEIGHT; // turn off arm immediately
-      } else if( weight > _justInGroveWeight){
+        weight = ARM_DOCKED_WEIGHT; // turn off arm immediately
+      } else if ( weight > _justInGroveWeight) {
         weight = _justInGroveWeight;
       } else {
-        weight -= (10 / _speedDown)  *  (_justInGroveWeight - justDockedWeight); //10 moet eig _interval.interval zijn
+        weight -= (10 / _speedDown) * (_justInGroveWeight - justDockedWeight); // 10 moet eig _interval.interval zijn
       }
     }
 
@@ -87,7 +87,7 @@ bool Arm::dockNeedle() {
 
 bool Arm::needleEmergencyStop() {
   LOG_DEBUG("arm.cpp", "[needleEmergencyStop]");
-  weight = ARM_HOME_WEIGHT;
+  weight = ARM_DOCKED_WEIGHT;
   motorOn = false;
   return true;
 } // needleEmergencyStop()
@@ -99,7 +99,7 @@ bool Arm::isNeedleInGrove() {
 
 
 bool Arm::isNeedleDocked() {
-  return weight == ARM_HOME_WEIGHT;
+  return weight == ARM_DOCKED_WEIGHT;
 } // isNeedleDocked()
 
 

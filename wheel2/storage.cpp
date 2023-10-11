@@ -32,7 +32,7 @@ void Storage::read() {
   readAddress(EEPROM_ARM_FORCE_500MG,  _armForceLow);
   readAddress(EEPROM_ARM_FORCE_4000MG, _armForceHigh);
   readAddress(EEPROM_ARM_TARGETWEIGHT, _armTargetWeight);
-  readAddress(EEPROM_ARM_FORCE_HOME,   _armForceHome);
+  readAddress(EEPROM_ARM_FORCE_DOCKED, _armForceDocked);
   readAddress(EEPROM_LEVEL_OFFSET_X,   _levelOffsetX);
   readAddress(EEPROM_LEVEL_OFFSET_Y,   _levelOffsetY);
   readAddress(EEPROM_LEVEL_OFFSET_Z,   _levelOffsetZ);
@@ -42,7 +42,7 @@ void Storage::read() {
   _arm.forceLow         = _armForceLow;
   _arm.forceHigh        = _armForceHigh;
   // _arm.targetWeight     = _armTargetWeight;
-  _arm.justDockedWeight   = _armForceHome;
+  _arm.justDockedWeight = _armForceDocked;
   _orientation.offsetX  = _levelOffsetX;
   _orientation.offsetY  = _levelOffsetY;
   _orientation.offsetZ  = _levelOffsetZ;
@@ -57,7 +57,7 @@ void Storage::write() {
   _armForceLow     = _arm.forceLow;
   _armForceHigh    = _arm.forceHigh;
   // _armTargetWeight = _arm.targetWeight;
-  _armForceHome    = _arm.justDockedWeight;
+  _armForceDocked  = _arm.justDockedWeight;
   _levelOffsetX    = _orientation.offsetX;
   _levelOffsetY    = _orientation.offsetY;
   _levelOffsetZ    = _orientation.offsetZ;
@@ -68,7 +68,7 @@ void Storage::write() {
   writeAddress(EEPROM_ARM_FORCE_500MG,  _armForceLow);
   writeAddress(EEPROM_ARM_FORCE_4000MG, _armForceHigh);
   writeAddress(EEPROM_ARM_TARGETWEIGHT, _armTargetWeight);
-  writeAddress(EEPROM_ARM_FORCE_HOME,   _armForceHome);
+  writeAddress(EEPROM_ARM_FORCE_DOCKED, _armForceDocked);
   writeAddress(EEPROM_LEVEL_OFFSET_X,   _levelOffsetX);
   writeAddress(EEPROM_LEVEL_OFFSET_Y,   _levelOffsetY);
   writeAddress(EEPROM_LEVEL_OFFSET_Z,   _levelOffsetZ);
@@ -99,7 +99,7 @@ void Storage::info() {
   Serial.println(padRight("EEPROM_ARM_FORCE_500MG", padR) +  ": " + String(_armForceLow, 5));
   Serial.println(padRight("EEPROM_ARM_FORCE_4000MG", padR) + ": " + String(_armForceHigh, 5));
   // Serial.println(padRight("EEPROM_ARM_TARGETWEIGHT", padR) + ": " + String(_armTargetWeight, 5));
-  Serial.println(padRight("EEPROM_ARM_FORCE_HOME", padR) +   ": " + String(_armForceHome, 5));
+  Serial.println(padRight("EEPROM_ARM_FORCE_DOCKED", padR) + ": " + String(_armForceDocked, 5));
   Serial.println(padRight("EEPROM_LEVEL_OFFSET_X", padR) +   ": " + String(_levelOffsetX, 5));
   Serial.println(padRight("EEPROM_LEVEL_OFFSET_Y", padR) +   ": " + String(_levelOffsetY, 5));
   Serial.println(padRight("EEPROM_LEVEL_OFFSET_Z", padR) +   ": " + String(_levelOffsetZ, 5));

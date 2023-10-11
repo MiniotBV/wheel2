@@ -97,13 +97,13 @@ void SerialComm::checkReceivedLine(String line, eCheckMode mode) {
 
   //-------------------------------------------------- ARM --------------------------------------------------
   println(mode);
-  if (checkLineCommand( "NE",     "Needle down",                mode)) { _arm.putNeedleInGrove();                   return; }
-  if (checkLineCommand( "NA",     "Needle up",                  mode)) { _arm.dockNeedle();                     return; }
+  if (checkLineCommand( "NE",     "Needle down",                mode)) { _arm.putNeedleInGrove();             return; }
+  if (checkLineCommand( "NA",     "Needle up",                  mode)) { _arm.dockNeedle();                   return; }
   if (checkLineFloat(   "ATG",    "Arm targetweight",           mode, _arm.targetWeight)) { _storage.saveRequired  = true; return; }
   if (checkLineFloat(   "AG",     "Arm weight",                 mode, _arm.weight)) {                         return; }
-  if (checkLineCommand( "AKHOK",  "Arm force Home calibrate",   mode)) { _arm.justDockedWeight = _arm.weight; Serial.println(padRight("AKHOK", 8) + " " + padRight("Arm force Home calibrate", 26)   + " SET: " + String(_arm.justDockedWeight, 5)); _storage.saveRequired = true; return; }
-  if (checkLineCommand( "AKL",    "Arm force 500mg calibrate",  mode)) { _arm.forceLow = _arm.force;       Serial.println(padRight("AKL", 8)   + " " + padRight("Arm force 500mg calibrate", 26)  + " SET: " + String(_arm.forceLow, 5));       _storage.saveRequired = true; return;}
-  if (checkLineCommand( "AKH",    "Arm force 4000mg calibrate", mode)) { _arm.forceHigh = _arm.force;      Serial.println(padRight("AKH", 8)   + " " + padRight("Arm force 4000mg calibrate", 26) + " SET: " + String(_arm.forceHigh, 5));      _storage.saveRequired = true; return;}
+  if (checkLineCommand( "AKHOK",  "Arm force Docked calibrate", mode)) { _arm.justDockedWeight = _arm.weight; Serial.println(padRight("AKHOK", 8) + " " + padRight("Arm force Docked calibrate", 26) + " SET: " + String(_arm.justDockedWeight, 5)); _storage.saveRequired = true; return; }
+  if (checkLineCommand( "AKL",    "Arm force 500mg calibrate",  mode)) { _arm.forceLow = _arm.force;          Serial.println(padRight("AKL", 8)   + " " + padRight("Arm force 500mg calibrate", 26)  + " SET: " + String(_arm.forceLow, 5));         _storage.saveRequired = true; return; }
+  if (checkLineCommand( "AKH",    "Arm force 4000mg calibrate", mode)) { _arm.forceHigh = _arm.force;         Serial.println(padRight("AKH", 8)   + " " + padRight("Arm force 4000mg calibrate", 26) + " SET: " + String(_arm.forceHigh, 5));        _storage.saveRequired = true; return; }
   if (checkLineFloat(   "AK",     "Arm force",                  mode, _arm.force)) { _arm.force = limitFloat(_arm.force, 0, 1); return;}
  
   //-------------------------------------------------- CARRIAGE --------------------------------------------------
@@ -281,7 +281,7 @@ void SerialComm::printValue(String command, String description, String value) {
 
 void SerialComm::printGraphicData() {
   if (!_headerShown) {
-    Serial.println("GRAPH_HEADER: SpeedRaw-TRPM, Speed-CTRPM, PPR, CTPRM-TRPM, UnbalanceComp, ArmAngleCall, RealPosition, Trackspacing");
+    Serial.println("GRAPH_HEADER: SpeedRaw-TRPM, Speed-CTRPM, PPR, CTPRM-TRPM, UnbalanceComp, ArmAngleCall, RealPosition, Trackspacing, ArmWeight");
     _headerShown = true;
   }
   Serial.print(_speedcomp.speedRaw - _plateau.targetRpm, 3);
@@ -360,7 +360,7 @@ void SerialComm::printGraphicData() {
   Serial.print(", ");
   Serial.print(_speedcomp.trackSpacing, 3);
 
-    Serial.print(", ");
+  Serial.print(", ");
   Serial.print(_arm.weight, 3);
 
  Serial.println();

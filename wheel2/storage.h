@@ -11,7 +11,7 @@
 #define EEPROM_ARM_FORCE_500MG    100
 #define EEPROM_ARM_FORCE_4000MG   110
 #define EEPROM_ARM_TARGETWEIGHT   120
-#define EEPROM_ARM_FORCE_HOME     130
+#define EEPROM_ARM_FORCE_DOCKED   130
 
 #define EEPROM_LEVEL_OFFSET_X     200
 #define EEPROM_LEVEL_OFFSET_Y     210
@@ -28,7 +28,7 @@ class Storage {
     float _armForceLow = 0;
     float _armForceHigh = 0;
     float _armTargetWeight = 0;
-    float _armForceHome = 0;
+    float _armForceDocked = 0;
     float _levelOffsetX = 0;
     float _levelOffsetY = 0;
     float _levelOffsetZ = 0;
