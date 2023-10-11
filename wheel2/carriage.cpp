@@ -103,7 +103,10 @@ void Carriage::stateUpdate() {
   if (_shared.state == S_HOME) {
     _arm.centerArmAngle();
     _motorEnable = false;
-    repeat = false;
+    if (repeat) {
+      repeat = false;
+      Serial.println("REPEAT: OFF");
+    }
     return;
   }
 
@@ -339,7 +342,7 @@ void Carriage::stateUpdate() {
 
   if (_shared.state == S_SKIP_FORWARD) {
     if (_arm.needleUp()) {
-      movetoPosition(CARRIAGE_RECORD_END, CARRIAGE_MAX_SPEED / 4);
+      movetoPosition(_scanner.tracks[0], CARRIAGE_MAX_SPEED / 4);
     }
     targetTrack = position; // to clean display
   }
@@ -371,7 +374,7 @@ void Carriage::stateUpdate() {
       _arm.needleDown();
     }
 
-    if (sensorPosition > CARRIAGE_RECORD_END + 2 && sensorPosition < CARRIAGE_RECORD_END + 12 && _scanner.recordPresent) {
+    if (sensorPosition > (CARRIAGE_RECORD_END + 2) && sensorPosition < (CARRIAGE_RECORD_END + 12) && _scanner.recordPresent) {
       // record present? stop!
       // LOG_ALERT("carriage.cpp", "[stateUpdate] Cannot clean needle; Record present?");
       Serial.println("Cannot clean needle; Record present? Clean record instead");
@@ -419,7 +422,7 @@ void Carriage::gotoNextTrack() {
     return;
   }
 
-  while (pos - 2 <= _scanner.tracks[track]) { // 2mm offset to prevent repeating the same track
+  while ((pos - 2) <= _scanner.tracks[track]) { // 2mm offset to prevent repeating the same track
     track--;
     if (track <= 0) {
       stopOrRepeat();
@@ -440,9 +443,9 @@ void Carriage::gotoPreviousTrack() {
   }
 
   int track = 0;
-  while (pos + CARRIAGE_BACKTRACK_OFFSET >= _scanner.tracks[track]) {
+  while ((pos + CARRIAGE_BACKTRACK_OFFSET) >= _scanner.tracks[track]) {
     track++;
-    if (track > _scanner.trackCount - 1) {
+    if (track > (_scanner.trackCount - 1)) {
       gotoRecordStart();
       return;
     }
@@ -450,8 +453,9 @@ void Carriage::gotoPreviousTrack() {
 
   if (_scanner.tracks[track] > _scanner.recordStart) {
     gotoRecordStart();
+  } else {
+    gotoTrack(_scanner.tracks[track]);
   }
-  gotoTrack(_scanner.tracks[track]);
 } // gotoPreviousTrack()
 
 
@@ -469,14 +473,13 @@ void Carriage::gotoRecordStart() {
   gotoTrack(_scanner.recordStart);
 } // gotoRecordStart()
 
-
 bool Carriage::movetoPosition(float target, float spd) {
   _acceleration = 0;
 
   float togo = abs(target - position);
-  int togoDirection = target - position > 0 ? 1 : -1;
+  int togoDirection = (target - position) > 0 ? 1 : -1;
 
-  _distanceToStop = (_speed * _speed) / ( 2 * CARRIAGE_ACCELERATION );
+  _distanceToStop = (_speed * _speed) / (2 * CARRIAGE_ACCELERATION);
   int _distanceToStopDirection = _speed > 0 ? 1 : -1;
 
   if (isApprox(togo, 0, 0.01) && _distanceToStop < 0.1) {
@@ -556,10 +559,11 @@ void Carriage::printGraphicData() {
 
 void Carriage::info() {
   int padR = 25;
-  Serial.println(padRight("CARRIAGE_P", padR) + ": " + String(P, 5));
-  Serial.println(padRight("CARRIAGE_I", padR) + ": " + String(I, 5));
-  Serial.println(padRight("CARRIAGE_D", padR) + ": " + String(D, 5));
+  Serial.println(padRight("CARRIAGE_P", padR) +        ": " + String(P, 5));
+  Serial.println(padRight("CARRIAGE_I", padR) +        ": " + String(I, 5));
+  Serial.println(padRight("CARRIAGE_D", padR) +        ": " + String(D, 5));
   Serial.println(padRight("CARRIAGE_POSITION", padR) + ": " + String(position));
   Serial.println(padRight("CARRIAGE_REAL_POS", padR) + ": " + String(realPosition));
+  Serial.println(padRight("CARRIAGE_REPEAT", padR) +   ": " + String(repeat ? "ON" : "OFF"));
   Serial.println();
 } // info()

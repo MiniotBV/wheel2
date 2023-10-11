@@ -104,7 +104,7 @@ void SpeedComp::stroboInterrupt() {
   trackSpacing = _carriagePosCenterHist[counter] - carriagePosMiddle;
   _carriagePosCenterHist[counter] = carriagePosMiddle;
 
-  // if ((trackSpacing > 0.01) || !(_arm.isNeedleDownFor(2000))) {
+  // if (trackSpacing > 0.01 || !_arm.isNeedleDownFor(2000)) {
   //   _carriage->movedForwardInterval.reset();
   // } else {
   //   // Nothing
@@ -133,7 +133,7 @@ void SpeedComp::stroboInterrupt() {
   float sinBuff = _carriageSinFilt / pulsesPerRev;
   float cosBuff = _carriageCosFilt / pulsesPerRev;
   // an off-center of 6mm (3mm radius) triggers error
-  if (sinBuff * sinBuff + cosBuff * cosBuff > 3 * 3) {
+  if ((sinBuff * sinBuff + cosBuff * cosBuff) > (3 * 3)) {
     _shared.setError(E_TO_MUCH_TRAVEL);
     clearCompSamples();
     _plateau->stop();

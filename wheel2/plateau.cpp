@@ -79,13 +79,13 @@ void Plateau::update() {
         return;
       }
     } else { // atSpeed == false
-      if (speed > targetRpm * 0.95) { // at speed 95%
+      if (speed > (targetRpm * 0.95)) { // at speed 95%
         // LOG_INFO("plateau.cpp", "[update] At speed");
         Serial.println("PLATEAU: AT SPEED");
         atSpeed = true;
         return;
       }
-      if (speed < targetRpm * 0.1 && turnInterval.duration() > 750) { // <5% target speed after short time
+      if (speed < (targetRpm * 0.1) && turnInterval.duration() > 750) { // <5% target speed after short time
         // LOG_ALERT("plateau.cpp", "[update] Could not speed up!!");
         Serial.println("PLATEAU: COULD NOT SPEED UP");
         stop();
@@ -94,7 +94,7 @@ void Plateau::update() {
     }
   } else { // motorOn = false
     if (turnInterval.duration() > 1000 && !spinningDown) { // spinned by swing
-      if (speed > PLATEAU_RPM33 * 0.666 && (_shared.state == S_HOME 
+      if (speed > (PLATEAU_RPM33 * 0.666) && (_shared.state == S_HOME 
         || _shared.state == S_HOMING || _shared.state == S_PARKING)) { // 50% of 33.3 speed
         // LOG_INFO("plateau.cpp", "[update] Started by swing");
         Serial.println("PLATEAU: STARTED BY SWING");
@@ -102,7 +102,7 @@ void Plateau::update() {
         return;
       }
     }
-    if (spinningDown && speed < PLATEAU_RPM33 * 0.05) { // <5% of 33.3 speed (spinning down)
+    if (spinningDown && speed < (PLATEAU_RPM33 * 0.05)) { // <5% of 33.3 speed (spinning down)
       spinningDown = false;
       turnInterval.reset();
       // LOG_INFO("plateau.cpp", "[update] Stopped");

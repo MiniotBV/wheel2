@@ -70,7 +70,7 @@ void Buttons::update() {
 
       } else if(_shared.state == S_PAUSE) {
         _carriage.targetTrack -= beltDiff * 0.25;
-        _carriage.targetTrack = limitFloat(_carriage.targetTrack, CARRIAGE_RECORD_END, _scanner.recordStart);
+        _carriage.targetTrack = limitFloat(_carriage.targetTrack, _scanner.tracks[0], _scanner.recordStart);
 
       } else {
         // to prevent volume popping up after button press while skipping
@@ -184,7 +184,7 @@ void Buttons::logic(int button) {
   }
 
   //--------------------------------------------- LONG PRESS
-  if (state[button] == BUTTON_PRESS && millisSinceBoot() - _buttonInterval[button] > BUTTON_LONG_CLICK) {
+  if (state[button] == BUTTON_PRESS && (millisSinceBoot() - _buttonInterval[button]) > BUTTON_LONG_CLICK) {
     state[button] = BUTTON_LONG_PRESS;
     _allButtonsInterval.reset();
 
@@ -228,7 +228,7 @@ void Buttons::logic(int button) {
   }
 
   //--------------------------------------------- SUPER LONG PRESS
-  if (state[button] == BUTTON_LONG_PRESS && millisSinceBoot() - _buttonInterval[button] > BUTTON_SUPERLONG_CLICK) {
+  if (state[button] == BUTTON_LONG_PRESS && (millisSinceBoot() - _buttonInterval[button]) > BUTTON_SUPERLONG_CLICK) {
     state[button] = BUTTON_SUPERLONG_PRESS;
     _allButtonsInterval.reset();
 
@@ -237,6 +237,7 @@ void Buttons::logic(int button) {
     if (button == BUTTON_PLAY) {
       if (_shared.state == S_HOMING_BEFORE_PLAYING || _shared.state == S_GOTO_RECORD_START) { // Repeat
         _carriage.repeat = true;
+        Serial.println("REPEAT: ON");
       }
     }
 

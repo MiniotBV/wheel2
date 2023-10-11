@@ -66,7 +66,7 @@ class Buttons {
     void init();
     void update();
     void info();
-};
+}; // Buttons
 
 
 #endif // BUTTONS_H

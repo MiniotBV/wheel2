@@ -52,6 +52,13 @@ void Scanner::func() {
     }
     _cut = !_cut; // toggle led
 
+    currentTrack = getCurrentTrack();
+    if ((_shared.state == S_PLAYING || _shared.state == S_PAUSE || _shared.state == S_SKIP_FORWARD || _shared.state == S_SKIP_REVERSE) &&
+      currentTrack > 0 && currentTrack != _currentTrackPrev) {
+      Serial.println("TRACK: " + String(currentTrack) + "-" + String(trackCount));
+      _currentTrackPrev = currentTrack;
+    }
+
     if (graphicData) {
       printGraphicData();
     } else {
@@ -84,7 +91,7 @@ void Scanner::check() {
   for (int i = 0; i < _bufferLength; i++) {
     float value = _buffer[i][1];
     
-    if (value < newThreshold / 2 && _trackBelowThreshold) {
+    if (value < (newThreshold / 2) && _trackBelowThreshold) {
       _trackBelowThreshold = false;
     }
     if (value > newThreshold && !_trackBelowThreshold) {
@@ -100,7 +107,7 @@ void Scanner::setTracksAs7inch() {
   trackCount = 1;
   tracks[1] = CARRIAGE_7INCH_START;
 
-  if (tracks[0] > CARRIAGE_7INCH_START - 12) {
+  if (tracks[0] > (CARRIAGE_7INCH_START - 12)) {
     tracks[0] = 55;
     // LOG_NOTICE("scanner.cpp", "[setTracksAs7inch] Adjusted record-end");
     Serial.println("Adjusted record-end");
@@ -151,7 +158,7 @@ bool Scanner::isRecordPresent() {
 void Scanner::scanForTracks() {
   // LOG_DEBUG("scanner.cpp", "[scanForTracks]");
 
-  if (_carriage->sensorPosition < CARRIAGE_RECORD_END + 2 || _shared.state != S_GOTO_RECORD_START) {
+  if (_carriage->sensorPosition < (CARRIAGE_RECORD_END + 2) || _shared.state != S_GOTO_RECORD_START) {
     _bufferCounter = 0;
     return;
   }
@@ -176,7 +183,22 @@ void Scanner::clearTracks() {
   // LOG_DEBUG("scanner.cpp", "[clearTracks]");
   trackCount = 0;
   tracks[trackCount] = 1;
+  currentTrack = 0;
+  _currentTrackPrev = 0;
 } // clearTracks()
+
+
+int Scanner::getCurrentTrack() {
+  // LOG_DEBUG("scanner.cpp", "[getCurrentTrack]");
+  float pos = _carriage->positionFilter;
+  int track = trackCount - 1;
+
+  while (pos <= tracks[track]) {
+    track--;
+  }
+
+  return limitInt(trackCount - track, 0, trackCount);;
+} // currentTrack()
 
 
 void Scanner::scanLedOff() {
@@ -216,12 +238,13 @@ void Scanner::printGraphicData() {
 void Scanner::info() {
   int padR = 25;
   Serial.println(padRight("SCANNER_TOTAL_TRACKS", padR) +  ": " + String(trackCount));
+  Serial.println(padRight("SCANNER_CURRENT_TRACK", padR) + ": " + String(currentTrack));
   if (trackCount > 0 ) {
-    Serial.println(padRight("SCANNER_TRACK_1", padR) +  ": " + String(recordStart));
+    Serial.println(padRight("SCANNER_TRACK_1", padR) + ": " + String(recordStart));
     for (int t = trackCount - 1; t > 0; t--) {
-      Serial.println(padRight("SCANNER_TRACK_" + String(trackCount - t + 1), padR) +  ": " + String(tracks[t]));
+      Serial.println(padRight("SCANNER_TRACK_" + String(trackCount - t + 1), padR) + ": " + String(tracks[t]));
     }
-    Serial.println(padRight("SCANNER_RECORD_END", padR) +  ": " + String(tracks[0]));
+    Serial.println(padRight("SCANNER_RECORD_END", padR) + ": " + String(tracks[0]));
   }
   Serial.println();
 } // info()
