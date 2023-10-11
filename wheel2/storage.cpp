@@ -42,7 +42,7 @@ void Storage::read() {
   _arm.forceLow         = _armForceLow;
   _arm.forceHigh        = _armForceHigh;
   // _arm.targetWeight     = _armTargetWeight;
-  _arm.justDockedWeight   = _armForceHome;
+  _arm.justHomeWeight   = _armForceHome;
   _orientation.offsetX  = _levelOffsetX;
   _orientation.offsetY  = _levelOffsetY;
   _orientation.offsetZ  = _levelOffsetZ;
@@ -57,7 +57,7 @@ void Storage::write() {
   _armForceLow     = _arm.forceLow;
   _armForceHigh    = _arm.forceHigh;
   // _armTargetWeight = _arm.targetWeight;
-  _armForceHome    = _arm.justDockedWeight;
+  _armForceHome    = _arm.justHomeWeight;
   _levelOffsetX    = _orientation.offsetX;
   _levelOffsetY    = _orientation.offsetY;
   _levelOffsetZ    = _orientation.offsetZ;
@@ -98,7 +98,7 @@ void Storage::info() {
   Serial.println(padRight("EEPROM_VERSION", padR) +          ": " + String(eepromVersion, 0));
   Serial.println(padRight("EEPROM_ARM_FORCE_500MG", padR) +  ": " + String(_armForceLow, 5));
   Serial.println(padRight("EEPROM_ARM_FORCE_4000MG", padR) + ": " + String(_armForceHigh, 5));
-  // Serial.println(padRight("EEPROM_ARM_TARGETWEIGHT", padR) + ": " + String(_armTargetWeight, 5));
+  Serial.println(padRight("EEPROM_ARM_TARGETWEIGHT", padR) + ": " + String(_armTargetWeight, 5));
   Serial.println(padRight("EEPROM_ARM_FORCE_HOME", padR) +   ": " + String(_armForceHome, 5));
   Serial.println(padRight("EEPROM_LEVEL_OFFSET_X", padR) +   ": " + String(_levelOffsetX, 5));
   Serial.println(padRight("EEPROM_LEVEL_OFFSET_Y", padR) +   ": " + String(_levelOffsetY, 5));
@@ -106,7 +106,7 @@ void Storage::info() {
   Serial.println(padRight("EEPROM_TRACK_OFFSET", padR) +     ": " + String(_trackOffset, 5));
   Serial.println(padRight("EEPROM_ARM_ANGLE_MIN", padR) +    ": " + String(_armAngleMin, 5));
   Serial.println(padRight("EEPROM_ARM_ANGLE_MAX", padR) +    ": " + String(_armAngleMax, 5));
-  // Serial.println(padRight("EEPROM_SAVE_REQUIRED", padR) +    ": " + String(saveRequired ? "YES" : "NO"));
+  Serial.println(padRight("EEPROM_SAVE_REQUIRED", padR) +    ": " + String(saveRequired ? "YES" : "NO"));
   Serial.println();
 } // info()
 

@@ -48,12 +48,12 @@ void Carriage::func() {
     if (_shared.state == S_PLAYING) {
       if (_arm.armAngleCall > 0.95) {
         _shared.setError(E_ARMANGLE_LIMIT_POS);
-        _arm.dockNeedle();
+        _arm.needleUp();
         _shared.setState(S_HOME);
       }
       if (_arm.armAngleCall < -0.95) {
         _shared.setError(E_ARMANGLE_LIMIT_NEG);
-        _arm.dockNeedle();
+        _arm.needleUp();
         _shared.setState(S_HOME);
       }
     }
@@ -79,7 +79,7 @@ void Carriage::func() {
       pwmDisableStepper(CARRIAGE_STEPPER_AP_PIN, CARRIAGE_STEPPER_AN_PIN, CARRIAGE_STEPPER_BP_PIN, CARRIAGE_STEPPER_BN_PIN);
     }
 
-    if (_shared.state == S_PLAYING && _arm.isNeedleInGrove()) { // carriage pos filter for display
+    if (_shared.state == S_PLAYING && _arm.isNeedleDown()) { // carriage pos filter for display
       float div = position - positionFilter;
       if (div < 0) {
         positionFilter += (div) / 1000;
@@ -111,7 +111,7 @@ void Carriage::stateUpdate() {
   }
 
   if (_shared.state == S_STOPPING) {
-    if (_arm.dockNeedle() && decelerate()) {
+    if (_arm.needleUp() && decelerate()) {
       _shared.setState(S_HOMING);
     }
     return;
@@ -193,7 +193,7 @@ void Carriage::stateUpdate() {
 
 
   if (_shared.state == S_BAD_ORIENTATION) {
-    _arm.dockNeedle();
+    _arm.needleUp();
     _motorEnable = false;
     return;
   }
@@ -273,7 +273,7 @@ void Carriage::stateUpdate() {
     //   movedForwardInterval.reset(); // reset timer to prevent error 3
     // }
 
-    if (_arm.putNeedleInGrove()) {
+    if (_arm.needleDown()) {
       //---------------------------------------- transport calculations
       _newPosition = position + limitFloat(_arm.armAngle * P, -3, 3);
       _newPosition = limitFloat(_newPosition, 0, _scanner.recordStart);
@@ -331,7 +331,7 @@ void Carriage::stateUpdate() {
   //      TRACKS & SKIPPING
   //  ================================================================
   if (_shared.state == S_GOTO_TRACK) {
-    if (_arm.dockNeedle()) {
+    if (_arm.needleUp()) {
       if (movetoPosition(targetTrack, CARRIAGE_MAX_SPEED)) {
         _shared.setState(S_PLAYING);
         return;
@@ -341,14 +341,14 @@ void Carriage::stateUpdate() {
   }
 
   if (_shared.state == S_SKIP_FORWARD) {
-    if (_arm.dockNeedle()) {
+    if (_arm.needleUp()) {
       movetoPosition(_scanner.tracks[0], CARRIAGE_MAX_SPEED / 4);
     }
     targetTrack = position; // to clean display
   }
 
   if (_shared.state == S_SKIP_REVERSE) {
-    if (_arm.dockNeedle()) {
+    if (_arm.needleUp()) {
       movetoPosition(_scanner.recordStart, CARRIAGE_MAX_SPEED / 4);
     }
     targetTrack = position; // to clean display
@@ -363,7 +363,7 @@ void Carriage::stateUpdate() {
   }
 
   if (_shared.state == S_PAUSE) {
-    if (_arm.dockNeedle()) {
+    if (_arm.needleUp()) {
       movetoPosition(targetTrack, CARRIAGE_MAX_SPEED);
     }
     return;
@@ -371,7 +371,7 @@ void Carriage::stateUpdate() {
 
   if (_shared.state == S_NEEDLE_CLEAN) {
     if (movetoPosition(CARRIAGE_CLEAN_POS, CARRIAGE_MAX_SPEED)) {
-      _arm.putNeedleInGrove();
+      _arm.needleDown();
     }
 
     if (sensorPosition > (CARRIAGE_RECORD_END + 2) && sensorPosition < (CARRIAGE_RECORD_END + 12) && _scanner.recordPresent) {

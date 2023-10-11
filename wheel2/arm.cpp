@@ -44,22 +44,18 @@ void Arm::func() {
     if (motorOn) { // should the motor be on?
       _motorOffInterval.reset();
       
-      if (weight > _justInGroveWeight) { // is the needle already in the groove?
+      if (weight > _justDownWeight - 0.01) { // is the needle down? (-0.01gr to prevent glitching)
         weight = targetWeight; // put arm on target weight immediately
-      } else if (weight < justDockedWeight){
-        weight = justDockedWeight;
       } else {
-        weight += (10 / _speedUp)  *  (_justInGroveWeight - justDockedWeight); //10 moet eig _interval.interval zijn
+        weight = mapFloat(_motorOnInterval.duration(), 0, _speedUp, justHomeWeight, _justDownWeight);
       }
     } else { // should the motor be off?
       _motorOnInterval.reset();
 
-      if (weight < justDockedWeight) { // is needle up?
+      if (weight < justHomeWeight) { // is needle up?
         weight = ARM_HOME_WEIGHT; // turn off arm immediately
-      } else if( weight > _justInGroveWeight){
-        weight = _justInGroveWeight;
       } else {
-        weight -= (10 / _speedDown)  *  (_justInGroveWeight - justDockedWeight); //10 moet eig _interval.interval zijn
+        weight = mapFloat(_motorOffInterval.duration(), 0, _speedDown, _justDownWeight, justHomeWeight);
       }
     }
 
@@ -73,16 +69,16 @@ void Arm::func() {
 } // func()
 
 
-bool Arm::putNeedleInGrove() {
+bool Arm::needleDown() {
   motorOn = true;
-  return isNeedleInGrove();
-} // putNeedleInGrove()
+  return isNeedleDown();
+} // needleDown()
 
 
-bool Arm::dockNeedle() {
+bool Arm::needleUp() {
   motorOn = false;
-  return isNeedleDocked();
-} // dockNeedle()
+  return isNeedleUp();
+} // needleUp()
 
 
 bool Arm::needleEmergencyStop() {
@@ -93,18 +89,18 @@ bool Arm::needleEmergencyStop() {
 } // needleEmergencyStop()
 
 
-bool Arm::isNeedleInGrove() {
+bool Arm::isNeedleDown() {
   return weight == targetWeight;
-} // isNeedleInGrove()
+} // isNeedleDown()
 
 
-bool Arm::isNeedleDocked() {
+bool Arm::isNeedleUp() {
   return weight == ARM_HOME_WEIGHT;
-} // isNeedleDocked()
+} // isNeedleUp()
 
 
 bool Arm::isNeedleDownFor(int ms) {
-  return isNeedleInGrove() && _needleDownInterval.duration() > ms;
+  return isNeedleDown() && _needleDownInterval.duration() > ms;
 } // isNeedleDownFor()
 
 
@@ -145,6 +141,6 @@ void Arm::info() {
   Serial.println(padRight("ARM_WEIGHT", padR) +        ": " + String(weight, 5));
   Serial.println(padRight("ARM_TARGET_WEIGHT", padR) + ": " + String(targetWeight, 5));
   Serial.println(padRight("ARM_MOTOR", padR) +         ": " + String(motorOn ? "ON" : "OFF"));
-  Serial.println(padRight("NEEDLE", padR) +            ": " + String(isNeedleInGrove() ? "DOWN" : "UP"));
+  Serial.println(padRight("NEEDLE", padR) +            ": " + String(isNeedleDown() ? "DOWN" : "UP"));
   Serial.println();
 } // info()
