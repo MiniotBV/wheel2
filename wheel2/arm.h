@@ -21,7 +21,7 @@ class Arm {
     Shared& _shared;
     float _speedUp = 1000; //ms;
     float _speedDown = 500; //ms;
-    float _justDownWeight = 0.5; //0.25;
+    float _justInGroveWeight = 0.5; //0.25;
     float armWeight2Pwm(float weight);
     float pwm2ArmWeight(float pwm);
   public:
@@ -31,7 +31,7 @@ class Arm {
     float force = 0;
     float forceLow = 0.3;  //0.13; //0.08;
     float forceHigh = 0.8; //0.13; //0.08;
-    float justHomeWeight = -0.75;
+    float justDockedWeight = -0.75;
     float armAngleMin = 1200;
     float armAngleMax = 3300;
     float armAngleMinCall = ARM_AMAX;
@@ -46,11 +46,11 @@ class Arm {
     Arm(Shared& shared);
     void init();
     void func();
-    bool needleDown();
-    bool needleUp();
+    bool putNeedleInGrove();
+    bool dockNeedle();
     bool needleEmergencyStop();
-    bool isNeedleDown();
-    bool isNeedleUp();
+    bool isNeedleInGrove();
+    bool isNeedleDocked();
     bool isNeedleDownFor(int ms);
     void centerArmAngle();
     void calibrateAngle();
