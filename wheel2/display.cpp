@@ -217,7 +217,7 @@ void Display::update() {
         if (needle != target) { // target dot
           drawPoint(target, 0.9);
         }
-      } else if (_shared.state == S_PLAYING && !_arm.isNeedleDown() && (_shared.stateChangedInterval.duration() % 1000 < 250) && !_shared.puristMode) {
+      } else if (_shared.state == S_PLAYING && !_arm.isNeedleInGrove() && (_shared.stateChangedInterval.duration() % 1000 < 250) && !_shared.puristMode) {
         // Nothing
       } else if (_carriage.repeat) {
         drawPoint(needle, 0.9);
