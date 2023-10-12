@@ -6,7 +6,7 @@
 
 
 Interval::Interval(uint64_t interval, eTimeMode mode = TM_MILLIS) :
-  _interval(interval),
+  interval(interval),
   _mode(mode) {
   _timenowPrev = timenow();
 } // Interval()
@@ -14,11 +14,11 @@ Interval::Interval(uint64_t interval, eTimeMode mode = TM_MILLIS) :
 
 bool Interval::tick() {
   uint64_t now = timenow();
-  if (now - _timenowPrev >= _interval) {
+  if (now - _timenowPrev >= interval) {
       _timenowPrevPrev = _timenowPrev;
-      _timenowPrev += _interval;
+      _timenowPrev += interval;
 
-      if (now - _timenowPrev >= _interval) {
+      if (now - _timenowPrev >= interval) {
         _timenowPrevPrev = _timenowPrev;
         _timenowPrev = now;
       }
@@ -56,7 +56,7 @@ void Interval::offset(uint64_t offst) {
 
 
 bool Interval::once() {
-  if (_onetimeLatch && ((timenow() - _timenowPrev)  > _interval)) {
+  if (_onetimeLatch && ((timenow() - _timenowPrev)  > interval)) {
     _onetimeLatch = false;
     return true;
   }

@@ -49,7 +49,7 @@ void Arm::func() {
       } else if (weight < justDockedWeight) {
         weight = justDockedWeight;
       } else {
-        weight += (10 / _speedUp) * (_justInGroveWeight - justDockedWeight); // 10 moet eig _interval.interval zijn
+        weight += (_interval.interval / _speedUp) * (_justInGroveWeight - justDockedWeight);
       }
     } else { // should the motor be off?
       _motorOnInterval.reset();
@@ -59,7 +59,7 @@ void Arm::func() {
       } else if ( weight > _justInGroveWeight) {
         weight = _justInGroveWeight;
       } else {
-        weight -= (10 / _speedDown) * (_justInGroveWeight - justDockedWeight); // 10 moet eig _interval.interval zijn
+        weight -= (_interval.interval / _speedDown) * (_justInGroveWeight - justDockedWeight);
       }
     }
 

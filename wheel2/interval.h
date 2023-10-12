@@ -7,13 +7,13 @@
 
 class Interval {
   private:
-    uint64_t _interval = 0;
     uint64_t _timenowPrev = 0;
     uint64_t _timenowPrevPrev = 0;
     eTimeMode _mode;
     uint64_t timenow();
     bool _onetimeLatch = true;
   public:
+    uint64_t interval = 0;
     Interval(uint64_t interval, eTimeMode mode);
     bool tick();
     uint64_t duration();
