@@ -342,7 +342,7 @@ void Carriage::stateUpdate() {
 
   if (_shared.state == S_SKIP_FORWARD) {
     if (_arm.dockNeedle()) {
-      movetoPosition(_scanner.tracks[0], CARRIAGE_MAX_SPEED / 4);
+      movetoPosition(CARRIAGE_RECORD_END, CARRIAGE_MAX_SPEED / 4);
     }
     targetTrack = position; // to clean display
   }
