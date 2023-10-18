@@ -24,11 +24,14 @@ void Display::init() {
   LOG_DEBUG("display.cpp", "[init]");
 
   pinMode(DISPLAY_IN_PIN,       OUTPUT);
+  gpio_set_drive_strength(DISPLAY_IN_PIN, GPIO_DRIVE_STRENGTH_2MA);
   pinMode(DISPLAY_OUT_PIN,      INPUT);
   pinMode(DISPLAY_CLOCK_PIN,    OUTPUT);
+  gpio_set_drive_strength(DISPLAY_CLOCK_PIN, GPIO_DRIVE_STRENGTH_2MA);
   pinMode(DISPLAY_LATCH_PIN,    OUTPUT);
   pinMode(DISPLAY_POTMETER_PIN, INPUT);
   pinMode(DISPLAY_EN_PIN,       OUTPUT);
+  gpio_set_drive_strength(DISPLAY_EN_PIN, GPIO_DRIVE_STRENGTH_2MA);//
   digitalWrite(DISPLAY_EN_PIN, 1);
 } // init()
 
