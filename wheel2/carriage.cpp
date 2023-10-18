@@ -453,6 +453,8 @@ void Carriage::gotoPreviousTrack() {
 
   if (_scanner.tracks[track] > _scanner.recordStart) {
     gotoRecordStart();
+  } else if (pos < _scanner.tracks[0]) { // When pos is after Record_End, skip to last track
+    gotoTrack(_scanner.tracks[1]);
   } else {
     gotoTrack(_scanner.tracks[track]);
   }
