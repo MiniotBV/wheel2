@@ -52,7 +52,7 @@ void SpeedComp::stroboInterrupt() {
 
   //------------------------------------------------------------ DIRECTION
   _direction = 1;
-  _sens = (gpio_get(PLATEAU_A_PIN) <<1 ) | gpio_get(PLATEAU_B_PIN);
+  _sens = (gpio_get(PLATEAU_A_PIN) << 1 ) | gpio_get(PLATEAU_B_PIN);
   if (_sens == 0b00 && _sensPrev == 0b01 ||
       _sens == 0b01 && _sensPrev == 0b11 ||
       _sens == 0b11 && _sensPrev == 0b10 ||
