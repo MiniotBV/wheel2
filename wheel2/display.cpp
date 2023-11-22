@@ -31,7 +31,7 @@ void Display::init() {
   pinMode(DISPLAY_LATCH_PIN,    OUTPUT);
   pinMode(DISPLAY_POTMETER_PIN, INPUT);
   pinMode(DISPLAY_EN_PIN,       OUTPUT);
-  gpio_set_drive_strength(DISPLAY_EN_PIN, GPIO_DRIVE_STRENGTH_2MA);//
+  gpio_set_drive_strength(DISPLAY_EN_PIN, GPIO_DRIVE_STRENGTH_2MA);
   digitalWrite(DISPLAY_EN_PIN, 1);
 } // init()
 
