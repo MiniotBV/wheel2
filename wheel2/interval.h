@@ -81,3 +81,16 @@ class Interval{
 		}
 
 };
+
+
+
+
+
+
+uint64_t nieuweMillis(){
+  return time_us_64()/1000;
+}
+
+
+
+

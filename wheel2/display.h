@@ -138,8 +138,8 @@ void displayUpdate(){
 
 
 		//--------------------------------------------------------------------INTRO
-		if(millis()<4000){
-      int pos = displayLengte - (millis()/10);
+		if(nieuweMillis()<4000){
+      int pos = displayLengte - (nieuweMillis()/10);
       int blokLengte = 10;
       int gatLengte = 3;
 
@@ -183,7 +183,7 @@ void displayUpdate(){
     //----------------------------------------------------------------ERROR WEERGEVEN
 		else if(errorVeranderd.sinds() < 10000  &&  error != E_GEEN){ // 10seonden knipperen
 
-			if((millis()%1000) < 800){// knipper
+			if((nieuweMillis()%1000) < 800){// knipper
 				
         int blokBreedte = 0.1 * displayLengte;
         int begin = dispHalf - (blokBreedte/2) * error;
@@ -256,7 +256,7 @@ void displayUpdate(){
 		//-------------------------------------------------------------------------WATER PAS STAND
 		else if(staat == S_FOUTE_ORIENTATIE){
 			
-      if((millis()%1000) < 800){
+      if((nieuweMillis()%1000) < 800){
         displayTekenBlok(0, displayLengte/4, 0.1);
         displayTekenBlok(displayLengte - (displayLengte/4),   displayLengte, 0.1);
       }
@@ -350,7 +350,7 @@ void displayUpdate(){
         displayTekenPunt(naald-2, 0.9);
         displayTekenPunt(naald+2, 0.9);
       }
-      else if(puristenMode  &&  (millis() % 1000 < 500)){
+      else if(puristenMode  &&  (nieuweMillis() % 1000 < 500)){
         displayTekenPunt(naald-1, 0.9);
         displayTekenPunt(naald+1, 0.9);
       }else{
@@ -368,7 +368,7 @@ void displayUpdate(){
 
 
     if(eepromNogOpslaan){  // als de eeprom nog niet is opgeslagen, blijf dan lekker knipperen voor arco en floris
-      if(millis()%1000>500){
+      if(nieuweMillis()%1000>500){
         displayTekenBlok(0, displayLengte/20, 0.9);
         displayTekenBlok(displayLengte,  displayLengte   -  displayLengte/20, 0.9);
       }

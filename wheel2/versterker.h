@@ -101,7 +101,7 @@ public:
   }
 
   void update() {
-    if (orientatieInt.loop() && millis() > 200) {  //staat hij ook al 200ms aan?
+    if (orientatieInt.loop() && nieuweMillis() > 200) {  //staat hij ook al 200ms aan?
 
       if (eersteKeer) {
         eersteKeer = false;
@@ -109,7 +109,7 @@ public:
         return;
       }
 
-      // loop = millis();
+      // loop = nieuweMillis();
 
       // id = i2cRead(adress, 0x00);
       float xSensorRuw = read_accel_axis(1);
@@ -475,7 +475,7 @@ void bluetoothOntcijfering() {
   }
 
   if (bluetoothBuffer.startsWith("OK+")) {
-    if (millis() < 4000) {
+    if (nieuweMillis() < 4000) {
       draadlozeVersie = true;  // ff checken of er wel een bluetooth module is aangesloten
     }
   }
@@ -491,7 +491,7 @@ Interval bluetoothCheckVoorOpstart(2000, MILLIS);
 
 
 void bluetoothFunc() {
-  if (millis() < 1000) return;
+  if (nieuweMillis() < 1000) return;
 
   if (bluetoothInitNogDoen) {
     bluetoothInitNogDoen = false;
