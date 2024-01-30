@@ -4,7 +4,7 @@
 //board instaleren:
 //https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json
 
-#define versie 168
+#define versie 169
   
 
 #include <stdio.h>
