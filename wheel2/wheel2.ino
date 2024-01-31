@@ -4,7 +4,7 @@
 //board instaleren:
 //https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json
 
-#define versie 167
+#define versie 170
   
 
 #include <stdio.h>
@@ -14,6 +14,7 @@
 #include "hardware/gpio.h"
 
 #include "pico/time.h"
+
 
 
 
@@ -107,8 +108,6 @@ void setup() {
 
 
 	
-	multicore_launch_core1(loop2);
-	
 	pinMode(slaapStand, OUTPUT);
 	digitalWrite(slaapStand, 1); // hou de batterij aan
 
@@ -125,35 +124,15 @@ void setup() {
 
 
 
-
-
-
-
-
-void core1Dingen(){
-	displayUpdate();
-	
-	serieelFunc();
-
-	knoppenUpdate();
-
-	arm.armFunc();  
+void setup1(){
+  displayInit();
 }
 
-
-
-
-void loop2(){
-
-  displayInit();
-
-	while(1){
-		core1Dingen();
-
-		if(eepromShit){//sckakel core2 tijdelijk uit om te zorge dat er vijlig flash beschreven kan worde
-			sleep_ms(100);
-		}
-	}
+void loop1(){
+	displayUpdate();
+	serieelFunc();
+	knoppenUpdate();
+	arm.armFunc();  
 }
 
 
@@ -164,7 +143,7 @@ void loop2(){
 void loop() {
 
 	if(eepromShit){//dit moet omdat je core2 moet uitschakelen om in flash te schrijven, zodat je niet leest en schrijft tegelijkertijd
-		delay(20);
+		// delay(20);
 		eepCommit();
 		Serial.println("opgeslagen!");
 	}
@@ -182,7 +161,7 @@ void loop() {
 
   bluetoothFunc();
 
-  digitalWrite(ledWit, millis() < 1000);//zet led aan
+  digitalWrite(ledWit, nieuweMillis() < 1000);//zet led aan
 
 }
 

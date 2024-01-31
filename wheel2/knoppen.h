@@ -16,7 +16,7 @@
 
 int           knopIn[8];
 int           knopStaat[8];
-unsigned long knopInterval[8];
+uint64_t      knopInterval[8];
 
 Interval ledBlinkInterval(0, MILLIS);
 Interval knopAlleInterval(0, MILLIS);
@@ -134,7 +134,7 @@ void knopLogica(int knop){
 		knopStaat[knop] = INGEDRUKT;
 		
 		knopAlleInterval.reset();
-		knopInterval[knop] = millis();
+		knopInterval[knop] = nieuweMillis();
 
 		ledBlink();  //led blink
 		
@@ -207,7 +207,7 @@ void knopLogica(int knop){
 	
 	
 	
-	if( knopStaat[knop] == INGEDRUKT    &&    millis() - knopInterval[knop]  >  KNOP_LANG ){//------------------------------------------LANG INGEDRUKT
+	if( knopStaat[knop] == INGEDRUKT    &&    nieuweMillis() - knopInterval[knop]  >  KNOP_LANG ){//------------------------------------------LANG INGEDRUKT
 		knopStaat[knop] = LANG_INGEDRUKT;
 		knopAlleInterval.reset();
 
@@ -265,7 +265,7 @@ void knopLogica(int knop){
 	
 	
 	
-	if( knopStaat[knop] == LANG_INGEDRUKT    &&    millis() - knopInterval[knop]  >  KNOP_SUPER_LANG ){//--------------SUPER LANG INGEDRUKT
+	if( knopStaat[knop] == LANG_INGEDRUKT    &&    nieuweMillis() - knopInterval[knop]  >  KNOP_SUPER_LANG ){//--------------SUPER LANG INGEDRUKT
 		knopStaat[knop] = SUPER_LANG_INGEDRUKT;
 		knopAlleInterval.reset();   //led blink
 		
@@ -362,7 +362,7 @@ void knoppenUpdate(){
 			riemDiv = riemFilter - riemFilterPrev;
 			riemFilterPrev = riemFilter;
 			
-      if(millis() < 1000){return;}//de band doet pas wat na 1seconden
+      if(nieuweMillis() < 1000){return;}//de band doet pas wat na 1seconden
 
 
 			

@@ -372,88 +372,88 @@ void serieelFunc(){
       Serial.print(", ");
 			Serial.print((float)strobo.teller / strobo.pulsenPerRev, 3);
 
-      // Serial.print(", ");
-			// Serial.print(strobo.onbalansFilterCurve[strobo.teller]);
+      // // Serial.print(", ");
+			// // Serial.print(strobo.onbalansFilterCurve[strobo.teller]);
 
 
       
-      // Serial.print(", ");
-			// Serial.print(strobo.vaartLowPass, 3);
+      // // Serial.print(", ");
+			// // Serial.print(strobo.vaartLowPass, 3);
 
 
       
-      // Serial.print(", ");
-			// Serial.print(strobo.procesInterval);
+      // // Serial.print(", ");
+			// // Serial.print(strobo.procesInterval);
       
 
 
-			// Serial.print(", ");
-			// Serial.print(strobo.vaartLowPass - targetRpm, 3);
-      // Serial.print(", ");
-			// Serial.print(strobo.lowpassRect, 3);
-      // Serial.print(", ");
-			// Serial.print(strobo.wow, 3);
+			// // Serial.print(", ");
+			// // Serial.print(strobo.vaartLowPass - targetRpm, 3);
+      // // Serial.print(", ");
+			// // Serial.print(strobo.lowpassRect, 3);
+      // // Serial.print(", ");
+			// // Serial.print(strobo.wow, 3);
 
-      // Serial.print(", ");
-			// Serial.print(strobo.vaartHighPass, 3);
-
-			Serial.print(", ");
-			Serial.print(centerCompTargetRpm - targetRpm, 3);
-
-
+      // // Serial.print(", ");
+			// // Serial.print(strobo.vaartHighPass, 3);
 
 			// Serial.print(", ");
-			// Serial.print(strobo.teller / float(strobo.pulsenPerRev));
+			// Serial.print(centerCompTargetRpm - targetRpm, 3);
+
+
+
+			// // Serial.print(", ");
+			// // Serial.print(strobo.teller / float(strobo.pulsenPerRev));
+
+			// // Serial.print(", ");
+			// // Serial.print(strobo.preComp, 4);
 
 			// Serial.print(", ");
-			// Serial.print(strobo.preComp, 4);
+			// Serial.print(strobo.onbalansComp, 4);
 
-			Serial.print(", ");
-			Serial.print(strobo.onbalansComp, 4);
+			// // Serial.print(", ");
+			// // Serial.print(uitBuff, 2);
 
-			// Serial.print(", ");
-			// Serial.print(uitBuff, 2);
-
-			// Serial.print(", ");
-			// Serial.print(uitBuffPre, 2);
+			// // Serial.print(", ");
+			// // Serial.print(uitBuffPre, 2);
 
 			
 
-			// Serial.print(", ");
-			// Serial.print(armHoekRuw);//1696);
+			// // Serial.print(", ");
+			// // Serial.print(armHoekRuw);//1696);
       
-			// Serial.print(", ");
-			// Serial.print(karDcomp, 4);//1696);
-      Serial.print(", ");
-			Serial.print(armHoekCall, 4);//1696);
+			// // Serial.print(", ");
+			// // Serial.print(karDcomp, 4);//1696);
+      // Serial.print(", ");
+			// Serial.print(armHoekCall, 4);//1696);
       
-			// Serial.print(", ");
-			// Serial.print(armHoekSlow, 5);//1696);
-			// Serial.print(", ");
-			// Serial.print(armHoekOffset, 5);//1696);
+			// // Serial.print(", ");
+			// // Serial.print(armHoekSlow, 5);//1696);
+			// // Serial.print(", ");
+			// // Serial.print(armHoekOffset, 5);//1696);
 
 
 
 
 
-
-			// Serial.print(", ");
-			// Serial.print(karPos, 3);  
-			Serial.print(", ");
-			Serial.print(egteKarPos, 3);
 
 			// // Serial.print(", ");
-			// // Serial.print(karPosMidden, 3);
+			// // Serial.print(karPos, 3);  
+			// Serial.print(", ");
+			// Serial.print(egteKarPos, 3);
+
+			// // // Serial.print(", ");
+			// // // Serial.print(karPosMidden, 3);
+
+			// // // Serial.print(", ");
+			// // // Serial.print(karPosMidden + strobo.karFourier, 3);  
 
 			// // Serial.print(", ");
-			// // Serial.print(karPosMidden + strobo.karFourier, 3);  
-
-			// Serial.print(", ");
-			// Serial.print(karPosMidden + strobo.karFourierFilt, 3);  
+			// // Serial.print(karPosMidden + strobo.karFourierFilt, 3);  
 
 
-      Serial.print(", ");
-			Serial.print(spoorafstand, 3);
+      // Serial.print(", ");
+			// Serial.print(spoorafstand, 3);
 
 
 
