@@ -71,7 +71,7 @@ bool isPlaatAanwezig(){
 
 
 // #define plaatKnipperInterval 50
-#define plaatDetectieTreshold 200
+#define plaatDetectieTreshold 150//200
 
 void plaatDetectie(){
 	
