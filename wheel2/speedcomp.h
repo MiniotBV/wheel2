@@ -28,7 +28,7 @@ class SpeedComp {
 
     //-------------------- speed
     volatile unsigned int _speedInterval;
-    volatile unsigned int _time;
+    volatile int64_t _time;
     volatile unsigned int _interval;
 
     //-------------------- direction
@@ -67,8 +67,8 @@ class SpeedComp {
     int _unbalanceFilterCurveWidth = 0;
 
     //-------------------- debug
-    unsigned int _processTime;
-    unsigned int _processInterval;
+    int64_t _processTime;
+    int64_t _processInterval;
     bool _clearCompSamplesQueue = false;
     bool _headerShown = false;
     bool _wowFirstLow;

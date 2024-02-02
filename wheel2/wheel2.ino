@@ -32,13 +32,9 @@
       "As a user you can run your own setup1/loop1 and never ever call rp2040.idle/resumeOtherCore
       and write to flash via EEPROM or LittleFS. The Arduino core plumbing here does all that for you"
 
-  millis() overflow rollover (50 days!!)
-    https://www.best-microcontroller-projects.com/arduino-millis.html
-    https://www.norwegiancreations.com/2018/10/arduino-tutorial-avoiding-the-overflow-issue-when-using-millis-and-micros/
-    https://techexplorations.com/guides/arduino/programming/millis-rollover/
 */
 
-#define APP_VERSION 204
+#define APP_VERSION 205
 
 #include "log.h"
 #include "pico/time.h"

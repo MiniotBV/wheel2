@@ -31,7 +31,7 @@ void SpeedComp::init(Carriage* carriage, Plateau* plateau) { // to prevent circu
 
 
 void SpeedComp::update() {
-  if ((micros() - _speedInterval) > SPEEDCOMP_SAMPLES_MAX ) {
+  if ((microsSinceBoot() - _speedInterval) > SPEEDCOMP_SAMPLES_MAX ) {
     if (_glitchCounter > 3) {
       shiftSamples(SPEEDCOMP_SAMPLES_MAX * _direction);
       speedRaw = 0;
@@ -47,8 +47,8 @@ void SpeedComp::update() {
 
 
 void SpeedComp::stroboInterrupt() {
-  _time = micros();
-  _processTime = micros();
+  _time = microsSinceBoot();
+  _processTime = microsSinceBoot();
 
   //------------------------------------------------------------ DIRECTION
   _direction = 1;
@@ -84,7 +84,7 @@ void SpeedComp::stroboInterrupt() {
   shiftSamples(_interval);
   getSpeed();
   speed += (speedRaw - speed) / 10;
-  _processInterval = micros() - _processTime;
+  _processInterval = microsSinceBoot() - _processTime;
 
   if (counter == 0) { // one rotation
     if (_clearCompSamplesQueue) { // T =0, Comp reset

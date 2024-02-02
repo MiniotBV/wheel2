@@ -265,11 +265,11 @@ void Display::update() {
     print(0);
     commit();
 
-    _delay = micros();
-    while(micros() - _delay < 2) {
+    _delay = microsSinceBoot();
+    while(microsSinceBoot() - _delay < 2) {
     }
     digitalWrite(DISPLAY_EN_PIN, 0);
-    while(micros() - _delay < 200) {
+    while(microsSinceBoot() - _delay < 200) {
     }
     digitalWrite(DISPLAY_EN_PIN, 1);
 

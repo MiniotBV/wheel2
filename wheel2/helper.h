@@ -18,6 +18,6 @@ String getError(eErrors error);
 void setBit(uint8_t *byte, uint8_t n, bool value);
 bool getBit(uint8_t byte, uint8_t n);
 uint64_t millisSinceBoot();
-
+uint64_t microsSinceBoot();
 
 #endif // HELPER_H
