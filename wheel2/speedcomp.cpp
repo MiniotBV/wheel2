@@ -79,15 +79,15 @@ void SpeedComp::stroboInterrupt() {
 
   _counterRaw += _direction;
   _counterSinceReset += _direction;
-  counter = roundTrip(counter + _direction, pulsesPerRev);
+  rotationPosition = roundTrip(rotationPosition + _direction, pulsesPerRev);
 
   shiftSamples(_interval);
   getSpeed();
   speed += (speedRaw - speed) / 10;
   _processInterval = microsSinceBoot() - _processTime;
 
-  if (counter == 0) { // one rotation
-    if (_clearCompSamplesQueue) { // T =0, Comp reset
+  if (rotationPosition == 0) { // one rotation
+    if (_clearCompSamplesQueue) { // T = 0, Comp reset
       _clearCompSamplesQueue = false;
       _counterSinceReset = 0;
       clearUnbalanceCompSamples();
@@ -96,13 +96,13 @@ void SpeedComp::stroboInterrupt() {
 
 
   //------------------------------------------------------------ OFF CENTER COMPENSATION
-  _carriagePosMiddlePre -= _carriageOffCenterWave[counter];
-  _carriageOffCenterWave[counter] = _carriage->realPosition;
-  _carriagePosMiddlePre += _carriageOffCenterWave[counter];
+  _carriagePosMiddlePre -= _carriageOffCenterWave[rotationPosition];
+  _carriageOffCenterWave[rotationPosition] = _carriage->realPosition;
+  _carriagePosMiddlePre += _carriageOffCenterWave[rotationPosition];
   carriagePosMiddle = _carriagePosMiddlePre / pulsesPerRev;
 
-  trackSpacing = _carriagePosCenterHist[counter] - carriagePosMiddle;
-  _carriagePosCenterHist[counter] = carriagePosMiddle;
+  trackSpacing = _carriagePosCenterHist[rotationPosition] - carriagePosMiddle;
+  _carriagePosCenterHist[rotationPosition] = carriagePosMiddle;
 
   // if (trackSpacing > 0.01 || !_arm.isNeedleDownFor(2000)) {
   //   _carriage->movedForwardInterval.reset();
@@ -113,20 +113,20 @@ void SpeedComp::stroboInterrupt() {
   float carriagePosOffCenter = _carriage->realPosition - carriagePosMiddle;
 
   if (_arm.isNeedleDownFor(1000) && _shared.state == S_PLAYING) { // needle has to be down while playing before calculation
-    _carriageSin -= _carriageSinValues[counter];
-    _carriageSinValues[counter] = _sinus[counter] * carriagePosOffCenter;
-    _carriageSin += _carriageSinValues[counter];
+    _carriageSin -= _carriageSinValues[rotationPosition];
+    _carriageSinValues[rotationPosition] = _sinus[rotationPosition] * carriagePosOffCenter;
+    _carriageSin += _carriageSinValues[rotationPosition];
     
-    _carriageCos -= _carriageCosValues[counter];
-    _carriageCosValues[counter] = _cosin[counter] * carriagePosOffCenter;
-    _carriageCos += _carriageCosValues[counter];
+    _carriageCos -= _carriageCosValues[rotationPosition];
+    _carriageCosValues[rotationPosition] = _cosin[rotationPosition] * carriagePosOffCenter;
+    _carriageCos += _carriageCosValues[rotationPosition];
 
     _carriageSinFilt += (_carriageSin - _carriageSinFilt) / 2000;
     _carriageCosFilt += (_carriageCos - _carriageCosFilt) / 2000;
   }
 
-  carriageFourier  = ( ( (_sinus[counter] * _carriageSin) + ( _cosin[counter] * _carriageCos) ) / pulsesPerRev ) * 2;
-  carriageFourierFilter  = ( ( ( _sinus[counter] * _carriageSinFilt )  +  ( _cosin[counter] * _carriageCosFilt ) ) / pulsesPerRev) * 2;
+  carriageFourier  = ( ( (_sinus[rotationPosition] * _carriageSin) + ( _cosin[rotationPosition] * _carriageCos) ) / pulsesPerRev ) * 2;
+  carriageFourierFilter  = ( ( ( _sinus[rotationPosition] * _carriageSinFilt )  +  ( _cosin[rotationPosition] * _carriageCosFilt ) ) / pulsesPerRev) * 2;
   
 
   //------------------------------------------------------------ too big break-out ERROR
@@ -142,7 +142,7 @@ void SpeedComp::stroboInterrupt() {
 
   //------------------------------------------------------------ COMP SPEEDS
   // phase shift: 8 of 16 samples avg filter, and 9 from found filter
-  int leadCounter = roundTrip(counter - (8+9), pulsesPerRev);
+  int leadCounter = roundTrip(rotationPosition - (8+9), pulsesPerRev);
   float offCenterSpeedComp = ( ( (_sinus[leadCounter] * _carriageSinFilt) + (_cosin[leadCounter] * _carriageCosFilt) ) / pulsesPerRev) * 2;
 
   _centerComp = ((carriagePosMiddle - offCenterSpeedComp) / carriagePosMiddle);
@@ -194,8 +194,8 @@ void SpeedComp::stroboInterrupt() {
     int value;
     for (int i = 0; i < _unbalanceFilterCurveWidth; i++) {
       value = _unbalanceFilterCurve[i] * speedError;
-      _unbalansComp[(counter + 1 + i) % pulsesPerRev] += value;
-      _unbalansComp[(counter + pulsesPerRev - i) % pulsesPerRev] += value;
+      _unbalansComp[(rotationPosition + 1 + i) % pulsesPerRev] += value;
+      _unbalansComp[(rotationPosition + pulsesPerRev - i) % pulsesPerRev] += value;
     }
     // digitalWrite(LED_PIN, 1); // turn led on
   } else {
@@ -203,7 +203,7 @@ void SpeedComp::stroboInterrupt() {
   }
 
   if (unbalanceCompOn) {
-    unbalanceComp = - (_unbalansComp[roundTrip(counter + unbalancePhase, pulsesPerRev)] / (100000000.0)) * unbalanceCompWeight;
+    unbalanceComp = - (_unbalansComp[roundTrip(rotationPosition + unbalancePhase, pulsesPerRev)] / (100000000.0)) * unbalanceCompWeight;
   } else {
     unbalanceComp = 0;
   }

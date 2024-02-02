@@ -84,7 +84,7 @@ class SpeedComp {
     void printGraphicData();
   public:
     //-------------------- direction
-    int counter = 0;
+    int rotationPosition = 0;
     int pulsesPerRev = SPEEDCOMP_PPR;
 
     //-------------------- filter
