@@ -2,18 +2,21 @@
   Wheel2 Firmware
   Name: wheel2
 
-  Author: Piet Kolkman (MiniotBv), refactored by Eduard Kuijt (EddyK69
+  Author: Piet Kolkman (MiniotBV), refactored by Eduard Kuijt (EddyK69)
   Many thanks to Piet, Peter & Greet from Miniot!
 
   Based on offical Miniot Wheel2 Firmware:
     https://drive.google.com/drive/folders/1BKKGxrlx6HUjvCHgJyVHJfkWcCUIp_lk
     https://pietk.com/wheel2/
 
+  New sourecode on GitHub:
+    https://github.com/MiniotBV/wheel2
+
   Install board (Raspberry Pi Pico, rp2040):
     https://arduino-pico.readthedocs.io/en/latest/install.html
     https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json
 
-  Arduine Code Guidelines:
+  Arduino Code Guidelines:
     https://sites.google.com/a/cabrillo.edu/cs-11m/howtos/cppdoc
 
   DebugLog Library:
