@@ -8,7 +8,7 @@ float displayData[displayLengte];
 
 int nummersTeller = 0;
 
-unsigned int displayDelay = 0;
+uint64_t displayDelay = 0;
 
 int lichtLevel;
 
@@ -409,18 +409,17 @@ void displayUpdate(){
 		
 		commitDisplay();
 
-		displayDelay = micros();
-		while(micros() - displayDelay < 2){}
+		displayDelay = time_us_64();
+		while(time_us_64() - displayDelay < 2){}
 		
 		digitalWrite(displayEN, 0);
 
-		while(micros() - displayDelay < 200){}
+		while(time_us_64() - displayDelay < 200){}
 
 		digitalWrite(displayEN, 1);
 
 
 		displayPrint(0.5);
-		// while(micros() - displayDelay < 75){}
 		commitDisplay();
 
 
@@ -428,9 +427,7 @@ void displayUpdate(){
 		delayMicroseconds(1500);
 		digitalWrite(displayEN, 1);
 
-		// displayPrint(1);
-		// // while(micros() - displayDelay < 400){}
-		// commitDisplay();
+
 
 
 

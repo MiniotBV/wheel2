@@ -68,10 +68,10 @@ class Interval{
 
 		uint64_t tijd(){
 			if(eenheid == MILLIS){
-				return time_us_64()/1000;//millis();
+				return time_us_64()/1000;
 			}
 			if(eenheid == MICROS){
-				return time_us_64();//micros(); //
+				return time_us_64();
         // time_us_32()
         // time_us_64();
         

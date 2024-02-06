@@ -26,9 +26,9 @@ class COMPVAART
 { 
 	public:
 		//-------------------------------------snelheid
-		volatile unsigned int vaartInterval;
-		volatile unsigned int tijd;
-		volatile unsigned int interval;
+		volatile uint64_t vaartInterval;
+		volatile uint64_t tijd;
+		volatile uint64_t interval;
 
 
 
@@ -51,7 +51,7 @@ class COMPVAART
 		//---------------------------------------filter
 		int sampleNum;
 		volatile          int samples[100];
-		volatile unsigned int sampleTeller = 0;
+		volatile uint64_t sampleTeller = 0;
 
 		float gemiddelde = sampleMax;
 
@@ -112,8 +112,8 @@ class COMPVAART
 
 
 		//------------------------------------------------debug
-		unsigned int procesTijd;
-		unsigned int procesInterval;
+		uint64_t procesTijd;
+		uint64_t procesInterval;
 
 		bool golven = false;    
 		bool onbalansCompAan = true;
@@ -151,7 +151,7 @@ class COMPVAART
 
 		void update(){// voor als hij stil staat dat de snelheid ook egt naar 0 gaat
 			
-			if( micros() - vaartInterval > sampleMax ){
+			if( time_us_64() - vaartInterval > sampleMax ){
 				if(glitchTeller > 3){
 					shiftSamples(sampleMax * dir);
 					vaartRuw = 0;
@@ -172,10 +172,10 @@ class COMPVAART
 	
 
 		void interrupt(){
-			tijd = micros();
+			tijd = time_us_64();
 
 
-      procesTijd = micros();//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+      // procesTijd = micros();//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
 			//------------------------------------------------------RICHTING
 			dir = 1;
@@ -219,7 +219,7 @@ class COMPVAART
 
 
 
-      procesInterval = micros() - procesTijd;//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      // procesInterval = micros() - procesTijd;//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 

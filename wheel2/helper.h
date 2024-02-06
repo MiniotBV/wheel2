@@ -18,7 +18,7 @@
 
 #define NUMMER_TERUG_OPFSET 1 //hoeveel mm kan de kar bewegen voor er terug gespoeld kan worden naar het begin van het nummer ipv naar een vorrig nummer
 
-#define ELPEE_PLAAT_BEGIN 146.5//147
+#define ELPEE_PLAAT_BEGIN 147.5//146.5//147
 #define TIEN_INCH_PLAAT_BEGIN 122//124//125
 #define SINGLETJE_PLAAT_BEGIN 84//85
 
