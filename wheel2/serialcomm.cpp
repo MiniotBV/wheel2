@@ -387,13 +387,14 @@ void SerialComm::report() {
 void SerialComm::info() {
   int padR = 25;
   Serial.println("-------------------- V" + String(_shared.version, 0) + " --------------------");
+  Serial.println(padRight("Compiled on", padR) +            ": " __DATE__ " " __TIME__);
+  Serial.println(padRight("Uptime", padR) +                 ": " + uptime());
   Serial.println();
   Serial.println(padRight("WHEEL_BOARD", padR) +            ": " + String(BOARD_DESCRIPTION));
   Serial.println(padRight("WHEEL_TEMPERATURE", padR) +      ": " + String(analogReadTemp(), 2) + " °C");
   Serial.println(padRight("WHEEL_STATE", padR) +            ": " + getState(_shared.state));
   Serial.println(padRight("WHEEL_VOLUME", padR) +           ": " + String(_amplifier.volume));
   Serial.println(padRight("WHEEL_WIRELESS_VERSION", padR) + ": " + String(_bluetooth.wirelessVersion ? "YES" : "NO"));
-  Serial.println(padRight("Uptime", padR) +                 ": " + uptime());
   Serial.println();
   _storage.info();
   _orientation.info();
