@@ -48,7 +48,7 @@ void SpeedComp::update() {
 
 void SpeedComp::stroboInterrupt() {
   _time = microsSinceBoot();
-  _processTime = microsSinceBoot();
+  // _processTime = microsSinceBoot();
 
   //------------------------------------------------------------ DIRECTION
   _direction = 1;
@@ -84,7 +84,7 @@ void SpeedComp::stroboInterrupt() {
   shiftSamples(_interval);
   getSpeed();
   speed += (speedRaw - speed) / 10;
-  _processInterval = microsSinceBoot() - _processTime;
+  // _processInterval = microsSinceBoot() - _processTime;
 
   if (rotationPosition == 0) { // one rotation
     if (_clearCompSamplesQueue) { // T = 0, Comp reset

@@ -118,9 +118,9 @@ bool getBit(uint8_t byte, uint8_t n) {
 } // getBit()
 
 uint64_t millisSinceBoot() {
-  return time_us_64() / 1000; // millis();
+  return time_us_64() / 1000;
 } // millisSinceBoot()
 
 uint64_t microsSinceBoot() {
-  return time_us_64(); // micros();
+  return time_us_64();
 } // microsSinceBoot()

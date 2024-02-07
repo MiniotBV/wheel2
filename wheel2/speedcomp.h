@@ -27,9 +27,9 @@ class SpeedComp {
     Plateau* _plateau;
 
     //-------------------- speed
-    volatile unsigned int _speedInterval;
+    volatile uint64_t _speedInterval;
     volatile uint64_t _time;
-    volatile unsigned int _interval;
+    volatile uint64_t _interval;
 
     //-------------------- direction
     char _sens, _sensPrev;
@@ -44,7 +44,7 @@ class SpeedComp {
 
     //-------------------- filter
     volatile int _samplesArr[100];
-    volatile unsigned int _sampleCounter = 0;
+    volatile uint64_t _sampleCounter = 0;
 
     float _average = SPEEDCOMP_SAMPLES_MAX;
 
@@ -67,8 +67,8 @@ class SpeedComp {
     int _unbalanceFilterCurveWidth = 0;
 
     //-------------------- debug
-    uint64_t _processTime;
-    uint64_t _processInterval;
+    // uint64_t _processTime;
+    // uint64_t _processInterval;
     bool _clearCompSamplesQueue = false;
     bool _headerShown = false;
     bool _wowFirstLow;
