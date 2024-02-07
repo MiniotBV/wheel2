@@ -393,6 +393,7 @@ void SerialComm::info() {
   Serial.println(padRight("WHEEL_STATE", padR) +            ": " + getState(_shared.state));
   Serial.println(padRight("WHEEL_VOLUME", padR) +           ": " + String(_amplifier.volume));
   Serial.println(padRight("WHEEL_WIRELESS_VERSION", padR) + ": " + String(_bluetooth.wirelessVersion ? "YES" : "NO"));
+  Serial.println(padRight("Uptime", padR) +                 ": " + uptime());
   Serial.println();
   _storage.info();
   _orientation.info();

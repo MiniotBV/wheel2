@@ -2,6 +2,14 @@
 #include "helper.h"
 
 
+String padLeft(String value, int length, char character) {
+  while (value.length() < length) {
+    value = character + value;
+  }
+  return value;
+} // padLeft()
+
+
 String padRight(String value, int length, char character) {
   while (value.length() < length) {
     value += character;
@@ -117,10 +125,25 @@ bool getBit(uint8_t byte, uint8_t n) {
   return (byte >> n) & 1U;
 } // getBit()
 
+
 uint64_t millisSinceBoot() {
   return time_us_64() / 1000;
 } // millisSinceBoot()
 
+
 uint64_t microsSinceBoot() {
   return time_us_64();
 } // microsSinceBoot()
+
+
+String uptime(uint64_t ms) {
+  unsigned long milliseconds = ms % 1000;
+  unsigned long Seconds = (ms / 1000) % 60;
+  unsigned long Minutes = (ms / (1000 * 60)) % 60;
+  unsigned long Hours = (ms / (1000 * 60 * 60)) % 24;
+  unsigned long Days = (ms / (1000 * 60 * 60 * 24));
+
+  String uptimeString = String(Days) + ":" + padLeft(String(Hours),2,'0') + ":" + padLeft(String(Minutes),2,'0') + ":" + padLeft(String(Seconds),2,'0') + "." + padLeft(String(milliseconds),3,'0');
+  
+  return uptimeString;
+} // uptime()

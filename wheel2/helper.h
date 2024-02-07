@@ -6,6 +6,7 @@
 #include <sys/_stdint.h>
 
 
+String padLeft(String value, int length, char character = ' ');
 String padRight(String value, int length, char character = ' ');
 int roundTrip(int n, int max);
 float limitFloat(float n, float min, float max);
@@ -19,5 +20,6 @@ void setBit(uint8_t *byte, uint8_t n, bool value);
 bool getBit(uint8_t byte, uint8_t n);
 uint64_t millisSinceBoot();
 uint64_t microsSinceBoot();
+String uptime(uint64_t ms = millisSinceBoot());
 
 #endif // HELPER_H
