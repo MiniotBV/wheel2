@@ -3,6 +3,7 @@
 #include "pico/time.h"
 #include <stdint.h>
 #include "hardware/timer.h"
+#include "helper.h"
 
 
 Interval::Interval(uint64_t interval, eTimeMode mode = TM_MILLIS) :
@@ -41,9 +42,9 @@ void Interval::reset() {
 
 uint64_t Interval::timenow() {
   if (_mode == TM_MILLIS) {
-    return time_us_64() / 1000; // millis();
+    return millisSinceBoot();
   } else if (_mode == TM_MICROS) {
-    return time_us_64(); // micros();
+    return microsSinceBoot();
   } else {
     return 0;
   }

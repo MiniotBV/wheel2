@@ -20,11 +20,11 @@ class Plateau {
     Shared& _shared;
     SpeedComp& _speedcomp;
     float _autoRpm;
-    float _basic = 0;
+    float _basicVoltage = 0;
     float _outBuff;
     float _outBuffPrev;
     float _rpmPrev = 0;
-    bool spinningDown;
+    bool _spinningDown;
     float pid(float rpmIn);
     void update();
   public:

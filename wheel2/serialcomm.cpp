@@ -291,10 +291,10 @@ void SerialComm::printGraphicData() {
   // Serial.print(", ");
   // Serial.print(_speedcomp.speed, 3);
   Serial.print(", ");
-  Serial.print((float)_speedcomp.counter / _speedcomp.pulsesPerRev, 3);
+  Serial.print((float)_speedcomp.rotationPosition / _speedcomp.pulsesPerRev, 3);
 
   // Serial.print(", ");
-  // Serial.print(_speedcomp._unbalanceFilterCurve[_speedcomp.counter]);
+  // Serial.print(_speedcomp._unbalanceFilterCurve[_speedcomp.rotationPosition]);
 
   // Serial.print(", ");
   // Serial.print(_speedcomp.speedLowPass, 3);
@@ -316,7 +316,7 @@ void SerialComm::printGraphicData() {
   Serial.print(_speedcomp.centerCompTargetRpm - _plateau.targetRpm, 3);
 
   // Serial.print(", ");
-  // Serial.print(_speedcomp.counter / float(_speedcomp.pulsesPerRev));
+  // Serial.print(_speedcomp.rotationPosition / float(_speedcomp.pulsesPerRev));
 
   // Serial.print(", ");
   // Serial.print(_speedcomp.preComp, 4);
@@ -387,6 +387,8 @@ void SerialComm::report() {
 void SerialComm::info() {
   int padR = 25;
   Serial.println("-------------------- V" + String(_shared.version, 0) + " --------------------");
+  Serial.println(padRight("Compiled on", padR) +            ": " __DATE__ " " __TIME__);
+  Serial.println(padRight("Uptime", padR) +                 ": " + uptime());
   Serial.println();
   Serial.println(padRight("WHEEL_BOARD", padR) +            ": " + String(BOARD_DESCRIPTION));
   Serial.println(padRight("WHEEL_TEMPERATURE", padR) +      ": " + String(analogReadTemp(), 2) + " °C");

@@ -31,7 +31,7 @@ class Display {
     SpeedComp& _speedcomp;
     Storage& _storage;
     int _trackCounter = 0;
-    unsigned int _delay = 0;
+    uint64_t _delay = 0;
     const int _dispHalf = DISPLAY_LENGTH / 2;
     float _data[DISPLAY_LENGTH];
     void clear();

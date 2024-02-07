@@ -40,7 +40,7 @@ class Buttons {
     Interval _interval;
     Interval _allButtonsInterval;
     int _buttonIn[BUTTON_COUNT];
-    unsigned long _buttonInterval[BUTTON_COUNT];
+    uint64_t _buttonInterval[BUTTON_COUNT];
     int potVal = 0;
     int potValPrev = 0;
     float belt = 0;
