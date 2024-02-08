@@ -33,6 +33,7 @@ class SerialComm {
     SpeedComp& _speedcomp;
     Storage& _storage;
     Interval _interval;
+    Interval _uptimeInterval;
     String _line = "";
     String _lineRaw = "";
     String _lastCommand = "";

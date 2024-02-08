@@ -48,8 +48,10 @@ enum eErrors {
 
 
 enum eTimeMode {
+  TM_MICROS,
   TM_MILLIS,
-  TM_MICROS
+  TM_SECS,
+  TM_MINS
 }; // eTimeMode
 
 

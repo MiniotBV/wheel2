@@ -354,5 +354,5 @@ void Display::commit() {
 
 
 void Display::bootLED() {
-  digitalWrite(LED_PIN, millisSinceBoot() < 3000); // turn LED on
+  digitalWrite(LED_PIN, secsSinceBoot() < 3); // turn LED on
 }

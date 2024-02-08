@@ -126,24 +126,35 @@ bool getBit(uint8_t byte, uint8_t n) {
 } // getBit()
 
 
-uint64_t millisSinceBoot() {
-  return time_us_64() / 1000;
-} // millisSinceBoot()
-
-
 uint64_t microsSinceBoot() {
   return time_us_64();
 } // microsSinceBoot()
 
 
-String uptime(uint64_t ms) {
-  unsigned long milliseconds = ms % 1000;
-  unsigned long Seconds = (ms / 1000) % 60;
-  unsigned long Minutes = (ms / (1000 * 60)) % 60;
-  unsigned long Hours = (ms / (1000 * 60 * 60)) % 24;
-  unsigned long Days = (ms / (1000 * 60 * 60 * 24));
+uint64_t millisSinceBoot() {
+  return time_us_64() / 1000;
+} // millisSinceBoot()
 
-  String uptimeString = String(Days) + ":" + padLeft(String(Hours),2,'0') + ":" + padLeft(String(Minutes),2,'0') + ":" + padLeft(String(Seconds),2,'0') + "." + padLeft(String(milliseconds),3,'0');
+
+uint64_t secsSinceBoot() {
+  return time_us_64() / (1000 * 1000);
+} // secsSinceBoot()
+
+
+uint64_t minsSinceBoot() {
+  return time_us_64() / (1000 * 1000 * 60);
+} // minsSinceBoot()
+
+
+String uptime() {
+  uint64_t ms = millisSinceBoot();
+  unsigned long milliseconds = ms % 1000;
+  unsigned long seconds = (ms / 1000) % 60;
+  unsigned long minutes = (ms / (1000 * 60)) % 60;
+  unsigned long hours = (ms / (1000 * 60 * 60)) % 24;
+  unsigned long days = (ms / (1000 * 60 * 60 * 24));
+
+  String uptimeString = String(days) + ":" + padLeft(String(hours),2,'0') + ":" + padLeft(String(minutes),2,'0') + ":" + padLeft(String(seconds),2,'0') + "." + padLeft(String(milliseconds),3,'0');
   
   return uptimeString;
 } // uptime()
