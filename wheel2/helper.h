@@ -18,8 +18,10 @@ String getRpmState(eRpmMode rpm);
 String getError(eErrors error);
 void setBit(uint8_t *byte, uint8_t n, bool value);
 bool getBit(uint8_t byte, uint8_t n);
-uint64_t millisSinceBoot();
 uint64_t microsSinceBoot();
-String uptime(uint64_t ms = millisSinceBoot());
+uint64_t millisSinceBoot();
+uint64_t secsSinceBoot();
+uint64_t minsSinceBoot();
+String uptime();
 
 #endif // HELPER_H

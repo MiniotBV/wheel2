@@ -17,7 +17,8 @@ SerialComm::SerialComm(Shared& shared, Amplifier& amplifier, Arm& arm, Bluetooth
       _scanner(scanner),
       _speedcomp(speedcomp),
       _storage(storage),
-      _interval(10000, TM_MICROS) {
+      _interval(10000, TM_MICROS),
+      _uptimeInterval(60, TM_MINS) {
 } // SerialComm()
 
 
@@ -64,6 +65,10 @@ void SerialComm::func() {
         _line += letter;
       }
     }
+  } // _interval.tick()
+
+  if (_uptimeInterval.tick()) {
+    Serial.println(padRight("Uptime", 25) + ": " + uptime());
   }
 } // func()
 

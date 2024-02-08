@@ -41,10 +41,14 @@ void Interval::reset() {
 
 
 uint64_t Interval::timenow() {
-  if (_mode == TM_MILLIS) {
-    return millisSinceBoot();
-  } else if (_mode == TM_MICROS) {
+  if (_mode == TM_MICROS) {
     return microsSinceBoot();
+  } else if (_mode == TM_MILLIS) {
+    return millisSinceBoot();
+  } else if (_mode == TM_SECS) {
+    return secsSinceBoot();
+  } else if (_mode == TM_MINS) {
+    return minsSinceBoot();
   } else {
     return 0;
   }
