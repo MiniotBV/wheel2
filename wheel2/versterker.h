@@ -84,8 +84,6 @@ public:
   float x, y, z;
   float xRuw, yRuw, zRuw;
   float xOffset = 0, yOffset = 0, zOffset = 0;  //0.05;
-  // int id;
-  unsigned long loop;
   bool eersteKeer = true;
 
 
