@@ -68,7 +68,9 @@ void SerialComm::func() {
   } // _interval.tick()
 
   if (_uptimeInterval.tick()) {
-    Serial.println(padRight("Uptime", 25) + ": " + uptime());
+    int padR = 25;
+    Serial.println(padRight("WHEEL_UPTIME", padR) +      ": " + uptime());
+    Serial.println(padRight("WHEEL_TEMPERATURE", padR) + ": " + String(analogReadTemp(), 2) + " °C");
   }
 } // func()
 
@@ -167,6 +169,7 @@ void SerialComm::checkReceivedLine(String line, eCheckMode mode) {
   if (checkLineCommand( "CW",     "Show values",                mode)) { checkReceivedLine(line, CM_VALUE);   return; }
   if (checkLineCommand( "?",      "Report",                     mode)) { report();                            return; }
   if (checkLineCommand( "INFO",   "Info",                       mode)) { info();                              return; }
+  if (checkLineCommand( "VER",    "HW/FW version",              mode)) { version();                           return; }
 
   if (mode == CM_NONE) {
     line.toUpperCase();
@@ -376,11 +379,7 @@ void SerialComm::report() {
   int padR = 25;
   Serial.println("-------------------- V" + String(_shared.version, 0) + " --------------------");
   Serial.println();
-  // Serial.println(padRight("WHEEL_BOARD", padR) +            ": " + String(BOARD_DESCRIPTION));
-  Serial.println(padRight("WHEEL_TEMPERATURE", padR) +      ": " + String(analogReadTemp(), 2) + " °C");
-  // Serial.println(padRight("WHEEL_STATE", padR) +            ": " + getState(_shared.state));
-  // Serial.println(padRight("WHEEL_VOLUME", padR) +           ": " + String(_amplifier.volume));
-  // Serial.println(padRight("WHEEL_WIRELESS_VERSION", padR) + ": " + String(_bluetooth.wirelessVersion ? "YES" : "NO"));
+  Serial.println(padRight("WHEEL_TEMPERATURE", padR) + ": " + String(analogReadTemp(), 2) + " °C");
   Serial.println();
   _storage.info();
   _orientation.info();
@@ -391,15 +390,9 @@ void SerialComm::report() {
 
 void SerialComm::info() {
   int padR = 25;
-  Serial.println("-------------------- V" + String(_shared.version, 0) + " --------------------");
-  Serial.println(padRight("Compiled on", padR) +            ": " __DATE__ " " __TIME__);
-  Serial.println(padRight("Uptime", padR) +                 ": " + uptime());
-  Serial.println();
-  Serial.println(padRight("WHEEL_BOARD", padR) +            ": " + String(BOARD_DESCRIPTION));
-  Serial.println(padRight("WHEEL_TEMPERATURE", padR) +      ": " + String(analogReadTemp(), 2) + " °C");
+  version();
   Serial.println(padRight("WHEEL_STATE", padR) +            ": " + getState(_shared.state));
   Serial.println(padRight("WHEEL_VOLUME", padR) +           ": " + String(_amplifier.volume));
-  Serial.println(padRight("WHEEL_WIRELESS_VERSION", padR) + ": " + String(_bluetooth.wirelessVersion ? "YES" : "NO"));
   Serial.println();
   _storage.info();
   _orientation.info();
@@ -411,6 +404,18 @@ void SerialComm::info() {
   _buttons.info();
   Serial.println("----------------------------------------------");
 } // info()
+
+
+void SerialComm::version() {
+  int padR = 25;
+  Serial.println("-------------------- V" + String(_shared.version, 0) + " --------------------");
+  Serial.println();
+  Serial.println(padRight("WHEEL_HW_VERSION", padR) +       ": " + String(BOARD_DESCRIPTION));
+  Serial.println(padRight("WHEEL_FW_VERSION", padR) +       ": V" + String(_shared.version, 0) + " [" + __DATE__ + " " + __TIME__ + "]");
+  Serial.println(padRight("WHEEL_WIRELESS_VERSION", padR) + ": " + String(_bluetooth.wirelessVersion ? "YES" : "NO"));
+  Serial.println(padRight("WHEEL_UPTIME", padR) +           ": " + uptime());
+  Serial.println(padRight("WHEEL_TEMPERATURE", padR) +      ": " + String(analogReadTemp(), 2) + " °C");
+} // version()
 
 
 //             bytes   cycles                
