@@ -116,6 +116,7 @@ void Plateau::update() {
 void Plateau::motorStart() {
   LOG_DEBUG("plateau.cpp", "[motorStart]");
   motorOn = true;
+  startUseCounter();
   setRpm(RPM_33);
 
   _basicVoltage = 30; // 50; //40; //60; //75;
@@ -127,6 +128,7 @@ void Plateau::motorStart() {
 void Plateau::motorStop() {
   LOG_DEBUG("plateau.cpp", "[motorStop]");
   motorOn = false;
+  stopUseCounter();
   targetRpm = 0;
 
   turnInterval.reset();
@@ -236,5 +238,32 @@ void Plateau::info() {
   Serial.println(padRight("PLATEAU_MOTOR", padR) +      ": " + String(motorOn ? "ON" : "OFF"));
   Serial.println(padRight("PLATEAU_RPM_MODE", padR) +   ": " + getRpmState(rpmMode));
   Serial.println(padRight("PLATEAU_TARGET_RPM", padR) + ": " + String(targetRpm, 2));
+  Serial.println(padRight("PLATEAU_TOTAL_USED", padR) + ": " + getUseCounter());
   Serial.println();
 } // info()
+
+
+void Plateau::startUseCounter() {
+  _tsMotorOn = millisSinceBoot();
+} // startUseCounter()
+
+
+void Plateau::stopUseCounter() {
+  unsigned long duration = 0;
+  if (_tsMotorOn > 0) {
+    duration = millisSinceBoot() - _tsMotorOn;
+    _tsMotorOn = 0;
+    if (duration > 0) {
+      _motorUsed += duration;
+    }
+  }
+} // stopUseCounter()
+
+
+String Plateau::getUseCounter() {
+  unsigned long duration = 0;
+  if (_tsMotorOn > 0) {
+    duration = millisSinceBoot() - _tsMotorOn;
+  }  
+  return msToString(_motorUsed + duration);
+} // getUseCounter()
