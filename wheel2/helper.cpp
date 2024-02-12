@@ -146,8 +146,7 @@ uint64_t minsSinceBoot() {
 } // minsSinceBoot()
 
 
-String uptime() {
-  uint64_t ms = millisSinceBoot();
+String msToString(uint64_t ms) {
   unsigned long milliseconds = ms % 1000;
   unsigned long seconds = (ms / 1000) % 60;
   unsigned long minutes = (ms / (1000 * 60)) % 60;

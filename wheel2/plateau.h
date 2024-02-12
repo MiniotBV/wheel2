@@ -25,8 +25,13 @@ class Plateau {
     float _outBuffPrev;
     float _rpmPrev = 0;
     bool _spinningDown;
+    unsigned long _tsMotorOn;
+    uint64_t _motorUsed = 0;
     float pid(float rpmIn);
     void update();
+    void startUseCounter();
+    void stopUseCounter();
+    String getUseCounter();
   public:
     Interval turnInterval;
     float P = 1;    // 0.5

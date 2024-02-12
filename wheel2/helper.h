@@ -22,6 +22,6 @@ uint64_t microsSinceBoot();
 uint64_t millisSinceBoot();
 uint64_t secsSinceBoot();
 uint64_t minsSinceBoot();
-String uptime();
+String msToString(uint64_t ms);
 
 #endif // HELPER_H
