@@ -68,9 +68,8 @@ void SerialComm::func() {
   } // _interval.tick()
 
   if (_uptimeInterval.tick()) {
-    int padR = 25;
-    Serial.println(padRight("WHEEL_UPTIME", padR) +      ": " + uptime());
-    Serial.println(padRight("WHEEL_TEMPERATURE", padR) + ": " + String(analogReadTemp(), 2) + " °C");
+    Serial.println("UPTIME: " + uptime());
+    Serial.println("TEMPERATURE: " + String(analogReadTemp(), 2) + " °C");
   }
 } // func()
 
