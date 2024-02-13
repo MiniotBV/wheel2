@@ -147,11 +147,11 @@ uint64_t minsSinceBoot() {
 
 
 String msToString(uint64_t ms) {
-  unsigned long milliseconds = ms % 1000;
-  unsigned long seconds = (ms / 1000) % 60;
-  unsigned long minutes = (ms / (1000 * 60)) % 60;
-  unsigned long hours = (ms / (1000 * 60 * 60)) % 24;
-  unsigned long days = (ms / (1000 * 60 * 60 * 24));
+  int milliseconds = ms % 1000;
+  int seconds = (ms / 1000) % 60;
+  int minutes = (ms / (1000 * 60)) % 60;
+  int hours = (ms / (1000 * 60 * 60)) % 24;
+  int days = (ms / (1000 * 60 * 60 * 24));
 
   String uptimeString = String(days) + ":" + padLeft(String(hours),2,'0') + ":" + padLeft(String(minutes),2,'0') + ":" + padLeft(String(seconds),2,'0') + "." + padLeft(String(milliseconds),3,'0');
   

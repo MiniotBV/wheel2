@@ -390,6 +390,8 @@ void SerialComm::report() {
 void SerialComm::info() {
   int padR = 25;
   version();
+  Serial.println(padRight("WHEEL_UPTIME", padR) +           ": " + msToString(millisSinceBoot()));
+  Serial.println(padRight("WHEEL_TEMPERATURE", padR) +      ": " + String(analogReadTemp(), 2) + " °C");
   Serial.println(padRight("WHEEL_STATE", padR) +            ": " + getState(_shared.state));
   Serial.println(padRight("WHEEL_VOLUME", padR) +           ": " + String(_amplifier.volume));
   Serial.println();
@@ -412,8 +414,6 @@ void SerialComm::version() {
   Serial.println(padRight("WHEEL_HW_VERSION", padR) +       ": " + String(BOARD_DESCRIPTION));
   Serial.println(padRight("WHEEL_FW_VERSION", padR) +       ": V" + String(_shared.version, 0) + " [" + __DATE__ + " " + __TIME__ + "]");
   Serial.println(padRight("WHEEL_WIRELESS_VERSION", padR) + ": " + String(_bluetooth.wirelessVersion ? "YES" : "NO"));
-  Serial.println(padRight("WHEEL_UPTIME", padR) +           ": " + msToString(millisSinceBoot()));
-  Serial.println(padRight("WHEEL_TEMPERATURE", padR) +      ": " + String(analogReadTemp(), 2) + " °C");
 } // version()
 
 
