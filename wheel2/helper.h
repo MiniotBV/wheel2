@@ -5,6 +5,8 @@
 #include "enums.h"
 #include <sys/_stdint.h>
 
+#define PADR 25
+
 
 String padLeft(String value, int length, char character = ' ');
 String padRight(String value, int length, char character = ' ');

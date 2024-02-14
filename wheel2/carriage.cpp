@@ -560,12 +560,11 @@ void Carriage::printGraphicData() {
 
 
 void Carriage::info() {
-  int padR = 25;
-  Serial.println(padRight("CARRIAGE_P", padR) +        ": " + String(P, 5));
-  Serial.println(padRight("CARRIAGE_I", padR) +        ": " + String(I, 5));
-  Serial.println(padRight("CARRIAGE_D", padR) +        ": " + String(D, 5));
-  Serial.println(padRight("CARRIAGE_POSITION", padR) + ": " + String(position));
-  Serial.println(padRight("CARRIAGE_REAL_POS", padR) + ": " + String(realPosition));
-  Serial.println(padRight("CARRIAGE_REPEAT", padR) +   ": " + String(repeat ? "ON" : "OFF"));
+  Serial.println(padRight("CARRIAGE_P", PADR) +        ": " + String(P, 5));
+  Serial.println(padRight("CARRIAGE_I", PADR) +        ": " + String(I, 5));
+  Serial.println(padRight("CARRIAGE_D", PADR) +        ": " + String(D, 5));
+  Serial.println(padRight("CARRIAGE_POSITION", PADR) + ": " + String(position));
+  Serial.println(padRight("CARRIAGE_REAL_POS", PADR) + ": " + String(realPosition));
+  Serial.println(padRight("CARRIAGE_REPEAT", PADR) +   ": " + String(repeat ? "ON" : "OFF"));
   Serial.println();
 } // info()
