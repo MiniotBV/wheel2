@@ -330,13 +330,12 @@ void SpeedComp::printGraphicData() {
 
 
 void SpeedComp::info() {
-  int padR = 25;
-  // Serial.println(padRight("STROBO_SAMPLES", padR) +            ": " + String(samples));
-  // Serial.println(padRight("STROBO_PULSES_PER_REV", padR) +     ": " + String(pulsesPerRev));
-  Serial.println(padRight("STROBO_UNBAL_PHASE", padR) +        ": " + String(unbalancePhase));
-  Serial.println(padRight("STROBO_UNBAL_COMP_WEIGHT", padR) +  ": " + String(unbalanceCompWeight));
-  Serial.println(padRight("STROBO_UNBAL_FILT_WIDTH", padR) +   ": " + String(unbalanceFilterWidth));
-  Serial.println(padRight("STROBO_UNBAL_FILT_CURVE_W", padR) + ": " + String(_unbalanceFilterCurveWidth));
+  // Serial.println(padRight("STROBO_SAMPLES", PADR) +            ": " + String(samples));
+  // Serial.println(padRight("STROBO_PULSES_PER_REV", PADR) +     ": " + String(pulsesPerRev));
+  Serial.println(padRight("STROBO_UNBAL_PHASE", PADR) +        ": " + String(unbalancePhase));
+  Serial.println(padRight("STROBO_UNBAL_COMP_WEIGHT", PADR) +  ": " + String(unbalanceCompWeight));
+  Serial.println(padRight("STROBO_UNBAL_FILT_WIDTH", PADR) +   ": " + String(unbalanceFilterWidth));
+  Serial.println(padRight("STROBO_UNBAL_FILT_CURVE_W", PADR) + ": " + String(_unbalanceFilterCurveWidth));
 
   Serial.println();
 } // info()

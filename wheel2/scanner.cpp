@@ -236,15 +236,14 @@ void Scanner::printGraphicData() {
 
 
 void Scanner::info() {
-  int padR = 25;
-  Serial.println(padRight("SCANNER_TOTAL_TRACKS", padR) +  ": " + String(trackCount));
-  Serial.println(padRight("SCANNER_CURRENT_TRACK", padR) + ": " + String(currentTrack));
+  Serial.println(padRight("SCANNER_TOTAL_TRACKS", PADR) +  ": " + String(trackCount));
+  Serial.println(padRight("SCANNER_CURRENT_TRACK", PADR) + ": " + String(currentTrack));
   if (trackCount > 0 ) {
-    Serial.println(padRight("SCANNER_TRACK_1", padR) + ": " + String(recordStart));
+    Serial.println(padRight("SCANNER_TRACK_1", PADR) + ": " + String(recordStart));
     for (int t = trackCount - 1; t > 0; t--) {
-      Serial.println(padRight("SCANNER_TRACK_" + String(trackCount - t + 1), padR) + ": " + String(tracks[t]));
+      Serial.println(padRight("SCANNER_TRACK_" + String(trackCount - t + 1), PADR) + ": " + String(tracks[t]));
     }
-    Serial.println(padRight("SCANNER_RECORD_END", padR) + ": " + String(tracks[0]));
+    Serial.println(padRight("SCANNER_RECORD_END", PADR) + ": " + String(tracks[0]));
   }
   Serial.println();
 } // info()

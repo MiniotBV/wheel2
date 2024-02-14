@@ -117,9 +117,8 @@ void Orientation::printGraphicData() {
 
 
 void Orientation::info() {
-  int padR = 25;
-  Serial.println(padRight("ORIENTATION_RAW_XYZ", padR) +  ": " + "X:" + String(_rawX, 3) + " Y:" + String(_rawY, 3) + " Z:" + String(_rawZ, 3));
-  Serial.println(padRight("ORIENTATION_XYZ", padR) +      ": " + "X:" + String(x, 3) + " Y:" + String(y, 3) + " Z:" + String(z, 3));
-  Serial.println(padRight("ORIENTATION_POSITION", padR) + ": " + String(isStanding ? "STANDING" : "NORMAL"));
+  Serial.println(padRight("ORIENTATION_RAW_XYZ", PADR) +  ": " + "X:" + String(_rawX, 3) + " Y:" + String(_rawY, 3) + " Z:" + String(_rawZ, 3));
+  Serial.println(padRight("ORIENTATION_XYZ", PADR) +      ": " + "X:" + String(x, 3) + " Y:" + String(y, 3) + " Z:" + String(z, 3));
+  Serial.println(padRight("ORIENTATION_POSITION", PADR) + ": " + String(isStanding ? "STANDING" : "NORMAL"));
   Serial.println();
 } // info()

@@ -375,10 +375,9 @@ void SerialComm::printGraphicData() {
 
 
 void SerialComm::report() {
-  int padR = 25;
   Serial.println("-------------------- V" + String(_shared.version, 0) + " --------------------");
   Serial.println();
-  Serial.println(padRight("WHEEL_TEMPERATURE", padR) + ": " + String(analogReadTemp(), 2) + " °C");
+  Serial.println(padRight("WHEEL_TEMPERATURE", PADR) + ": " + String(analogReadTemp(), 2) + " °C");
   Serial.println();
   _storage.info();
   _orientation.info();
@@ -388,10 +387,11 @@ void SerialComm::report() {
 
 
 void SerialComm::info() {
-  int padR = 25;
   version();
-  Serial.println(padRight("WHEEL_STATE", padR) +            ": " + getState(_shared.state));
-  Serial.println(padRight("WHEEL_VOLUME", padR) +           ": " + String(_amplifier.volume));
+  Serial.println(padRight("WHEEL_UPTIME", PADR) +           ": " + msToString(millisSinceBoot()));
+  Serial.println(padRight("WHEEL_TEMPERATURE", PADR) +      ": " + String(analogReadTemp(), 2) + " °C");
+  Serial.println(padRight("WHEEL_STATE", PADR) +            ": " + getState(_shared.state));
+  Serial.println(padRight("WHEEL_VOLUME", PADR) +           ": " + String(_amplifier.volume));
   Serial.println();
   _storage.info();
   _orientation.info();
@@ -406,14 +406,11 @@ void SerialComm::info() {
 
 
 void SerialComm::version() {
-  int padR = 25;
   Serial.println("-------------------- V" + String(_shared.version, 0) + " --------------------");
   Serial.println();
-  Serial.println(padRight("WHEEL_HW_VERSION", padR) +       ": " + String(BOARD_DESCRIPTION));
-  Serial.println(padRight("WHEEL_FW_VERSION", padR) +       ": V" + String(_shared.version, 0) + " [" + __DATE__ + " " + __TIME__ + "]");
-  Serial.println(padRight("WHEEL_WIRELESS_VERSION", padR) + ": " + String(_bluetooth.wirelessVersion ? "YES" : "NO"));
-  Serial.println(padRight("WHEEL_UPTIME", padR) +           ": " + msToString(millisSinceBoot()));
-  Serial.println(padRight("WHEEL_TEMPERATURE", padR) +      ": " + String(analogReadTemp(), 2) + " °C");
+  Serial.println(padRight("WHEEL_HW_VERSION", PADR) +       ": " + String(BOARD_DESCRIPTION) + String(_bluetooth.wirelessVersion ? " [BT]" : ""));
+  Serial.println(padRight("WHEEL_FW_VERSION", PADR) +       ": V" + String(_shared.version, 0) + " [" + __DATE__ + " " + __TIME__ + "]");
+  // Serial.println(padRight("WHEEL_WIRELESS_VERSION", PADR) + ": " + String(_bluetooth.wirelessVersion ? "YES" : "NO"));
 } // version()
 
 
