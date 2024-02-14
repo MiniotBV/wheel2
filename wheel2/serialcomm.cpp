@@ -375,7 +375,7 @@ void SerialComm::printGraphicData() {
 
 
 void SerialComm::report() {
-  Serial.println("-------------------- V" + String(_shared.version, 0) + " --------------------");
+  Serial.println("-------------------- V" + String(_shared.appversion) + " --------------------");
   Serial.println();
   Serial.println(padRight("WHEEL_TEMPERATURE", PADR) + ": " + String(analogReadTemp(), 2) + " °C");
   Serial.println();
@@ -406,10 +406,10 @@ void SerialComm::info() {
 
 
 void SerialComm::version() {
-  Serial.println("-------------------- V" + String(_shared.version, 0) + " --------------------");
+  Serial.println("-------------------- V" + String(_shared.appversion) + " --------------------");
   Serial.println();
   Serial.println(padRight("WHEEL_HW_VERSION", PADR) +       ": " + String(BOARD_DESCRIPTION) + String(_bluetooth.wirelessVersion ? " [BT]" : ""));
-  Serial.println(padRight("WHEEL_FW_VERSION", PADR) +       ": V" + String(_shared.version, 0) + " [" + __DATE__ + " " + __TIME__ + "]");
+  Serial.println(padRight("WHEEL_FW_VERSION", PADR) +       ": V" + String(_shared.appversion) + " [" + _shared.appdate + "]");
   // Serial.println(padRight("WHEEL_WIRELESS_VERSION", PADR) + ": " + String(_bluetooth.wirelessVersion ? "YES" : "NO"));
 } // version()
 

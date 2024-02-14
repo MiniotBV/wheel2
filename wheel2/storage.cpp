@@ -53,7 +53,7 @@ void Storage::read() {
 
 
 void Storage::write() {
-  eepromVersion    = _shared.version;
+  eepromVersion    = _shared.appversion;
   _armForceLow     = _arm.forceLow;
   _armForceHigh    = _arm.forceHigh;
   // _armTargetWeight = _arm.targetWeight;

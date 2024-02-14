@@ -32,7 +32,7 @@ class Wheel {
     SerialComm serialcomm;
     SpeedComp speedcomp;
     Storage storage;
-    Wheel(float version);
+    Wheel(int appversion, String appdate);
     void init();
 }; // Wheel
 

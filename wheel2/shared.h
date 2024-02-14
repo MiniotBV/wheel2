@@ -12,11 +12,12 @@ class Shared {
   public:
     Interval stateChangedInterval;
     Interval errorChangedInterval;
-    float version;
+    int appversion;
+    String appdate;
     eStates state = S_HOME;
     eErrors error = E_NONE;
     bool puristMode = false;
-    Shared(float version);
+    Shared(int appversion, String appdate);
     void setState(eStates state);
     void setError(eErrors newError);
     bool firstTimeStateChanged();

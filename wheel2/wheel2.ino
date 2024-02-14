@@ -39,6 +39,8 @@
 
 #define APP_VERSION 205
 
+#define APP_DATE __DATE__ " " __TIME__
+
 #include "log.h"
 #include "pico/time.h"
 #include <stdio.h>
@@ -49,7 +51,7 @@
 #include "wheel.h"
 
 
-Wheel wheel(APP_VERSION);
+Wheel wheel(APP_VERSION, APP_DATE);
 
 
 // The normal, core 0 setup
