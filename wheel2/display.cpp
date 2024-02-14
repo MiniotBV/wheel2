@@ -56,7 +56,7 @@ void Display::update() {
       int spaceLength = 3;
 
       int decimals = 3;
-      int version = _shared.version;
+      int version = _shared.appversion;
       int versionDecimals[decimals] = { (version % 10), (version / 10) % 10, (version / 100) % 10 };
 
       for (int i = 0; i < decimals; i++) {
