@@ -28,6 +28,7 @@ void Shared::setError(eErrors newError) {
   errorChangedInterval.reset();
   Serial.println("ERROR: " + getError(error));
   Serial.println("STATE: " + getState(state));
+  errorCount[newError] += 1;
 } // setError()
 
 
@@ -38,3 +39,13 @@ bool Shared::firstTimeStateChanged() {
   }
   return false;
 } // firstTimeStateChanged()
+
+void Shared::info() {
+  int padR = 25;
+
+  for (int error = 0; error < E_MAX; error++) {
+    Serial.println(padRight("ERROR", padR) + ": [" + String(error) + "] <" + String(errorCount[error]) +" occurences>");
+  }
+
+  Serial.println();
+} // info()
