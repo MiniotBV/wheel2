@@ -41,10 +41,11 @@ bool Shared::firstTimeStateChanged() {
 } // firstTimeStateChanged()
 
 void Shared::info() {
-  int padR = 25;
-
   for (int error = 0; error < E_MAX; error++) {
-    Serial.println(padRight("ERROR", padR) + ": [" + String(error) + "] <" + String(errorCount[error]) +" occurences>");
+    String err = getError(static_cast<eErrors>(error));
+    if ((err != "E_UNKNOWN") && (err != "E_NONE")) {
+      Serial.println(padRight(err, PADR) + ": " + String(errorCount[error]));
+    }
   }
 
   Serial.println();
