@@ -17,7 +17,8 @@ SerialComm::SerialComm(Shared& shared, Amplifier& amplifier, Arm& arm, Bluetooth
       _scanner(scanner),
       _speedcomp(speedcomp),
       _storage(storage),
-      _interval(10000, TM_MICROS) {
+      _interval(10000, TM_MICROS),
+      _uptimeInterval(60, TM_MINS) {
 } // SerialComm()
 
 
@@ -64,6 +65,11 @@ void SerialComm::func() {
         _line += letter;
       }
     }
+  } // _interval.tick()
+
+  if (_uptimeInterval.tick()) {
+    Serial.println("UPTIME: " + msToString(millisSinceBoot()));
+    Serial.println("TEMPERATURE: " + String(analogReadTemp(), 2) + " °C");
   }
 } // func()
 
@@ -162,6 +168,7 @@ void SerialComm::checkReceivedLine(String line, eCheckMode mode) {
   if (checkLineCommand( "CW",     "Show values",                mode)) { checkReceivedLine(line, CM_VALUE);   return; }
   if (checkLineCommand( "?",      "Report",                     mode)) { report();                            return; }
   if (checkLineCommand( "INFO",   "Info",                       mode)) { info();                              return; }
+  if (checkLineCommand( "VER",    "HW/FW version",              mode)) { version();                           return; }
 
   if (mode == CM_NONE) {
     line.toUpperCase();
@@ -291,10 +298,10 @@ void SerialComm::printGraphicData() {
   // Serial.print(", ");
   // Serial.print(_speedcomp.speed, 3);
   Serial.print(", ");
-  Serial.print((float)_speedcomp.counter / _speedcomp.pulsesPerRev, 3);
+  Serial.print((float)_speedcomp.rotationPosition / _speedcomp.pulsesPerRev, 3);
 
   // Serial.print(", ");
-  // Serial.print(_speedcomp._unbalanceFilterCurve[_speedcomp.counter]);
+  // Serial.print(_speedcomp._unbalanceFilterCurve[_speedcomp.rotationPosition]);
 
   // Serial.print(", ");
   // Serial.print(_speedcomp.speedLowPass, 3);
@@ -316,7 +323,7 @@ void SerialComm::printGraphicData() {
   Serial.print(_speedcomp.centerCompTargetRpm - _plateau.targetRpm, 3);
 
   // Serial.print(", ");
-  // Serial.print(_speedcomp.counter / float(_speedcomp.pulsesPerRev));
+  // Serial.print(_speedcomp.rotationPosition / float(_speedcomp.pulsesPerRev));
 
   // Serial.print(", ");
   // Serial.print(_speedcomp.preComp, 4);
@@ -368,14 +375,9 @@ void SerialComm::printGraphicData() {
 
 
 void SerialComm::report() {
-  int padR = 25;
-  Serial.println("-------------------- V" + String(_shared.version, 0) + " --------------------");
+  Serial.println("-------------------- V" + String(_shared.appversion) + " --------------------");
   Serial.println();
-  // Serial.println(padRight("WHEEL_BOARD", padR) +            ": " + String(BOARD_DESCRIPTION));
-  Serial.println(padRight("WHEEL_TEMPERATURE", padR) +      ": " + String(analogReadTemp(), 2) + " °C");
-  // Serial.println(padRight("WHEEL_STATE", padR) +            ": " + getState(_shared.state));
-  // Serial.println(padRight("WHEEL_VOLUME", padR) +           ": " + String(_amplifier.volume));
-  // Serial.println(padRight("WHEEL_WIRELESS_VERSION", padR) + ": " + String(_bluetooth.wirelessVersion ? "YES" : "NO"));
+  Serial.println(padRight("WHEEL_TEMPERATURE", PADR) + ": " + String(analogReadTemp(), 2) + " °C");
   Serial.println();
   _storage.info();
   _orientation.info();
@@ -385,14 +387,11 @@ void SerialComm::report() {
 
 
 void SerialComm::info() {
-  int padR = 25;
-  Serial.println("-------------------- V" + String(_shared.version, 0) + " --------------------");
-  Serial.println();
-  Serial.println(padRight("WHEEL_BOARD", padR) +            ": " + String(BOARD_DESCRIPTION));
-  Serial.println(padRight("WHEEL_TEMPERATURE", padR) +      ": " + String(analogReadTemp(), 2) + " °C");
-  Serial.println(padRight("WHEEL_STATE", padR) +            ": " + getState(_shared.state));
-  Serial.println(padRight("WHEEL_VOLUME", padR) +           ": " + String(_amplifier.volume));
-  Serial.println(padRight("WHEEL_WIRELESS_VERSION", padR) + ": " + String(_bluetooth.wirelessVersion ? "YES" : "NO"));
+  version();
+  Serial.println(padRight("WHEEL_UPTIME", PADR) +           ": " + msToString(millisSinceBoot()));
+  Serial.println(padRight("WHEEL_TEMPERATURE", PADR) +      ": " + String(analogReadTemp(), 2) + " °C");
+  Serial.println(padRight("WHEEL_STATE", PADR) +            ": " + getState(_shared.state));
+  Serial.println(padRight("WHEEL_VOLUME", PADR) +           ": " + String(_amplifier.volume));
   Serial.println();
   _storage.info();
   _orientation.info();
@@ -404,6 +403,15 @@ void SerialComm::info() {
   _buttons.info();
   Serial.println("----------------------------------------------");
 } // info()
+
+
+void SerialComm::version() {
+  Serial.println("-------------------- V" + String(_shared.appversion) + " --------------------");
+  Serial.println();
+  Serial.println(padRight("WHEEL_HW_VERSION", PADR) +       ": " + String(BOARD_DESCRIPTION) + String(_bluetooth.wirelessVersion ? " [BT]" : ""));
+  Serial.println(padRight("WHEEL_FW_VERSION", PADR) +       ": V" + String(_shared.appversion) + " [" + _shared.appdate + "]");
+  // Serial.println(padRight("WHEEL_WIRELESS_VERSION", PADR) + ": " + String(_bluetooth.wirelessVersion ? "YES" : "NO"));
+} // version()
 
 
 //             bytes   cycles                

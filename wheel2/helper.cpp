@@ -2,6 +2,14 @@
 #include "helper.h"
 
 
+String padLeft(String value, int length, char character) {
+  while (value.length() < length) {
+    value = character + value;
+  }
+  return value;
+} // padLeft()
+
+
 String padRight(String value, int length, char character) {
   while (value.length() < length) {
     value += character;
@@ -117,6 +125,35 @@ bool getBit(uint8_t byte, uint8_t n) {
   return (byte >> n) & 1U;
 } // getBit()
 
+
+uint64_t microsSinceBoot() {
+  return time_us_64();
+} // microsSinceBoot()
+
+
 uint64_t millisSinceBoot() {
   return time_us_64() / 1000;
 } // millisSinceBoot()
+
+
+uint64_t secsSinceBoot() {
+  return time_us_64() / (1000 * 1000);
+} // secsSinceBoot()
+
+
+uint64_t minsSinceBoot() {
+  return time_us_64() / (1000 * 1000 * 60);
+} // minsSinceBoot()
+
+
+String msToString(uint64_t ms) {
+  int milliseconds = ms % 1000;
+  int seconds = (ms / 1000) % 60;
+  int minutes = (ms / (1000 * 60)) % 60;
+  int hours = (ms / (1000 * 60 * 60)) % 24;
+  int days = (ms / (1000 * 60 * 60 * 24));
+
+  String uptimeString = String(days) + ":" + padLeft(String(hours),2,'0') + ":" + padLeft(String(minutes),2,'0') + ":" + padLeft(String(seconds),2,'0') + "." + padLeft(String(milliseconds),3,'0');
+  
+  return uptimeString;
+} // uptime()

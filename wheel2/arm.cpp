@@ -138,13 +138,12 @@ float Arm::pwm2ArmWeight(float pwm) {
 
 
 void Arm::info() {
-  int padR = 25;
-  Serial.println(padRight("ARM_FORCE_LOW", padR) +     ": " + String(forceLow,  5));
-  Serial.println(padRight("ARM_FORCE_HIGH", padR) +    ": " + String(forceHigh, 5));
-  Serial.println(padRight("ARM_FORCE", padR) +         ": " + String(force,  5));
-  Serial.println(padRight("ARM_WEIGHT", padR) +        ": " + String(weight, 5));
-  Serial.println(padRight("ARM_TARGET_WEIGHT", padR) + ": " + String(targetWeight, 5));
-  Serial.println(padRight("ARM_MOTOR", padR) +         ": " + String(motorOn ? "ON" : "OFF"));
-  Serial.println(padRight("NEEDLE", padR) +            ": " + String(isNeedleInGrove() ? "DOWN" : "UP"));
+  Serial.println(padRight("ARM_FORCE_LOW", PADR) +     ": " + String(forceLow,  5));
+  Serial.println(padRight("ARM_FORCE_HIGH", PADR) +    ": " + String(forceHigh, 5));
+  Serial.println(padRight("ARM_FORCE", PADR) +         ": " + String(force,  5));
+  Serial.println(padRight("ARM_WEIGHT", PADR) +        ": " + String(weight, 5));
+  Serial.println(padRight("ARM_TARGET_WEIGHT", PADR) + ": " + String(targetWeight, 5));
+  Serial.println(padRight("ARM_MOTOR", PADR) +         ": " + String(motorOn ? "ON" : "OFF"));
+  Serial.println(padRight("NEEDLE", PADR) +            ": " + String(isNeedleInGrove() ? "DOWN" : "UP"));
   Serial.println();
 } // info()

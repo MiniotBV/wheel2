@@ -33,6 +33,7 @@ class SerialComm {
     SpeedComp& _speedcomp;
     Storage& _storage;
     Interval _interval;
+    Interval _uptimeInterval;
     String _line = "";
     String _lineRaw = "";
     String _lastCommand = "";
@@ -51,6 +52,7 @@ class SerialComm {
     void printGraphicData();
     void report();
     void info();
+    void version();
   public:
     SerialComm(Shared& shared, Amplifier& amplifier, Arm& arm, Bluetooth& bluetooth, Buttons& buttons, Carriage& carriage,
       Orientation& orientation, Plateau& plateau, Scanner& scanner, SpeedComp& speedcomp, Storage& storage);

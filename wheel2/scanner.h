@@ -6,7 +6,7 @@
 #include "shared.h"
 #include "plateau.h"
 
-#define SCANNER_DETECTION_THRESHOLD 200
+#define SCANNER_DETECTION_THRESHOLD 150 //200
 
 
 class Carriage; // pre-declare class

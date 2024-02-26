@@ -53,7 +53,7 @@ void Storage::read() {
 
 
 void Storage::write() {
-  eepromVersion    = _shared.version;
+  eepromVersion    = _shared.appversion;
   _armForceLow     = _arm.forceLow;
   _armForceHigh    = _arm.forceHigh;
   // _armTargetWeight = _arm.targetWeight;
@@ -94,19 +94,18 @@ void Storage::commit() {
 
 
 void Storage::info() {
-  int padR = 25;
-  Serial.println(padRight("EEPROM_VERSION", padR) +          ": " + String(eepromVersion, 0));
-  Serial.println(padRight("EEPROM_ARM_FORCE_500MG", padR) +  ": " + String(_armForceLow, 5));
-  Serial.println(padRight("EEPROM_ARM_FORCE_4000MG", padR) + ": " + String(_armForceHigh, 5));
-  // Serial.println(padRight("EEPROM_ARM_TARGETWEIGHT", padR) + ": " + String(_armTargetWeight, 5));
-  Serial.println(padRight("EEPROM_ARM_FORCE_DOCKED", padR) + ": " + String(_armForceDocked, 5));
-  Serial.println(padRight("EEPROM_LEVEL_OFFSET_X", padR) +   ": " + String(_levelOffsetX, 5));
-  Serial.println(padRight("EEPROM_LEVEL_OFFSET_Y", padR) +   ": " + String(_levelOffsetY, 5));
-  Serial.println(padRight("EEPROM_LEVEL_OFFSET_Z", padR) +   ": " + String(_levelOffsetZ, 5));
-  Serial.println(padRight("EEPROM_TRACK_OFFSET", padR) +     ": " + String(_trackOffset, 5));
-  Serial.println(padRight("EEPROM_ARM_ANGLE_MIN", padR) +    ": " + String(_armAngleMin, 5));
-  Serial.println(padRight("EEPROM_ARM_ANGLE_MAX", padR) +    ": " + String(_armAngleMax, 5));
-  // Serial.println(padRight("EEPROM_SAVE_REQUIRED", padR) +    ": " + String(saveRequired ? "YES" : "NO"));
+  Serial.println(padRight("EEPROM_VERSION", PADR) +          ": " + String(eepromVersion, 0));
+  Serial.println(padRight("EEPROM_ARM_FORCE_500MG", PADR) +  ": " + String(_armForceLow, 5));
+  Serial.println(padRight("EEPROM_ARM_FORCE_4000MG", PADR) + ": " + String(_armForceHigh, 5));
+  // Serial.println(padRight("EEPROM_ARM_TARGETWEIGHT", PADR) + ": " + String(_armTargetWeight, 5));
+  Serial.println(padRight("EEPROM_ARM_FORCE_DOCKED", PADR) + ": " + String(_armForceDocked, 5));
+  Serial.println(padRight("EEPROM_LEVEL_OFFSET_X", PADR) +   ": " + String(_levelOffsetX, 5));
+  Serial.println(padRight("EEPROM_LEVEL_OFFSET_Y", PADR) +   ": " + String(_levelOffsetY, 5));
+  Serial.println(padRight("EEPROM_LEVEL_OFFSET_Z", PADR) +   ": " + String(_levelOffsetZ, 5));
+  Serial.println(padRight("EEPROM_TRACK_OFFSET", PADR) +     ": " + String(_trackOffset, 5));
+  Serial.println(padRight("EEPROM_ARM_ANGLE_MIN", PADR) +    ": " + String(_armAngleMin, 5));
+  Serial.println(padRight("EEPROM_ARM_ANGLE_MAX", PADR) +    ": " + String(_armAngleMax, 5));
+  // Serial.println(padRight("EEPROM_SAVE_REQUIRED", PADR) +    ": " + String(saveRequired ? "YES" : "NO"));
   Serial.println();
 } // info()
 

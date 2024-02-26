@@ -38,9 +38,9 @@ void Plateau::func() {
       _outBuff = limitFloat(_outBuff, -100, 100);
       
       pwmPhase(_outBuff / 100.0, PLATEAU_MOTOR_N_PIN, PLATEAU_MOTOR_P_PIN);
-    } else {
+    } else { // motorOn == false
       pwmPhase(0, PLATEAU_MOTOR_P_PIN, PLATEAU_MOTOR_N_PIN);
-      _basic = 0; // reset I
+      _basicVoltage = 0; // reset I
     }
     update();
   } // _interval.tick()
@@ -93,7 +93,7 @@ void Plateau::update() {
       }
     }
   } else { // motorOn = false
-    if (turnInterval.duration() > 1000 && !spinningDown) { // spinned by swing
+    if (turnInterval.duration() > 1000 && !_spinningDown) { // spinned by swing
       if (speed > (PLATEAU_RPM33 * 0.666) && (_shared.state == S_HOME 
         || _shared.state == S_HOMING || _shared.state == S_PARKING)) { // 50% of 33.3 speed
         // LOG_INFO("plateau.cpp", "[update] Started by swing");
@@ -102,14 +102,14 @@ void Plateau::update() {
         return;
       }
     }
-    if (spinningDown && speed < (PLATEAU_RPM33 * 0.05)) { // <5% of 33.3 speed (spinning down)
-      spinningDown = false;
+    if (_spinningDown && speed < (PLATEAU_RPM33 * 0.05)) { // <5% of 33.3 speed (spinning down)
+      _spinningDown = false;
       turnInterval.reset();
       // LOG_INFO("plateau.cpp", "[update] Stopped");
       Serial.println("PLATEAU: STOPPED");
       return;
     }
-  }
+  } // motorOn
 } // update()
 
 
@@ -118,9 +118,10 @@ void Plateau::motorStart() {
   motorOn = true;
   setRpm(RPM_33);
 
-  _basic = 30; // 50; //40; //60; //75;
+  _basicVoltage = 30; // 50; //40; //60; //75;
 
   Serial.println("PLATEAU: ON");
+  startUseCounter();
 } // motorStart
 
 
@@ -130,10 +131,11 @@ void Plateau::motorStop() {
   targetRpm = 0;
 
   turnInterval.reset();
-  spinningDown = true;
+  _spinningDown = true;
   atSpeed = false;
 
   Serial.println("PLATEAU: OFF");
+  stopUseCounter();
 } // motorStop
 
 
@@ -188,11 +190,11 @@ float Plateau::pid(float rpm) {
 
   if (unbalanceCompensation) {
     pp = diffTargetRpm * P;
-    _basic += diffTargetRpm * I; // bring basic voltage back to average for proper speed
-    _basic = limitFloat(_basic, 40, 80);
+    _basicVoltage += diffTargetRpm * I; // bring basic voltage back to average for proper speed
+    _basicVoltage = limitFloat(_basicVoltage, 40, 80);
     pd = diffRpm * D;
   }
-  return  pp + _basic + pd;
+  return  pp + _basicVoltage + pd;
 } // pid()
 
 
@@ -229,12 +231,34 @@ void Plateau::cleanMode() {
 
 
 void Plateau::info() {
-  int padR = 25;
-  Serial.println(padRight("PLATEAU_P", padR) +          ": " + String(P, 5));
-  Serial.println(padRight("PLATEAU_I", padR) +          ": " + String(I, 5));
-  Serial.println(padRight("PLATEAU_D", padR) +          ": " + String(D, 5));
-  Serial.println(padRight("PLATEAU_MOTOR", padR) +      ": " + String(motorOn ? "ON" : "OFF"));
-  Serial.println(padRight("PLATEAU_RPM_MODE", padR) +   ": " + getRpmState(rpmMode));
-  Serial.println(padRight("PLATEAU_TARGET_RPM", padR) + ": " + String(targetRpm, 2));
+  Serial.println(padRight("PLATEAU_P", PADR) +              ": " + String(P, 5));
+  Serial.println(padRight("PLATEAU_I", PADR) +              ": " + String(I, 5));
+  Serial.println(padRight("PLATEAU_D", PADR) +              ": " + String(D, 5));
+  Serial.println(padRight("PLATEAU_MOTOR", PADR) +          ": " + String(motorOn ? "ON" : "OFF"));
+  Serial.println(padRight("PLATEAU_RPM_MODE", PADR) +       ": " + getRpmState(rpmMode));
+  Serial.println(padRight("PLATEAU_TARGET_RPM", PADR) +     ": " + String(targetRpm, 2));
+  Serial.println(padRight("PLATEAU_TOTAL_PLAYTIME", PADR) + ": " + getUseCounter());
   Serial.println();
 } // info()
+
+
+void Plateau::startUseCounter() {
+  _tsMotorOn = millisSinceBoot();
+} // startUseCounter()
+
+
+void Plateau::stopUseCounter() {
+  if (_tsMotorOn > 0) {
+    _motorUsed += (millisSinceBoot() - _tsMotorOn);
+    _tsMotorOn = 0;
+    Serial.println("TOTAL_PLAYTIME: " + getUseCounter());
+  }
+} // stopUseCounter()
+
+
+String Plateau::getUseCounter() {
+  if (_tsMotorOn > 0) {
+    return msToString(_motorUsed + (millisSinceBoot() - _tsMotorOn));
+  }
+  return msToString(_motorUsed);
+} // getUseCounter()

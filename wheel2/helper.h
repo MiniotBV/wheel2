@@ -5,7 +5,10 @@
 #include "enums.h"
 #include <sys/_stdint.h>
 
+#define PADR 25
 
+
+String padLeft(String value, int length, char character = ' ');
 String padRight(String value, int length, char character = ' ');
 int roundTrip(int n, int max);
 float limitFloat(float n, float min, float max);
@@ -17,7 +20,10 @@ String getRpmState(eRpmMode rpm);
 String getError(eErrors error);
 void setBit(uint8_t *byte, uint8_t n, bool value);
 bool getBit(uint8_t byte, uint8_t n);
+uint64_t microsSinceBoot();
 uint64_t millisSinceBoot();
-
+uint64_t secsSinceBoot();
+uint64_t minsSinceBoot();
+String msToString(uint64_t ms);
 
 #endif // HELPER_H

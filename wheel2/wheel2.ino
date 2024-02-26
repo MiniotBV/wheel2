@@ -2,18 +2,21 @@
   Wheel2 Firmware
   Name: wheel2
 
-  Author: Piet Kolkman (MiniotBv), refactored by Eduard Kuijt (EddyK69
+  Author: Piet Kolkman (MiniotBV), refactored by Eduard Kuijt (EddyK69)
   Many thanks to Piet, Peter & Greet from Miniot!
 
   Based on offical Miniot Wheel2 Firmware:
     https://drive.google.com/drive/folders/1BKKGxrlx6HUjvCHgJyVHJfkWcCUIp_lk
     https://pietk.com/wheel2/
 
+  New sourecode on GitHub:
+    https://github.com/MiniotBV/wheel2
+
   Install board (Raspberry Pi Pico, rp2040):
     https://arduino-pico.readthedocs.io/en/latest/install.html
     https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json
 
-  Arduine Code Guidelines:
+  Arduino Code Guidelines:
     https://sites.google.com/a/cabrillo.edu/cs-11m/howtos/cppdoc
 
   DebugLog Library:
@@ -32,13 +35,11 @@
       "As a user you can run your own setup1/loop1 and never ever call rp2040.idle/resumeOtherCore
       and write to flash via EEPROM or LittleFS. The Arduino core plumbing here does all that for you"
 
-  millis() overflow rollover (50 days!!)
-    https://www.best-microcontroller-projects.com/arduino-millis.html
-    https://www.norwegiancreations.com/2018/10/arduino-tutorial-avoiding-the-overflow-issue-when-using-millis-and-micros/
-    https://techexplorations.com/guides/arduino/programming/millis-rollover/
 */
 
-#define APP_VERSION 204
+#define APP_VERSION 205
+
+#define APP_DATE __DATE__ " " __TIME__ // __DATE__ & __TIME__ only updates when compiling when in the main *.ino sketch file, NOT in de *.cpp files!!
 
 #include "log.h"
 #include "pico/time.h"
@@ -50,7 +51,7 @@
 #include "wheel.h"
 
 
-Wheel wheel(APP_VERSION);
+Wheel wheel(APP_VERSION, APP_DATE);
 
 
 // The normal, core 0 setup

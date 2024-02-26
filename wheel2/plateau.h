@@ -20,13 +20,18 @@ class Plateau {
     Shared& _shared;
     SpeedComp& _speedcomp;
     float _autoRpm;
-    float _basic = 0;
+    float _basicVoltage = 0;
     float _outBuff;
     float _outBuffPrev;
     float _rpmPrev = 0;
-    bool spinningDown;
+    bool _spinningDown;
+    unsigned long _tsMotorOn;
+    uint64_t _motorUsed = 0;
     float pid(float rpmIn);
     void update();
+    void startUseCounter();
+    void stopUseCounter();
+    String getUseCounter();
   public:
     Interval turnInterval;
     float P = 1;    // 0.5

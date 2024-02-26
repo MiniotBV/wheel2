@@ -3,8 +3,8 @@
 #include "pins.h"
 
 
-Wheel::Wheel(float version) :
-    shared(version),
+Wheel::Wheel(int appversion, String appdate) :
+    shared(appversion, appdate),
     arm(shared),
     amplifier(shared, arm),
     orientation(shared, arm),

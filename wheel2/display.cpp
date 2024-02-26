@@ -56,7 +56,7 @@ void Display::update() {
       int spaceLength = 3;
 
       int decimals = 3;
-      int version = _shared.version;
+      int version = _shared.appversion;
       int versionDecimals[decimals] = { (version % 10), (version / 10) % 10, (version / 100) % 10 };
 
       for (int i = 0; i < decimals; i++) {
@@ -265,11 +265,11 @@ void Display::update() {
     print(0);
     commit();
 
-    _delay = micros();
-    while(micros() - _delay < 2) {
+    _delay = microsSinceBoot();
+    while(microsSinceBoot() - _delay < 2) {
     }
     digitalWrite(DISPLAY_EN_PIN, 0);
-    while(micros() - _delay < 200) {
+    while(microsSinceBoot() - _delay < 200) {
     }
     digitalWrite(DISPLAY_EN_PIN, 1);
 
@@ -354,5 +354,5 @@ void Display::commit() {
 
 
 void Display::bootLED() {
-  digitalWrite(LED_PIN, millisSinceBoot() < 3000); // turn LED on
+  digitalWrite(LED_PIN, secsSinceBoot() < 3); // turn LED on
 }

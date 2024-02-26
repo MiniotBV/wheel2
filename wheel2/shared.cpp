@@ -3,8 +3,9 @@
 #include "helper.h"
 
 
-Shared::Shared(float version) :
-  version(version),
+Shared::Shared(int appversion, String appdate) :
+  appversion(appversion),
+  appdate(appdate),
   stateChangedInterval(1000, TM_MILLIS),
   errorChangedInterval(0, TM_MILLIS) {
 } // Shared()

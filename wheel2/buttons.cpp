@@ -319,8 +319,7 @@ String Buttons::getButton(int button) {
 
 
 void Buttons::info() {
-  int padR = 25;
-  Serial.print(padRight("BUTTONS", padR) + ": ");
+  Serial.print(padRight("BUTTONS", PADR) + ": ");
   for (int button = 0; button < BUTTON_COUNT; button++) {
     Serial.print(String(_buttonIn[button]) + " ");
   }
