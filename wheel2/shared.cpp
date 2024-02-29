@@ -28,7 +28,7 @@ void Shared::setError(eErrors newError) {
   errorChangedInterval.reset();
   Serial.println("ERROR: " + getError(error));
   Serial.println("STATE: " + getState(state));
-  errorCount[newError] += 1;
+  errorCount[error] += 1;
 } // setError()
 
 
