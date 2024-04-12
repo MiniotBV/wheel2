@@ -327,10 +327,10 @@ void checkenVoorCommando(int info){
 		orientatie.print();
 		// Serial.println();
 
-		// Serial.println("strobo.onbalansFase: " + String(strobo.onbalansFase));
-    // Serial.println("strobo.onbalansCompGewicht: " + String(strobo.onbalansCompGewicht));
-    // Serial.println("strobo.onbalansFilterBreedte: " + String(strobo.onbalansFilterBreedte));
-    // Serial.println("strobo.onbalansFilterCurveBreedte: " + String(strobo.onbalansFilterCurveBreedte));
+		Serial.println("strobo.onbalansFase: " + String(strobo.onbalansFase));
+    Serial.println("strobo.onbalansCompGewicht: " + String(strobo.onbalansCompGewicht));
+    Serial.println("strobo.onbalansFilterBreedte: " + String(strobo.onbalansFilterBreedte));
+    Serial.println("strobo.onbalansFilterCurveBreedte: " + String(strobo.onbalansFilterCurveBreedte));
     
 
   
@@ -372,8 +372,8 @@ void serieelFunc(){
       Serial.print(", ");
 			Serial.print((float)strobo.teller / strobo.pulsenPerRev, 3);
 
-      // // Serial.print(", ");
-			// // Serial.print(strobo.onbalansFilterCurve[strobo.teller]);
+      // Serial.print(", ");
+			// Serial.print(strobo.onbalansFilterCurve[strobo.teller]);
 
 
       
@@ -408,11 +408,11 @@ void serieelFunc(){
 			// // Serial.print(", ");
 			// // Serial.print(strobo.preComp, 4);
 
-			// Serial.print(", ");
-			// Serial.print(strobo.onbalansComp, 4);
+			Serial.print(", ");
+			Serial.print(strobo.onbalansComp, 4);
 
-			// // Serial.print(", ");
-			// // Serial.print(uitBuff, 2);
+			Serial.print(", ");
+			Serial.print(uitBuff, 2);
 
 			// // Serial.print(", ");
 			// // Serial.print(uitBuffPre, 2);
