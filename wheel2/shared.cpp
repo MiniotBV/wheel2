@@ -28,6 +28,7 @@ void Shared::setError(eErrors newError) {
   errorChangedInterval.reset();
   Serial.println("ERROR: " + getError(error));
   Serial.println("STATE: " + getState(state));
+  errorCount[error] += 1;
 } // setError()
 
 
@@ -38,3 +39,14 @@ bool Shared::firstTimeStateChanged() {
   }
   return false;
 } // firstTimeStateChanged()
+
+void Shared::info() {
+  for (int error = 0; error < E_MAX; error++) {
+    String err = getError(static_cast<eErrors>(error));
+    if ((err != "E_UNKNOWN") && (err != "E_NONE")) {
+      Serial.println(padRight(err, PADR) + ": " + String(errorCount[error]));
+    }
+  }
+
+  Serial.println();
+} // info()

@@ -324,4 +324,5 @@ void Buttons::info() {
     Serial.print(String(_buttonIn[button]) + " ");
   }
   Serial.println();
+  Serial.println();
 } // info()
