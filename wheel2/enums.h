@@ -26,7 +26,9 @@ enum eStates {
   S_RECORD_CLEAN,
   S_CALIBRATE,
   S_HOMING_FAILED,
-  S_BAD_ORIENTATION
+  S_BAD_ORIENTATION,
+
+  S_MAX                         // Max value of eStates
 }; // eStates
 
 
@@ -44,6 +46,8 @@ enum eErrors {
   E_ARMANGLE_LIMIT_NEG = 7,     // the arm is close to its limit; maybe an obstruction outside of the carriage, or hard bump
 
   E_TO_MUCH_TRAVEL = 8,         // if the record is far off-center for tracking of a huge tracking error (hard bump) during tracking?
+
+  E_MAX                         // Max value of eErrors
 }; // eErrors
 
 

@@ -101,7 +101,7 @@ String getRpmState(eRpmMode rpm) {
 
 
 String getError(eErrors error) {
-  String strError = "ERROR_UNKNOWN";
+  String strError = "E_UNKNOWN";
 
   if        (error == E_NONE)                  { strError = "E_NONE";
   } else if (error == E_NEEDLE_MOVE_BACKWARDS) { strError = "E_NEEDLE_MOVE_BACKWARDS";

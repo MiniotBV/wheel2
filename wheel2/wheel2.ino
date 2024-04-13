@@ -37,7 +37,7 @@
 
 */
 
-#define APP_VERSION 205
+#define APP_VERSION 206
 
 #define APP_DATE __DATE__ " " __TIME__ // __DATE__ & __TIME__ only updates when compiling when in the main *.ino sketch file, NOT in de *.cpp files!!
 

@@ -401,6 +401,7 @@ void SerialComm::info() {
   _scanner.info();
   _arm.info();
   _buttons.info();
+  _shared.info();
   Serial.println("----------------------------------------------");
 } // info()
 
