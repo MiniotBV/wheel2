@@ -251,7 +251,7 @@ void Plateau::info() {
   Serial.println(padRight("PLATEAU_MOTOR", PADR) +           ": " + String(motorOn ? "ON" : "OFF"));
   Serial.println(padRight("PLATEAU_RPM_MODE", PADR) +        ": " + getRpmState(rpmMode));
   Serial.println(padRight("PLATEAU_TARGET_RPM", PADR) +      ": " + String(targetRpm, 2));
-  Serial.println(padRight("PLATEAU_TOTAL_PLAYCOUNT", PADR) + ": " + String(_playCount7 + _playCount10 + _playCount12 + _playCountOther) + " [" + String(_playCount7) + "/" + String(_playCount10) + "/" + String(_playCount12) + "/" + String(_playCountOther) + "]");
+  Serial.println(padRight("PLATEAU_TOTAL_PLAYCOUNT", PADR) + ": " + String(_playCount7 + _playCount10 + _playCount12 + _playCountOther) + " [7\":" + String(_playCount7) + " 10\":" + String(_playCount10) + " 12\":" + String(_playCount12) + " ?:" + String(_playCountOther) + "]");
   Serial.println(padRight("PLATEAU_TOTAL_PLAYTIME", PADR) +  ": " + getUseCounter());
   Serial.println();
 } // info()

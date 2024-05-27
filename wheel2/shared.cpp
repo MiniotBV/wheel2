@@ -29,6 +29,7 @@ void Shared::setError(eErrors newError) {
   Serial.println("ERROR: " + getError(error));
   Serial.println("STATE: " + getState(state));
   errorCount[error] += 1;
+  Serial.println("TOTAL_ERRORS: " + String(getTotalErrors()));
 } // setError()
 
 
@@ -40,6 +41,16 @@ bool Shared::firstTimeStateChanged() {
   return false;
 } // firstTimeStateChanged()
 
+
+int Shared::getTotalErrors() {
+  int totalErrors = 0;
+  for (int error = 0; error < E_MAX; error++) {
+    totalErrors += errorCount[error];
+  }
+  return totalErrors;
+} // getTotalErrors()
+
+
 void Shared::info() {
   for (int error = 0; error < E_MAX; error++) {
     String err = getError(static_cast<eErrors>(error));
@@ -47,6 +58,7 @@ void Shared::info() {
       Serial.println(padRight(err, PADR) + ": " + String(errorCount[error]));
     }
   }
+  Serial.println(padRight("TOTAL_ERRORS", PADR) + ": " + String(getTotalErrors()));
 
   Serial.println();
 } // info()

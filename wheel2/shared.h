@@ -9,6 +9,7 @@
 class Shared {
   private:
     bool firstTimeStateChange = false;
+    int getTotalErrors();
   public:
     Interval stateChangedInterval;
     Interval errorChangedInterval;
