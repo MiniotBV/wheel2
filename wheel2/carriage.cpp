@@ -216,12 +216,14 @@ void Carriage::stateUpdate() {
         // LOG_DEBUG("carriage.cpp", "[stateUpdate] RecordDiameter: " + String(recordDiaInch) + " : ±7\" ");
         Serial.println("RecordDiameter: " + String(recordDiaInch) + " : ±7\" ");
         _plateau.setRpm(RPM_45);
+        _plateau.setPlayCount(R_7INCH);
         _scanner.recordStart = CARRIAGE_7INCH_START;
         _scanner.setTracksAs7inch();
       } else if (recordDiaInch < 11) { 
         // LOG_DEBUG("carriage.cpp", "[stateUpdate] RecordDiameter: " + String(recordDiaInch) + " : ±10\" ");
         Serial.println("RecordDiameter: " + String(recordDiaInch) + " : ±10\" ");
         _plateau.setRpm(RPM_33);
+        _plateau.setPlayCount(R_10INCH);
         _scanner.recordStart = CARRIAGE_10INCH_START;
         _scanner.check();
       } else {
@@ -229,6 +231,7 @@ void Carriage::stateUpdate() {
         Serial.println("RecordDiameter: " + String(recordDiaInch) + " : ???\" ");
         _scanner.recordStart = sensorPosition;
         // _plateau.setRpm(RPM_33);
+        _plateau.setPlayCount(R_OTHER);
       }
       targetTrack = _scanner.recordStart;
       _shared.setState(S_PLAY_TILL_END);
@@ -242,6 +245,7 @@ void Carriage::stateUpdate() {
       // LOG_DEBUG("carriage.cpp", "[stateUpdate] RecordDiameter: 12\" ");
       Serial.println("RecordDiameter: 12\" ");
       _plateau.setRpm(RPM_33);
+      _plateau.setPlayCount(R_12INCH);
       _scanner.check();
 
       _shared.setState(S_PLAYING);

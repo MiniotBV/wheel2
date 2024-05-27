@@ -25,8 +25,12 @@ class Plateau {
     float _outBuffPrev;
     float _rpmPrev = 0;
     bool _spinningDown;
-    unsigned long _tsMotorOn;
+    uint64_t _tsMotorOn;
     uint64_t _motorUsed = 0;
+    int _playCount7 = 0;
+    int _playCount10 = 0;
+    int _playCount12 = 0;
+    int _playCountOther = 0;
     float pid(float rpmIn);
     void update();
     void startUseCounter();
@@ -49,6 +53,7 @@ class Plateau {
     void motorStart();
     void updateRpm();
     void setRpm(eRpmMode rpm);
+    void setPlayCount(eRecordDiameter rd);
     void motorStop();
     void play();
     void stop();

@@ -121,7 +121,7 @@ void Plateau::motorStart() {
   _basicVoltage = 30; // 50; //40; //60; //75;
 
   Serial.println("PLATEAU: ON");
-  startUseCounter();
+  // startUseCounter();
 } // motorStart
 
 
@@ -182,6 +182,20 @@ void Plateau::setRpm(eRpmMode rpmMode) {
 } // setRpm
 
 
+void Plateau::setPlayCount(eRecordDiameter rd) {
+  LOG_DEBUG("plateau.cpp", "[setPlayCount]");
+  if (rd == R_7INCH) {
+    _playCount7++;
+  } else if (rd == R_10INCH) {
+    _playCount10++;
+  } else if (rd == R_12INCH) {
+    _playCount12++;
+  } else
+    _playCountOther++;
+  startUseCounter();
+} // setPlayCount
+
+
 float Plateau::pid(float rpm) {
   float pp, pd;
   float diffRpm = rpm - _rpmPrev;
@@ -231,13 +245,14 @@ void Plateau::cleanMode() {
 
 
 void Plateau::info() {
-  Serial.println(padRight("PLATEAU_P", PADR) +              ": " + String(P, 5));
-  Serial.println(padRight("PLATEAU_I", PADR) +              ": " + String(I, 5));
-  Serial.println(padRight("PLATEAU_D", PADR) +              ": " + String(D, 5));
-  Serial.println(padRight("PLATEAU_MOTOR", PADR) +          ": " + String(motorOn ? "ON" : "OFF"));
-  Serial.println(padRight("PLATEAU_RPM_MODE", PADR) +       ": " + getRpmState(rpmMode));
-  Serial.println(padRight("PLATEAU_TARGET_RPM", PADR) +     ": " + String(targetRpm, 2));
-  Serial.println(padRight("PLATEAU_TOTAL_PLAYTIME", PADR) + ": " + getUseCounter());
+  Serial.println(padRight("PLATEAU_P", PADR) +               ": " + String(P, 5));
+  Serial.println(padRight("PLATEAU_I", PADR) +               ": " + String(I, 5));
+  Serial.println(padRight("PLATEAU_D", PADR) +               ": " + String(D, 5));
+  Serial.println(padRight("PLATEAU_MOTOR", PADR) +           ": " + String(motorOn ? "ON" : "OFF"));
+  Serial.println(padRight("PLATEAU_RPM_MODE", PADR) +        ": " + getRpmState(rpmMode));
+  Serial.println(padRight("PLATEAU_TARGET_RPM", PADR) +      ": " + String(targetRpm, 2));
+  Serial.println(padRight("PLATEAU_TOTAL_PLAYCOUNT", PADR) + ": " + String(_playCount7 + _playCount10 + _playCount12 + _playCountOther) + " [" + String(_playCount7) + "/" + String(_playCount10) + "/" + String(_playCount12) + "/" + String(_playCountOther) + "]");
+  Serial.println(padRight("PLATEAU_TOTAL_PLAYTIME", PADR) +  ": " + getUseCounter());
   Serial.println();
 } // info()
 
@@ -251,6 +266,7 @@ void Plateau::stopUseCounter() {
   if (_tsMotorOn > 0) {
     _motorUsed += (millisSinceBoot() - _tsMotorOn);
     _tsMotorOn = 0;
+    Serial.println("TOTAL_PLAYCOUNT: " + String(_playCount7 + _playCount10 + _playCount12 + _playCountOther));
     Serial.println("TOTAL_PLAYTIME: " + getUseCounter());
   }
 } // stopUseCounter()
