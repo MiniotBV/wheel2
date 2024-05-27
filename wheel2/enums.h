@@ -73,5 +73,11 @@ enum eRpmMode {
   RPM_78
 }; // eRpmMode
 
+enum eRecordDiameter {
+  R_7INCH,
+  R_10INCH,
+  R_12INCH,
+  R_OTHER
+}; // eRecordDiameter
 
 #endif // ENUMS_H
