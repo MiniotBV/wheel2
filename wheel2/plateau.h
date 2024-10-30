@@ -280,7 +280,8 @@ void plateauFunc(){
 
 			uitBuff = limieteerF(uitBuff, -100, 100);
 			
-			pwmFase(uitBuff / 100.0, motorN, motorP, false);
+			pwmFase(uitBuff / 100.0, motorN, motorP, false); // ouwe motor
+      // pwmFase(uitBuff / 100.0, motorP, motorN, false); //nieuwe motor
 			
 		}else{
 			

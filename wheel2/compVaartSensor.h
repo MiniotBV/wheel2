@@ -97,7 +97,7 @@ class COMPVAART
 
     int onbalansFase = 23;//25;//50;//50;
 		float onbalansCompGewicht = 1.2;//1.1;//1.3;//2;
-    float onbalansFilterBreedte = 80;//65;//50;//100;
+    float onbalansFilterBreedte = 240;//80;//65;//50;//100;
 
 
     // int onbalansFase = 20;//50;//50;
