@@ -164,6 +164,15 @@ enum errors{
 	E_TE_GROTE_UITSLAG = 8,// als de plaat te ver uit het midden zit om goed te tracken of dat er een grote tracking fout is door een grote dieuw tijdens het tracken ofzo?
 };
 
+//2 the needle moved backwards (so the needle did not track or there are no tracks)
+//3 the needle did not move for to long
+//4 de platter motor could not get up to speed (not used)
+//5 could not home the carriage
+//6 maximum outward force on carriage exceeded
+//7 maximum inward force on carriage exceeded
+//8 the record is to much off center to track well (>6mm)
+
+
 enum errors error = E_GEEN;
 
 Interval errorVeranderd(0, MILLIS);
