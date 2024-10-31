@@ -13,7 +13,7 @@ Wheel::Wheel(int appversion, String appdate) :
     scanner(shared, plateau), // carriage is passed via init()
     carriage(shared, arm, plateau, scanner), // speedcomp is passed via init()
     buttons(shared, amplifier, arm, bluetooth, carriage, orientation, plateau, scanner),
-    storage(shared, arm, carriage, orientation),
+    storage(shared, arm, carriage, orientation, plateau),
     display(shared, amplifier, arm, buttons, carriage, orientation, plateau, scanner, speedcomp, storage),
     serialcomm(shared, amplifier, arm, bluetooth, buttons, carriage, orientation, plateau, scanner, speedcomp, storage),
     bluetooth(shared, carriage, plateau) {

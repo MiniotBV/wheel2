@@ -222,7 +222,7 @@ void Carriage::stateUpdate() {
       } else if (recordDiaInch < 11) { 
         // LOG_DEBUG("carriage.cpp", "[stateUpdate] RecordDiameter: " + String(recordDiaInch) + " : ±10\" ");
         Serial.println("RecordDiameter: " + String(recordDiaInch) + " : ±10\" ");
-        _plateau.setRpm(RPM_33);
+        _plateau.setRpm(RPM_33); // https://standardvinyl.com/vinyl-pressing/10-inch-records
         _plateau.setPlayCount(R_10INCH);
         _scanner.recordStart = CARRIAGE_10INCH_START;
         _scanner.check();

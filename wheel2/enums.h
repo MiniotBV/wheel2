@@ -40,7 +40,7 @@ enum eErrors {
 
   E_SPEED_UP_FAILED = 4,
 
-  E_HOMING_FAILED = 5,          // counld not finish homing; this means that there might be an obstruction (cable), of the toothed track is unstable, or calibration is bad
+  E_HOMING_FAILED = 5,          // could not finish homing; this means that there might be an obstruction (cable), of the toothed track is unstable, or calibration is bad
 
   E_ARMANGLE_LIMIT_POS = 6,     // the arm is close to its limit; maybe stuck to home position or hard bump
   E_ARMANGLE_LIMIT_NEG = 7,     // the arm is close to its limit; maybe an obstruction outside of the carriage, or hard bump
@@ -50,6 +50,13 @@ enum eErrors {
   E_MAX                         // Max value of eErrors
 }; // eErrors
 
+//2 the needle moved backwards (so the needle did not track or there are no tracks)
+//3 the needle did not move for too long
+//4 the platter motor could not get up to speed (not used)
+//5 could not home the carriage
+//6 maximum outward force on carriage exceeded
+//7 maximum inward force on carriage exceeded
+//8 the record is too much off center to track well (>6mm)
 
 enum eTimeMode {
   TM_MICROS,
@@ -67,10 +74,10 @@ enum eCheckMode {
 
 
 enum eRpmMode {
-  RPM_AUTO,
-  RPM_33,
-  RPM_45,
-  RPM_78
+  RPM_AUTO = 1,
+  RPM_33 = 3,
+  RPM_45 = 4,
+  RPM_78 = 7
 }; // eRpmMode
 
 enum eRecordDiameter {

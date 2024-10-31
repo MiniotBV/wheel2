@@ -43,10 +43,12 @@ class Plateau {
     float D = 0;
     float targetRpm = 0;
     eRpmMode rpmMode = RPM_AUTO;
+    // int rmpSetRpmMode = 0; // TODO: EK
     bool logic = true;
     bool unbalanceCompensation = true;
     bool atSpeed;
     bool motorOn = false;
+    bool motorReverse = false;
     Plateau(Shared& shared, SpeedComp& speedcomp);
     void init();
     void func();
