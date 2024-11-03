@@ -13,11 +13,12 @@
 */
 
 
-Storage::Storage(Shared& shared, Arm& arm, Carriage& carriage, Orientation& orientation) :
+Storage::Storage(Shared& shared, Arm& arm, Carriage& carriage, Orientation& orientation, Plateau& plateau) :
   _shared(shared),
   _arm(arm),
   _carriage(carriage),
-  _orientation(orientation) {
+  _orientation(orientation),
+  _plateau(plateau) {
 } // Storage()
 
 
@@ -28,17 +29,18 @@ void Storage::init() {
 
 
 void Storage::read() {
-  readAddress(EEPROM_VERSION,          eepromVersion);
-  readAddress(EEPROM_ARM_FORCE_500MG,  _armForceLow);
-  readAddress(EEPROM_ARM_FORCE_4000MG, _armForceHigh);
-  readAddress(EEPROM_ARM_TARGETWEIGHT, _armTargetWeight);
-  readAddress(EEPROM_ARM_FORCE_DOCKED, _armForceDocked);
-  readAddress(EEPROM_LEVEL_OFFSET_X,   _levelOffsetX);
-  readAddress(EEPROM_LEVEL_OFFSET_Y,   _levelOffsetY);
-  readAddress(EEPROM_LEVEL_OFFSET_Z,   _levelOffsetZ);
-  readAddress(EEPROM_TRACK_OFFSET,     _trackOffset);
-  readAddress(EEPROM_ARM_ANGLE_MIN,    _armAngleMin);
-  readAddress(EEPROM_ARM_ANGLE_MAX,    _armAngleMax);
+  readAddress(EEPROM_VERSION,           eepromVersion);
+  readAddress(EEPROM_ARM_FORCE_500MG,   _armForceLow);
+  readAddress(EEPROM_ARM_FORCE_4000MG,  _armForceHigh);
+  readAddress(EEPROM_ARM_TARGETWEIGHT,  _armTargetWeight);
+  readAddress(EEPROM_ARM_FORCE_DOCKED,  _armForceDocked);
+  readAddress(EEPROM_LEVEL_OFFSET_X,    _levelOffsetX);
+  readAddress(EEPROM_LEVEL_OFFSET_Y,    _levelOffsetY);
+  readAddress(EEPROM_LEVEL_OFFSET_Z,    _levelOffsetZ);
+  readAddress(EEPROM_TRACK_OFFSET,      _trackOffset);
+  readAddress(EEPROM_ARM_ANGLE_MIN,     _armAngleMin);
+  readAddress(EEPROM_ARM_ANGLE_MAX,     _armAngleMax);
+  readAddress(EEPROM_PLATEAU_MOTOR_REV, _plateauMotorReverse);
   _arm.forceLow         = _armForceLow;
   _arm.forceHigh        = _armForceHigh;
   // _arm.targetWeight     = _armTargetWeight;
@@ -49,32 +51,35 @@ void Storage::read() {
   _carriage.trackOffset = _trackOffset;
   _arm.armAngleMin      = _armAngleMin;
   _arm.armAngleMax      = _armAngleMax;
+  _plateau.motorReverse = _plateauMotorReverse;
 } // read()
 
 
 void Storage::write() {
-  eepromVersion    = _shared.appversion;
-  _armForceLow     = _arm.forceLow;
-  _armForceHigh    = _arm.forceHigh;
-  // _armTargetWeight = _arm.targetWeight;
-  _armForceDocked  = _arm.justDockedWeight;
-  _levelOffsetX    = _orientation.offsetX;
-  _levelOffsetY    = _orientation.offsetY;
-  _levelOffsetZ    = _orientation.offsetZ;
-  _trackOffset     = _carriage.trackOffset;
-  _armAngleMin     = _arm.armAngleMin;
-  _armAngleMax     = _arm.armAngleMax;
-  writeAddress(EEPROM_VERSION,          eepromVersion);
-  writeAddress(EEPROM_ARM_FORCE_500MG,  _armForceLow);
-  writeAddress(EEPROM_ARM_FORCE_4000MG, _armForceHigh);
-  writeAddress(EEPROM_ARM_TARGETWEIGHT, _armTargetWeight);
-  writeAddress(EEPROM_ARM_FORCE_DOCKED, _armForceDocked);
-  writeAddress(EEPROM_LEVEL_OFFSET_X,   _levelOffsetX);
-  writeAddress(EEPROM_LEVEL_OFFSET_Y,   _levelOffsetY);
-  writeAddress(EEPROM_LEVEL_OFFSET_Z,   _levelOffsetZ);
-  writeAddress(EEPROM_TRACK_OFFSET,     _trackOffset);
-  writeAddress(EEPROM_ARM_ANGLE_MIN,    _armAngleMin);
-  writeAddress(EEPROM_ARM_ANGLE_MAX,    _armAngleMax);
+  eepromVersion        = _shared.appversion;
+  _armForceLow         = _arm.forceLow;
+  _armForceHigh        = _arm.forceHigh;
+  // _armTargetWeight     = _arm.targetWeight;
+  _armForceDocked      = _arm.justDockedWeight;
+  _levelOffsetX        = _orientation.offsetX;
+  _levelOffsetY        = _orientation.offsetY;
+  _levelOffsetZ        = _orientation.offsetZ;
+  _trackOffset         = _carriage.trackOffset;
+  _armAngleMin         = _arm.armAngleMin;
+  _armAngleMax         = _arm.armAngleMax;
+  _plateauMotorReverse = static_cast<float>(_plateau.motorReverse);
+  writeAddress(EEPROM_VERSION,           eepromVersion);
+  writeAddress(EEPROM_ARM_FORCE_500MG,   _armForceLow);
+  writeAddress(EEPROM_ARM_FORCE_4000MG,  _armForceHigh);
+  writeAddress(EEPROM_ARM_TARGETWEIGHT,  _armTargetWeight);
+  writeAddress(EEPROM_ARM_FORCE_DOCKED,  _armForceDocked);
+  writeAddress(EEPROM_LEVEL_OFFSET_X,    _levelOffsetX);
+  writeAddress(EEPROM_LEVEL_OFFSET_Y,    _levelOffsetY);
+  writeAddress(EEPROM_LEVEL_OFFSET_Z,    _levelOffsetZ);
+  writeAddress(EEPROM_TRACK_OFFSET,      _trackOffset);
+  writeAddress(EEPROM_ARM_ANGLE_MIN,     _armAngleMin);
+  writeAddress(EEPROM_ARM_ANGLE_MAX,     _armAngleMax);
+  writeAddress(EEPROM_PLATEAU_MOTOR_REV, _plateauMotorReverse);
 
   // saveRequired = false;
   // Save changes to EEPROM

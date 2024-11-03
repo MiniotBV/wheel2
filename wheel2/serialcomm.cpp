@@ -125,7 +125,10 @@ void SerialComm::checkReceivedLine(String line, eCheckMode mode) {
   if (checkLineFloat(   "PI",     "Plateau I",                  mode, _plateau.I)) {                          return; }
   if (checkLineFloat(   "PD",     "Plateau D",                  mode, _plateau.D)) {                          return; }
 
+  if (checkLineBool(    "PR",     "Plateau motor reverse",      mode, _plateau.motorReverse)) {               return; }
+
   if (checkLineFloat(   "TR",     "Target RPM",                 mode, _plateau.targetRpm)) { _plateau.turnInterval.reset(); return; }
+//  if (checkLineInt(     "RPM",    "RPM mode (1/3/4)",           mode, _plateau.rpmMode)) { return; } // TODO: EK
 
   if (checkLineCommand( "PA",     "Plateau start",              mode)) { _plateau.motorStart();               return; }
   if (checkLineCommand( "PS",     "Plateau stop",               mode)) { _plateau.motorStop();                return; }

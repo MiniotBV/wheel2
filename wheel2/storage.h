@@ -22,6 +22,8 @@
 #define EEPROM_ARM_ANGLE_MIN      400
 #define EEPROM_ARM_ANGLE_MAX      410
 
+#define EEPROM_PLATEAU_MOTOR_REV  420
+
 
 class Storage {
   private:
@@ -35,17 +37,19 @@ class Storage {
     float _trackOffset = 0;
     float _armAngleMin = 0;
     float _armAngleMax = 0;
+    float _plateauMotorReverse = 0;
     Shared& _shared;
     Arm& _arm;
     Carriage& _carriage;
     Orientation& _orientation;
+    Plateau& _plateau;
     void readAddress(int address, float& value);
     void writeAddress(int address, float value);
     void commit();
   public:
     float eepromVersion = 0;
     bool saveRequired = false;
-    Storage(Shared& shared, Arm& arm, Carriage& carriage, Orientation& orientation);
+    Storage(Shared& shared, Arm& arm, Carriage& carriage, Orientation& orientation, Plateau& plateau);
     void init();
     void read();
     void write();

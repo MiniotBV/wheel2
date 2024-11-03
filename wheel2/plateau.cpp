@@ -37,7 +37,11 @@ void Plateau::func() {
       _outBuff += _speedcomp.unbalanceComp;
       _outBuff = limitFloat(_outBuff, -100, 100);
       
-      pwmPhase(_outBuff / 100.0, PLATEAU_MOTOR_N_PIN, PLATEAU_MOTOR_P_PIN);
+      if (!motorReverse) {
+        pwmPhase(_outBuff / 100.0, PLATEAU_MOTOR_N_PIN, PLATEAU_MOTOR_P_PIN); // old motor
+      } else {
+        pwmPhase(_outBuff / 100.0, PLATEAU_MOTOR_P_PIN, PLATEAU_MOTOR_N_PIN); // new motor
+      }
     } else { // motorOn == false
       pwmPhase(0, PLATEAU_MOTOR_P_PIN, PLATEAU_MOTOR_N_PIN);
       _basicVoltage = 0; // reset I
@@ -249,6 +253,7 @@ void Plateau::info() {
   Serial.println(padRight("PLATEAU_I", PADR) +               ": " + String(I, 5));
   Serial.println(padRight("PLATEAU_D", PADR) +               ": " + String(D, 5));
   Serial.println(padRight("PLATEAU_MOTOR", PADR) +           ": " + String(motorOn ? "ON" : "OFF"));
+  Serial.println(padRight("PLATEAU_MOTOR_REVERSE", PADR) +   ": " + String(motorReverse ? "YES" : "NO"));
   Serial.println(padRight("PLATEAU_RPM_MODE", PADR) +        ": " + getRpmState(rpmMode));
   Serial.println(padRight("PLATEAU_TARGET_RPM", PADR) +      ": " + String(targetRpm, 2));
   Serial.println(padRight("PLATEAU_TOTAL_PLAYCOUNT", PADR) + ": " + String(_playCount7 + _playCount10 + _playCount12 + _playCountOther) + " [7\":" + String(_playCount7) + " 10\":" + String(_playCount10) + " 12\":" + String(_playCount12) + " ?:" + String(_playCountOther) + "]");

@@ -104,7 +104,7 @@ class SpeedComp {
     //-------------------- unbalance compensation
     int unbalancePhase = 23; //25; //50; //50;
     float unbalanceCompWeight = 1.2; // 1.1; //1.3; //2;
-    float unbalanceFilterWidth = 80; //65; //50; //100;
+    float unbalanceFilterWidth = 240; //80; //65; //50; //100;
     volatile float unbalanceComp = 0;
 
     //-------------------- debug
